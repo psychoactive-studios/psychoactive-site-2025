@@ -1,0 +1,10 @@
+@use 'reset';
+@use 'typography';
+@use 'colors' as *;
+
+// Other global styles, variables, mixins, etc.
+
+body {
+  background-color: $color-background;
+  color: $color-foreground;
+}
