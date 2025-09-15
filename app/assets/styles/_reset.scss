@@ -15,7 +15,7 @@ body {
   margin: 0;
   padding: 0;
   scroll-behavior: smooth;
-  overflow-x: hidden; /* Запобігає горизонтальному скролу */
+  overflow-x: hidden;
 }
 
 /* Make images, videos, svg responsive by default */
@@ -35,6 +35,14 @@ button,
 textarea,
 select {
   font: inherit;
+}
+
+button {
+  all: unset;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Remove list styles for ul/ol */
@@ -62,7 +70,7 @@ p {
 
 /* Optional: smoother focus outline for accessibility */
 :focus {
-  outline: 2px solid #3498db; /* можна під змінну кольору */
+  outline: 2px solid #3498db;
   outline-offset: 2px;
 }
 
