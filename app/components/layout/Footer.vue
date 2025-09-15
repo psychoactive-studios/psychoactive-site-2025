@@ -53,7 +53,7 @@ import PlusIcon from '~/assets/icons/plus.svg';
 
 <style lang="scss" scoped>
 @use '~/assets/styles/functions' as *;
-@use '~/assets/styles/colors' as *;
+@use '~/assets/styles/variables' as *;
 .footer {
   height: 100vh;
   padding-top: getRem(60);
@@ -67,7 +67,7 @@ import PlusIcon from '~/assets/icons/plus.svg';
       justify-content: space-between;
       align-items: center;
       gap: getRem(24);
-      padding: 0 getRem(160);
+      padding: 0 getRem($main-padding);
       .link {
         font-family: 'RoobertMono', sans-serif;
         text-transform: uppercase;

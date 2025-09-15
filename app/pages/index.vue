@@ -1,16 +1,11 @@
+<script setup>
+import Hero from '~/components/homepage/Hero.vue';
+</script>
+
 <template>
-  <div class="container">
-    <h1 style="text-align: center">psychoactive®</h1>
-  </div>
+  <main class="container">
+    <Hero />
+  </main>
 </template>
 
-<style lang="scss" scoped>
-.container {
-  padding: 2rem;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50vh;
-}
-</style>
+<style lang="scss" scoped></style>

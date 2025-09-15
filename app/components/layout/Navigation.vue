@@ -10,7 +10,7 @@
 </template>
 
 <style lang="scss" scoped>
-@use '~/assets/styles/colors' as *;
+@use '~/assets/styles/variables' as *;
 
 .navigation {
   &__button {
