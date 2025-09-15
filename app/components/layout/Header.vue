@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Navigation from '~/components/layout/Navigation.vue';
+import SoundButton from './SoundButton.vue';
 </script>
 
 <template>
@@ -8,6 +9,7 @@ import Navigation from '~/components/layout/Navigation.vue';
       <img src="/img/logo-1.svg" alt="psychoactive logo" />
     </NuxtLink>
     <Navigation />
+    <SoundButton />
   </header>
 </template>
 
