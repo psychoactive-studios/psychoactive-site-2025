@@ -2,6 +2,7 @@
 import { partnersData } from '~/data/partnersData';
 import Circle from '../ui/Circle.vue';
 import PlusIcon from '~/assets/icons/plus.svg';
+import DotsArrowIcon from '~/assets/icons/icon-dots-arrow-down.svg';
 </script>
 
 <template>
@@ -12,17 +13,32 @@ import PlusIcon from '~/assets/icons/plus.svg';
           <Circle class="circle" />
           <div class="psychoactive">
             psychoactive®
-            <PlusIcon class="psychoactive__icon psychoactive_icon--right" />
-            <PlusIcon class="psychoactive__icon psychoactive_icon--bottom" />
+            <PlusIcon class="psychoactive__icon psychoactive__icon--right" />
+            <PlusIcon class="psychoactive__icon psychoactive__icon--bottom" />
           </div>
           <div class="top-text">
             <img class="top-text__label" src="/img/Webflow_label.svg" alt="" />
             <div class="top-text__agency">Digital First design agency</div>
             <div class="top-text__innovation grey-text">Innovate</div>
           </div>
+          <div class="line">
+            <div class="line__text line__text--left">-41.2925°</div>
+            <div class="line__text line__text--right">174.7783°</div>
+          </div>
           <div class="bottom-text">
             <div class="bottom-text__imagine grey-text">Imagine</div>
-            <div class="bottom-text__scale">scale</div>
+            <div class="bottom-text__scale">
+              scale
+              <div class="bottom-text__scale-arrows">
+                <span>&larr;</span><span>&rarr;</span>
+              </div>
+            </div>
+          </div>
+          <div class="dots-arrow">
+            <DotsArrowIcon class="dots-arrow__icon" />
+            <PlusIcon class="dots-arrow__plus dots-arrow__plus--tr" />
+            <PlusIcon class="dots-arrow__plus dots-arrow__plus--br" />
+            <PlusIcon class="dots-arrow__plus dots-arrow__plus--bl" />
           </div>
         </div>
       </section>
@@ -74,14 +90,14 @@ import PlusIcon from '~/assets/icons/plus.svg';
             width: 7px;
             height: 7px;
             stroke: white(50);
-          }
-          .psychoactive_icon--right {
-            top: 0;
-            right: 0;
-          }
-          .psychoactive_icon--bottom {
-            bottom: 0;
-            left: 0;
+            &--right {
+              top: 0;
+              right: 0;
+            }
+            &--bottom {
+              bottom: 0;
+              left: -3px;
+            }
           }
         }
         .grey-text {
@@ -135,6 +151,86 @@ import PlusIcon from '~/assets/icons/plus.svg';
             font-weight: 400;
             line-height: 77%;
             letter-spacing: -0.756vw;
+            &-arrows {
+              color: $color-grey;
+              font-size: 5.5vw;
+              position: absolute;
+              top: 0;
+              left: 95%;
+              letter-spacing: -1.5vw;
+            }
+          }
+        }
+        .line {
+          position: absolute;
+          top: 50%;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: white(10);
+          &::before,
+          &::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: white(50);
+          }
+          &::before {
+            left: -3px;
+          }
+          &::after {
+            right: -3px;
+          }
+          &__text {
+            color: white(80);
+            font-family: 'RoobertMono', sans-serif;
+            font-size: 12px;
+            font-style: normal;
+            line-height: 1;
+            text-transform: uppercase;
+            opacity: 0.5;
+            position: absolute;
+            &--left {
+              left: 0;
+              top: 10px;
+            }
+            &--right {
+              right: 0;
+              top: 10px;
+            }
+          }
+        }
+        .dots-arrow {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          width: 62px;
+          height: 62px;
+          @include flex-center;
+          &__icon {
+            width: 16px;
+            height: auto;
+          }
+          &__plus {
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            color: white(50);
+            &--tr {
+              top: 0;
+              right: 0;
+            }
+            &--br {
+              bottom: 0;
+              right: 0;
+            }
+            &--bl {
+              bottom: 0;
+              left: 0;
+            }
           }
         }
       }

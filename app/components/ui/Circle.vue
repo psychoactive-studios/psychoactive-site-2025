@@ -49,10 +49,10 @@
   transform-origin: center;
 }
 .circle-path-1 {
-  stroke-dashoffset: 469.82;
+  stroke-dashoffset: 467.92;
 }
 .circle-path-2 {
-  stroke-dashoffset: 469.82;
+  stroke-dashoffset: 470.22;
   transform: rotate(180deg);
 }
 .circle-dots {
@@ -70,12 +70,12 @@
     border-radius: 50%;
   }
   &::before {
-    top: 50%;
-    left: -3px;
+    top: calc(50% + 3px);
+    left: -2px;
   }
   &::after {
     top: 50%;
-    right: -3px;
+    right: -2px;
   }
 }
 </style>
