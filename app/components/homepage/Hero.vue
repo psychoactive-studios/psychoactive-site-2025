@@ -17,7 +17,13 @@ import DotsArrowIcon from '~/assets/icons/icon-dots-arrow-down.svg';
             <PlusIcon class="psychoactive__icon psychoactive__icon--bottom" />
           </div>
           <div class="top-text">
-            <img class="top-text__label" src="/img/Webflow_label.svg" alt="" />
+            <a href="https://webflow.com/@Psychoactive-Studios" target="_blank">
+              <img
+                class="top-text__label"
+                src="/img/Webflow_label.svg"
+                alt=""
+              />
+            </a>
             <div class="top-text__agency">Digital First design agency</div>
             <div class="top-text__innovation grey-text">Innovate</div>
           </div>

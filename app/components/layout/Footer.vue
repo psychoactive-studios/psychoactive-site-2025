@@ -43,7 +43,7 @@ import PlusIcon from '~/assets/icons/plus.svg';
         </li>
       </ul>
       <div class="awards__label">
-        <a href="">
+        <a href="https://webflow.com/@Psychoactive-Studios" target="_blank">
           <img src="/img/Webflow_label.svg" alt="" />
         </a>
       </div>
