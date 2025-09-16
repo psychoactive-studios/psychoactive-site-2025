@@ -67,7 +67,7 @@ import PlusIcon from '~/assets/icons/plus.svg';
       justify-content: space-between;
       align-items: center;
       gap: getRem(24);
-      padding: 0 getRem($main-padding);
+      padding: 0 $main-padding;
       .link {
         font-family: 'RoobertMono', sans-serif;
         text-transform: uppercase;

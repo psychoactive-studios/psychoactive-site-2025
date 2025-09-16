@@ -3,4 +3,4 @@ $color-background: #101012;
 $color-foreground: #ffffff;
 
 // Layout variables
-$main-padding: 148;
+$main-padding: clamp(48px, 8vw, 160px);
