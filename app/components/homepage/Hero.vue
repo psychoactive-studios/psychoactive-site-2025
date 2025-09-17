@@ -4,6 +4,7 @@ import Circle from '../ui/Circle.vue';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
 import DotsArrowIcon from '~/assets/icons/icon-dots-arrow-down.svg';
 import VideoPlayer from '../ui/VideoPlayer.vue';
+import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
 </script>
 
 <template>
@@ -71,7 +72,9 @@ import VideoPlayer from '../ui/VideoPlayer.vue';
         />
       </section>
     </div>
-    <div class="hero__player">222</div>
+    <div class="hero__player">
+      <HomeHero3DScene />
+    </div>
   </div>
 </template>
 
