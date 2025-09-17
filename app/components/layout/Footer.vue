@@ -1,6 +1,6 @@
 <script setup>
 import { footerData } from '~/data/footerData';
-import PlusIcon from '~/assets/icons/plus.svg';
+import PlusIcon from '~/assets/icons/icon-plus.svg';
 </script>
 
 <template>

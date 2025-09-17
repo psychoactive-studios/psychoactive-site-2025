@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { partnersData } from '~/data/partnersData';
 import Circle from '../ui/Circle.vue';
-import PlusIcon from '~/assets/icons/plus.svg';
+import PlusIcon from '~/assets/icons/icon-plus.svg';
 import DotsArrowIcon from '~/assets/icons/icon-dots-arrow-down.svg';
+import VideoPlayer from '../ui/VideoPlayer.vue';
 </script>
 
 <template>
@@ -46,6 +47,13 @@ import DotsArrowIcon from '~/assets/icons/icon-dots-arrow-down.svg';
             <PlusIcon class="dots-arrow__plus dots-arrow__plus--br" />
             <PlusIcon class="dots-arrow__plus dots-arrow__plus--bl" />
           </div>
+
+          <VideoPlayer
+            class="video-player homehero-prepared"
+            preview="/video/short-planet-reel-ps.mp4"
+            src="/video/short-planet-reel-ps.mp4"
+            transparent-button
+          />
         </div>
       </section>
       <section class="hero__intro_partners">
@@ -182,7 +190,7 @@ import DotsArrowIcon from '~/assets/icons/icon-dots-arrow-down.svg';
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: white(50);
+            background: $color-dots;
           }
           &::before {
             left: -3px;
@@ -211,8 +219,8 @@ import DotsArrowIcon from '~/assets/icons/icon-dots-arrow-down.svg';
         }
         .dots-arrow {
           position: absolute;
-          right: 0;
-          bottom: 0;
+          right: -3px;
+          bottom: -3px;
           width: 62px;
           height: 62px;
           @include flex-center;
@@ -238,6 +246,13 @@ import DotsArrowIcon from '~/assets/icons/icon-dots-arrow-down.svg';
               left: 0;
             }
           }
+        }
+        .video-player {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          aspect-ratio: 2.22;
         }
       }
     }
@@ -283,6 +298,7 @@ import DotsArrowIcon from '~/assets/icons/icon-dots-arrow-down.svg';
   }
   &__player {
     height: 100dvh;
+    @include flex-center;
   }
 }
 </style>
