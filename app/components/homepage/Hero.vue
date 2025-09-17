@@ -28,9 +28,14 @@ import VideoPlayer from '../ui/VideoPlayer.vue';
             <div class="top-text__agency">Digital First design agency</div>
             <div class="top-text__innovation grey-text">Innovate</div>
           </div>
-          <div class="line">
-            <div class="line__text line__text--left">-41.2925°</div>
-            <div class="line__text line__text--right">174.7783°</div>
+          <div class="center">
+            <div class="center__line" />
+            <div class="center__dots center__dots--left" />
+            <div class="center__dots center__dots--right" />
+            <div class="center__text center__text--left">-41.2925°</div>
+            <div class="center__text center__text--right">174.7783°</div>
+            <div class="center__text center__text--play">PLAY REEL</div>
+            <div class="center__text center__text--time">01:16 SEC</div>
           </div>
           <div class="bottom-text">
             <div class="bottom-text__imagine grey-text">Imagine</div>
@@ -175,28 +180,28 @@ import VideoPlayer from '../ui/VideoPlayer.vue';
             }
           }
         }
-        .line {
+        .center {
           position: absolute;
           top: 50%;
           left: 0;
           right: 0;
-          height: 1px;
-          background: white(10);
-          &::before,
-          &::after {
-            content: '';
+          &__line {
+            background: white(10);
+            height: 1px;
+          }
+          &__dots {
             position: absolute;
             top: -3px;
             width: 7px;
             height: 7px;
             border-radius: 50%;
             background: $color-dots;
-          }
-          &::before {
-            left: -3px;
-          }
-          &::after {
-            right: -3px;
+            &--left {
+              left: -3px;
+            }
+            &--right {
+              right: -3px;
+            }
           }
           &__text {
             color: white(80);
@@ -213,6 +218,14 @@ import VideoPlayer from '../ui/VideoPlayer.vue';
             }
             &--right {
               right: 0;
+              top: 10px;
+            }
+            &--play {
+              left: 20%;
+              top: 10px;
+            }
+            &--time {
+              right: 20%;
               top: 10px;
             }
           }
