@@ -82,6 +82,12 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+.hero__player {
+  * {
+    color: red;
+    fill: #fff;
+  }
+}
 .hero {
   &__intro {
     height: 100dvh;
