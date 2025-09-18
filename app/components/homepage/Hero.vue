@@ -54,6 +54,8 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
             <PlusIcon class="dots-arrow__plus dots-arrow__plus--bl" />
           </div>
 
+          <HomeHero3DScene class="homehero-3d-scene" />
+
           <VideoPlayer
             class="video-player homehero-prepared"
             preview="/video/short-planet-reel-ps.mp4"
@@ -72,9 +74,7 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
         />
       </section>
     </div>
-    <div class="hero__player">
-      <HomeHero3DScene />
-    </div>
+    <div class="hero__player">222</div>
   </div>
 </template>
 
@@ -93,11 +93,11 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
       @include flex-center;
       .scene {
         aspect-ratio: 2.43;
-        border: 2px dashed white(40);
         width: 100%;
         position: relative;
         .psychoactive {
           position: absolute;
+          z-index: 2;
           top: 0;
           left: 0;
           font-family: 'RoobertMono', sans-serif;
@@ -132,6 +132,7 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
         }
         .circle {
           position: absolute;
+          z-index: 1;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%) rotate(30deg);
@@ -139,6 +140,7 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
         }
         .top-text {
           position: absolute;
+          z-index: 4;
           top: 0;
           right: 0;
           text-align: right;
@@ -161,6 +163,7 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
         }
         .bottom-text {
           position: absolute;
+          z-index: 2;
           bottom: 0;
           left: 0;
           &__imagine {
@@ -185,6 +188,7 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
         }
         .center {
           position: absolute;
+          z-index: 2;
           top: 50%;
           left: 0;
           right: 0;
@@ -235,6 +239,7 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
         }
         .dots-arrow {
           position: absolute;
+          z-index: 2;
           right: -3px;
           bottom: -3px;
           width: 62px;
@@ -265,10 +270,20 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
         }
         .video-player {
           position: absolute;
+          z-index: 3;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
           aspect-ratio: 2.22;
+        }
+        .homehero-3d-scene {
+          position: absolute;
+          z-index: 1;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 100%;
+          height: 150%;
         }
       }
     }

@@ -1,45 +1,46 @@
 <script setup>
 import { onMounted, onUnmounted, ref } from 'vue';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { createNoise3D } from 'simplex-noise';
 
 const canvasContainer = ref(null);
 
-// --- Ініціалізація сцени, камери та рендерера ---
-let scene, camera, renderer, controls;
+// --- Scene, camera, and renderer initialization ---
+let scene, camera, renderer; // controls removed
 let spherePoints;
 const clock = new THREE.Clock();
 const simplex = createNoise3D();
 let animationFrameId;
 
-// --- Палітра кольорів для градієнта ---
+// --- Gradient color palette ---
 const colorPalette = [
-  new THREE.Color('#30d5f0'), // cyan
-  new THREE.Color('#22a275'), // green
-  new THREE.Color('#2b5cc1'), // blue
-  new THREE.Color('#d90000'), // red
+  new THREE.Color('#CC4F8C'),
+  new THREE.Color('#E4393C'),
+  new THREE.Color('#23CF48'),
+  new THREE.Color('#17FFFF'),
+  new THREE.Color('#0646FF'),
+  new THREE.Color('#101012'),
 ];
 
-// --- Змінні для інтерактивності ---
+// --- Interactivity variables ---
 const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2(-10, -10); // Початкова позиція за межами екрану
+const mouse = new THREE.Vector2(-10, -10); // Initial position off-screen
 const lastMousePos = new THREE.Vector2();
 const mouseMove = new THREE.Vector2();
-let velocities; // Масив для зберігання швидкостей кожної точки
+let velocities; // Array to store the velocity of each point
 
-// --- Фізичні константи ---
-const PUSH_STRENGTH = 0.03; // Сила "штовхання" від курсора
-const SPRING_CONSTANT = 0.0008; // Жорсткість пружини, що повертає точки
-const DAMPING = 0.96; // Демпфування (опір руху)
+// --- Physics constants ---
+const PUSH_STRENGTH = 0.03; // "Push" strength from the cursor
+const SPRING_CONSTANT = 0.0008; // Spring constant that returns points
+const DAMPING = 0.96; // Damping (resistance to motion)
 
 function init() {
   if (!canvasContainer.value) return;
 
   scene = new THREE.Scene();
 
-  // --- ДОДАНО ТУМАН ---
-  scene.fog = new THREE.FogExp2(0x000000, 0.4);
+  // --- FOG ADDED ---
+  scene.fog = new THREE.FogExp2(0x000000, 0.55);
 
   camera = new THREE.PerspectiveCamera(
     75,
@@ -47,25 +48,27 @@ function init() {
     0.1,
     1000
   );
-  camera.position.z = 5;
+  camera.position.z = 4;
 
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  renderer.setClearColor(0x000000, 0); // Встановлюємо прозорий фон
+  renderer.setClearColor(0x000000, 0); // Set transparent background
   renderer.setSize(
     canvasContainer.value.clientWidth,
     canvasContainer.value.clientHeight
   );
   canvasContainer.value.appendChild(renderer.domElement);
 
+  /*
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
+  */
 
-  const geometry = new THREE.SphereGeometry(1.5, 128, 128);
+  const geometry = new THREE.SphereGeometry(1.5, 256, 256);
   const positions = geometry.attributes.position.array;
   const originalPositions = new Float32Array(positions.length);
   velocities = new Float32Array(positions.length);
-  const colors = new Float32Array(positions.length); // Масив для кольорів
+  const colors = new Float32Array(positions.length); // Array for colors
 
   for (let i = 0; i < positions.length; i++) {
     originalPositions[i] = positions[i];
@@ -75,11 +78,11 @@ function init() {
     'originalPosition',
     new THREE.BufferAttribute(originalPositions, 3)
   );
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3)); // Додаємо атрибут кольору
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3)); // Add color attribute
 
   const material = new THREE.PointsMaterial({
-    vertexColors: true, // Вказуємо, що колір береться з атрибутів геометрії
-    size: 0.015,
+    vertexColors: true, // Specify that color is taken from geometry attributes
+    size: 0.008,
     blending: THREE.AdditiveBlending,
     transparent: true,
     opacity: 0.9,
@@ -123,6 +126,12 @@ function animate() {
 
   const elapsedTime = clock.getElapsedTime();
 
+  // --- Slow camera rotation added ---
+  const rotationSpeed = 0.06;
+  camera.position.x = Math.sin(elapsedTime * rotationSpeed) * 4;
+  camera.position.z = Math.cos(elapsedTime * rotationSpeed) * 4;
+  camera.lookAt(scene.position); // Camera always looks at the scene center
+
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObject(spherePoints);
 
@@ -147,9 +156,9 @@ function animate() {
 
   const frequency = 1.5,
     amplitude = 0.5,
-    timeFactor = 0.1;
-  const colorFrequency = 0.8,
-    colorTimeFactor = 0.2;
+    timeFactor = 0.08;
+  const colorFrequency = 0.4,
+    colorTimeFactor = 0.08;
 
   for (let i = 0; i < positions.length; i += 3) {
     const ox = originalPositions[i],
@@ -215,7 +224,7 @@ function animate() {
   spherePoints.geometry.attributes.color.needsUpdate = true;
   spherePoints.rotation.y += 0.0005;
 
-  controls.update();
+  // controls.update(); // Removed
   renderer.render(scene, camera);
 }
 
@@ -228,6 +237,7 @@ onUnmounted(() => {
   cancelAnimationFrame(animationFrameId);
   window.removeEventListener('resize', onWindowResize);
   if (renderer) {
+    // Remove event listener as OrbitControls is no longer used
     renderer.domElement.removeEventListener('mousemove', onDocumentMouseMove);
     renderer.dispose();
   }
@@ -255,7 +265,7 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  /* background-color: #050a14; видалено для прозорості */
+  /* background-color: #050a14; removed for transparency */
   font-family: 'Inter', sans-serif;
   position: relative;
 }
@@ -273,6 +283,6 @@ canvas {
   display: block;
   padding: 10px;
   background: rgba(0, 0, 0, 0.2);
-  pointer-events: none; // щоб не перехоплювати події миші
+  pointer-events: none; // to not intercept mouse events
 }
 </style>
