@@ -1,7 +1,9 @@
 import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
+import { useLoader } from '~/composables/useLoader';
 
-export const heroInitAnimation = (ctx) => {
+export const heroInitAnimation = (ctx, scrollSmoother) => {
+  const { stopLoading } = useLoader();
   /* ======== Player elements ========= */
   const playerPreview = '.video-player .player__preview';
   const playerDotsL = '.player__dots--tl, .player__dots--bl';
@@ -75,15 +77,26 @@ export const heroInitAnimation = (ctx) => {
     document
   );
 
+  const loaderElement = document.querySelector('.loader__animation');
+
   const ease1 = 'power3.out';
   const duration1 = 2;
   const easeCircle = 'power3.inOut';
 
   ctx.add(() => {
     gsap
-      .timeline({ delay: 1, paused: false })
-      // .timeScale(0.25)
+      .timeline()
       /* =======Player part ========= */
+      .to(loaderElement, {
+        scale: 0,
+        duration: 0.5,
+        ease: 'power3.out',
+        delay: 1.6,
+      })
+      .add(() => {
+        stopLoading();
+        scrollSmoother.value.paused(false);
+      })
       .from(
         playerPreview,
         {

@@ -7,7 +7,9 @@ console.log('animationRef', animationRef);
 
 <template>
   <div class="loader">
-    <Lottie ref="animationRef" class="loader__animation" :data="loaderData" />
+    <div class="loader__animation">
+      <Lottie ref="animationRef" :data="loaderData" />
+    </div>
   </div>
 </template>
 

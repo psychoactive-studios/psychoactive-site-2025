@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { partnersData } from '~/data/partnersData';
 import Circle from '../ui/Circle.vue';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
@@ -8,13 +8,16 @@ import gsap from 'gsap';
 
 import { heroInitAnimation } from '~/utils';
 
-const container = ref<HTMLElement | null>(null);
+const container = ref(null);
 let ctx;
 
+const scrollSmoother = inject('scrollSmoother');
+
 onMounted(() => {
+  scrollSmoother.value.paused(true);
   if (container.value) {
     ctx = gsap.context(() => {}, container.value);
-    heroInitAnimation(ctx);
+    heroInitAnimation(ctx, scrollSmoother);
   }
 });
 </script>
@@ -102,9 +105,7 @@ onMounted(() => {
         />
       </section>
     </div>
-    <div class="hero__player">
-      <h1 id="scooterok">Digital First design agency</h1>
-    </div>
+    <!-- <div class="hero__player"></div> -->
   </div>
 </template>
 
