@@ -6,7 +6,7 @@ import SoundButton from './SoundButton.vue';
 <template>
   <header>
     <NuxtLink to="/" class="logo">
-      <img src="/img/logo-1.svg" alt="psychoactive logo" />
+      <img id="header-logo" src="/img/logo-1.svg" alt="psychoactive logo" />
     </NuxtLink>
     <Navigation />
     <SoundButton />

@@ -65,7 +65,7 @@ defineProps({
     width: 100%;
     .player__dots {
       width: 1px;
-      transition: all 0.5s ease-out;
+      will-change: transform;
       &.player__dots--tl {
         top: 34%;
         left: 26.5%;
@@ -84,11 +84,11 @@ defineProps({
       }
     }
     .player__preview {
-      // clip-path: polygon(0% 20%, 100% 20%, 100% 80%, 0% 80%);
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
       border-radius: 20px;
       aspect-ratio: 3.376;
-      transition: all 0.5s ease-out;
       transform: scale(0.45);
+      will-change: transform;
       &_controls {
         .plus,
         span {

@@ -1,5 +1,5 @@
 <template>
-  <button class="sound-button">
+  <button id="header-sound-button" class="sound-button">
     <span />
   </button>
 </template>

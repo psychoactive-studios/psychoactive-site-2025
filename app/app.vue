@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import ScrollProvider from './components/layout/ScrollProvider.vue';
 </script>
 

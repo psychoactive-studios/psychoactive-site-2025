@@ -2,21 +2,37 @@
 import { partnersData } from '~/data/partnersData';
 import Circle from '../ui/Circle.vue';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
-import DotsArrowIcon from '~/assets/icons/icon-dots-arrow-down.svg';
 import VideoPlayer from '../ui/VideoPlayer.vue';
 import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
+import gsap from 'gsap';
+
+import { heroInitAnimation } from '~/utils';
+
+const container = ref<HTMLElement | null>(null);
+let ctx;
+
+onMounted(() => {
+  if (container.value) {
+    ctx = gsap.context(() => {}, container.value);
+    heroInitAnimation(ctx);
+  }
+});
 </script>
 
 <template>
   <div class="hero">
-    <div class="hero__intro">
+    <div ref="container" class="hero__intro">
       <section class="hero__intro_wrapper">
         <div class="scene">
           <Circle class="circle" />
           <div class="psychoactive">
-            psychoactive®
-            <PlusIcon class="psychoactive__icon psychoactive__icon--right" />
-            <PlusIcon class="psychoactive__icon psychoactive__icon--bottom" />
+            <div class="psychoactive__text">psychoactive®</div>
+            <div class="psychoactive__horizontal">
+              <PlusIcon class="psychoactive__icon" />
+            </div>
+            <div class="psychoactive__vertical">
+              <PlusIcon class="psychoactive__icon" />
+            </div>
           </div>
           <div class="top-text">
             <a href="https://webflow.com/@Psychoactive-Studios" target="_blank">
@@ -31,10 +47,14 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
           </div>
           <div class="center">
             <div class="center__line" />
-            <div class="center__dots center__dots--left" />
-            <div class="center__dots center__dots--right" />
-            <div class="center__text center__text--left">-41.2925°</div>
-            <div class="center__text center__text--right">174.7783°</div>
+            <div class="center__part center__part--left">
+              <div class="center__part_dot" />
+              <div class="center__text">-41.2925°</div>
+            </div>
+            <div class="center__part center__part--right">
+              <div class="center__part_dot" />
+              <div class="center__text">174.7783°</div>
+            </div>
             <div class="center__text center__text--play">PLAY REEL</div>
             <div class="center__text center__text--time">01:16 SEC</div>
           </div>
@@ -48,10 +68,18 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
             </div>
           </div>
           <div class="dots-arrow">
-            <DotsArrowIcon class="dots-arrow__icon" />
-            <PlusIcon class="dots-arrow__plus dots-arrow__plus--tr" />
+            <div class="dots-arrow__icon">
+              <span class="dots-arrow__icon_dot dots-arrow__icon_dot--1" />
+              <span class="dots-arrow__icon_dot dots-arrow__icon_dot--2" />
+              <span class="dots-arrow__icon_dot dots-arrow__icon_dot--3" />
+            </div>
+            <div class="dots-arrow__horizontal">
+              <PlusIcon class="dots-arrow__plus" />
+            </div>
+            <div class="dots-arrow__vertical">
+              <PlusIcon class="dots-arrow__plus" />
+            </div>
             <PlusIcon class="dots-arrow__plus dots-arrow__plus--br" />
-            <PlusIcon class="dots-arrow__plus dots-arrow__plus--bl" />
           </div>
 
           <HomeHero3DScene class="homehero-3d-scene" />
@@ -74,7 +102,9 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
         />
       </section>
     </div>
-    <div class="hero__player">222</div>
+    <div class="hero__player">
+      <h1 id="scooterok">Digital First design agency</h1>
+    </div>
   </div>
 </template>
 
@@ -84,7 +114,6 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
 @use '~/assets/styles/variables' as *;
 .hero__player {
   * {
-    color: red;
     fill: #fff;
   }
 }
@@ -101,6 +130,7 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
         aspect-ratio: 2.43;
         width: 100%;
         position: relative;
+        will-change: transform;
         .psychoactive {
           position: absolute;
           z-index: 2;
@@ -113,19 +143,32 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
           line-height: 1;
           text-transform: uppercase;
           padding: 0 48px 48px 0;
+          &__horizontal {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            visibility: hidden;
+            .psychoactive__icon {
+              left: 100%;
+            }
+          }
+          &__vertical {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 7px;
+            visibility: hidden;
+            .psychoactive__icon {
+              top: 100%;
+            }
+          }
           &__icon {
             position: absolute;
             width: 7px;
             height: 7px;
             stroke: white(50);
-            &--right {
-              top: 0;
-              right: 0;
-            }
-            &--bottom {
-              bottom: 0;
-              left: -3px;
-            }
           }
         }
         .grey-text {
@@ -135,6 +178,7 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
           font-weight: 400;
           line-height: 88%;
           letter-spacing: -0.2874vw;
+          will-change: transform;
         }
         .circle {
           position: absolute;
@@ -185,6 +229,7 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
             &-arrows {
               color: $color-grey;
               font-size: 5.5vw;
+              line-height: 0.5;
               position: absolute;
               top: 0;
               left: 95%;
@@ -201,21 +246,44 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
           &__line {
             background: white(10);
             height: 1px;
+            will-change: transform;
           }
-          &__dots {
+          &__part {
             position: absolute;
-            top: -3px;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: $color-dots;
+            top: 0;
+            width: 50%;
+            will-change: transform;
+            .center__text {
+              top: 10px;
+            }
+            &_dot {
+              width: 7px;
+              height: 7px;
+              border-radius: 50%;
+              background: $color-dots;
+              position: absolute;
+              top: -3px;
+            }
             &--left {
-              left: -3px;
+              left: 0;
+              .center__part_dot {
+                left: 0;
+              }
+              .center__text {
+                left: 0;
+              }
             }
             &--right {
-              right: -3px;
+              right: 0;
+              .center__part_dot {
+                right: 0;
+              }
+              .center__text {
+                right: 0;
+              }
             }
           }
+
           &__text {
             color: white(80);
             font-family: 'RoobertMono', sans-serif;
@@ -225,14 +293,6 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
             text-transform: uppercase;
             opacity: 0.5;
             position: absolute;
-            &--left {
-              left: 0;
-              top: 10px;
-            }
-            &--right {
-              right: 0;
-              top: 10px;
-            }
             &--play {
               left: 20%;
               top: 10px;
@@ -251,9 +311,31 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
           width: 62px;
           height: 62px;
           @include flex-center;
+          visibility: hidden;
           &__icon {
             width: 16px;
-            height: auto;
+            height: 16px;
+            position: relative;
+            &_dot {
+              display: block;
+              width: 6px;
+              height: 6px;
+              border-radius: 50%;
+              position: absolute;
+              background-color: $color-foreground;
+              &--1 {
+                top: 2px;
+                left: 1px;
+              }
+              &--2 {
+                top: 2px;
+                right: 1px;
+              }
+              &--3 {
+                bottom: 1px;
+                left: calc(50% - 3px);
+              }
+            }
           }
           &__plus {
             position: absolute;
@@ -273,6 +355,20 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
               left: 0;
             }
           }
+          &__horizontal {
+            position: absolute;
+            bottom: 0.125em;
+            right: 0;
+            width: 100%;
+            height: 7px;
+          }
+          &__vertical {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 7px;
+            height: 100%;
+          }
         }
         .video-player {
           position: absolute;
@@ -290,6 +386,7 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
           transform: translate(-50%, -50%);
           width: 100%;
           height: 150%;
+          will-change: transform;
         }
       }
     }
@@ -297,6 +394,7 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
       display: flex;
       justify-content: space-between;
       align-items: center;
+      will-change: transform;
       img {
         height: auto;
         object-fit: contain;
