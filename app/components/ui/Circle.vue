@@ -40,6 +40,7 @@
 
 <style lang="scss">
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/variables' as *;
 
 .circle-path-1,
 .circle-path-2 {
@@ -66,7 +67,7 @@
     position: absolute;
     width: 7px;
     height: 7px;
-    background: white(50);
+    background: $color-dots;
     border-radius: 50%;
   }
   &::before {

@@ -8,7 +8,7 @@ export default defineNuxtConfig({
       enabled: true
     }
   },
-  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo'],
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo', 'nuxt-lottie'],
   css: ['modern-normalize/modern-normalize.css', '~/assets/styles/main.scss'],
   app: {
     head: {

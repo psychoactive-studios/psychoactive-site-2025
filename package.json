@@ -15,9 +15,13 @@
     "@nuxt/scripts": "^0.11.13",
     "@unhead/vue": "^2.0.14",
     "eslint": "^9.35.0",
+    "gsap": "^3.13.0",
     "modern-normalize": "^3.0.1",
     "nuxt": "^4.1.1",
+    "nuxt-lottie": "^1.0.5",
     "nuxt-svgo": "^4.2.6",
+    "simplex-noise": "^4.0.3",
+    "three": "^0.180.0",
     "vue": "^3.5.21",
     "vue-router": "^4.5.1"
   },

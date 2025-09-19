@@ -1,6 +1,6 @@
 <template>
   <nav class="navigation">
-    <button class="navigation__button">
+    <button id="header-navigation-button" class="navigation__button">
       <span />
       <span />
       <span />
