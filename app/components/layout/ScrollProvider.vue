@@ -1,11 +1,6 @@
 <script setup>
 import { onMounted, provide } from 'vue';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-
-// Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const scrollSmoother = ref(null);
 

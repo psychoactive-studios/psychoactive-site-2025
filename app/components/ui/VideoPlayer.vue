@@ -37,7 +37,7 @@ defineProps({
     <div class="player__preview_controls">
       <PlusIcon class="plus" />
       <PlusIcon class="plus" />
-      <span>PLAY REEL</span>
+      <div class="play-reel-text">PLAY REEL</div>
       <button
         :class="[
           'play-button',
@@ -47,7 +47,7 @@ defineProps({
       >
         <PlayIcon />
       </button>
-      <span>00:47 sec</span>
+      <div class="play-time-text">00:47 sec</div>
       <PlusIcon class="plus" />
       <PlusIcon class="plus" />
     </div>
@@ -75,11 +75,11 @@ defineProps({
         right: 26.5%;
       }
       &.player__dots--bl {
-        top: 66%;
+        bottom: 33%;
         left: 26.5%;
       }
       &.player__dots--br {
-        top: 66%;
+        bottom: 33%;
         right: 26.5%;
       }
     }
@@ -91,7 +91,8 @@ defineProps({
       will-change: transform;
       &_controls {
         .plus,
-        span {
+        .play-reel-text,
+        .play-time-text {
           visibility: hidden;
         }
       }
@@ -122,6 +123,7 @@ defineProps({
     width: 7px;
     height: 7px;
     color: white(50);
+    margin: 0;
   }
   &__dots {
     position: absolute;
@@ -175,6 +177,7 @@ defineProps({
   }
   &__preview {
     @include flex-center;
+    width: 100%;
     position: relative;
     border-radius: 10px;
     overflow: hidden;
@@ -182,9 +185,10 @@ defineProps({
     &_video {
       aspect-ratio: inherit;
       object-fit: cover;
+      width: 100%;
     }
     &_overlay {
-      background: url('/img/video-player-dots-overlay.svg') repeat center;
+      background: url('/img/video-player-dots-overlay.svg') repeat;
       position: absolute;
       inset: 0;
     }
@@ -196,7 +200,8 @@ defineProps({
       transform: translateY(-50%);
       font-family: 'RoobertMono', sans-serif;
       text-transform: uppercase;
-      span {
+      .play-reel-text,
+      .play-time-text {
         color: white(80);
       }
       .play-button {
