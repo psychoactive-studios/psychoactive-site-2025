@@ -84,10 +84,9 @@ defineProps({
       }
     }
     .player__preview {
-      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+      clip-path: inset(20% 0% round 20px);
       border-radius: 20px;
-      aspect-ratio: 3.376;
-      transform: scale(0.45);
+      // aspect-ratio: 3.376;
       will-change: transform;
       &_controls {
         .plus,

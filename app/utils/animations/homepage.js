@@ -129,7 +129,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
       .from(
         playerPreview,
         {
-          clipPath: 'polygon(50% 0%, 50% 0%, 50% 100%, 50% 100%)',
+          clipPath: 'inset(20% 50% round 20px)',
           duration: duration1,
           ease: ease1,
         },
@@ -419,15 +419,14 @@ export const heroScrollAnimation = (ctx) => {
   ctx.add(() => {
     gsap
       .timeline({
-        // scrollTrigger: {
-        //   trigger: '.hero__intro',
-        //   pin: true, // pin the trigger element while active
-        //   // pinSpacing: true,
-        //   start: 'top top', // when the top of the trigger hits the top of the viewport
-        //   end: 'bottom', // end after scrolling 500px beyond the start
-        //   scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-        //   markers: true,
-        // },
+        scrollTrigger: {
+          trigger: '.hero__intro',
+          pin: true, // pin the trigger element while active
+          start: 'top top', // when the top of the trigger hits the top of the viewport
+          end: 'bottom 15%', // end after scrolling 500px beyond the start
+          scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+          markers: true,
+        },
       })
       .to(
         scaleText,
@@ -542,6 +541,7 @@ export const heroScrollAnimation = (ctx) => {
         { yPercent: 300, duration: 1, ease: 'power4.out' },
         'output-of-elements'
       )
+      /* ======= Player part ========= */
       .to(
         '.player__dots--tl',
         { top: -48, left: -48, duration: outputTime, ease: 'power4.out' },
@@ -581,7 +581,7 @@ export const heroScrollAnimation = (ctx) => {
         playerPreview,
         {
           scale: 1,
-          aspectRatio: 2.222,
+          clipPath: 'inset(0% 0% round 20px)',
           duration: outputTime + 0.5,
           ease: 'power4.out',
         },

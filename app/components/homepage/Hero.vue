@@ -18,7 +18,6 @@ let ctx;
 const scrollSmoother = inject('scrollSmoother');
 
 onMounted(() => {
-  scrollSmoother.value.paused(true);
   if (container.value) {
     ctx = gsap.context(() => {}, container.value);
     heroInitSplitText();
@@ -32,8 +31,8 @@ const scrollOnClick = () => {
 </script>
 
 <template>
-  <div class="hero" @click="scrollOnClick">
-    <div ref="container" class="hero__intro">
+  <div ref="container" class="hero" @click="scrollOnClick">
+    <div class="hero__intro">
       <section class="hero__intro_wrapper">
         <div class="scene">
           <Circle class="circle" />

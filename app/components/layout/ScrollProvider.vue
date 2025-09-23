@@ -11,6 +11,7 @@ onMounted(() => {
     // effects: true,
     normalizeScroll: true,
   });
+  scrollSmoother.value.paused(true);
 });
 
 // Provide the ScrollSmoother instance to child components
