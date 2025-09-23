@@ -546,6 +546,7 @@ export const heroScrollAnimation = (ctx) => {
         { yPercent: 300, duration: 1, ease: 'power1.out' },
         'output-of-elements'
       )
+      .set(partnersLogos, { visibility: 'hidden' })
       /* ======= Player part ========= */
       .to(
         '.player__dots--tl',
