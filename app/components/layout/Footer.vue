@@ -9,7 +9,9 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
       <ul class="links">
         <template v-for="(link, index) in footerData.links" :key="link.title">
           <li class="link">
-            <NuxtLink :to="link.url">{{ link.title }}</NuxtLink>
+            <!-- <NuxtLink :to="link.url">{{ link.title }}</NuxtLink> -->
+            <!-- TODO: fix NuxtLink -->
+            <a :href="link.url">{{ link.title }}</a>
           </li>
           <li v-if="index < footerData.links.length - 1" class="separator" />
         </template>

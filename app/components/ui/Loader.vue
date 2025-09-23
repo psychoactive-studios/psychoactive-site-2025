@@ -1,8 +1,6 @@
 <script setup>
 import loaderData from '~/assets/lottie/logo-V02.json';
-
 const animationRef = ref(null);
-console.log('animationRef', animationRef);
 </script>
 
 <template>

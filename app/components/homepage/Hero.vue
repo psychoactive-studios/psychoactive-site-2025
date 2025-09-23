@@ -6,7 +6,11 @@ import VideoPlayer from '../ui/VideoPlayer.vue';
 import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
 import gsap from 'gsap';
 
-import { heroInitAnimation } from '~/utils';
+import {
+  heroInitSplitText,
+  heroInitAnimation,
+  heroScrollAnimation,
+} from '~/utils';
 
 const container = ref(null);
 let ctx;
@@ -14,17 +18,21 @@ let ctx;
 const scrollSmoother = inject('scrollSmoother');
 
 onMounted(() => {
-  scrollSmoother.value.paused(true);
   if (container.value) {
     ctx = gsap.context(() => {}, container.value);
+    heroInitSplitText();
     heroInitAnimation(ctx, scrollSmoother);
   }
 });
+
+// const scrollOnClick = () => {
+//   heroScrollAnimation(ctx);
+// };
 </script>
 
 <template>
-  <div class="hero">
-    <div ref="container" class="hero__intro">
+  <div ref="container" class="hero">
+    <div class="hero__intro">
       <section class="hero__intro_wrapper">
         <div class="scene">
           <Circle class="circle" />
@@ -96,16 +104,18 @@ onMounted(() => {
         </div>
       </section>
       <section class="hero__intro_partners">
-        <NuxtImg
-          v-for="partner in partnersData"
-          :key="partner.id"
-          :src="partner.logo"
-          :alt="partner.name"
-          :class="partner.id"
-        />
+        <div class="list">
+          <NuxtImg
+            v-for="partner in partnersData"
+            :key="partner.id"
+            :src="partner.logo"
+            :alt="partner.name"
+            :class="partner.id"
+          />
+        </div>
       </section>
     </div>
-    <!-- <div class="hero__player"></div> -->
+    <!-- <div class="hero__player" /> -->
   </div>
 </template>
 
@@ -123,7 +133,8 @@ onMounted(() => {
     height: 100dvh;
     display: flex;
     flex-direction: column;
-    padding: 0 0 48px 0;
+    padding: 0;
+    // padding: 0 0 48px 0;
     &_wrapper {
       flex-grow: 1;
       @include flex-center;
@@ -392,10 +403,13 @@ onMounted(() => {
       }
     }
     &_partners {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       will-change: transform;
+      .list {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 48px;
+      }
       img {
         height: auto;
         object-fit: contain;
@@ -433,8 +447,8 @@ onMounted(() => {
     }
   }
   &__player {
-    height: 100dvh;
-    @include flex-center;
+    background-color: red;
+    height: calc(100vh - 48px - 48px);
   }
 }
 </style>
