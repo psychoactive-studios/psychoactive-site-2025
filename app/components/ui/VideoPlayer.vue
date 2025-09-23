@@ -86,7 +86,7 @@ defineProps({
     .player__preview {
       clip-path: inset(20% 0% round 20px);
       border-radius: 20px;
-      // aspect-ratio: 3.376;
+      transform: scale(0.45);
       will-change: transform;
       &_controls {
         .plus,

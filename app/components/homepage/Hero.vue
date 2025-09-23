@@ -25,13 +25,13 @@ onMounted(() => {
   }
 });
 
-const scrollOnClick = () => {
-  heroScrollAnimation(ctx);
-};
+// const scrollOnClick = () => {
+//   heroScrollAnimation(ctx);
+// };
 </script>
 
 <template>
-  <div ref="container" class="hero" @click="scrollOnClick">
+  <div ref="container" class="hero">
     <div class="hero__intro">
       <section class="hero__intro_wrapper">
         <div class="scene">

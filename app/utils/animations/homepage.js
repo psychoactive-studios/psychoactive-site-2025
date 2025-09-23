@@ -115,7 +115,12 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 
   ctx.add(() => {
     gsap
-      .timeline({ onComplete: () => scrollSmoother.value.paused(false) })
+      .timeline({
+        onComplete: () => {
+          heroScrollAnimation(ctx);
+          scrollSmoother.value.paused(false);
+        },
+      })
       .to(loaderElement, {
         scale: 0,
         duration: 0.5,
@@ -411,10 +416,10 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
   });
 };
 
-const outputTime = 1.3;
 /* ====================================================
                   Scroll animation
 =======================================================*/
+const outputTime = 1.3;
 export const heroScrollAnimation = (ctx) => {
   ctx.add(() => {
     gsap
@@ -423,25 +428,25 @@ export const heroScrollAnimation = (ctx) => {
           trigger: '.hero__intro',
           pin: true, // pin the trigger element while active
           start: 'top top', // when the top of the trigger hits the top of the viewport
-          end: 'bottom 15%', // end after scrolling 500px beyond the start
+          end: 'bottom top', // end after scrolling 500px beyond the start
           scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
           markers: true,
         },
       })
       .to(
         scaleText,
-        { xPercent: -175, duration: outputTime, ease: 'power4.out' },
+        { xPercent: -175, duration: outputTime, ease: 'power1.out' },
         'output-of-elements'
       )
       .to(
         imagineContainer,
-        { xPercent: -125, duration: outputTime, ease: 'power2.out' },
+        { xPercent: -125, duration: outputTime },
         'output-of-elements'
       )
       /* ======= Top text part ========= */
       .to(
         labelImage,
-        { xPercent: 175, duration: outputTime, ease: 'power4.out' },
+        { xPercent: 175, duration: outputTime, ease: 'power1.out' },
         'output-of-elements'
       )
       .to(
@@ -458,7 +463,7 @@ export const heroScrollAnimation = (ctx) => {
       )
       .to(
         innovationContainer,
-        { xPercent: 175, duration: outputTime, ease: 'power4.out' },
+        { xPercent: 175, duration: outputTime, ease: 'power1.out' },
         'output-of-elements'
       )
       /* ======= Psychoactive part ========= */
@@ -495,13 +500,13 @@ export const heroScrollAnimation = (ctx) => {
       /* ======= Canvas part ========= */
       .to(
         canvas,
-        { scale: 0.4, duration: outputTime, ease: 'power4.out' },
+        { scale: 0.4, duration: outputTime, ease: 'power1.out' },
         'output-of-elements'
       )
       /* ======= Circle part ========= */
       .to(
         circleContainer,
-        { rotate: 120, opacity: 0, duration: outputTime, ease: 'power4.out' },
+        { rotate: 120, opacity: 0, duration: outputTime, ease: 'power1.out' },
         'output-of-elements'
       )
       /* ======= Center line part ========= */
@@ -533,28 +538,28 @@ export const heroScrollAnimation = (ctx) => {
       /* ======= Partners part ========= */
       .to(
         partnersContainer,
-        { height: 0, duration: 1, ease: 'power4.out' },
+        { height: 0, duration: 1, ease: 'power1.out' },
         'output-of-elements'
       )
       .to(
         partnersLogos,
-        { yPercent: 300, duration: 1, ease: 'power4.out' },
+        { yPercent: 300, duration: 1, ease: 'power1.out' },
         'output-of-elements'
       )
       /* ======= Player part ========= */
       .to(
         '.player__dots--tl',
-        { top: -48, left: -48, duration: outputTime, ease: 'power4.out' },
+        { top: -48, left: -48, duration: outputTime, ease: 'power1.out' },
         'output-of-elements'
       )
       .to(
         '.player__dots--tr',
-        { top: -48, right: -48, duration: outputTime, ease: 'power4.out' },
+        { top: -48, right: -48, duration: outputTime, ease: 'power1.out' },
         'output-of-elements'
       )
       .to(
         '.player__dots--bl',
-        { bottom: -48, left: -48, duration: outputTime, ease: 'power4.out' },
+        { bottom: -48, left: -48, duration: outputTime, ease: 'power1.out' },
         'output-of-elements'
       )
       .to(
@@ -563,7 +568,7 @@ export const heroScrollAnimation = (ctx) => {
           bottom: -48,
           right: -48,
           duration: outputTime + 0.5,
-          ease: 'power4.out',
+          ease: 'power1.out',
         },
         'output-of-elements'
       )
@@ -574,7 +579,7 @@ export const heroScrollAnimation = (ctx) => {
           '.player__dots--bl',
           '.player__dots--br',
         ]),
-        { width: 140, duration: 1, ease: 'power4.out' },
+        { width: 140, duration: 1, ease: 'power1.out' },
         'output-of-elements+=0.75'
       )
       .to(
@@ -582,8 +587,9 @@ export const heroScrollAnimation = (ctx) => {
         {
           scale: 1,
           clipPath: 'inset(0% 0% round 20px)',
+          // aspectRatio: 2.222,
           duration: outputTime + 0.5,
-          ease: 'power4.out',
+          ease: 'power1.out',
         },
         'output-of-elements'
       )
@@ -623,12 +629,4 @@ export const heroScrollAnimation = (ctx) => {
         'output-of-elements+=0.3'
       );
   });
-
-  // playerControlTexts
-  // const playerPreview = '.video-player .player__preview';
-  // const playerDotsL = '.player__dots--tl, .player__dots--bl';
-  // const playerDotsR = '.player__dots--tr, .player__dots--br';
-  // const playerButton = '.video-player .play-button';
-
-  console.log('heroScrollAnimation click!!!!');
 };
