@@ -2,15 +2,11 @@
 import { partnersData } from '~/data/partnersData';
 import Circle from '../ui/Circle.vue';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
-import VideoPlayer from '../ui/VideoPlayer.vue';
 import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
 import gsap from 'gsap';
 
-import {
-  heroInitSplitText,
-  heroInitAnimation,
-  heroScrollAnimation,
-} from '~/utils';
+import { heroInitSplitText, heroInitAnimation } from '~/utils';
+import VideoPreview from '../ui/VideoPreview.vue';
 
 const container = ref(null);
 let ctx;
@@ -95,10 +91,10 @@ onMounted(() => {
 
           <HomeHero3DScene class="homehero-3d-scene" />
 
-          <VideoPlayer
+          <VideoPreview
             class="video-player homehero-prepared"
             preview="/video/short-planet-reel-ps.mp4"
-            src="/video/short-planet-reel-ps.mp4"
+            src="https://vjs.zencdn.net/v/oceans.mp4"
             transparent-button
           />
         </div>
