@@ -1,5 +1,6 @@
 import gsap from 'gsap';
 import { RoughEase } from 'gsap/EasePack';
+import { Flip } from 'gsap/Flip';
 import ScrambleTextPlugin from 'gsap/ScrambleTextPlugin';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
@@ -14,7 +15,8 @@ export default defineNuxtPlugin(() => {
       ScrollToPlugin,
       ScrambleTextPlugin,
       RoughEase,
-      SplitText
+      SplitText,
+      Flip
     );
   }
 });

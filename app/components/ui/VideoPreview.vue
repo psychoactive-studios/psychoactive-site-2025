@@ -2,6 +2,8 @@
 import PlusIcon from '~/assets/icons/icon-plus.svg';
 import PlayIcon from '~/assets/icons/icon-play.svg';
 
+import useVideoPlayer from '~/composables/useVideoPlayer';
+
 defineProps({
   preview: {
     type: String,
@@ -15,7 +17,14 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  customHandler: {
+    type: Function,
+    default: null,
+  },
 });
+
+const playerContainerRef = ref(null);
+const { isFullScreen, onPlayerOpen } = useVideoPlayer();
 </script>
 <template>
   <div class="player">
@@ -23,33 +32,45 @@ defineProps({
     <div class="player__dots player__dots--tr" />
     <div class="player__dots player__dots--bl" />
     <div class="player__dots player__dots--br" />
-    <div class="player__preview">
-      <video
-        class="player__preview_video"
-        :src="preview"
-        autoplay
-        loop
-        muted
-        playsinline
-      />
-      <div class="player__preview_overlay" />
-    </div>
-    <div class="player__preview_controls">
-      <PlusIcon class="plus" />
-      <PlusIcon class="plus" />
-      <div class="play-reel-text">PLAY REEL</div>
-      <button
-        :class="[
-          'play-button',
-          { 'play-button--transparent': transparentButton },
-        ]"
-        aria-label="Play video"
-      >
-        <PlayIcon />
-      </button>
-      <div class="play-time-text">00:47 sec</div>
-      <PlusIcon class="plus" />
-      <PlusIcon class="plus" />
+
+    <div
+      ref="playerContainerRef"
+      :class="['player__container', { active: !isFullScreen }]"
+      data-flip-id="video-player"
+    >
+      <div class="player__preview">
+        <video
+          class="player__preview_video"
+          :src="preview"
+          autoplay
+          loop
+          muted
+          playsinline
+        />
+        <div class="player__preview_overlay" />
+      </div>
+      <div class="player__preview_controls">
+        <PlusIcon class="plus" />
+        <PlusIcon class="plus" />
+        <div class="play-reel-text">PLAY REEL</div>
+        <button
+          :class="[
+            'play-button',
+            { 'play-button--transparent': transparentButton },
+          ]"
+          aria-label="Play video"
+          @click="
+            customHandler
+              ? customHandler(playerContainerRef)
+              : onPlayerOpen(playerContainerRef)
+          "
+        >
+          <PlayIcon />
+        </button>
+        <div class="play-time-text">00:47 sec</div>
+        <PlusIcon class="plus" />
+        <PlusIcon class="plus" />
+      </div>
     </div>
   </div>
 </template>
@@ -82,6 +103,12 @@ defineProps({
         bottom: 33%;
         right: 26.5%;
       }
+    }
+    .player__main {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      opacity: 0;
     }
     .player__preview {
       clip-path: inset(20% 0% round 20px);
@@ -174,9 +201,24 @@ defineProps({
       transform-origin: right;
     }
   }
+  &__container {
+    position: relative;
+    aspect-ratio: inherit;
+    @include flex-center;
+    display: none;
+    &.active {
+      display: flex;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
   &__preview {
     @include flex-center;
     width: 100%;
+    height: 100%;
     position: relative;
     border-radius: 10px;
     overflow: hidden;
@@ -210,10 +252,37 @@ defineProps({
         border-radius: getRem(48);
         background-color: $color-foreground;
         color: $color-background;
-        transition: background-color 0.5s ease, color 0.5s ease;
+        &::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: getRem(48);
+          z-index: 1;
+          transform: scale(0);
+          transition: transform 0.5s cubic-bezier(0, 0, 0.02, 0.99);
+          will-change: transform;
+        }
         &--transparent {
           background-color: transparent;
           color: $color-foreground;
+          .nuxt-icon {
+            position: relative;
+            z-index: 1;
+            transition: color 0.5s cubic-bezier(0, 0, 0.02, 0.99);
+          }
+          &::before {
+            background: $color-foreground;
+          }
+          &:hover {
+            .nuxt-icon {
+              color: $color-background;
+            }
+          }
+        }
+        &:hover {
+          &::before {
+            transform: scale(1);
+          }
         }
       }
     }

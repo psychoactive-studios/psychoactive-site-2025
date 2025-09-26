@@ -1,21 +1,13 @@
 <script setup>
-import { onMounted, provide } from 'vue';
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { onMounted } from 'vue';
+import useScrollSmoother from '~/composables/useScrollSmoother';
 
-const scrollSmoother = ref(null);
+const { initScrollSmoother } = useScrollSmoother();
 
 onMounted(() => {
   // Initialize ScrollSmoother when the component is mounted
-  scrollSmoother.value = ScrollSmoother.create({
-    smooth: 2,
-    // effects: true,
-    normalizeScroll: true,
-  });
-  scrollSmoother.value.paused(true);
+  initScrollSmoother();
 });
-
-// Provide the ScrollSmoother instance to child components
-provide('scrollSmoother', scrollSmoother);
 </script>
 
 <template>

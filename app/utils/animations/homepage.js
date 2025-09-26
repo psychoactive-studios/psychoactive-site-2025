@@ -115,12 +115,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 
   ctx.add(() => {
     gsap
-      .timeline({
-        onComplete: () => {
-          heroScrollAnimation(ctx);
-          scrollSmoother.value.paused(false);
-        },
-      })
+      .timeline()
       .to(loaderElement, {
         scale: 0,
         duration: 0.5,
@@ -406,13 +401,18 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
       .from(
         dotsArrowIcon,
         {
-          autoAlpha: 0,
+          opacity: 0,
           duration: 2,
           stagger: { each: 0.05, from: 'random' },
-          ease: "rough({ template: circ.easeOut, strength: 5, points: 20, taper: 'out', randomize: true, clamp:  true})",
+          ease: "rough({ template: power1.out, strength: 5, points: 20, taper: 'none', randomize: true, clamp: false})",
         },
         'finalPart'
-      );
+      )
+      // The '-=1' offset ensures heroScrollAnimation and scrollSmoother resume 1 second before the timeline ends for a smoother transition.
+      .add(() => {
+        heroScrollAnimation(ctx);
+        scrollSmoother.value.paused(false);
+      }, '-=1');
   });
 };
 
@@ -425,6 +425,7 @@ export const heroScrollAnimation = (ctx) => {
     gsap
       .timeline({
         scrollTrigger: {
+          id: 'homepage-hero-scrolltrigger',
           trigger: '.hero__intro',
           pin: true, // pin the trigger element while active
           start: 'top top', // when the top of the trigger hits the top of the viewport

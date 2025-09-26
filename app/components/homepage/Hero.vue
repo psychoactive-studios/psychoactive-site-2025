@@ -2,20 +2,20 @@
 import { partnersData } from '~/data/partnersData';
 import Circle from '../ui/Circle.vue';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
-import VideoPlayer from '../ui/VideoPlayer.vue';
 import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
 import gsap from 'gsap';
+import useVideoPlayer from '~/composables/useVideoPlayer';
 
-import {
-  heroInitSplitText,
-  heroInitAnimation,
-  heroScrollAnimation,
-} from '~/utils';
+import { heroInitSplitText, heroInitAnimation } from '~/utils';
+import VideoPreview from '../ui/VideoPreview.vue';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import useScrollSmoother from '~/composables/useScrollSmoother';
+
+const { disableScroll, scrollSmoother } = useScrollSmoother();
+const { onPlayerOpen } = useVideoPlayer();
 
 const container = ref(null);
 let ctx;
-
-const scrollSmoother = inject('scrollSmoother');
 
 onMounted(() => {
   if (container.value) {
@@ -25,9 +25,41 @@ onMounted(() => {
   }
 });
 
-// const scrollOnClick = () => {
-//   heroScrollAnimation(ctx);
-// };
+const MAX_SCROLL_DURATION = 1.5; // Maximum duration (in seconds) for scroll animation
+
+const onPlayVideoHandler = (playerContainerRef) => {
+  // Get ScrollTrigger by ID
+  const trigger = ScrollTrigger.getById('homepage-hero-scrolltrigger');
+
+  // Check if scrollSmoother and trigger exist
+  if (!scrollSmoother.value || !trigger) return;
+
+  // Get the current progress of the ScrollTrigger
+  const progress = trigger?.progress;
+
+  // If the animation is already complete, just open the video player
+  if (progress === 1) {
+    disableScroll();
+    onPlayerOpen(playerContainerRef);
+    return;
+  }
+
+  // Calculate the target scroll position based on progress
+  const y = trigger?.end;
+  // Duration is proportional to the remaining scroll distance
+  const duration = MAX_SCROLL_DURATION * (1 - progress);
+
+  // Smoothly scroll to the target position and then open the video player
+  gsap
+    .timeline()
+    .to(scrollSmoother.value, {
+      scrollTop: y,
+      duration,
+      ease: 'power3.inOut',
+      onComplete: () => disableScroll(),
+    })
+    .add(() => onPlayerOpen(playerContainerRef));
+};
 </script>
 
 <template>
@@ -95,11 +127,12 @@ onMounted(() => {
 
           <HomeHero3DScene class="homehero-3d-scene" />
 
-          <VideoPlayer
+          <VideoPreview
             class="video-player homehero-prepared"
             preview="/video/short-planet-reel-ps.mp4"
-            src="/video/short-planet-reel-ps.mp4"
+            src="https://vjs.zencdn.net/v/oceans.mp4"
             transparent-button
+            :custom-handler="onPlayVideoHandler"
           />
         </div>
       </section>
