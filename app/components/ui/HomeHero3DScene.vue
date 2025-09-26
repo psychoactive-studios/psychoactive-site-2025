@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import * as THREE from 'three';
 import { createNoise3D } from 'simplex-noise';
+import { useDebounceFn, useEventListener } from '@vueuse/core';
 
 const canvasElement = ref(null);
 
@@ -11,6 +12,7 @@ let spherePoints;
 const clock = new THREE.Clock();
 const simplex = createNoise3D();
 let animationFrameId;
+let removeResizeListener; // Додаємо змінну для зберігання функції відписки
 
 // --- Gradient color palette ---
 const colorPalette = [
@@ -100,14 +102,13 @@ function init() {
 
   raycaster.params.Points.threshold = 0.15;
 
-  window.addEventListener('resize', onWindowResize, false);
+  // Save the unsubscribe function for resize event
+  removeResizeListener = useEventListener(window, 'resize', onWindowResize);
   canvasElement.value.addEventListener('mousemove', onDocumentMouseMove, false);
 }
 
-function onWindowResize() {
+const onWindowResize = useDebounceFn(() => {
   if (!canvasElement.value) return;
-  console.log('Window resized');
-
   camera.aspect =
     canvasElement.value.clientWidth / canvasElement.value.clientHeight;
   camera.updateProjectionMatrix();
@@ -116,7 +117,7 @@ function onWindowResize() {
     canvasElement.value.clientHeight,
     false // Don't update canvas style
   );
-}
+}, 200);
 
 function onDocumentMouseMove(event) {
   if (!canvasElement.value) return;
@@ -244,7 +245,12 @@ onMounted(() => {
 
 onUnmounted(() => {
   cancelAnimationFrame(animationFrameId);
-  window.removeEventListener('resize', onWindowResize);
+
+  // Remove resize event listeners
+  if (removeResizeListener) {
+    removeResizeListener();
+  }
+
   if (canvasElement.value) {
     canvasElement.value.removeEventListener('mousemove', onDocumentMouseMove);
   }
