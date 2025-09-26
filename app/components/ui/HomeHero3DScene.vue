@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, ref, nextTick } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import * as THREE from 'three';
 import { createNoise3D } from 'simplex-noise';
 
@@ -19,7 +19,7 @@ const colorPalette = [
   new THREE.Color('#23CF48'),
   new THREE.Color('#17FFFF'),
   new THREE.Color('#0646FF'),
-  // new THREE.Color('#101012'),
+  new THREE.Color('#101012'),
 ];
 
 // --- Interactivity variables ---
@@ -34,30 +34,6 @@ const PUSH_STRENGTH = 0.03; // "Push" strength from the cursor
 const SPRING_CONSTANT = 0.0008; // Spring constant that returns points
 const DAMPING = 0.96; // Damping (resistance to motion)
 
-function getCanvasSize() {
-  const canvas = canvasElement.value;
-  const container = canvas && canvas.parentElement;
-  return {
-    width: container ? container.clientWidth : 0,
-    height: container ? container.clientHeight : 0,
-  };
-}
-
-function updateRendererSize() {
-  if (!renderer || !canvasElement.value) return;
-
-  const { width, height } = getCanvasSize();
-  const pixelRatio = Math.min(window.devicePixelRatio, 2);
-
-  renderer.setSize(width, height, false);
-  renderer.setPixelRatio(pixelRatio);
-
-  if (camera) {
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-  }
-}
-
 function init() {
   if (!canvasElement.value) return;
 
@@ -66,9 +42,12 @@ function init() {
   // --- FOG ADDED ---
   scene.fog = new THREE.FogExp2(0x000000, 0.55);
 
-  const { width, height } = getCanvasSize();
-
-  camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+  camera = new THREE.PerspectiveCamera(
+    75,
+    canvasElement.value.clientWidth / canvasElement.value.clientHeight,
+    0.1,
+    1000
+  );
   camera.position.z = 4;
 
   renderer = new THREE.WebGLRenderer({
@@ -78,8 +57,12 @@ function init() {
   });
   renderer.setClearColor(0x000000, 0); // Set transparent background
 
-  // Properly set size and pixel ratio for sharp rendering
-  updateRendererSize();
+  renderer.setSize(
+    canvasElement.value.clientWidth,
+    canvasElement.value.clientHeight,
+    false // не міняє inline-стилі canvas
+  );
+  renderer.setPixelRatio(window.devicePixelRatio);
 
   /*
   controls = new OrbitControls(camera, renderer.domElement);
@@ -122,7 +105,17 @@ function init() {
 }
 
 function onWindowResize() {
-  updateRendererSize();
+  if (!canvasElement.value) return;
+  console.log('Window resized');
+
+  camera.aspect =
+    canvasElement.value.clientWidth / canvasElement.value.clientHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(
+    canvasElement.value.clientWidth,
+    canvasElement.value.clientHeight,
+    false // Don't update canvas style
+  );
 }
 
 function onDocumentMouseMove(event) {
@@ -245,10 +238,8 @@ function animate() {
 }
 
 onMounted(() => {
-  nextTick(() => {
-    init();
-    animate();
-  });
+  init();
+  animate();
 });
 
 onUnmounted(() => {
@@ -277,7 +268,7 @@ onUnmounted(() => {
 
 <template>
   <div class="scene-container">
-    <canvas ref="canvasElement" class="scene-canvas" />
+    <canvas ref="canvasElement" class="three-canvas" />
   </div>
 </template>
 
@@ -290,9 +281,21 @@ onUnmounted(() => {
   position: relative;
 }
 
-.scene-canvas {
+.three-canvas {
   width: 100%;
   height: 100%;
   display: block;
+}
+
+.info {
+  position: absolute;
+  top: 10px;
+  width: 100%;
+  text-align: center;
+  z-index: 100;
+  display: block;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  pointer-events: none; // to not intercept mouse events
 }
 </style>
