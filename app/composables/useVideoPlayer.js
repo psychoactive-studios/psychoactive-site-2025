@@ -4,7 +4,7 @@ import { Flip } from 'gsap/Flip';
 import { ref } from 'vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
-const { disableScroll, enableScroll } = useScrollSmoother();
+const { enableScroll } = useScrollSmoother();
 
 const isFullScreen = ref(false);
 const currentPreview = ref(null);
@@ -51,9 +51,6 @@ export default function () {
     const videoPlayer = videoPlayerModalRef.value.querySelector(
       '.player__main_video'
     );
-
-    // Disable scrolling
-    disableScroll();
 
     currentPreview.value = previewElement;
     // get the state of the elements before the transition

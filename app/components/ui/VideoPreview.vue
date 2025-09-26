@@ -17,6 +17,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  customHandler: {
+    type: Function,
+    default: null,
+  },
 });
 
 const playerContainerRef = ref(null);
@@ -55,7 +59,11 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
             { 'play-button--transparent': transparentButton },
           ]"
           aria-label="Play video"
-          @click="onPlayerOpen(playerContainerRef)"
+          @click="
+            customHandler
+              ? customHandler(playerContainerRef)
+              : onPlayerOpen(playerContainerRef)
+          "
         >
           <PlayIcon />
         </button>
