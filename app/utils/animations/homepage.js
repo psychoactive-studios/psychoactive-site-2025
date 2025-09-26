@@ -115,12 +115,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 
   ctx.add(() => {
     gsap
-      .timeline({
-        onComplete: () => {
-          heroScrollAnimation(ctx);
-          scrollSmoother.value.paused(false);
-        },
-      })
+      .timeline()
       .to(loaderElement, {
         scale: 0,
         duration: 0.5,
@@ -412,7 +407,12 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
           ease: "rough({ template: power1.out, strength: 5, points: 20, taper: 'none', randomize: true, clamp: false})",
         },
         'finalPart'
-      );
+      )
+      // The '-=1' offset ensures heroScrollAnimation and scrollSmoother resume 1 second before the timeline ends for a smoother transition.
+      .add(() => {
+        heroScrollAnimation(ctx);
+        scrollSmoother.value.paused(false);
+      }, '-=1');
   });
 };
 

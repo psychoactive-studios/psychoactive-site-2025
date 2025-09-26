@@ -252,10 +252,37 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
         border-radius: getRem(48);
         background-color: $color-foreground;
         color: $color-background;
-        transition: background-color 0.5s ease, color 0.5s ease;
+        &::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: getRem(48);
+          z-index: 1;
+          transform: scale(0);
+          transition: transform 0.5s cubic-bezier(0, 0, 0.02, 0.99);
+          will-change: transform;
+        }
         &--transparent {
           background-color: transparent;
           color: $color-foreground;
+          .nuxt-icon {
+            position: relative;
+            z-index: 1;
+            transition: color 0.5s cubic-bezier(0, 0, 0.02, 0.99);
+          }
+          &::before {
+            background: $color-foreground;
+          }
+          &:hover {
+            .nuxt-icon {
+              color: $color-background;
+            }
+          }
+        }
+        &:hover {
+          &::before {
+            transform: scale(1);
+          }
         }
       }
     }
