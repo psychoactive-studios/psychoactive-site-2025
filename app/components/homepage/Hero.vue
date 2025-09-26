@@ -67,7 +67,9 @@ const onPlayVideoHandler = (playerContainerRef) => {
     <div class="hero__intro">
       <section class="hero__intro_wrapper">
         <div class="scene">
-          <Circle class="circle" />
+          <div class="circle--wrapper">
+            <Circle class="circle" />
+          </div>
           <div class="psychoactive">
             <div class="psychoactive__text">psychoactive®</div>
             <div class="psychoactive__horizontal">
@@ -125,7 +127,9 @@ const onPlayVideoHandler = (playerContainerRef) => {
             <PlusIcon class="dots-arrow__plus dots-arrow__plus--br" />
           </div>
 
-          <HomeHero3DScene class="homehero-3d-scene" />
+          <div class="homehero-3d-scene--wrapper">
+            <HomeHero3DScene class="homehero-3d-scene" />
+          </div>
 
           <VideoPreview
             class="video-player homehero-prepared"
@@ -225,14 +229,19 @@ const onPlayVideoHandler = (playerContainerRef) => {
           letter-spacing: -0.2874vw;
           will-change: transform;
         }
-        .circle {
+        .circle--wrapper {
           position: absolute;
           z-index: 1;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%) rotate(30deg);
           width: 50%;
+          .circle {
+            width: 100%;
+            height: 100%;
+          }
         }
+
         .top-text {
           position: absolute;
           z-index: 4;
@@ -423,7 +432,7 @@ const onPlayVideoHandler = (playerContainerRef) => {
           transform: translate(-50%, -50%);
           aspect-ratio: 2.22;
         }
-        .homehero-3d-scene {
+        .homehero-3d-scene--wrapper {
           position: absolute;
           z-index: 1;
           top: 50%;
@@ -431,7 +440,11 @@ const onPlayVideoHandler = (playerContainerRef) => {
           transform: translate(-50%, -50%);
           width: 100%;
           height: 150%;
-          will-change: transform;
+          .homehero-3d-scene {
+            width: 100%;
+            height: 100%;
+            will-change: transform;
+          }
         }
       }
     }
