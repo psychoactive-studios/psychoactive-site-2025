@@ -431,7 +431,7 @@ export const heroScrollAnimation = (ctx) => {
           start: 'top top', // when the top of the trigger hits the top of the viewport
           end: 'bottom top', // end after scrolling 500px beyond the start
           scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-          markers: true,
+          // markers: true,
         },
       })
       .to(
