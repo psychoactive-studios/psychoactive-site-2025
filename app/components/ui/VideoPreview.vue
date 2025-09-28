@@ -21,6 +21,10 @@ defineProps({
     type: Function,
     default: null,
   },
+  dots: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const playerContainerRef = ref(null);
@@ -28,10 +32,10 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
 </script>
 <template>
   <div class="player">
-    <div class="player__dots player__dots--tl" />
-    <div class="player__dots player__dots--tr" />
-    <div class="player__dots player__dots--bl" />
-    <div class="player__dots player__dots--br" />
+    <div v-if="dots" class="player__dots player__dots--tl" />
+    <div v-if="dots" class="player__dots player__dots--tr" />
+    <div v-if="dots" class="player__dots player__dots--bl" />
+    <div v-if="dots" class="player__dots player__dots--br" />
 
     <div
       ref="playerContainerRef"
