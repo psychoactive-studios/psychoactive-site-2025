@@ -109,7 +109,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 
   ctx.add(() => {
     gsap
-      .timeline()
+      .timeline({ id: 'homepage-initial-animation' })
       .to(loaderElement, {
         scale: 0,
         duration: 0.5,

@@ -61,75 +61,78 @@ export default function () {
     // wait for the DOM to update
 
     // animate the button and texts out first before the
-    gsap
-      .timeline()
-      .to(previewControlsButton, {
-        scale: 0,
-        duration: 0.5,
-        ease: 'power3.inOut',
-      })
-      .to(
-        previewControlsPlus,
-        { autoAlpha: 0, duration: 0.5, ease: 'power3.inOut' },
-        '<+=0.2'
-      )
-      .to(
-        previewControlsTexts,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 0.25,
-            from: 'random',
-          },
+    return new Promise((resolve) => {
+      gsap
+        .timeline()
+        .to(previewControlsButton, {
+          scale: 0,
+          duration: 0.5,
           ease: 'power3.inOut',
-        },
-        '<'
-      )
-      // animate the transition using Flip
-      .add(async () => {
-        // set the full screen to true to trigger the modal to open
-        isFullScreen.value = true;
-        await nextTick();
-        flipAnimation(state);
-      }, '<')
-      .fromTo(videoPlayer, { opacity: 0 }, { opacity: 1, duration: 0.5 }, '<')
-      .add(() => {
-        isPlaying.value = true;
-        videoPlayer.currentTime = 0;
-        videoPlayer.play();
-      }, '<')
-      .fromTo(
-        playerButtons,
-        { scale: 0 },
-        { scale: 1, duration: 0.5, ease: 'power3.Out' },
-        '<+=0.65'
-      )
-      .to(
-        playerTimerText,
-        {
-          duration: 1.5,
-          scrambleText: {
-            text: '{original}',
-            chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
-            tweenLength: false,
+        })
+        .to(
+          previewControlsPlus,
+          { autoAlpha: 0, duration: 0.5, ease: 'power3.inOut' },
+          '<+=0.2'
+        )
+        .to(
+          previewControlsTexts,
+          {
+            opacity: 0,
+            duration: 0.01,
+            stagger: {
+              amount: 0.25,
+              from: 'random',
+            },
+            ease: 'power3.inOut',
           },
-        },
-        '<'
-      )
-      .fromTo(
-        playerTimerText,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.01,
-          stagger: {
-            amount: 0.5,
-            from: 'random',
+          '<'
+        )
+        // animate the transition using Flip
+        .add(async () => {
+          // set the full screen to true to trigger the modal to open
+          isFullScreen.value = true;
+          await nextTick();
+          flipAnimation(state);
+        }, '<')
+        .fromTo(videoPlayer, { opacity: 0 }, { opacity: 1, duration: 0.5 }, '<')
+        .add(() => {
+          isPlaying.value = true;
+          videoPlayer.currentTime = 0;
+          videoPlayer.play();
+        }, '<')
+        .fromTo(
+          playerButtons,
+          { scale: 0 },
+          { scale: 1, duration: 0.5, ease: 'power3.Out' },
+          '<+=0.65'
+        )
+        .to(
+          playerTimerText,
+          {
+            duration: 1.5,
+            scrambleText: {
+              text: '{original}',
+              chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+              tweenLength: false,
+            },
           },
-        },
-        '<'
-      );
+          '<'
+        )
+        .fromTo(
+          playerTimerText,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 0.01,
+            stagger: {
+              amount: 0.5,
+              from: 'random',
+            },
+          },
+          '<'
+        )
+        .add(() => resolve());
+    });
   };
 
   const onPlayerClose = async () => {

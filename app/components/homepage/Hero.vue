@@ -25,40 +25,52 @@ onMounted(() => {
   }
 });
 
-const MAX_SCROLL_DURATION = 1.5; // Maximum duration (in seconds) for scroll animation
+// const MAX_SCROLL_DURATION = 1.5; // Maximum duration (in seconds) for scroll animation
 
 const onPlayVideoHandler = (playerContainerRef) => {
   // Get ScrollTrigger by ID
   const trigger = ScrollTrigger.getById('homepage-hero-scrolltrigger');
 
+  const isInitialAnimationPlaying = gsap
+    .getById('homepage-initial-animation')
+    ?.isActive();
+
   // Check if scrollSmoother and trigger exist
-  if (!scrollSmoother.value || !trigger) return;
+  if (!scrollSmoother.value || isInitialAnimationPlaying) return;
 
   // Get the current progress of the ScrollTrigger
-  const progress = trigger?.progress;
+  // const progress = trigger?.progress;
 
   // If the animation is already complete, just open the video player
-  if (progress === 1) {
-    disableScroll();
-    onPlayerOpen(playerContainerRef);
-    return;
-  }
 
   // Calculate the target scroll position based on progress
   const y = trigger?.end;
-  // Duration is proportional to the remaining scroll distance
-  const duration = MAX_SCROLL_DURATION * (1 - progress);
 
-  // Smoothly scroll to the target position and then open the video player
   gsap
     .timeline()
-    .to(scrollSmoother.value, {
-      scrollTop: y,
-      duration,
-      ease: 'power3.inOut',
-      onComplete: () => disableScroll(),
+    .add(() => {
+      disableScroll();
+      onPlayerOpen(playerContainerRef);
     })
-    .add(() => onPlayerOpen(playerContainerRef));
+    .add(() => {
+      scrollSmoother.value.scrollTop(y);
+    }, '+=1.3');
+
+  //
+
+  // Duration is proportional to the remaining scroll distance
+  // const duration = MAX_SCROLL_DURATION * (1 - progress);
+
+  // Smoothly scroll to the target position and then open the video player
+  // gsap
+  //   .timeline()
+  //   .to(scrollSmoother.value, {
+  //     scrollTop: y,
+  //     duration,
+  //     ease: 'power3.inOut',
+  //     onComplete: () => disableScroll(),
+  //   })
+  //   .add(() => onPlayerOpen(playerContainerRef));
 };
 </script>
 
