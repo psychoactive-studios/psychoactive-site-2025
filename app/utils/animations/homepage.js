@@ -8,7 +8,8 @@ const playerDotsL = '.player__dots--tl, .player__dots--bl';
 const playerDotsR = '.player__dots--tr, .player__dots--br';
 const playerButton = '.video-player .play-button';
 const playerControlePlus = '.player__preview_controls .plus';
-let playerControlTexts;
+const playerControlTexts =
+  '.player.homehero-prepared .play-reel-text .char-center, .player.homehero-prepared .play-time-text .char-center';
 
 /* ======== Center line elements ========== */
 const centerLine = '.center__line';
@@ -57,13 +58,6 @@ const partnersLogos = '.hero__intro_partners .list';
               Split text initialization
 =======================================================*/
 export const heroInitSplitText = () => {
-  playerControlTexts = SplitText.create(
-    '.player__preview_controls .play-reel-text, .player__preview_controls .play-time-text',
-    {
-      type: 'chars',
-      charsClass: 'char-center',
-    }
-  ).chars;
   centerTexts = SplitText.create('.center__part .center__text', {
     type: 'chars',
     charsClass: 'char-center',

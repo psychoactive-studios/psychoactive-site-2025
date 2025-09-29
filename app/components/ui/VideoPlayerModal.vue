@@ -33,8 +33,6 @@ watch(isPlaying, (state) => {
   const videoElement = videoPlayerModalRef.value?.querySelector('video');
   if (videoElement) {
     if (state) {
-      console.log('Playing video', videoElement);
-
       videoElement.play();
     } else {
       videoElement.pause();
