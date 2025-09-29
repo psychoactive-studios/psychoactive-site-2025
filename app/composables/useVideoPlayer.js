@@ -171,11 +171,6 @@ export default function () {
     videoPlayer.pause();
     isPlaying.value = false;
 
-    console.log(
-      'preview',
-      currentPreview.value.querySelectorAll('.player__preview_controls')
-    );
-
     gsap
       .timeline()
       .to(playerButtons, { scale: 0, duration: 0.5, ease: 'power3.In' })

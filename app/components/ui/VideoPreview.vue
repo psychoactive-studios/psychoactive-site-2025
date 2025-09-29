@@ -3,6 +3,7 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
 import PlayIcon from '~/assets/icons/icon-play.svg';
 
 import useVideoPlayer from '~/composables/useVideoPlayer';
+import { SplitText } from 'gsap/SplitText';
 
 defineProps({
   preview: {
@@ -25,6 +26,16 @@ defineProps({
     type: Boolean,
     default: true,
   },
+});
+
+onMounted(() => {
+  SplitText.create(
+    '.player .player__preview_controls .play-reel-text, .player .player__preview_controls .play-time-text',
+    {
+      type: 'chars',
+      charsClass: 'char-center',
+    }
+  );
 });
 
 const playerContainerRef = ref(null);
