@@ -220,6 +220,7 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
     position: relative;
     aspect-ratio: inherit;
     @include flex-center;
+    width: 100%;
     display: none;
     &.active {
       display: flex;
