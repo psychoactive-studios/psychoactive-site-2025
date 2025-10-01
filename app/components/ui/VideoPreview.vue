@@ -235,6 +235,7 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
     }
   }
   &__preview {
+    clip-path: inset(50% 0% round 20px);
     @include flex-center;
     width: 100%;
     height: 100%;

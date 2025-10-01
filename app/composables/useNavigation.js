@@ -98,16 +98,16 @@ export default function () {
         },
         'step1'
       )
-      .fromTo(
-        navVideo,
-        { clipPath: 'inset(50% 0% round 20px)' },
-        {
-          clipPath: 'inset(0% 0% round 20px)',
-          duration: 1,
-          ease: 'power4.inOut',
-        },
-        'step1+=0.1'
-      )
+      // .fromTo(
+      //   navVideo,
+      //   { clipPath: 'inset(50% 0% round 20px)' },
+      //   {
+      //     clipPath: 'inset(0% 0% round 20px)',
+      //     duration: 1,
+      //     ease: 'power4.inOut',
+      //   },
+      //   'step1+=0.1'
+      // )
       .fromTo(
         navLines,
         { width: '0%' },

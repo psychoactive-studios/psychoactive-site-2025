@@ -89,14 +89,16 @@ onMounted(() => {
   });
 });
 
+onUnmounted(() => {
+  ctx.revert();
+});
+
 const onClickHandler = () => {
   if (isOpen.value) {
     transitionTimelineOut.restart();
     closeNavigation();
   } else {
     transitionTimelineIn.restart();
-    //hoverTimeline.pause(0);
-
     openNavigation();
   }
 };
@@ -111,7 +113,6 @@ const onMouseEnterHandler = () => {
 
 const onMouseLeaveHandler = () => {
   if (isOpen.value) {
-    //hoverTimelineClose.reverse();
     hoverTimelineCloseOut.restart();
   } else {
     hoverTimeline.reverse();
