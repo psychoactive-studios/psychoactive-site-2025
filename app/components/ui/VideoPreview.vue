@@ -275,7 +275,7 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
           border-radius: getRem(48);
           z-index: 1;
           transform: scale(0);
-          transition: transform 0.5s cubic-bezier(0, 0, 0.02, 0.99);
+          transition: transform 0.4s cubic-bezier(0, 0, 0.02, 0.99);
           will-change: transform;
         }
         &--transparent {
@@ -284,7 +284,7 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
           .nuxt-icon {
             position: relative;
             z-index: 1;
-            transition: color 0.5s cubic-bezier(0, 0, 0.02, 0.99);
+            transition: color 0.075s ease-out;
           }
           &::before {
             background: $color-foreground;
