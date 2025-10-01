@@ -129,7 +129,6 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
       clip-path: inset(20% 0% round 20px);
       border-radius: 20px;
       transform: scale(0.45);
-      will-change: transform;
       &_controls {
         .plus,
         .play-reel-text,
@@ -239,6 +238,7 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
     border-radius: 10px;
     overflow: hidden;
     aspect-ratio: inherit;
+    will-change: clip-path, transform;
     &_video {
       aspect-ratio: inherit;
       object-fit: cover;
