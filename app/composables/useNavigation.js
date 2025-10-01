@@ -59,31 +59,31 @@ export default function () {
     isOpen.value = true;
 
     // Create a timeline for staggered animations of navigation items
-    // const itemsTl = gsap.timeline({
-    //   delay: 0.3,
-    // });
-    // const itemsTweens = [];
+    const itemsTl = gsap.timeline({
+      delay: 0.3,
+    });
+    const itemsTweens = [];
 
     // Animate each navigation item with staggered opacity
-    // navItems.forEach((item) => {
-    //   const chars = item.querySelectorAll('.char-center');
-    //   const tween = gsap.fromTo(
-    //     chars,
-    //     { opacity: 0 },
-    //     {
-    //       opacity: 1,
-    //       duration: 0.01,
-    //       stagger: {
-    //         amount: 0.22,
-    //         from: 'random',
-    //       },
-    //     }
-    //   );
-    //   itemsTweens.push(tween);
-    // });
+    navItems.forEach((item) => {
+      const chars = item.querySelectorAll('.char-center');
+      const tween = gsap.fromTo(
+        chars,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.01,
+          stagger: {
+            amount: 0.22,
+            from: 'random',
+          },
+        }
+      );
+      itemsTweens.push(tween);
+    });
 
     // Add tweens to the timeline
-    // itemsTweens.forEach((tween) => itemsTl.add(tween, '<+=0.15'));
+    itemsTweens.forEach((tween) => itemsTl.add(tween, '<+=0.15'));
 
     // Main timeline for opening animations
     gsap
@@ -106,7 +106,7 @@ export default function () {
           duration: 1,
           ease: 'power4.inOut',
         },
-        'step1+=0.1'
+        'step1+=0.6'
       )
       .fromTo(
         navLines,
@@ -125,7 +125,7 @@ export default function () {
             from: 'random',
           },
         },
-        'step1+=0.6'
+        'step1+=1.1'
       )
       .fromTo(
         letsButton,
