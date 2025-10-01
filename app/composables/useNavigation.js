@@ -106,7 +106,7 @@ export default function () {
           duration: 1,
           ease: 'power4.inOut',
         },
-        'step1+=0.6'
+        'step1+=1.4'
       )
       .fromTo(
         navLines,
@@ -125,7 +125,7 @@ export default function () {
             from: 'random',
           },
         },
-        'step1+=1.1'
+        'step1+=2'
       )
       .fromTo(
         letsButton,
