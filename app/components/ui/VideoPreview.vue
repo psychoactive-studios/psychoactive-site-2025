@@ -26,6 +26,10 @@ defineProps({
     type: Boolean,
     default: true,
   },
+  autoplay: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 onMounted(() => {
@@ -57,7 +61,7 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
         <video
           class="player__preview_video"
           :src="preview"
-          autoplay
+          :autoplay="autoplay"
           loop
           muted
           playsinline
