@@ -21,9 +21,7 @@ export default function () {
     disableScroll();
 
     // Select DOM elements for animations
-    const navVideo = navigationRef?.value?.querySelector(
-      '.video-player .player__preview'
-    );
+    const navVideo = navigationRef?.value?.querySelector('.navigation__video');
 
     const navItems = gsap.utils.toArray(
       navigationRef?.value?.querySelectorAll('.navigation__item')
@@ -106,7 +104,7 @@ export default function () {
           duration: 1,
           ease: 'power4.inOut',
         },
-        'step1+=1.4'
+        'step1+=0.1'
       )
       .fromTo(
         navLines,
@@ -114,19 +112,19 @@ export default function () {
         { width: '100%', duration: 1.5, ease: 'power2.inOut', stagger: 0.07 },
         'step1'
       )
-      .fromTo(
-        navPlayerText,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.01,
-          stagger: {
-            amount: 0.3,
-            from: 'random',
-          },
-        },
-        'step1+=2'
-      )
+      // .fromTo(
+      //   navPlayerText,
+      //   { opacity: 0 },
+      //   {
+      //     opacity: 1,
+      //     duration: 0.01,
+      //     stagger: {
+      //       amount: 0.3,
+      //       from: 'random',
+      //     },
+      //   },
+      //   'step1+=2'
+      // )
       .fromTo(
         letsButton,
         { scale: 0 },

@@ -27,13 +27,21 @@ onMounted(() => {
     <div class="navigation__wrapper">
       <div class="navigation__grid">
         <div class="navigation__video">
-          <VideoPreview
+          <NuxtImg
+            src="/img/video-preview.png"
+            alt="Planet reel video preview"
+            width="900"
+            height="500"
+            class="navigation__video-image"
+            priority
+          />
+          <!-- <VideoPreview
             class="video-player"
             preview="/video/short-planet-reel-ps.mp4"
             src="https://vjs.zencdn.net/v/oceans.mp4"
             :dots="false"
             :autoplay="true"
-          />
+          /> -->
         </div>
         <div class="navigation__menu">
           <ul class="navigation__list">
