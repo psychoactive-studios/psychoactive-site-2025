@@ -34,7 +34,6 @@ export default function () {
         },
       });
       sounds[file] = sound;
-      console.log('sounds', sounds);
     });
   }
   return {

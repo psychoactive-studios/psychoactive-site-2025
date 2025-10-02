@@ -46,15 +46,13 @@ const onPlayVideoHandler = (playerContainerRef) => {
   // Calculate the target scroll position based on progress
   const y = trigger?.end;
 
-  gsap
-    .timeline()
-    .add(() => {
-      disableScroll();
-      onPlayerOpen(playerContainerRef);
-    })
-    .add(() => {
-      scrollSmoother.value.scrollTop(y);
-    }, '+=1.3');
+  gsap.timeline().add(() => {
+    disableScroll();
+    onPlayerOpen(playerContainerRef);
+  });
+  // .add(() => {
+  //   scrollSmoother.value.scrollTop(y);
+  // }, '+=1.3');
 
   //
 
