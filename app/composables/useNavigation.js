@@ -204,6 +204,7 @@ export default function () {
 
     closeTimeline = gsap
       .timeline({ id: 'close-timeline', paused: true })
+      .add(() => navVideoPlayer.pause())
       .to(
         letsBlock,
         {
