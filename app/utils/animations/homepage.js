@@ -563,7 +563,7 @@ export const heroScrollAnimation = (ctx) => {
         {
           bottom: -48,
           right: -48,
-          duration: outputTime + 0.5,
+          duration: outputTime,
           ease: 'power1.out',
         },
         'output-of-elements'
