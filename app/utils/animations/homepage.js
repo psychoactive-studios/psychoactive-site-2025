@@ -545,7 +545,7 @@ export const heroScrollAnimation = (ctx) => {
       /* ======= Player part ========= */
       .to(
         '.player__dots--tl',
-        { top: -48, left: -48, duration: outputTime, ease: 'power1.out' },
+        { top: '0%', left: '0%', duration: outputTime, ease: 'power1.out' },
         'output-of-elements'
       )
       .to(

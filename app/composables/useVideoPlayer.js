@@ -17,8 +17,8 @@ const progress = ref(0);
 
 const flipAnimation = (state) => {
   Flip.from(state, {
-    duration: 0.9,
-    ease: 'power2.inOut',
+    duration: 1,
+    ease: 'power3.inOut',
     // scale: true,
     absolute: true,
   });
@@ -26,13 +26,12 @@ const flipAnimation = (state) => {
 
 export default function () {
   const onPlayerOpen = async (previewId) => {
-    const playerWrapper = document.querySelector(
-      `#${previewId} .player__wrapper`
-    );
+    const playerWrapper = document.querySelector(`#${previewId}`);
     if (!playerWrapper) return;
     console.log('playerWrapper:', playerWrapper);
 
     const preview = playerWrapper.querySelector('.player__preview');
+    const previewVideo = playerWrapper.querySelector('.player__preview_video');
     const previewControlsButton = playerWrapper.querySelector(
       '.player__preview_controls .play-button'
     );
@@ -64,12 +63,11 @@ export default function () {
     // get the state of the elements before the transition
     const state = Flip.getState(playerWrapper);
 
-    console.log('currentPreview in onPlayerOpen:', currentPreview.value, state);
-
     // animate the button and texts out first before the
 
     gsap
       .timeline()
+      .add(() => previewVideo.pause())
       .to(previewControlsButton, {
         scale: 0,
         duration: 0.5,
@@ -99,8 +97,8 @@ export default function () {
         {
           scale: 1,
           clipPath: 'inset(0% 0% round 20px)',
-          duration: 0.9,
-          ease: 'power2.inOut',
+          duration: 1,
+          ease: 'power3.inOut',
         },
         '<+=0.1'
       )
@@ -111,15 +109,21 @@ export default function () {
         flipAnimation(state);
       }, '<')
       .to(
-        preview,
+        previewVideo,
         {
           opacity: 0,
-          duration: 0.5,
+          duration: 0.6,
+          ease: 'power3.inOut',
         },
-        '<+=0.5'
+        '<+=0.3'
       )
-      .set(modal, { display: 'block' }, '<-=0.3')
-      .fromTo(modal, { opacity: 0 }, { opacity: 1, duration: 0.5 }, '<')
+      .set(modal, { display: 'block' }, '-=0.2')
+      .fromTo(
+        modal,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.4, ease: 'power3.inOut' },
+        '<'
+      )
       .add(() => {
         isPlaying.value = true;
         videoPlayer.currentTime = 0;
@@ -129,7 +133,7 @@ export default function () {
         playerButtons,
         { scale: 0 },
         { scale: 1, duration: 0.5, ease: 'power3.Out' },
-        '<+=0.65'
+        '<+=0.35'
       )
       .to(
         playerTimerText,
@@ -160,20 +164,26 @@ export default function () {
 
   const onPlayerClose = async () => {
     // get the state of the elements before the transition
-    const state = Flip.getState(
-      gsap.utils.toArray([currentPreview.value, '#video-player-modal'])
-    );
 
-    const previewControlsButton = currentPreview.value.querySelector(
+    const playerWrapper = document.querySelector(`#${currentPreview.value}`);
+
+    console.log('videoPlayerModalRef.value:', videoPlayerModalRef.value);
+
+    const state = Flip.getState(gsap.utils.toArray([playerWrapper]));
+
+    const preview = playerWrapper.querySelector('.player__preview');
+    const previewVideo = playerWrapper.querySelector('.player__preview_video');
+
+    const previewControlsButton = playerWrapper.querySelector(
       '.player__preview_controls .play-button'
     );
 
     const previewControlsPlus = gsap.utils.toArray(
-      currentPreview.value.querySelectorAll('.player__preview_controls .plus')
+      playerWrapper.querySelectorAll('.player__preview_controls .plus')
     );
 
     const previewControlsTexts = gsap.utils.toArray(
-      currentPreview.value.querySelectorAll(
+      playerWrapper.querySelectorAll(
         '.player__preview_controls .play-reel-text .char-center, .player__preview_controls .play-time-text .char-center'
       )
     );
@@ -190,6 +200,9 @@ export default function () {
       )
     );
 
+    const videoPlayerBox =
+      videoPlayerModalRef.value.querySelector('.modal__player');
+
     const videoPlayer = videoPlayerModalRef.value.querySelector(
       '.player__main_video'
     );
@@ -199,6 +212,9 @@ export default function () {
 
     gsap
       .timeline()
+      .set(previewVideo, {
+        opacity: 1,
+      })
       .to(playerButtons, { scale: 0, duration: 0.5, ease: 'power3.In' })
       .to(
         playerTimerText,
@@ -212,13 +228,22 @@ export default function () {
         },
         '<'
       )
-      .to(videoPlayer, { opacity: 0, duration: 0.5 }, '<')
+      .to(videoPlayerBox, { opacity: 0, duration: 0.5 }, '<')
+      .to(
+        previewVideo,
+        {
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power3.inOut',
+        },
+        '<+=0.2'
+      )
       .add(async () => {
         // set the full screen to true to trigger the modal to open
-        isFullScreen.value = false;
+        currentPreview.value = null;
         await nextTick();
         flipAnimation(state);
-      }, '<+=0.25')
+      }, '<+=0.1')
       .to(
         previewControlsPlus,
         { autoAlpha: 1, duration: 0.5, ease: 'power3.inOut' },
@@ -257,6 +282,7 @@ export default function () {
         },
         '<+=0.25'
       )
+      .set(videoPlayerBox, { display: 'none' }, '<')
       .add(() => enableScroll(), '<');
   };
 

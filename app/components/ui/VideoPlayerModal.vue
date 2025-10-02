@@ -57,6 +57,7 @@ onMounted(() => {
         src="https://vjs.zencdn.net/v/oceans.mp4"
         playsinline
         :muted="isMuted"
+        muted
       />
       <div class="player__controls">
         <button
@@ -96,7 +97,8 @@ onMounted(() => {
     width: 100%;
     height: 100vh;
     display: none;
-    background-color: $color-background;
+    position: relative;
+    z-index: 1;
   }
 
   .close-button {
@@ -113,7 +115,6 @@ onMounted(() => {
     bottom: 48px;
     left: 48px;
     width: auto;
-    z-index: 1;
     .control-button {
       @include flex-center;
       flex-shrink: 0;
@@ -227,15 +228,7 @@ onMounted(() => {
       overflow: hidden;
       aspect-ratio: inherit;
       will-change: clip-path, transform;
-
-      &_image {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 1;
-      }
+      background-color: $color-background;
       &_video {
         aspect-ratio: inherit;
         object-fit: cover;

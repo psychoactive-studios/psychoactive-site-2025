@@ -57,7 +57,7 @@ const { isFullScreen, currentPreview, onPlayerOpen } = useVideoPlayer();
 console.log('currentPreview:', currentPreview.value);
 </script>
 <template>
-  <div :id="uniqueId" class="player">
+  <div class="player">
     <div v-if="dots" class="player__dots player__dots--tl" />
     <div v-if="dots" class="player__dots player__dots--tr" />
     <div v-if="dots" class="player__dots player__dots--bl" />
@@ -72,7 +72,7 @@ console.log('currentPreview:', currentPreview.value);
         to="#video-player-modal"
         :disabled="currentPreview !== uniqueId"
       >
-        <div class="player__wrapper">
+        <div :id="uniqueId" class="player__wrapper">
           <div class="player__preview">
             <video
               class="player__preview_video"
