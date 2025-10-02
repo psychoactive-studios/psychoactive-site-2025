@@ -11,54 +11,82 @@ const isOpen = ref(false);
 // Ref to the navigation DOM element
 const navigationRef = ref(null);
 
+// GSAP timelines for animations
+let openTimelineMain, openTimelineItems, closeTimeline;
+
+// DOM elements for animation
+let navBackground,
+  navWrapper,
+  navVideo,
+  navVideoPlayer,
+  // navVideoPoster,
+  navItems,
+  navPlayerText,
+  navLines,
+  letsBlock,
+  letsButton,
+  navLetsText,
+  letsLines;
+
 export default function () {
-  /**
-   * Opens the navigation menu with GSAP animations.
-   * Animates various elements like video preview, lines, and text.
-   */
-  function openNavigation() {
-    // Disable page scrolling when navigation is open
-    disableScroll();
-
+  function initNavigation() {
     // Select DOM elements for animations
-    const navVideo = navigationRef?.value?.querySelector('.navigation__video');
+    navBackground = navigationRef?.value?.querySelector(
+      '.navigation__background'
+    );
 
-    const navItems = gsap.utils.toArray(
+    navWrapper = navigationRef?.value?.querySelector('.navigation__wrapper');
+
+    navVideo = navigationRef?.value?.querySelector(
+      '.video-player .player__preview'
+    );
+
+    navVideoPlayer = navigationRef?.value?.querySelector(
+      '.video-player .player__preview video'
+    );
+
+    // navVideoPoster = navigationRef?.value?.querySelector(
+    //   '.video-player .player__preview_image'
+    // );
+
+    navItems = gsap.utils.toArray(
       navigationRef?.value?.querySelectorAll('.navigation__item')
     );
 
-    const navPlayerText = gsap.utils.toArray(
+    navPlayerText = gsap.utils.toArray(
       navigationRef?.value?.querySelectorAll(
         '.video-player .player__preview_controls .char-center'
       )
     );
 
-    const navLines = gsap.utils.toArray(
+    navLines = gsap.utils.toArray(
       navigationRef?.value?.querySelectorAll(
         '.navigation__list .navigation__item .line'
       )
     );
 
-    const letsButton = navigationRef?.value?.querySelector(
+    letsButton = navigationRef?.value?.querySelector(
       '.navigation__talk_button'
     );
 
-    const navLetsText = gsap.utils.toArray(
+    navLetsText = gsap.utils.toArray(
       navigationRef?.value?.querySelectorAll(
         '.navigation__talk_button .char-center'
       )
     );
 
-    const letsLines = gsap.utils.toArray(
+    letsBlock = gsap.utils.toArray(
+      navigationRef?.value?.querySelectorAll('.navigation__talk')
+    );
+
+    letsLines = gsap.utils.toArray(
       navigationRef?.value?.querySelectorAll('.navigation__talk_line > span')
     );
 
-    // Set navigation state to open
-    isOpen.value = true;
-
     // Create a timeline for staggered animations of navigation items
-    const itemsTl = gsap.timeline({
+    openTimelineItems = gsap.timeline({
       delay: 0.3,
+      paused: true,
     });
     const itemsTweens = [];
 
@@ -81,18 +109,28 @@ export default function () {
     });
 
     // Add tweens to the timeline
-    itemsTweens.forEach((tween) => itemsTl.add(tween, '<+=0.15'));
+    itemsTweens.forEach((tween) => openTimelineItems.add(tween, '<+=0.15'));
 
     // Main timeline for opening animations
-    gsap
-      .timeline()
-      .set(navVideo, { transformOrigin: 'top' })
+    openTimelineMain = gsap
+      .timeline({ id: 'open-timeline-main', paused: true })
+      .set(navVideoPlayer, { display: 'none' })
+      .set([navItems, letsBlock], { clearProps: 'all' })
       .to(
-        navigationRef.value,
+        navBackground,
         {
+          scaleY: 1,
           duration: 1,
           ease: 'expo.inOut',
-          '--scY': 1,
+        },
+        'step1'
+      )
+      .to(
+        navWrapper,
+        {
+          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
+          duration: 1,
+          ease: 'expo.inOut',
         },
         'step1'
       )
@@ -112,19 +150,19 @@ export default function () {
         { width: '100%', duration: 1.5, ease: 'power2.inOut', stagger: 0.07 },
         'step1'
       )
-      // .fromTo(
-      //   navPlayerText,
-      //   { opacity: 0 },
-      //   {
-      //     opacity: 1,
-      //     duration: 0.01,
-      //     stagger: {
-      //       amount: 0.3,
-      //       from: 'random',
-      //     },
-      //   },
-      //   'step1+=2'
-      // )
+      .fromTo(
+        navPlayerText,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.01,
+          stagger: {
+            amount: 0.3,
+            from: 'random',
+          },
+        },
+        'step1+=0.6'
+      )
       .fromTo(
         letsButton,
         { scale: 0 },
@@ -159,7 +197,86 @@ export default function () {
           },
         },
         '<+=0.2'
-      );
+      )
+      // .set(navVideoPlayer, { visibility: 'visible' })
+      // .set(navVideoPoster, { visibility: 'hidden' })
+      .add(() => navVideoPlayer.play());
+
+    closeTimeline = gsap
+      .timeline({ id: 'close-timeline', paused: true })
+      .to(
+        letsBlock,
+        {
+          opacity: 0,
+          duration: 0.3,
+          ease: 'power2.out',
+        },
+        'init'
+      )
+      .to(
+        navItems,
+        {
+          opacity: 0,
+          duration: 0.2,
+          ease: 'power2.out',
+          stagger: {
+            amount: 0.2,
+            from: 'end',
+          },
+        },
+        'init+=0.1'
+      )
+      .fromTo(
+        navVideo,
+        { clipPath: 'inset(0% 0% round 20px)' },
+        {
+          clipPath: 'inset(50% 0% round 20px)',
+          duration: 1,
+          ease: 'power4.inOut',
+        },
+        'init'
+      )
+      .to(
+        navBackground,
+        {
+          duration: 1,
+          ease: 'expo.inOut',
+          scaleY: 0,
+        },
+        'init'
+      )
+      .to(
+        navWrapper,
+        {
+          clipPath: 'polygon(0 0, 100% 0, 100% 0%, 0 0%)',
+          duration: 1,
+          ease: 'expo.inOut',
+        },
+        'init'
+      )
+      .add(() => {
+        // Enable scrolling
+        enableScroll();
+        isOpen.value = false;
+      }, 'init+=0.2');
+  }
+
+  /**
+   * Opens the navigation menu with GSAP animations.
+   * Animates various elements like video preview, lines, and text.
+   */
+  function openNavigation() {
+    // Prevent multiple clicks during animation
+    const isAnimating = gsap.getById('close-timeline').isActive();
+    if (isAnimating) return;
+
+    // Disable page scrolling when navigation is open
+    disableScroll();
+    // Set navigation state to open
+    isOpen.value = true;
+
+    openTimelineMain.restart();
+    openTimelineItems.restart();
   }
 
   /**
@@ -167,24 +284,18 @@ export default function () {
    * Resets the navigation state after the animation completes.
    */
   function closeNavigation() {
-    gsap
-      .timeline()
-      .to(navigationRef.value, {
-        duration: 1,
-        ease: 'expo.inOut',
-        '--scY': 0,
-      })
-      .add(() => {
-        // Enable scrolling
-        enableScroll();
-        isOpen.value = false;
-      }, '<+=0.2');
+    // Prevent multiple clicks during animation
+    const isAnimating = gsap.getById('open-timeline-main').isActive();
+    if (isAnimating) return;
+
+    closeTimeline.restart();
   }
 
   // Return the reactive state and methods
   return {
     isOpen,
     navigationRef,
+    initNavigation,
     openNavigation,
     closeNavigation,
   };

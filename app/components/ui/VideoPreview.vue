@@ -30,6 +30,10 @@ defineProps({
     type: Boolean,
     default: true,
   },
+  poster: {
+    type: String || null,
+    default: null,
+  },
 });
 
 onMounted(() => {
@@ -58,6 +62,7 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
       data-flip-id="video-player"
     >
       <div class="player__preview">
+        <NuxtImg v-if="poster" :src="poster" class="player__preview_image" />
         <video
           class="player__preview_video"
           :src="preview"
@@ -243,6 +248,14 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
     overflow: hidden;
     aspect-ratio: inherit;
     will-change: clip-path, transform;
+    &_image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
     &_video {
       aspect-ratio: inherit;
       object-fit: cover;

@@ -3,7 +3,7 @@ import { SplitText } from 'gsap/SplitText';
 import VideoPreview from '../ui/VideoPreview.vue';
 import useNavigation from '~/composables/useNavigation';
 
-const { navigationRef } = useNavigation();
+const { navigationRef, initNavigation } = useNavigation();
 
 onMounted(() => {
   SplitText.create(
@@ -13,6 +13,7 @@ onMounted(() => {
       charsClass: 'char-center',
     }
   );
+  initNavigation();
 });
 </script>
 
@@ -22,26 +23,19 @@ onMounted(() => {
     ref="navigationRef"
     class="navigation"
     aria-label="Main navigation"
-    style="--scY: 0"
   >
+    <div class="navigation__background" />
     <div class="navigation__wrapper">
       <div class="navigation__grid">
         <div class="navigation__video">
-          <NuxtImg
-            src="/img/video-preview.png"
-            alt="Planet reel video preview"
-            width="900"
-            height="500"
-            class="navigation__video-image"
-            priority
-          />
-          <!-- <VideoPreview
+          <VideoPreview
             class="video-player"
             preview="/video/short-planet-reel-ps.mp4"
+            poster="/img/video-preview.png"
             src="https://vjs.zencdn.net/v/oceans.mp4"
             :dots="false"
-            :autoplay="true"
-          /> -->
+            :autoplay="false"
+          />
         </div>
         <div class="navigation__menu">
           <ul class="navigation__list">
@@ -103,13 +97,12 @@ onMounted(() => {
   overflow: hidden;
   z-index: 999;
   pointer-events: none;
-  &::before {
-    content: '';
+  &__background {
     position: absolute;
     inset: 0;
     background-color: $color-foreground;
     z-index: -1;
-    transform: scaleY(var(--scY));
+    transform: scaleY(0);
     transform-origin: top;
     will-change: transform;
     pointer-events: none;
@@ -121,13 +114,10 @@ onMounted(() => {
     height: 100%;
     padding: 120px 48px;
     overflow: clip;
-    clip-path: polygon(
-      0 0,
-      100% 0,
-      100% calc((var(--scY)) * 100%),
-      0 calc((var(--scY)) * 100%)
-    );
-    will-change: clip-path;
+    clip-path: polygon(0 0, 100% 0, 100% 0%, 0 0%);
+    will-change: transform, clip-path;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
   }
   &__grid {
     width: 100%;
@@ -138,6 +128,22 @@ onMounted(() => {
     pointer-events: all;
   }
   &__video {
+    .video-player {
+      aspect-ratio: 1.78;
+    }
+    // :deep(.video-player) {
+    //   transform: translate3d(0, 0, 0);
+    //   backface-visibility: hidden;
+    //   will-change: transform, clip-path;
+    //   .player__preview {
+    //     transform: translate3d(0, 0, 0);
+    //     backface-visibility: hidden;
+    //   }
+    //   video {
+    //     transform: translate3d(0, 0, 0);
+    //     backface-visibility: hidden;
+    //   }
+    // }
   }
   &__menu {
   }
