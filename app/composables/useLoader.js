@@ -1,10 +1,23 @@
 // composables/useLoader.js
 import { ref } from 'vue';
 
-const isLoading = ref(true); // global state
+const isLoading = ref(true);
+const resourcesToLoad = ref(0);
+let loadedResources = ref(0);
 
 export function useLoader() {
   // methods for managing loading state
+
+  function addResourceToLoad(quantity) {
+    resourcesToLoad.value += quantity;
+  }
+
+  function resourceLoaded() {
+    console.log('resourceLoaded +1');
+
+    loadedResources.value += 1;
+  }
+
   function startLoading() {
     isLoading.value = true;
   }
@@ -13,8 +26,14 @@ export function useLoader() {
     isLoading.value = false;
   }
 
+  watch(loadedResources, (val) => {
+    console.log('LOADER!', val, resourcesToLoad.value);
+  });
+
   return {
     isLoading,
+    addResourceToLoad,
+    resourceLoaded,
     startLoading,
     stopLoading,
   };

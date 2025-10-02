@@ -26,6 +26,14 @@ defineProps({
     type: Boolean,
     default: true,
   },
+  autoplay: {
+    type: Boolean,
+    default: true,
+  },
+  poster: {
+    type: String || null,
+    default: null,
+  },
 });
 
 onMounted(() => {
@@ -54,10 +62,11 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
       data-flip-id="video-player"
     >
       <div class="player__preview">
+        <NuxtImg v-if="poster" :src="poster" class="player__preview_image" />
         <video
           class="player__preview_video"
           :src="preview"
-          autoplay
+          :autoplay="autoplay"
           loop
           muted
           playsinline
@@ -129,7 +138,6 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
       clip-path: inset(20% 0% round 20px);
       border-radius: 20px;
       transform: scale(0.45);
-      will-change: transform;
       &_controls {
         .plus,
         .play-reel-text,
@@ -239,6 +247,15 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
     border-radius: 10px;
     overflow: hidden;
     aspect-ratio: inherit;
+    will-change: clip-path, transform;
+    &_image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+    }
     &_video {
       aspect-ratio: inherit;
       object-fit: cover;
@@ -275,7 +292,7 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
           border-radius: getRem(48);
           z-index: 1;
           transform: scale(0);
-          transition: transform 0.5s cubic-bezier(0, 0, 0.02, 0.99);
+          transition: transform 0.4s cubic-bezier(0, 0, 0.02, 0.99);
           will-change: transform;
         }
         &--transparent {
@@ -284,7 +301,7 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
           .nuxt-icon {
             position: relative;
             z-index: 1;
-            transition: color 0.5s cubic-bezier(0, 0, 0.02, 0.99);
+            transition: color 0.075s ease-out;
           }
           &::before {
             background: $color-foreground;
