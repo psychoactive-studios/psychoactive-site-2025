@@ -96,8 +96,8 @@ onUnmounted(() => {
 const onClickHandler = () => {
   // Prevent multiple clicks during animation
   const isAnimating =
-    gsap.getById('open-timeline-main').isActive() ||
-    gsap.getById('close-timeline').isActive();
+    gsap.getById('open-timeline-main')?.isActive() ||
+    gsap.getById('close-timeline')?.isActive();
   if (isAnimating) return;
 
   // Toggle navigation state

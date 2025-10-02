@@ -31,7 +31,6 @@ onMounted(() => {
           <VideoPreview
             class="video-player"
             preview="/video/short-planet-reel-ps.mp4"
-            poster="/img/video-preview.png"
             src="https://vjs.zencdn.net/v/oceans.mp4"
             :dots="false"
             :autoplay="false"

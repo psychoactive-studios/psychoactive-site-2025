@@ -114,7 +114,7 @@ export default function () {
     // Main timeline for opening animations
     openTimelineMain = gsap
       .timeline({ id: 'open-timeline-main', paused: true })
-      .set(navVideoPlayer, { display: 'none' })
+      // .set(navVideoPlayer, { display: 'none' })
       .set([navItems, letsBlock], { clearProps: 'all' })
       .to(
         navBackground,
@@ -267,7 +267,7 @@ export default function () {
    */
   function openNavigation() {
     // Prevent multiple clicks during animation
-    const isAnimating = gsap.getById('close-timeline').isActive();
+    const isAnimating = gsap.getById('close-timeline')?.isActive();
     if (isAnimating) return;
 
     // Disable page scrolling when navigation is open
@@ -285,7 +285,7 @@ export default function () {
    */
   function closeNavigation() {
     // Prevent multiple clicks during animation
-    const isAnimating = gsap.getById('open-timeline-main').isActive();
+    const isAnimating = gsap.getById('open-timeline-main')?.isActive();
     if (isAnimating) return;
 
     closeTimeline.restart();
