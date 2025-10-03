@@ -145,7 +145,7 @@ const onPlayVideoHandler = (playerContainerRef) => {
 
           <VideoPreview
             class="video-player homehero-prepared"
-            preview="/video/short-planet-reel-ps.mp4"
+            preview="/video/preview_reel.mp4"
             src="https://vjs.zencdn.net/v/oceans.mp4"
             transparent-button
             :custom-handler="onPlayVideoHandler"

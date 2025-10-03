@@ -70,21 +70,21 @@ onMounted(() => {
       .to(dot3, { x: 5, y: -5, duration: 0.3, ease: 'power2.inOut' }, 'init')
       .to(dot4, { x: -5, y: -5, duration: 0.3, ease: 'power2.inOut' }, 'init')
       .to(lines, { scaleX: 0, duration: 0.3, ease: 'power2.inOut' }, 'init');
-  });
 
-  // Initial state for lines
-  gsap.set('.line-1', {
-    xPercent: -50,
-    yPercent: -50,
-    rotation: 45,
-    scaleX: 0,
-  });
-  gsap.set('.line-2', {
-    xPercent: -50,
-    yPercent: -50,
-    rotation: -45,
-    scaleX: 0,
-  });
+    // Initial state for lines
+    gsap.set('.line-1', {
+      xPercent: -50,
+      yPercent: -50,
+      rotation: 45,
+      scaleX: 0,
+    });
+    gsap.set('.line-2', {
+      xPercent: -50,
+      yPercent: -50,
+      rotation: -45,
+      scaleX: 0,
+    });
+  }, buttonRef.value);
 });
 
 onUnmounted(() => {

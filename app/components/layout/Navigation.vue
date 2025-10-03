@@ -30,7 +30,7 @@ onMounted(() => {
         <div class="navigation__video">
           <VideoPreview
             class="video-player"
-            preview="/video/short-planet-reel-ps.mp4"
+            preview="/video/preview_reel.mp4"
             src="https://vjs.zencdn.net/v/oceans.mp4"
             :dots="false"
             :autoplay="false"
