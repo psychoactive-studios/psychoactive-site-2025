@@ -5,7 +5,6 @@ import PauseIcon from '~/assets/icons/icon-pause.svg';
 import SoundButton from './SoundButton.vue';
 import CloseButton from './CloseButton.vue';
 const {
-  isFullScreen,
   isPlaying,
   currentTime,
   isMuted,
@@ -57,7 +56,6 @@ onMounted(() => {
         src="https://vjs.zencdn.net/v/oceans.mp4"
         playsinline
         :muted="isMuted"
-        muted
       />
       <div class="player__controls">
         <button
@@ -228,6 +226,7 @@ onMounted(() => {
       overflow: hidden;
       aspect-ratio: inherit;
       will-change: clip-path, transform;
+      clip-path: inherit;
       background-color: $color-background;
       &_video {
         aspect-ratio: inherit;

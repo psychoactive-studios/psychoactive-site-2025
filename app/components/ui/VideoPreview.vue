@@ -5,7 +5,7 @@ import PlayIcon from '~/assets/icons/icon-play.svg';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 import { SplitText } from 'gsap/SplitText';
 
-defineProps({
+const props = defineProps({
   preview: {
     type: String,
     required: true,
@@ -30,9 +30,13 @@ defineProps({
     type: Boolean,
     default: true,
   },
+  aspectRatio: {
+    type: [Number, String],
+    default: null,
+  },
 });
 
-const aspectRatio = ref(null);
+const playerContainerRef = ref(null);
 
 onMounted(() => {
   SplitText.create(
@@ -44,17 +48,29 @@ onMounted(() => {
   );
 
   // Set initial aspect ratio based on container size
-  aspectRatio.value =
-    playerContainerRef.value.clientWidth /
-    playerContainerRef.value.clientHeight;
+});
+
+const currentAspectRatio = computed(() => {
+  // If aspectRatio prop is provided, use it
+  if (props.aspectRatio) {
+    return props.aspectRatio;
+  }
+
+  // Otherwise, calculate based on container dimensions
+  if (currentAspectRatio.value) {
+    return (
+      playerContainerRef.value.clientWidth /
+      playerContainerRef.value.clientHeight
+    );
+  }
+
+  // If container is not yet available,
+  return 'inherit'; // або будь-яке інше стандартне значення
 });
 
 const uniqueId = `player-preview-${useId()}`;
 
-const playerContainerRef = ref(null);
-const { isFullScreen, currentPreview, onPlayerOpen } = useVideoPlayer();
-
-console.log('currentPreview:', currentPreview.value);
+const { currentPreview, onPlayerOpen } = useVideoPlayer();
 </script>
 <template>
   <div class="player">
@@ -65,19 +81,23 @@ console.log('currentPreview:', currentPreview.value);
 
     <div
       ref="playerContainerRef"
-      :class="['player__container']"
-      :style="aspectRatio && { 'aspect-ratio': aspectRatio }"
+      class="player__container"
+      :style="currentAspectRatio && { 'aspect-ratio': currentAspectRatio }"
+      :data-flip-id="uniqueId"
     >
       <Teleport
         to="#video-player-modal"
         :disabled="currentPreview !== uniqueId"
       >
-        <div :id="uniqueId" class="player__wrapper">
+        <div :id="uniqueId" :data-flip-id="uniqueId" class="player__wrapper">
           <div class="player__preview">
             <video
               class="player__preview_video"
               :src="preview"
               :autoplay="autoplay"
+              :style="
+                currentAspectRatio && { 'aspect-ratio': currentAspectRatio }
+              "
               loop
               muted
               playsinline
@@ -240,11 +260,16 @@ console.log('currentPreview:', currentPreview.value);
     aspect-ratio: inherit;
     @include flex-center;
     width: 100%;
+    height: 100%;
     video {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+  }
+  &__wrapper {
+    width: 100%;
+    // height: 100%;
   }
   &__preview {
     @include flex-center;
