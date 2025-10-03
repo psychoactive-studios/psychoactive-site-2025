@@ -13,8 +13,6 @@ export function useLoader() {
   }
 
   function resourceLoaded() {
-    console.log('resourceLoaded +1');
-
     loadedResources.value += 1;
   }
 
@@ -26,9 +24,9 @@ export function useLoader() {
     isLoading.value = false;
   }
 
-  watch(loadedResources, (val) => {
-    console.log('LOADER!', val, resourcesToLoad.value);
-  });
+  // watch(loadedResources, (val) => {
+  //   console.log('LOADER!', val, resourcesToLoad.value);
+  // });
 
   return {
     isLoading,

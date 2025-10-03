@@ -5,7 +5,7 @@ import PlayIcon from '~/assets/icons/icon-play.svg';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 import { SplitText } from 'gsap/SplitText';
 
-defineProps({
+const props = defineProps({
   preview: {
     type: String,
     required: true,
@@ -30,11 +30,13 @@ defineProps({
     type: Boolean,
     default: true,
   },
-  poster: {
-    type: String || null,
+  aspectRatio: {
+    type: [Number, String],
     default: null,
   },
 });
+
+const playerContainerRef = ref(null);
 
 onMounted(() => {
   SplitText.create(
@@ -44,10 +46,31 @@ onMounted(() => {
       charsClass: 'char-center',
     }
   );
+
+  // Set initial aspect ratio based on container size
 });
 
-const playerContainerRef = ref(null);
-const { isFullScreen, onPlayerOpen } = useVideoPlayer();
+const currentAspectRatio = computed(() => {
+  // If aspectRatio prop is provided, use it
+  if (props.aspectRatio) {
+    return props.aspectRatio;
+  }
+
+  // Otherwise, calculate based on container dimensions
+  if (currentAspectRatio.value) {
+    return (
+      playerContainerRef.value.clientWidth /
+      playerContainerRef.value.clientHeight
+    );
+  }
+
+  // If container is not yet available,
+  return 'inherit'; // або будь-яке інше стандартне значення
+});
+
+const uniqueId = `player-preview-${useId()}`;
+
+const { currentPreview, onPlayerOpen } = useVideoPlayer();
 </script>
 <template>
   <div class="player">
@@ -58,43 +81,51 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
 
     <div
       ref="playerContainerRef"
-      :class="['player__container', { active: !isFullScreen }]"
-      data-flip-id="video-player"
+      class="player__container"
+      :style="currentAspectRatio && { 'aspect-ratio': currentAspectRatio }"
+      :data-flip-id="uniqueId"
     >
-      <div class="player__preview">
-        <NuxtImg v-if="poster" :src="poster" class="player__preview_image" />
-        <video
-          class="player__preview_video"
-          :src="preview"
-          :autoplay="autoplay"
-          loop
-          muted
-          playsinline
-        />
-        <div class="player__preview_overlay" />
-      </div>
-      <div class="player__preview_controls">
-        <PlusIcon class="plus" />
-        <PlusIcon class="plus" />
-        <div class="play-reel-text">PLAY REEL</div>
-        <button
-          :class="[
-            'play-button',
-            { 'play-button--transparent': transparentButton },
-          ]"
-          aria-label="Play video"
-          @click="
-            customHandler
-              ? customHandler(playerContainerRef)
-              : onPlayerOpen(playerContainerRef)
-          "
-        >
-          <PlayIcon />
-        </button>
-        <div class="play-time-text">00:47 sec</div>
-        <PlusIcon class="plus" />
-        <PlusIcon class="plus" />
-      </div>
+      <Teleport
+        to="#video-player-modal"
+        :disabled="currentPreview !== uniqueId"
+      >
+        <div :id="uniqueId" :data-flip-id="uniqueId" class="player__wrapper">
+          <div class="player__preview">
+            <video
+              class="player__preview_video"
+              :src="preview"
+              :autoplay="autoplay"
+              :style="
+                currentAspectRatio && { 'aspect-ratio': currentAspectRatio }
+              "
+              loop
+              muted
+              playsinline
+            />
+            <div class="player__preview_overlay" />
+          </div>
+          <div class="player__preview_controls">
+            <PlusIcon class="plus" />
+            <PlusIcon class="plus" />
+            <div class="play-reel-text">PLAY REEL</div>
+            <button
+              :class="[
+                'play-button',
+                { 'play-button--transparent': transparentButton },
+              ]"
+              aria-label="Play video"
+              @click="
+                customHandler ? customHandler(uniqueId) : onPlayerOpen(uniqueId)
+              "
+            >
+              <PlayIcon />
+            </button>
+            <div class="play-time-text">00:47 sec</div>
+            <PlusIcon class="plus" />
+            <PlusIcon class="plus" />
+          </div>
+        </div>
+      </Teleport>
     </div>
   </div>
 </template>
@@ -229,15 +260,16 @@ const { isFullScreen, onPlayerOpen } = useVideoPlayer();
     aspect-ratio: inherit;
     @include flex-center;
     width: 100%;
-    display: none;
-    &.active {
-      display: flex;
-    }
+    height: 100%;
     video {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
+  }
+  &__wrapper {
+    width: 100%;
+    // height: 100%;
   }
   &__preview {
     @include flex-center;

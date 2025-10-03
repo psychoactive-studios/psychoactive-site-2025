@@ -54,7 +54,7 @@ const onPlayVideoHandler = (playerContainerRef) => {
     })
     .add(() => {
       scrollSmoother.value.scrollTop(y);
-    }, '+=1.3');
+    }, '+=2');
 
   //
 
@@ -149,6 +149,7 @@ const onPlayVideoHandler = (playerContainerRef) => {
             src="https://vjs.zencdn.net/v/oceans.mp4"
             transparent-button
             :custom-handler="onPlayVideoHandler"
+            aspect-ratio="2.22"
           />
         </div>
       </section>

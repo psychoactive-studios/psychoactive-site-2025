@@ -70,8 +70,6 @@ onMounted(() => {
       .to(dot3, { x: 5, y: -5, duration: 0.3, ease: 'power2.inOut' }, 'init')
       .to(dot4, { x: -5, y: -5, duration: 0.3, ease: 'power2.inOut' }, 'init')
       .to(lines, { scaleX: 0, duration: 0.3, ease: 'power2.inOut' }, 'init');
-
-    console.log(hoverTimeline, hoverTimelineCloseIn, transitionTimelineIn);
   });
 
   // Initial state for lines

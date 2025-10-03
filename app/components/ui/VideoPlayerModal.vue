@@ -5,7 +5,6 @@ import PauseIcon from '~/assets/icons/icon-pause.svg';
 import SoundButton from './SoundButton.vue';
 import CloseButton from './CloseButton.vue';
 const {
-  isFullScreen,
   isPlaying,
   currentTime,
   isMuted,
@@ -49,37 +48,34 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    id="video-player-modal"
-    ref="videoPlayerModalRef"
-    :class="{ active: isFullScreen }"
-    data-flip-id="video-player"
-  >
-    <CloseButton class="close-button" @click="onPlayerClose" />
-    <video
-      class="player__main_video"
-      src="https://vjs.zencdn.net/v/oceans.mp4"
-      playsinline
-      :muted="isMuted"
-    />
-    <div class="player__controls">
-      <button
-        :class="['control-button', isPlaying ? 'played' : 'paused']"
-        @click="playHandler"
-      >
-        <PlayIcon class="icon-play" />
-        <PauseIcon class="icon-pause" />
-      </button>
-      <SoundButton mode="filled" :muted="isMuted" @click="soundHandler" />
-      <div class="play-time-text">
-        <div class="char-center">{{ formattedTime.minutes[0] }}</div>
-        <div class="char-center">{{ formattedTime.minutes[1] }}</div>
-        <div class="char-center">:</div>
-        <div class="char-center">{{ formattedTime.seconds[0] }}</div>
-        <div class="char-center">{{ formattedTime.seconds[1] }}</div>
-      </div>
-      <div class="progress-bar">
-        <div class="progress-fill" :style="{ width: `${progress}%` }" />
+  <div id="video-player-modal" ref="videoPlayerModalRef">
+    <div class="modal__player">
+      <CloseButton class="close-button" @click="onPlayerClose" />
+      <video
+        class="player__main_video"
+        src="https://vjs.zencdn.net/v/oceans.mp4"
+        playsinline
+        :muted="isMuted"
+      />
+      <div class="player__controls">
+        <button
+          :class="['control-button', isPlaying ? 'played' : 'paused']"
+          @click="playHandler"
+        >
+          <PlayIcon class="icon-play" />
+          <PauseIcon class="icon-pause" />
+        </button>
+        <SoundButton mode="filled" :muted="isMuted" @click="soundHandler" />
+        <div class="play-time-text">
+          <div class="char-center">{{ formattedTime.minutes[0] }}</div>
+          <div class="char-center">{{ formattedTime.minutes[1] }}</div>
+          <div class="char-center">:</div>
+          <div class="char-center">{{ formattedTime.seconds[0] }}</div>
+          <div class="char-center">{{ formattedTime.seconds[1] }}</div>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" :style="{ width: `${progress}%` }" />
+        </div>
       </div>
     </div>
   </div>
@@ -90,17 +86,19 @@ onMounted(() => {
 @use '@/assets/styles/mixins' as *;
 @use '@/assets/styles/functions' as *;
 #video-player-modal {
-  @include flex-center;
   position: fixed;
   top: 0;
   width: 100%;
-  height: 100vh;
   z-index: 1000;
-  display: none;
-  background-color: $color-background;
-  &.active {
-    display: flex;
+  .modal__player {
+    @include flex-center;
+    width: 100%;
+    height: 100vh;
+    display: none;
+    position: relative;
+    z-index: 1;
   }
+
   .close-button {
     position: absolute;
     top: 48px;
@@ -214,6 +212,92 @@ onMounted(() => {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .player__wrapper {
+    position: fixed;
+    inset: 0;
+    .player__preview {
+      @include flex-center;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      aspect-ratio: inherit;
+      will-change: clip-path, transform;
+      clip-path: inherit;
+      background-color: $color-background;
+      &_video {
+        aspect-ratio: inherit;
+        object-fit: cover;
+        width: 100%;
+      }
+      &_overlay {
+        background: url('/img/video-player-dots-overlay.svg') repeat;
+        position: absolute;
+        inset: 0;
+      }
+      &_controls {
+        @include flex-center;
+        gap: 6%;
+        position: absolute;
+        inset: 50% 0 auto 0;
+        transform: translateY(-50%);
+        font-family: 'RoobertMono', sans-serif;
+        text-transform: uppercase;
+        .plus {
+          width: 7px;
+          height: 7px;
+          color: white(50);
+          margin: 0;
+        }
+        .play-reel-text,
+        .play-time-text {
+          color: white(80);
+        }
+        .play-button {
+          width: getRem(96);
+          height: getRem(48);
+          border: 1px solid white(20);
+          border-radius: getRem(48);
+          background-color: $color-foreground;
+          color: $color-background;
+          &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: getRem(48);
+            z-index: 1;
+            transform: scale(0);
+            transition: transform 0.4s cubic-bezier(0, 0, 0.02, 0.99);
+            will-change: transform;
+          }
+          &--transparent {
+            background-color: transparent;
+            color: $color-foreground;
+            .nuxt-icon {
+              position: relative;
+              z-index: 1;
+              transition: color 0.075s ease-out;
+            }
+            &::before {
+              background: $color-foreground;
+            }
+            &:hover {
+              .nuxt-icon {
+                color: $color-background;
+              }
+            }
+          }
+          &:hover {
+            &::before {
+              transform: scale(1);
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>

@@ -3,6 +3,7 @@ import { SplitText } from 'gsap/SplitText';
 import { useLoader } from '~/composables/useLoader';
 
 /* ======== Player elements ========= */
+const player = '.video-player.homehero-prepared';
 const playerPreview = '.video-player .player__preview';
 const playerDotsL = '.player__dots--tl, .player__dots--bl';
 const playerDotsR = '.player__dots--tr, .player__dots--br';
@@ -413,6 +414,24 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 /* ====================================================
                   Scroll animation
 =======================================================*/
+
+const DOT_OFFSET_PX = -48; // Offset in pixels for player dots positioning
+
+const getDotsPercent = () => {
+  const playerElement = document.querySelector(player);
+  if (
+    !playerElement ||
+    !playerElement.offsetWidth ||
+    !playerElement.offsetHeight
+  ) {
+    return { xPercent: '0%', yPercent: '0%' };
+  }
+  const xPercent = (DOT_OFFSET_PX / playerElement.offsetWidth) * 100;
+  const yPercent = (DOT_OFFSET_PX / playerElement.offsetHeight) * 100;
+
+  return { xPercent: `${xPercent}%`, yPercent: `${yPercent}%` };
+};
+
 const outputTime = 1.3;
 export const heroScrollAnimation = (ctx) => {
   ctx.add(() => {
@@ -425,6 +444,7 @@ export const heroScrollAnimation = (ctx) => {
           start: 'top top', // when the top of the trigger hits the top of the viewport
           end: 'bottom top', // end after scrolling 500px beyond the start
           scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+          invalidateOnRefresh: true,
           // markers: true,
         },
       })
@@ -545,25 +565,40 @@ export const heroScrollAnimation = (ctx) => {
       /* ======= Player part ========= */
       .to(
         '.player__dots--tl',
-        { top: -48, left: -48, duration: outputTime, ease: 'power1.out' },
+        {
+          top: () => getDotsPercent().yPercent,
+          left: () => getDotsPercent().xPercent,
+          duration: outputTime,
+          ease: 'power1.out',
+        },
         'output-of-elements'
       )
       .to(
         '.player__dots--tr',
-        { top: -48, right: -48, duration: outputTime, ease: 'power1.out' },
+        {
+          top: getDotsPercent().yPercent,
+          right: getDotsPercent().xPercent,
+          duration: outputTime,
+          ease: 'power1.out',
+        },
         'output-of-elements'
       )
       .to(
         '.player__dots--bl',
-        { bottom: -48, left: -48, duration: outputTime, ease: 'power1.out' },
+        {
+          bottom: getDotsPercent().yPercent,
+          left: getDotsPercent().xPercent,
+          duration: outputTime,
+          ease: 'power1.out',
+        },
         'output-of-elements'
       )
       .to(
         '.player__dots--br',
         {
-          bottom: -48,
-          right: -48,
-          duration: outputTime + 0.5,
+          bottom: getDotsPercent().yPercent,
+          right: getDotsPercent().xPercent,
+          duration: outputTime,
           ease: 'power1.out',
         },
         'output-of-elements'
