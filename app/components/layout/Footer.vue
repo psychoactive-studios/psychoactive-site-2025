@@ -1,6 +1,7 @@
 <script setup>
 import { footerData } from '~/data/footerData';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
+import LinkWithHover from '../ui/LinkWithHover.vue';
 </script>
 
 <template>
@@ -9,9 +10,7 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
       <ul class="links">
         <template v-for="(link, index) in footerData.links" :key="link.title">
           <li class="link">
-            <!-- <NuxtLink :to="link.url">{{ link.title }}</NuxtLink> -->
-            <!-- TODO: fix NuxtLink -->
-            <a :href="link.url">{{ link.title }}</a>
+            <LinkWithHover :href="link.url">{{ link.title }}</LinkWithHover>
           </li>
           <li v-if="index < footerData.links.length - 1" class="separator" />
         </template>
@@ -32,7 +31,9 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
       <div class="brief__title">Brief our <span>AI</span> agent</div>
       <div class="brief__email">
         Or email the old fashioned way:
-        <a href="mailto:hello@psychoactive.co.nz">hello@psychoactive.co.nz</a>
+        <LinkWithHover href="mailto:hello@psychoactive.co.nz">
+          hello@psychoactive.co.nz
+        </LinkWithHover>
       </div>
     </section>
 
@@ -73,6 +74,9 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
       .link {
         font-family: 'RoobertMono', sans-serif;
         text-transform: uppercase;
+        a {
+          display: block;
+        }
       }
       .separator {
         flex-grow: 1;
