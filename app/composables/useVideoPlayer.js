@@ -26,11 +26,14 @@ export default function () {
     const previewControlsButton = playerWrapper.querySelector(
       '.player__preview_controls .play-button'
     );
+
     const previewControlsPlus = gsap.utils.toArray(
-      '.player__preview_controls .plus'
+      playerWrapper.querySelectorAll('.player__preview_controls .plus')
     );
     const previewControlsTexts = gsap.utils.toArray(
-      '.player__preview_controls .play-reel-text .char-center, .player__preview_controls .play-time-text .char-center'
+      playerWrapper.querySelectorAll(
+        '.player__preview_controls .play-reel-text .char-center, .player__preview_controls .play-time-text .char-center'
+      )
     );
     const playerButtons = gsap.utils.toArray(
       videoPlayerModalRef.value.querySelectorAll(
@@ -239,6 +242,7 @@ export default function () {
             gsap.set(playerWrapper, { clearProps: 'all' });
           },
         });
+        previewVideo.play();
       }, 'close+=0.1')
       .to(
         previewControlsPlus,
