@@ -64,6 +64,8 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
+  z-index: 1;
   .navigation {
     .links {
       display: flex;
