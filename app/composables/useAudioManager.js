@@ -37,7 +37,7 @@ export default function () {
     });
   }
 
-  function playHoverSound() {
+  function playInteractionSound() {
     if (isMuted.value) return;
     const randomIndex = Math.floor(Math.random() * fileList.length);
     const sound = sounds[fileList[randomIndex]];
@@ -49,6 +49,6 @@ export default function () {
   return {
     isMuted,
     loadSounds,
-    playHoverSound,
+    playInteractionSound,
   };
 }

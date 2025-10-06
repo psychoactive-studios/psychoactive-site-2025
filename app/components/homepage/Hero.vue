@@ -10,9 +10,11 @@ import { heroInitSplitText, heroInitAnimation } from '~/utils';
 import VideoPreview from '../ui/VideoPreview.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
+import useAudioManager from '~/composables/useAudioManager';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen } = useVideoPlayer();
+const { playInteractionSound } = useAudioManager();
 
 const container = ref(null);
 let ctx;
@@ -92,7 +94,12 @@ const onPlayVideoHandler = (playerContainerRef) => {
             </div>
           </div>
           <div class="top-text">
-            <a href="https://webflow.com/@Psychoactive-Studios" target="_blank">
+            <a
+              href="https://webflow.com/@Psychoactive-Studios"
+              target="_blank"
+              @mouseenter="playInteractionSound"
+              @focus="playInteractionSound"
+            >
               <img
                 class="top-text__label"
                 src="/img/Webflow_label.svg"

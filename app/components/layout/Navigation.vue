@@ -3,8 +3,10 @@ import { SplitText } from 'gsap/SplitText';
 import VideoPreview from '../ui/VideoPreview.vue';
 import useNavigation from '~/composables/useNavigation';
 import LinkWithHover from '../ui/LinkWithHover.vue';
+import useAudioManager from '~/composables/useAudioManager';
 
 const { navigationRef, initNavigation } = useNavigation();
+const { playInteractionSound } = useAudioManager();
 
 onMounted(() => {
   SplitText.create(
@@ -76,7 +78,13 @@ onMounted(() => {
         <div class="navigation__talk_line">
           <span />
         </div>
-        <button class="navigation__talk_button">Let’s talk</button>
+        <button
+          class="navigation__talk_button"
+          @mouseenter="playInteractionSound"
+          @focus="playInteractionSound"
+        >
+          Let’s talk
+        </button>
         <div class="navigation__talk_line">
           <span />
         </div>

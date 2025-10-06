@@ -2,6 +2,9 @@
 import { footerData } from '~/data/footerData';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
 import LinkWithHover from '../ui/LinkWithHover.vue';
+import useAudioManager from '~/composables/useAudioManager';
+
+const { playInteractionSound } = useAudioManager();
 </script>
 
 <template>
@@ -46,7 +49,12 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
         </li>
       </ul>
       <div class="awards__label">
-        <a href="https://webflow.com/@Psychoactive-Studios" target="_blank">
+        <a
+          href="https://webflow.com/@Psychoactive-Studios"
+          target="_blank"
+          @mouseenter="playInteractionSound"
+          @focus="playInteractionSound"
+        >
           <img src="/img/Webflow_label.svg" alt="" />
         </a>
       </div>
@@ -157,6 +165,7 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
       text-align: center;
       a {
         color: white(100);
+        display: inline-block;
       }
     }
   }

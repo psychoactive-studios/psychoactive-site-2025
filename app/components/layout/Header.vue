@@ -4,8 +4,10 @@ import SoundButton from '../ui/SoundButton.vue';
 import Logo from '~/assets/img/logo-1.svg';
 import HeaderNavigationButton from '../ui/HeaderNavigationButton.vue';
 import useNavigation from '~/composables/useNavigation';
+import useAudioManager from '~/composables/useAudioManager';
 
 const { isOpen } = useNavigation();
+const { playInteractionSound } = useAudioManager();
 </script>
 
 <template>
@@ -15,11 +17,18 @@ const { isOpen } = useNavigation();
       :class="['logo', { dark: isOpen }]"
       aria-label="Go to homepage"
       aria-describedby="main-logo"
+      @mouseenter="playInteractionSound"
+      @focus="playInteractionSound"
     >
       <Logo id="header-logo" alt="psychoactive logo" />
     </NuxtLink>
     <HeaderNavigationButton />
-    <SoundButton id="header-sound-button" class="header__sound-button" />
+    <SoundButton
+      id="header-sound-button"
+      class="header__sound-button"
+      @mouseenter="playInteractionSound"
+      @focus="playInteractionSound"
+    />
     <Navigation />
   </header>
 </template>

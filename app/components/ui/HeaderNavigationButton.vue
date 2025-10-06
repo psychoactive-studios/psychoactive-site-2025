@@ -2,10 +2,12 @@
 import gsap from 'gsap';
 import useNavigation from '~/composables/useNavigation';
 import useVideoPlayer from '~/composables/useVideoPlayer';
+import useAudioManager from '~/composables/useAudioManager';
 
 const buttonRef = ref(null);
 const { isOpen: isNavOpen, openNavigation, closeNavigation } = useNavigation();
 const { isOpen: isVideoOpen, onPlayerClose } = useVideoPlayer();
+const { playInteractionSound } = useAudioManager();
 
 let ctx;
 let hoverTimelineIn, hoverTimelineOut;
@@ -155,6 +157,7 @@ const onClickHandler = () => {
 };
 
 const onMouseEnterHandler = () => {
+  playInteractionSound();
   if (isNavOpen.value || isVideoOpen.value) {
     hoverTimelineCloseIn.restart();
   } else {

@@ -2,7 +2,7 @@
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 
-const { playHoverSound } = useAudioManager();
+const { playInteractionSound } = useAudioManager();
 
 defineProps({
   href: {
@@ -19,7 +19,7 @@ const handleHoverEffect = (el) => {
   const width = el.offsetWidth;
   gsap.set(el, { width });
 
-  playHoverSound();
+  playInteractionSound();
 
   // Store the original text
   gsap.to(el, {
