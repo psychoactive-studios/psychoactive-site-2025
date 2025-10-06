@@ -2,6 +2,7 @@
 import { SplitText } from 'gsap/SplitText';
 import VideoPreview from '../ui/VideoPreview.vue';
 import useNavigation from '~/composables/useNavigation';
+import LinkWithHover from '../ui/LinkWithHover.vue';
 
 const { navigationRef, initNavigation } = useNavigation();
 
@@ -39,31 +40,31 @@ onMounted(() => {
         <div class="navigation__menu">
           <ul class="navigation__list">
             <li class="navigation__item">
-              <a href="/">About</a>
+              <LinkWithHover href="/">About</LinkWithHover>
               <div class="navigation__item-line">
                 <span class="line" />
               </div>
             </li>
             <li class="navigation__item">
-              <a href="/">Work</a>
+              <LinkWithHover href="/">Work</LinkWithHover>
               <div class="navigation__item-line">
                 <span class="line" />
               </div>
             </li>
             <li class="navigation__item">
-              <a href="/">Services</a>
+              <LinkWithHover href="/">Services</LinkWithHover>
               <div class="navigation__item-line">
                 <span class="line" />
               </div>
             </li>
             <li class="navigation__item">
-              <a href="/">Webflow</a>
+              <LinkWithHover href="/">Webflow</LinkWithHover>
               <div class="navigation__item-line">
                 <span class="line" />
               </div>
             </li>
             <li class="navigation__item">
-              <a href="/">Content</a>
+              <LinkWithHover href="/">Content</LinkWithHover>
               <div class="navigation__item-line">
                 <span class="line" />
               </div>
