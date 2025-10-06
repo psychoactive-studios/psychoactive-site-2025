@@ -55,6 +55,7 @@ defineProps({
         position: absolute;
         border-radius: 50%;
         animation: pulse 1.6s linear infinite;
+        transform: scale(0);
         width: 48px;
         height: 48px;
         border: 2px solid white(100);
@@ -63,6 +64,26 @@ defineProps({
       }
       &::before {
         animation-delay: 0.5s;
+      }
+    }
+  }
+  &--muted {
+    span {
+      width: 6px;
+      height: 6px;
+      position: relative;
+      z-index: 1;
+      &::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        animation: none;
+        width: 48px;
+        height: 48px;
+        border: 1px solid white(50);
+        top: -21px;
+        left: -21px;
+        animation: flicker-effect 0.6s ease;
       }
     }
   }

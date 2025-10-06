@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import Navigation from '~/components/layout/Navigation.vue';
 import SoundButton from '../ui/SoundButton.vue';
 import Logo from '~/assets/img/logo-1.svg';
@@ -7,7 +7,11 @@ import useNavigation from '~/composables/useNavigation';
 import useAudioManager from '~/composables/useAudioManager';
 
 const { isOpen } = useNavigation();
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, isMuted } = useAudioManager();
+
+const onSoundChangeHandler = () => {
+  isMuted.value = !isMuted.value;
+};
 </script>
 
 <template>
@@ -26,6 +30,8 @@ const { playInteractionSound } = useAudioManager();
     <SoundButton
       id="header-sound-button"
       class="header__sound-button"
+      :muted="isMuted"
+      @click="onSoundChangeHandler"
       @mouseenter="playInteractionSound"
       @focus="playInteractionSound"
     />
