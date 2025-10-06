@@ -315,38 +315,45 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
         height: getRem(48);
         border: 1px solid white(20);
         border-radius: getRem(48);
-        background-color: $color-foreground;
         color: $color-background;
+        position: relative;
+        .nuxt-icon {
+          position: relative;
+          z-index: 1;
+          transition: color 0.075s ease-out;
+        }
         &::before {
           content: '';
           position: absolute;
           inset: 0;
+          background-color: $color-foreground;
           border-radius: getRem(48);
           z-index: 1;
-          transform: scale(0);
+          transform: scale(1);
           transition: transform 0.4s cubic-bezier(0, 0, 0.02, 0.99);
           will-change: transform;
         }
-        &--transparent {
-          background-color: transparent;
-          color: $color-foreground;
+        &:hover {
           .nuxt-icon {
-            position: relative;
-            z-index: 1;
-            transition: color 0.075s ease-out;
+            color: $color-foreground;
           }
           &::before {
+            transform: scale(0);
+          }
+        }
+        &--transparent {
+          color: $color-foreground;
+          &::before {
             background: $color-foreground;
+            transform: scale(0);
           }
           &:hover {
             .nuxt-icon {
               color: $color-background;
             }
-          }
-        }
-        &:hover {
-          &::before {
-            transform: scale(1);
+            &::before {
+              transform: scale(1);
+            }
           }
         }
       }
