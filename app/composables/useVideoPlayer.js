@@ -8,6 +8,7 @@ const { enableScroll } = useScrollSmoother();
 
 const currentPreview = ref(null);
 const videoPlayerModalRef = ref(null);
+const isOpen = ref(false);
 const isPlaying = ref(false);
 const isMuted = ref(false);
 const currentTime = ref(0);
@@ -51,7 +52,7 @@ export default function () {
 
     // animate the button and texts out first before the
     gsap
-      .timeline()
+      .timeline({ id: 'open-video-modal-timeline' })
       .add(() => previewVideo.pause())
       .to(previewControlsButton, {
         scale: 0,
@@ -97,6 +98,7 @@ export default function () {
           absolute: true,
         });
       }, '<')
+      .add(() => (isOpen.value = true), '<')
       .to(
         previewVideo,
         {
@@ -191,9 +193,10 @@ export default function () {
 
     videoPlayer.pause();
     isPlaying.value = false;
+    isOpen.value = false;
 
     gsap
-      .timeline()
+      .timeline({ id: 'close-video-modal-timeline' })
       .set(previewVideo, {
         opacity: 1,
       })
@@ -316,6 +319,7 @@ export default function () {
   return {
     videoPlayerModalRef,
     currentPreview,
+    isOpen,
     isPlaying,
     isMuted,
     currentTime,
