@@ -22,7 +22,7 @@ const animationRef = ref(null);
   background-color: $color-background;
   z-index: 9999; /* Ensure it overlays other content */
   &__animation {
-    width: 80px;
+    width: 48px;
     height: auto;
     * {
       fill: $color-foreground;

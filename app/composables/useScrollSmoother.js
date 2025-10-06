@@ -12,6 +12,7 @@ export default function () {
       // effects: true,
       normalizeScroll: true,
     });
+    scrollSmoother.value.scrollTo(0, false);
     scrollSmoother.value.paused(true);
   };
 

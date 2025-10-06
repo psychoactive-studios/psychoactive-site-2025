@@ -28,12 +28,11 @@ const { isOpen } = useNavigation();
 @use '~/assets/styles/variables' as *;
 .header {
   position: relative;
-  z-index: 100;
   .logo {
     position: fixed;
     top: 48px;
     left: 48px;
-    z-index: 1000;
+    z-index: 99;
     transition: color 0.3s ease;
     transition-delay: 0.3s;
     &.dark {
@@ -48,7 +47,7 @@ const { isOpen } = useNavigation();
     position: fixed;
     top: 110px;
     right: 48px;
-    z-index: 1000;
+    z-index: 99;
   }
 }
 </style>

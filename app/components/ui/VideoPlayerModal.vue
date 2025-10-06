@@ -3,13 +3,12 @@ import useVideoPlayer from '~/composables/useVideoPlayer';
 import PlayIcon from '~/assets/icons/icon-play.svg';
 import PauseIcon from '~/assets/icons/icon-pause.svg';
 import SoundButton from './SoundButton.vue';
-import CloseButton from './CloseButton.vue';
+
 const {
   isPlaying,
   currentTime,
   isMuted,
   progress,
-  onPlayerClose,
   videoPlayerModalRef,
   playHandler,
   formatTime,
@@ -50,7 +49,6 @@ onMounted(() => {
 <template>
   <div id="video-player-modal" ref="videoPlayerModalRef">
     <div class="modal__player">
-      <CloseButton class="close-button" @click="onPlayerClose" />
       <video
         class="player__main_video"
         src="https://vjs.zencdn.net/v/oceans.mp4"
@@ -89,7 +87,7 @@ onMounted(() => {
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 100;
   .modal__player {
     @include flex-center;
     width: 100%;

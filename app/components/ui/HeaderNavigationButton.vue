@@ -1,14 +1,17 @@
 <script setup>
 import gsap from 'gsap';
 import useNavigation from '~/composables/useNavigation';
+import useVideoPlayer from '~/composables/useVideoPlayer';
 
 const buttonRef = ref(null);
-const { isOpen, openNavigation, closeNavigation } = useNavigation();
+const { isOpen: isNavOpen, openNavigation, closeNavigation } = useNavigation();
+const { isOpen: isVideoOpen, onPlayerClose } = useVideoPlayer();
 
 let ctx;
-let hoverTimeline;
+let hoverTimelineIn, hoverTimelineOut;
 let hoverTimelineCloseIn, hoverTimelineCloseOut;
 let transitionTimelineIn, transitionTimelineOut;
+let transitionFromVideoTimelineIn;
 
 onMounted(() => {
   ctx = gsap.context(() => {
@@ -18,7 +21,7 @@ onMounted(() => {
     const dot3 = buttonRef.value.querySelector('.dot-3');
     const dot4 = buttonRef.value.querySelector('.dot-4');
     const lines = buttonRef.value.querySelectorAll('.line');
-    hoverTimeline = gsap
+    hoverTimelineIn = gsap
       .timeline({ paused: true })
       .to(dots, {
         opacity: 0,
@@ -27,12 +30,34 @@ onMounted(() => {
           amount: 0.15,
           from: 'random',
         },
+        overwrite: 'auto',
       })
       .set(dot1, { x: 5, y: 5 })
       .set(dot2, { x: -5, y: 5 })
       .set(dot3, { x: 5, y: -5 })
       .set(dot4, { x: -5, y: -5 })
       .to(dots, { opacity: 1, duration: 0.001 }, '+=0.1');
+
+    hoverTimelineOut = gsap
+      .timeline({ paused: true })
+      .to(dots, { opacity: 0, duration: 0.001 }, '+=0.1')
+      .set(dot1, { x: 0, y: 0 })
+      .set(dot2, { x: 0, y: 0 })
+      .set(dot3, { x: 0, y: 0 })
+      .set(dot4, { x: 0, y: 0 })
+      .to(
+        dots,
+        {
+          opacity: 1,
+          duration: 0.001,
+          stagger: {
+            amount: 0.15,
+            from: 'random',
+          },
+          overwrite: 'auto',
+        },
+        '+=0.1'
+      );
 
     hoverTimelineCloseIn = gsap
       .timeline({ paused: true })
@@ -71,6 +96,10 @@ onMounted(() => {
       .to(dot4, { x: -5, y: -5, duration: 0.3, ease: 'power2.inOut' }, 'init')
       .to(lines, { scaleX: 0, duration: 0.3, ease: 'power2.inOut' }, 'init');
 
+    transitionFromVideoTimelineIn = gsap
+      .timeline({ paused: true })
+      .to(lines, { scaleX: 1.4, duration: 0.3, ease: 'power2.inOut' }, 'init');
+
     // Initial state for lines
     gsap.set('.line-1', {
       xPercent: -50,
@@ -91,15 +120,32 @@ onUnmounted(() => {
   ctx.revert();
 });
 
+watch(isVideoOpen, (newVal) => {
+  if (newVal) {
+    // If video is open, ensure button is in closed state
+    transitionFromVideoTimelineIn.restart();
+  } else {
+    // If video is closed, reset button to initial state
+    if (!isNavOpen.value) transitionTimelineOut.restart();
+  }
+});
+
 const onClickHandler = () => {
   // Prevent multiple clicks during animation
   const isAnimating =
     gsap.getById('open-timeline-main')?.isActive() ||
-    gsap.getById('close-timeline')?.isActive();
+    gsap.getById('close-timeline')?.isActive() ||
+    gsap.getById('open-video-modal-timeline')?.isActive() ||
+    gsap.getById('close-video-modal-timeline')?.isActive();
   if (isAnimating) return;
 
+  if (isVideoOpen.value) {
+    onPlayerClose();
+    return;
+  }
+
   // Toggle navigation state
-  if (isOpen.value) {
+  if (isNavOpen.value) {
     transitionTimelineOut.restart();
     closeNavigation();
   } else {
@@ -109,18 +155,18 @@ const onClickHandler = () => {
 };
 
 const onMouseEnterHandler = () => {
-  if (isOpen.value) {
+  if (isNavOpen.value || isVideoOpen.value) {
     hoverTimelineCloseIn.restart();
   } else {
-    hoverTimeline.restart();
+    hoverTimelineIn.restart();
   }
 };
 
 const onMouseLeaveHandler = () => {
-  if (isOpen.value) {
+  if (isNavOpen.value || isVideoOpen.value) {
     hoverTimelineCloseOut.restart();
   } else {
-    hoverTimeline.reverse();
+    hoverTimelineOut.restart();
   }
 };
 </script>
@@ -128,7 +174,7 @@ const onMouseLeaveHandler = () => {
   <button
     id="header-navigation-button"
     ref="buttonRef"
-    :class="['header__navigation-button', { dark: isOpen }]"
+    :class="['header__navigation-button', { dark: isNavOpen && !isVideoOpen }]"
     @click="onClickHandler"
     @mouseenter="onMouseEnterHandler"
     @mouseleave="onMouseLeaveHandler"
@@ -160,13 +206,16 @@ $flicker-ease: ease;
   grid-template-rows: repeat(2, 1fr);
   place-items: center;
   gap: 4px;
-  z-index: 1000;
+  z-index: 102;
   transition: color 0.3s ease;
   transition-delay: 0.3s;
   &.dark {
     color: $color-foreground;
     &::before {
       background-color: $color-background;
+    }
+    .line {
+      background-color: white(50);
     }
   }
   &::before {
@@ -207,7 +256,7 @@ $flicker-ease: ease;
     display: block;
     height: 1px;
     width: 10px;
-    background-color: white(50);
+    background-color: rgbaColor($color-background, 50);
     position: absolute;
     top: 50%;
     left: 50%;
