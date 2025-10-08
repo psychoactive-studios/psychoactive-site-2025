@@ -3,8 +3,58 @@ import { footerData } from '~/data/footerData';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
+import gsap from 'gsap';
+
+let footerBriefTimeline;
+const briefRef = ref(null);
 
 const { playInteractionSound } = useAudioManager();
+
+onMounted(() => {
+  const dotsLeft = briefRef.value.querySelector('.brief__title_dots .dot-left');
+  const dotsRight = briefRef.value.querySelector(
+    '.brief__title_dots .dot-right'
+  );
+  footerBriefTimeline = gsap
+    .timeline({ paused: true })
+    .to(gsap.utils.toArray([dotsLeft, dotsRight]), {
+      duration: 0.8,
+      width: '0%',
+      ease: 'power3.inOut',
+      overwrite: 'auto',
+    })
+    .set(dotsLeft, {
+      left: '50%',
+    })
+    .set(dotsRight, {
+      right: '50%',
+    })
+    .to(gsap.utils.toArray([dotsLeft, dotsRight]), {
+      duration: 0.8,
+      width: '50%',
+      ease: 'power3.inOut',
+      overwrite: 'auto',
+    });
+});
+
+const briefMouseEnterHandler = () => {
+  gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
+    duration: 0.9,
+    clipPath: 'polygon(0% 0, 100% 0, 100% 100%, 0% 100%)',
+    ease: 'power3.inOut',
+    overwrite: 'auto',
+  });
+  footerBriefTimeline.repeat(-1).restart();
+};
+const briefMouseLeaveHandler = () => {
+  gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
+    duration: 0.9,
+    clipPath: 'polygon(55% 0, 55% 0, 55% 100%, 55% 100%)',
+    ease: 'power3.inOut',
+    overwrite: 'auto',
+  });
+  footerBriefTimeline.repeat(0).reverse();
+};
 </script>
 
 <template>
@@ -31,7 +81,32 @@ const { playInteractionSound } = useAudioManager();
           <PlusIcon />
         </div>
       </div>
-      <div class="brief__title">Brief our <span>AI</span> agent</div>
+      <div
+        ref="briefRef"
+        class="brief__title"
+        @mouseenter="briefMouseEnterHandler"
+        @mouseleave="briefMouseLeaveHandler"
+      >
+        <NuxtLink href="/" class="brief__title_text">
+          <div class="brief__title_text--original">
+            Brief our
+            <div class="text-ai">
+              <span>AI</span>
+              <div class="brief__title_dots">
+                <span class="dot-left" />
+                <span class="dot-center" />
+                <span class="dot-right" />
+              </div>
+            </div>
+            agent
+          </div>
+          <div class="brief__title_text--mask">
+            Brief our
+            <div class="text-ai">AI</div>
+            agent
+          </div>
+        </NuxtLink>
+      </div>
       <div class="brief__email">
         Or email the old fashioned way:
         <LinkWithHover href="mailto:hello@psychoactive.co.nz">
@@ -141,22 +216,111 @@ const { playInteractionSound } = useAudioManager();
     }
 
     &__title {
-      font-size: 12.448vw;
-      line-height: 1.16;
-      letter-spacing: getRem(-16);
-      color: white(20);
-      text-align: center;
-      margin: 0 0 getRem(80) 0;
-      span {
-        color: white(100);
+      position: relative;
+      &_text {
+        font-size: 12.448vw;
+        line-height: 1.16;
+        letter-spacing: getRem(-16);
+        color: white(20);
+        text-align: center;
+        margin: 0 0 getRem(80) 0;
+        display: block;
         position: relative;
+        .text-ai {
+          display: inline-block;
+          color: white(100);
+          position: relative;
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: getRem(24);
+            left: 0;
+            width: 100%;
+          }
+        }
+        &--mask {
+          position: absolute;
+          inset: 0;
+          color: white(100);
+          clip-path: polygon(55% 0, 55% 0, 55% 100%, 55% 100%);
+        }
+      }
+      &_dots {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 3%;
+        &::before {
+          content: '';
+          display: block;
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background-color: $color-dots;
+          position: absolute;
+          top: 0;
+          left: calc(0% - 3px);
+          z-index: 1;
+        }
         &::after {
           content: '';
+          display: block;
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background-color: $color-dots;
           position: absolute;
-          bottom: getRem(24);
-          left: 0;
-          width: 100%;
-          border-bottom: 1px dashed white(100);
+          top: 0;
+          right: calc(0% - 4px);
+          z-index: 1;
+        }
+        .dot-center {
+          display: block;
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background-color: $color-dots;
+          position: absolute;
+          top: 0;
+          left: calc(50% - 3px);
+        }
+        .dot-left,
+        .dot-right {
+          display: block;
+          width: 50%;
+          height: 1px;
+          background-color: white(20);
+          position: absolute;
+          &::before {
+            content: '';
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            background: $color-dots;
+            border-radius: 50%;
+            top: -3px;
+            left: -3px;
+          }
+          &::after {
+            content: '';
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            background: $color-dots;
+            border-radius: 50%;
+            top: -3px;
+            right: -4px;
+          }
+          &.dot-left {
+            left: 0px;
+            top: 3px;
+            // background-color: red;
+          }
+          &.dot-right {
+            right: 0px;
+            top: 3px;
+            // background-color: green;
+          }
         }
       }
     }
