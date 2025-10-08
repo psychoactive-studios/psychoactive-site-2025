@@ -11,16 +11,16 @@ const { playInteractionSound } = useAudioManager();
 
 const briefMouseEnterHandler = () => {
   gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
-    duration: 0.4,
+    duration: 1,
     clipPath: 'polygon(0% 0, 100% 0, 100% 100%, 0% 100%)',
-    // ease: 'power1.out',
+    ease: 'power2.out',
   });
 };
 const briefMouseLeaveHandler = () => {
   gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
     duration: 0.6,
     clipPath: 'polygon(55% 0, 55% 0, 55% 100%, 55% 100%)',
-    // ease: 'power1.in',
+    ease: 'power2.in',
   });
 };
 </script>
