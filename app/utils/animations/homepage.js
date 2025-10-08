@@ -102,7 +102,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
     document
   );
 
-  const loaderElement = document.querySelector('.loader__animation');
+  const loaderElement = document.querySelector('#loader-logo');
 
   const ease1 = 'power3.out';
   const duration1 = 2;

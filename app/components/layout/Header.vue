@@ -1,16 +1,27 @@
 <script setup>
 import Navigation from '~/components/layout/Navigation.vue';
 import SoundButton from '../ui/SoundButton.vue';
-import Logo from '~/assets/img/logo-1.svg';
 import HeaderNavigationButton from '../ui/HeaderNavigationButton.vue';
 import useNavigation from '~/composables/useNavigation';
 import useAudioManager from '~/composables/useAudioManager';
+import MainAnimatedLogo from '../ui/MainAnimatedLogo.vue';
 
+const mainLogoRef = ref(null);
 const { isOpen } = useNavigation();
 const { playInteractionSound, isMuted } = useAudioManager();
 
 const onSoundChangeHandler = () => {
   isMuted.value = !isMuted.value;
+};
+
+const onLogoHoverHandler = (e) => {
+  if (mainLogoRef.value && e.type === 'mouseenter') {
+    mainLogoRef.value.animationInstance.loop = true;
+    mainLogoRef.value.animationInstance.play();
+  }
+  if (mainLogoRef.value && e.type === 'mouseleave') {
+    mainLogoRef.value.animationInstance.loop = false;
+  }
 };
 </script>
 
@@ -24,7 +35,13 @@ const onSoundChangeHandler = () => {
       @mouseenter="playInteractionSound"
       @focus="playInteractionSound"
     >
-      <Logo id="header-logo" alt="psychoactive logo" />
+      <MainAnimatedLogo
+        id="header-logo"
+        ref="mainLogoRef"
+        alt="Psychoactive"
+        @mouseenter="onLogoHoverHandler"
+        @mouseleave="onLogoHoverHandler"
+      />
     </NuxtLink>
     <HeaderNavigationButton />
     <SoundButton
