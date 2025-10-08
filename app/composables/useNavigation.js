@@ -185,18 +185,18 @@ export default function () {
         { width: '100%', duration: 1, ease: 'power3.inOut' },
         '<'
       )
-      .fromTo(
-        navLetsText,
-        { opacity: 0 },
+      .to(
+        letsButton,
         {
-          opacity: 1,
-          duration: 0.01,
-          stagger: {
-            amount: 0.22,
-            from: 'random',
+          duration: 1,
+          ease: 'none',
+          scrambleText: {
+            text: '{original}',
+            chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+            tweenLength: false,
           },
         },
-        '<+=0.2'
+        '<'
       )
       // .set(navVideoPlayer, { visibility: 'visible' })
       // .set(navVideoPoster, { visibility: 'hidden' })

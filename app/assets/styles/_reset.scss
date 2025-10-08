@@ -44,6 +44,7 @@ button {
   align-items: center;
   justify-content: center;
   outline: none !important;
+  box-sizing: border-box;
 }
 
 /* Remove list styles for ul/ol */

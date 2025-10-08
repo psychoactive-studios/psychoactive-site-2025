@@ -1,23 +1,38 @@
-<script setup lang="ts">
+<script setup>
 import { SplitText } from 'gsap/SplitText';
 import VideoPreview from '../ui/VideoPreview.vue';
 import useNavigation from '~/composables/useNavigation';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
+import gsap from 'gsap';
 
 const { navigationRef, initNavigation } = useNavigation();
 const { playInteractionSound } = useAudioManager();
 
+let talkButtonHoverTween;
+
 onMounted(() => {
-  SplitText.create(
-    '#main-navigation .navigation__item a, .navigation__talk_button',
-    {
-      type: 'chars',
-      charsClass: 'char-center',
-    }
-  );
+  SplitText.create('#main-navigation .navigation__item a', {
+    type: 'chars',
+    charsClass: 'char-center',
+  });
   initNavigation();
+  talkButtonHoverTween = gsap.to('.navigation__talk_button', {
+    duration: 0.5,
+    ease: 'none',
+    scrambleText: {
+      text: '{original}',
+      chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+      tweenLength: false,
+    },
+  });
 });
+
+const talkButtonHoverHandler = () => {
+  playInteractionSound();
+  if (gsap.isTweening('.navigation__talk_button')) return;
+  talkButtonHoverTween.restart();
+};
 </script>
 
 <template>
@@ -80,8 +95,8 @@ onMounted(() => {
         </div>
         <button
           class="navigation__talk_button"
-          @mouseenter="playInteractionSound"
-          @focus="playInteractionSound"
+          @mouseenter="talkButtonHoverHandler"
+          @focus="talkButtonHoverHandler"
         >
           Let’s talk
         </button>
@@ -252,12 +267,13 @@ onMounted(() => {
       font-size: 1rem;
       color: $color-foreground;
       cursor: pointer;
-      padding: 0 56px;
+      padding: 0 24px;
       border-radius: 48px;
       position: relative;
       z-index: 1;
       height: 64px;
       text-transform: uppercase;
+      width: 212px;
       &::before {
         content: '';
         position: absolute;
