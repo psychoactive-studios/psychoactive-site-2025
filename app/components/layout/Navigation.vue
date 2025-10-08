@@ -103,7 +103,7 @@ onMounted(() => {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  z-index: 100;
+  z-index: 99;
   pointer-events: none;
   &__background {
     position: absolute;

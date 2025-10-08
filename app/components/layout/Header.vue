@@ -29,7 +29,7 @@ const onSoundChangeHandler = () => {
     <HeaderNavigationButton />
     <SoundButton
       id="header-sound-button"
-      class="header__sound-button"
+      :class="['header__sound-button', { dark: isOpen }]"
       :muted="isMuted"
       @click="onSoundChangeHandler"
       @mouseenter="playInteractionSound"
@@ -47,7 +47,7 @@ const onSoundChangeHandler = () => {
     position: fixed;
     top: 48px;
     left: 48px;
-    z-index: 99;
+    z-index: 100;
     transition: color 0.3s ease;
     transition-delay: 0.3s;
     &.dark {
@@ -62,7 +62,29 @@ const onSoundChangeHandler = () => {
     position: fixed;
     top: 110px;
     right: 48px;
-    z-index: 99;
+    z-index: 100;
+    &::after {
+      transition: background-color 0.3s ease;
+      transition-delay: 0.3s;
+    }
+    :deep(span) {
+      &::before,
+      &::after {
+        transition: border-color 0.3s ease;
+        transition-delay: 0.3s;
+      }
+    }
+    &.dark {
+      &::after {
+        background-color: $color-background;
+      }
+      :deep(span) {
+        &::before,
+        &::after {
+          border-color: $color-background;
+        }
+      }
+    }
   }
 }
 </style>
