@@ -237,7 +237,7 @@ const onPlayVideoHandler = (playerContainerRef) => {
             position: absolute;
             width: 7px;
             height: 7px;
-            stroke: white(50);
+            color: white(50);
           }
         }
         .grey-text {
