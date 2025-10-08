@@ -3,8 +3,26 @@ import { footerData } from '~/data/footerData';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
+import gsap from 'gsap';
+
+const briefRef = ref(null);
 
 const { playInteractionSound } = useAudioManager();
+
+const briefMouseEnterHandler = () => {
+  gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
+    duration: 0.4,
+    clipPath: 'polygon(0% 0, 100% 0, 100% 100%, 0% 100%)',
+    // ease: 'power1.out',
+  });
+};
+const briefMouseLeaveHandler = () => {
+  gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
+    duration: 0.6,
+    clipPath: 'polygon(55% 0, 55% 0, 55% 100%, 55% 100%)',
+    // ease: 'power1.in',
+  });
+};
 </script>
 
 <template>
@@ -31,7 +49,27 @@ const { playInteractionSound } = useAudioManager();
           <PlusIcon />
         </div>
       </div>
-      <div class="brief__title">Brief our <span>AI</span> agent</div>
+      <div
+        ref="briefRef"
+        class="brief__title"
+        style="
+          /* --colorFrom: rgba(255, 255, 255, 1);
+          --colorTo: rgba(255, 255, 255, 0.2); */
+          --progressTo: 0;
+          --progressFrom: 0;
+        "
+        @mouseenter="briefMouseEnterHandler"
+        @mouseleave="briefMouseLeaveHandler"
+      >
+        <div class="brief__title_text">
+          <div class="brief__title_text--original">
+            Brief our <span>AI</span> agent
+          </div>
+          <div class="brief__title_text--mask">
+            Brief our <span>AI</span> agent
+          </div>
+        </div>
+      </div>
       <div class="brief__email">
         Or email the old fashioned way:
         <LinkWithHover href="mailto:hello@psychoactive.co.nz">
@@ -141,24 +179,53 @@ const { playInteractionSound } = useAudioManager();
     }
 
     &__title {
-      font-size: 12.448vw;
-      line-height: 1.16;
-      letter-spacing: getRem(-16);
-      color: white(20);
-      text-align: center;
-      margin: 0 0 getRem(80) 0;
-      span {
-        color: white(100);
+      &_text {
+        font-size: 12.448vw;
+        line-height: 1.16;
+        letter-spacing: getRem(-16);
+        color: white(20);
+        text-align: center;
+        margin: 0 0 getRem(80) 0;
+        // background-image: linear-gradient(
+        //   90deg,
+        //   var(--colorFrom) calc(var(--progress) * 1%),
+        //   var(--colorTo) 0%
+        // );
+        // background-clip: text;
         position: relative;
-        &::after {
-          content: '';
+        span {
+          color: white(100);
+          position: relative;
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: getRem(24);
+            left: 0;
+            width: 100%;
+            border-bottom: 1px dashed white(100);
+          }
+        }
+        &--mask {
           position: absolute;
-          bottom: getRem(24);
-          left: 0;
-          width: 100%;
-          border-bottom: 1px dashed white(100);
+          inset: 0;
+          color: white(100);
+          // clip-path: polygon(
+          //   calc(var(--progressFrom) * 1%) 0,
+          //   calc(var(--progressTo) * 1%) 0,
+          //   calc(var(--progressTo) * 1%) 100%,
+          //   calc(var(--progressFrom) * 1%) 100%
+          // );
+          clip-path: polygon(55% 0, 55% 0, 55% 100%, 55% 100%);
+          // transition: clip-path 0.3s;
+          // transition-timing-function: ease-in-out;
         }
       }
+      // &:hover {
+      //   .brief__title_text--mask {
+      //     clip-path: polygon(0% 0, 100% 0, 100% 100%, 0% 100%);
+      //     // transition-timing-function: ease-out;
+      //   }
+      // }
     }
 
     &__email {
