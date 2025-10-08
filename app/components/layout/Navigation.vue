@@ -168,8 +168,8 @@ const talkButtonHoverHandler = () => {
     //   }
     // }
   }
-  &__menu {
-  }
+  // &__menu {
+  // }
   &__list {
     height: 100%;
     display: flex;

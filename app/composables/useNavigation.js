@@ -25,7 +25,6 @@ let navBackground,
   navLines,
   letsBlock,
   letsButton,
-  navLetsText,
   letsLines;
 
 export default function () {
@@ -67,12 +66,6 @@ export default function () {
 
     letsButton = navigationRef?.value?.querySelector(
       '.navigation__talk_button'
-    );
-
-    navLetsText = gsap.utils.toArray(
-      navigationRef?.value?.querySelectorAll(
-        '.navigation__talk_button .char-center'
-      )
     );
 
     letsBlock = gsap.utils.toArray(
