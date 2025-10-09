@@ -77,16 +77,18 @@ const onPlayVideoHandler = (playerContainerRef) => {
 };
 
 const onScrollDownHandler = () => {
-  console.log('AAAAA');
-
+  // Get ScrollTrigger by ID
   const trigger = ScrollTrigger.getById('homepage-hero-scrolltrigger');
+  if (!scrollSmoother.value || !trigger) return;
+  // Check if scrollSmoother and trigger exist
   const y = trigger?.end;
+
+  // Smoothly scroll to the target position
   gsap.to(scrollSmoother.value, {
     scrollTop: y,
     duration: 1.25,
     ease: 'power3.inOut',
   });
-  console.log('y', y);
 };
 </script>
 
