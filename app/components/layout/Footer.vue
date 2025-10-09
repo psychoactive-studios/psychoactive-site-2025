@@ -4,6 +4,7 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import gsap from 'gsap';
+import WebflowLabel from '../ui/WebflowLabel.vue';
 
 let footerBriefTimeline;
 const briefRef = ref(null);
@@ -118,7 +119,12 @@ const briefMouseLeaveHandler = () => {
     <section class="awards">
       <ul class="awards__list">
         <li v-for="award in footerData.awards" :key="award.name">
-          <a :href="award.url" target="_blank">
+          <a
+            :href="award.url"
+            target="_blank"
+            @mouseenter="playInteractionSound"
+            @focus="playInteractionSound"
+          >
             <NuxtImg :src="award.icon" :alt="award.name" height="28" />
           </a>
         </li>
@@ -130,7 +136,7 @@ const briefMouseLeaveHandler = () => {
           @mouseenter="playInteractionSound"
           @focus="playInteractionSound"
         >
-          <img src="/img/Webflow_label.svg" alt="" />
+          <WebflowLabel />
         </a>
       </div>
     </section>
@@ -346,6 +352,10 @@ const briefMouseLeaveHandler = () => {
       li {
         a {
           opacity: 0.5;
+          &:hover {
+            transition: none;
+            animation: flicker-effect-3 0.4s ease forwards;
+          }
         }
       }
     }
