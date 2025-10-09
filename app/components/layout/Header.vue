@@ -65,10 +65,14 @@ const onLogoHoverHandler = (e) => {
     top: 48px;
     left: 48px;
     z-index: 100;
-    transition: color 0.3s ease;
-    transition-delay: 0.3s;
+    & * {
+      transition: fill 0.3s ease;
+      transition-delay: 0.3s;
+    }
     &.dark {
-      color: $color-background;
+      & * {
+        fill: $color-background;
+      }
     }
     .nuxt-icon {
       width: 48px;
