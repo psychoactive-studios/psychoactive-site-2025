@@ -275,7 +275,7 @@ const onScrollDownHandler = () => {
         .circle--wrapper {
           position: absolute;
           z-index: 1;
-          top: 50%;
+          top: 46.5%;
           left: 50%;
           transform: translate(-50%, -50%) rotate(30deg);
           width: 50%;
@@ -293,16 +293,17 @@ const onScrollDownHandler = () => {
           text-align: right;
           &__label {
             width: auto;
-            height: 48px;
+            height: 2.5vw;
+            margin-left: auto;
           }
           &__agency {
             font-family: 'RoobertMono', sans-serif;
             color: white(80);
-            font-size: 18px;
+            font-size: 0.938vw;
             font-style: normal;
             line-height: 1;
             text-transform: uppercase;
-            margin: 24px 0 32px 0;
+            margin: 1.25vw 0 1.667vw 0;
           }
           &__innovation {
             line-height: 65%;
@@ -337,7 +338,7 @@ const onScrollDownHandler = () => {
         .center {
           position: absolute;
           z-index: 2;
-          top: 50%;
+          top: 46.5%;
           left: 0;
           right: 0;
           &__line {
@@ -485,7 +486,7 @@ const onScrollDownHandler = () => {
         .video-player {
           position: absolute;
           z-index: 3;
-          top: 50%;
+          top: 46.5%;
           left: 50%;
           transform: translate(-50%, -50%);
           aspect-ratio: 2.22;
@@ -493,7 +494,7 @@ const onScrollDownHandler = () => {
         .homehero-3d-scene--wrapper {
           position: absolute;
           z-index: 1;
-          top: 50%;
+          top: 46.5%;
           left: 50%;
           transform: translate(-50%, -50%);
           width: 100%;
