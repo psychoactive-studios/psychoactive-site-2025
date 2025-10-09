@@ -20,7 +20,7 @@ onMounted(() => {
     .to(gsap.utils.toArray([dotsLeft, dotsRight]), {
       duration: 0.8,
       width: '0%',
-      ease: 'power3.inOut',
+      ease: 'power1.in',
       overwrite: 'auto',
     })
     .set(dotsLeft, {
@@ -32,25 +32,25 @@ onMounted(() => {
     .to(gsap.utils.toArray([dotsLeft, dotsRight]), {
       duration: 0.8,
       width: '50%',
-      ease: 'power3.inOut',
+      ease: 'power1.out',
       overwrite: 'auto',
     });
 });
 
 const briefMouseEnterHandler = () => {
   gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
-    duration: 0.9,
+    duration: 0.8,
     clipPath: 'polygon(0% 0, 100% 0, 100% 100%, 0% 100%)',
-    ease: 'power3.inOut',
+    ease: 'power2.in',
     overwrite: 'auto',
   });
   footerBriefTimeline.repeat(-1).restart();
 };
 const briefMouseLeaveHandler = () => {
   gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
-    duration: 0.9,
+    duration: 0.8,
     clipPath: 'polygon(55% 0, 55% 0, 55% 100%, 55% 100%)',
-    ease: 'power3.inOut',
+    ease: 'power2.in',
     overwrite: 'auto',
   });
   footerBriefTimeline.repeat(0).reverse();
