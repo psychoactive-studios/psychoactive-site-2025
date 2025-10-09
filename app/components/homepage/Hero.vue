@@ -75,6 +75,19 @@ const onPlayVideoHandler = (playerContainerRef) => {
   //   })
   //   .add(() => onPlayerOpen(playerContainerRef));
 };
+
+const onScrollDownHandler = () => {
+  console.log('AAAAA');
+
+  const trigger = ScrollTrigger.getById('homepage-hero-scrolltrigger');
+  const y = trigger?.end;
+  gsap.to(scrollSmoother.value, {
+    scrollTop: y,
+    duration: 1.25,
+    ease: 'power3.inOut',
+  });
+  console.log('y', y);
+};
 </script>
 
 <template>
@@ -133,7 +146,13 @@ const onPlayVideoHandler = (playerContainerRef) => {
               </div>
             </div>
           </div>
-          <div class="dots-arrow">
+          <button
+            class="dots-arrow"
+            aria-label="Scroll down"
+            @click="onScrollDownHandler"
+            @mouseenter="playInteractionSound"
+            @focus="playInteractionSound"
+          >
             <div class="dots-arrow__icon">
               <span class="dots-arrow__icon_dot dots-arrow__icon_dot--1" />
               <span class="dots-arrow__icon_dot dots-arrow__icon_dot--2" />
@@ -146,7 +165,7 @@ const onPlayVideoHandler = (playerContainerRef) => {
               <PlusIcon class="dots-arrow__plus" />
             </div>
             <PlusIcon class="dots-arrow__plus dots-arrow__plus--br" />
-          </div>
+          </button>
 
           <div class="homehero-3d-scene--wrapper">
             <HomeHero3DScene class="homehero-3d-scene" />
@@ -381,13 +400,28 @@ const onPlayVideoHandler = (playerContainerRef) => {
         }
         .dots-arrow {
           position: absolute;
-          z-index: 2;
+          z-index: 5;
           right: -3px;
           bottom: -3px;
           width: 62px;
           height: 62px;
           @include flex-center;
           visibility: hidden;
+          &:hover {
+            .dots-arrow__icon {
+              &_dot {
+                &--1 {
+                  animation: flicker-effect-1 0.6s ease;
+                }
+                &--2 {
+                  animation: flicker-effect-3 0.6s ease;
+                }
+                &--3 {
+                  animation: flicker-effect-5 0.6s ease;
+                }
+              }
+            }
+          }
           &__icon {
             width: 16px;
             height: 16px;
