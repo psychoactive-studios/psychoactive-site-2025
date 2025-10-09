@@ -11,6 +11,7 @@ import VideoPreview from '../ui/VideoPreview.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useAudioManager from '~/composables/useAudioManager';
+import WebflowLabel from '../ui/WebflowLabel.vue';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen } = useVideoPlayer();
@@ -100,11 +101,12 @@ const onPlayVideoHandler = (playerContainerRef) => {
               @mouseenter="playInteractionSound"
               @focus="playInteractionSound"
             >
-              <img
+              <WebflowLabel class="top-text__label" />
+              <!-- <img
                 class="top-text__label"
                 src="/img/Webflow_label.svg"
                 alt=""
-              />
+              /> -->
             </a>
             <div class="top-text__agency">Digital First design agency</div>
             <div class="top-text__innovation grey-text">Innovate</div>
