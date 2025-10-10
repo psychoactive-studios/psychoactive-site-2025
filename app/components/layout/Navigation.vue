@@ -88,20 +88,20 @@ const talkButtonHoverHandler = () => {
             </li>
           </ul>
         </div>
-      </div>
-      <div class="navigation__talk">
-        <div class="navigation__talk_line">
-          <span />
-        </div>
-        <button
-          class="navigation__talk_button"
-          @mouseenter="talkButtonHoverHandler"
-          @focus="talkButtonHoverHandler"
-        >
-          Let’s talk
-        </button>
-        <div class="navigation__talk_line">
-          <span />
+        <div class="navigation__talk">
+          <div class="navigation__talk_line">
+            <span />
+          </div>
+          <button
+            class="navigation__talk_button"
+            @mouseenter="talkButtonHoverHandler"
+            @focus="talkButtonHoverHandler"
+          >
+            Let’s talk
+          </button>
+          <div class="navigation__talk_line">
+            <span />
+          </div>
         </div>
       </div>
     </div>
@@ -141,6 +141,9 @@ const talkButtonHoverHandler = () => {
     will-change: transform, clip-path;
     transform: translate3d(0, 0, 0);
     backface-visibility: hidden;
+    @include respond(portrait) {
+      padding: 170px 24px 48px 24px;
+    }
   }
   &__grid {
     width: 100%;
@@ -149,8 +152,18 @@ const talkButtonHoverHandler = () => {
     gap: 48px;
     align-items: center;
     pointer-events: all;
+    @include respond(portrait) {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      height: 100%;
+      justify-content: space-between;
+    }
   }
   &__video {
+    @include respond(portrait) {
+      order: 3;
+    }
     .video-player {
       aspect-ratio: 1.78;
     }
@@ -176,6 +189,14 @@ const talkButtonHoverHandler = () => {
     flex-direction: column;
     justify-content: center;
     gap: 2.5vw;
+    @include respond(portrait) {
+      order: 1;
+    }
+  }
+  &__menu {
+    @include respond(portrait) {
+      width: 100%;
+    }
   }
   &__item {
     font-size: clamp(48px, 3.646vw, 70px);
@@ -216,6 +237,8 @@ const talkButtonHoverHandler = () => {
     }
   }
   &__talk {
+    grid-column: span 2 / span 2;
+    grid-row-start: 2;
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
@@ -224,6 +247,12 @@ const talkButtonHoverHandler = () => {
     bottom: 48px;
     left: 48px;
     right: 48px;
+
+    @include respond(portrait) {
+      width: 100%;
+      order: 2;
+      position: static;
+    }
 
     &_line {
       &:first-child {
