@@ -218,11 +218,19 @@ const onScrollDownHandler = () => {
     &_wrapper {
       flex-grow: 1;
       @include flex-center;
+      @include respond(portrait) {
+        padding-top: 160px;
+        padding-bottom: 48px;
+      }
       .scene {
         aspect-ratio: 2.43;
         width: 100%;
         position: relative;
         will-change: transform;
+        @include respond(portrait) {
+          aspect-ratio: auto;
+          height: 100%;
+        }
         .psychoactive {
           position: absolute;
           z-index: 2;
@@ -230,7 +238,7 @@ const onScrollDownHandler = () => {
           left: 0;
           font-family: 'RoobertMono', sans-serif;
           color: white(50);
-          font-size: 18px;
+          font-size: clamp(16px, 0.938vw, 18px);
           font-style: normal;
           line-height: 1;
           text-transform: uppercase;
@@ -265,7 +273,7 @@ const onScrollDownHandler = () => {
         }
         .grey-text {
           color: $color-grey;
-          font-size: 4.79vw;
+          font-size: clamp(48px, 4.79vw, 92px);
           font-style: normal;
           font-weight: 400;
           line-height: 88%;
@@ -293,13 +301,13 @@ const onScrollDownHandler = () => {
           text-align: right;
           &__label {
             width: auto;
-            height: 2.5vw;
+            height: clamp(32px, 2.5vw, 48px);
             margin-left: auto;
           }
           &__agency {
             font-family: 'RoobertMono', sans-serif;
             color: white(80);
-            font-size: 0.938vw;
+            font-size: clamp(14px, 0.938vw, 18px);
             font-style: normal;
             line-height: 1;
             text-transform: uppercase;
@@ -319,7 +327,7 @@ const onScrollDownHandler = () => {
           }
           &__scale {
             color: $color-foreground;
-            font-size: 12.6vw;
+            font-size: clamp(128px, 12.6vw, 242px);
             font-style: normal;
             font-weight: 400;
             line-height: 77%;
@@ -369,6 +377,9 @@ const onScrollDownHandler = () => {
               }
               .center__text {
                 left: 0;
+                @include respond(portrait) {
+                  display: none;
+                }
               }
             }
             &--right {
@@ -378,6 +389,9 @@ const onScrollDownHandler = () => {
               }
               .center__text {
                 right: 0;
+                @include respond(portrait) {
+                  display: none;
+                }
               }
             }
           }
@@ -391,13 +405,21 @@ const onScrollDownHandler = () => {
             text-transform: uppercase;
             opacity: 0.5;
             position: absolute;
+            @include respond(portrait) {
+            }
             &--play {
               left: 20%;
               top: 10px;
+              @include respond(portrait) {
+                left: 0%;
+              }
             }
             &--time {
               right: 20%;
               top: 10px;
+              @include respond(portrait) {
+                right: 0%;
+              }
             }
           }
         }
@@ -498,7 +520,11 @@ const onScrollDownHandler = () => {
           left: 50%;
           transform: translate(-50%, -50%);
           width: 100%;
-          height: 150%;
+          height: 100%;
+          @include respond(portrait) {
+            height: auto;
+            aspect-ratio: 1;
+          }
           .homehero-3d-scene {
             width: 100%;
             height: 100%;

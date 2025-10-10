@@ -161,7 +161,7 @@ const briefMouseLeaveHandler = () => {
       justify-content: space-between;
       align-items: center;
       gap: getRem(24);
-      padding: 0 $main-padding;
+      padding: 0 clamp(88px, 8vw, 160px);
       .link {
         font-family: 'RoobertMono', sans-serif;
         text-transform: uppercase;
