@@ -58,6 +58,7 @@ const onLogoHoverHandler = (e) => {
 
 <style lang="scss" scoped>
 @use '~/assets/styles/variables' as *;
+@use '~/assets/styles/mixins' as *;
 .header {
   position: relative;
   .logo {
@@ -77,6 +78,9 @@ const onLogoHoverHandler = (e) => {
     .nuxt-icon {
       width: 48px;
       height: auto;
+    }
+    @include respond(portrait) {
+      left: 24px;
     }
   }
   &__sound-button {
@@ -105,6 +109,9 @@ const onLogoHoverHandler = (e) => {
           border-color: $color-background;
         }
       }
+    }
+    @include respond(portrait) {
+      right: 24px;
     }
   }
 }

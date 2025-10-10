@@ -145,18 +145,34 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
       &.player__dots--tl {
         top: 34%;
         left: 26.5%;
+        @include respond(portrait) {
+          top: 20%;
+          left: 12%;
+        }
       }
       &.player__dots--tr {
         top: 34%;
         right: 26.5%;
+        @include respond(portrait) {
+          top: 20%;
+          right: 12%;
+        }
       }
       &.player__dots--bl {
         bottom: 33%;
         left: 26.5%;
+        @include respond(portrait) {
+          bottom: 20%;
+          left: 12%;
+        }
       }
       &.player__dots--br {
         bottom: 33%;
         right: 26.5%;
+        @include respond(portrait) {
+          bottom: 20%;
+          right: 12%;
+        }
       }
     }
     .player__main {
@@ -169,6 +185,10 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
       clip-path: inset(20% 0% round 20px);
       border-radius: 20px;
       transform: scale(0.45);
+      @include respond(portrait) {
+        transform: scale(0.7);
+        clip-path: inset(15% 0% round 20px);
+      }
       &_controls {
         .plus,
         .play-reel-text,

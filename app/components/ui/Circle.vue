@@ -41,6 +41,7 @@
 <style lang="scss">
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+@use '~/assets/styles/mixins' as *;
 
 .circle-path-1,
 .circle-path-2 {
@@ -48,6 +49,9 @@
   stroke-dasharray: 626.43; /* 2 * PI * 99.7 */
   // stroke-dashoffset: 626.43;
   transform-origin: center;
+  @include respond(portrait) {
+    opacity: 0.4;
+  }
 }
 .circle-path-1 {
   stroke-dashoffset: 467.92;

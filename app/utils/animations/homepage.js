@@ -2,6 +2,8 @@ import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 import { useLoader } from '~/composables/useLoader';
 
+let matchMedia = gsap.matchMedia();
+
 /* ======== Player elements ========= */
 const player = '.video-player.homehero-prepared';
 const playerPreview = '.video-player .player__preview';
@@ -435,234 +437,279 @@ const getDotsPercent = () => {
 const outputTime = 1.3;
 export const heroScrollAnimation = (ctx) => {
   ctx.add(() => {
-    gsap
-      .timeline({
-        scrollTrigger: {
-          id: 'homepage-hero-scrolltrigger',
-          trigger: '.hero__intro',
-          pin: true, // pin the trigger element while active
-          start: 'top top', // when the top of the trigger hits the top of the viewport
-          end: 'bottom top', // end after scrolling 500px beyond the start
-          scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-          invalidateOnRefresh: true,
-          // markers: true,
-        },
-      })
-      .to(
-        scaleText,
-        { xPercent: -175, duration: outputTime, ease: 'power1.out' },
-        'output-of-elements'
-      )
-      .to(
-        imagineContainer,
-        { xPercent: -125, duration: outputTime },
-        'output-of-elements'
-      )
-      /* ======= Top text part ========= */
-      .to(
-        labelImage,
-        { xPercent: 175, duration: outputTime, ease: 'power1.out' },
-        'output-of-elements'
-      )
-      .to(
-        agencyText,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 0.4,
-            from: 'random',
-          },
-        },
-        'output-of-elements'
-      )
-      .to(
-        innovationContainer,
-        { xPercent: 175, duration: outputTime, ease: 'power1.out' },
-        'output-of-elements'
-      )
-      /* ======= Psychoactive part ========= */
-      .to(
-        psychoactiveText,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 0.4,
-            from: 'random',
-          },
-        },
-        'output-of-elements'
-      )
-      .to(
-        gsap.utils.toArray([psychoactiveIconH, psychoactiveIconV]),
-        {
-          opacity: 0,
-          duration: 0.01,
-        },
-        'output-of-elements+=0.15'
-      ) /* ======= Dots arrow part ========= */
-      .to(
-        gsap.utils.toArray([dotsArrowIcon, dotsArrowPlusIcons]),
-        {
-          autoAlpha: 0,
-          duration: 0.5,
-          stagger: { each: 0.04, from: 'random' },
-          ease: "rough({ template: circ.easeOut, strength: 5, points: 20, taper: 'out', randomize: true, clamp:  true})",
-        },
-        'output-of-elements'
-      )
-      /* ======= Canvas part ========= */
-      .to(
-        canvas,
-        { scale: 0.4, duration: outputTime, ease: 'power1.out' },
-        'output-of-elements'
-      )
-      /* ======= Circle part ========= */
-      .to(
-        circleContainer,
-        { rotate: 120, opacity: 0, duration: outputTime, ease: 'power1.out' },
-        'output-of-elements'
-      )
-      /* ======= Center line part ========= */
-      .to(
-        centerLine,
-        { scaleX: 0, duration: outputTime, ease: 'power3.out' },
-        'output-of-elements'
-      )
-      .to(
-        centerLeft,
-        {
-          xPercent: 100,
-          x: -4,
-          duration: outputTime,
-          ease: 'power3.out',
-        },
-        'output-of-elements'
-      )
-      .to(
-        centerRight,
-        {
-          xPercent: -100,
-          x: 3,
-          duration: outputTime,
-          ease: 'power3.out',
-        },
-        'output-of-elements'
-      )
-      /* ======= Partners part ========= */
-      .to(
-        partnersContainer,
-        { height: 0, duration: 1, ease: 'power1.out' },
-        'output-of-elements'
-      )
-      .to(
-        partnersLogos,
-        { yPercent: 300, duration: 1, ease: 'power1.out' },
-        'output-of-elements'
-      )
-      .set(partnersLogos, { visibility: 'hidden' })
-      /* ======= Player part ========= */
-      .to(
-        player,
-        { top: '50%', duration: outputTime, ease: 'power1.out' },
-        'output-of-elements'
-      )
-      .to(
-        '.player__dots--tl',
-        {
-          top: () => getDotsPercent().yPercent,
-          left: () => getDotsPercent().xPercent,
-          duration: outputTime,
-          ease: 'power1.out',
-        },
-        'output-of-elements'
-      )
-      .to(
-        '.player__dots--tr',
-        {
-          top: getDotsPercent().yPercent,
-          right: getDotsPercent().xPercent,
-          duration: outputTime,
-          ease: 'power1.out',
-        },
-        'output-of-elements'
-      )
-      .to(
-        '.player__dots--bl',
-        {
-          bottom: getDotsPercent().yPercent,
-          left: getDotsPercent().xPercent,
-          duration: outputTime,
-          ease: 'power1.out',
-        },
-        'output-of-elements'
-      )
-      .to(
-        '.player__dots--br',
-        {
-          bottom: getDotsPercent().yPercent,
-          right: getDotsPercent().xPercent,
-          duration: outputTime,
-          ease: 'power1.out',
-        },
-        'output-of-elements'
-      )
-      .to(
-        gsap.utils.toArray([
-          '.player__dots--tl',
-          '.player__dots--tr',
-          '.player__dots--bl',
-          '.player__dots--br',
-        ]),
-        { width: 140, duration: 1, ease: 'power1.out' },
-        'output-of-elements+=0.75'
-      )
-      .to(
-        playerPreview,
-        {
-          scale: 1,
-          clipPath: 'inset(0% 0% round 20px)',
-          // aspectRatio: 2.222,
-          duration: outputTime + 0.5,
-          ease: 'power1.out',
-        },
-        'output-of-elements'
-      )
-      .set(playerControlTexts, { visibility: 'visible' }, 'output-of-elements')
-      .to(
-        playerControlTexts,
-        {
-          duration: 2,
-          scrambleText: {
-            text: '{original}',
-            chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%=+<>/?',
-            tweenLength: false,
-          },
-        },
-        'output-of-elements+=0.3'
-      )
-      .from(
-        playerControlTexts,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 0.5,
-            from: 'random',
-          },
-        },
-        'output-of-elements+=0.3'
-      )
-      .from(
-        playerControlePlus,
-        {
-          autoAlpha: 0,
-          duration: outputTime,
-          stagger: { each: 0.04, from: 'random' },
-          ease: "rough({ template: circ.easeOut, strength: 5, points: 20, taper: 'out', randomize: true, clamp:  true})",
-        },
-        'output-of-elements+=0.3'
-      );
+    matchMedia.add(
+      {
+        // set up any number of arbitrarily-named conditions. The function below will be called when ANY of them match.
+        isPortrait: `(orientation: portrait)`,
+        isDesktop: `(min-width: 768px)`,
+      },
+      (context) => {
+        // context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
+        let { isDesktop, isPortrait } = context.conditions;
+        if (isDesktop) {
+          gsap
+            .timeline({
+              id: 'homepage-scroll-animation',
+              scrollTrigger: {
+                id: 'homepage-hero-scrolltrigger',
+                trigger: '.hero__intro',
+                pin: true, // pin the trigger element while active
+                start: 'top top', // when the top of the trigger hits the top of the viewport
+                end: 'bottom top', // end after scrolling 500px beyond the start
+                scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+                invalidateOnRefresh: true,
+                // markers: true,
+              },
+            })
+            .to(
+              scaleText,
+              { xPercent: -175, duration: outputTime, ease: 'power1.out' },
+              'output-of-elements'
+            )
+            .to(
+              imagineContainer,
+              { xPercent: -125, duration: outputTime },
+              'output-of-elements'
+            )
+            /* ======= Top text part ========= */
+            .to(
+              labelImage,
+              { xPercent: 175, duration: outputTime, ease: 'power1.out' },
+              'output-of-elements'
+            )
+            .to(
+              agencyText,
+              {
+                opacity: 0,
+                duration: 0.01,
+                stagger: {
+                  amount: 0.4,
+                  from: 'random',
+                },
+              },
+              'output-of-elements'
+            )
+            .to(
+              innovationContainer,
+              { xPercent: 175, duration: outputTime, ease: 'power1.out' },
+              'output-of-elements'
+            )
+            /* ======= Psychoactive part ========= */
+            .to(
+              psychoactiveText,
+              {
+                opacity: 0,
+                duration: 0.01,
+                stagger: {
+                  amount: 0.4,
+                  from: 'random',
+                },
+              },
+              'output-of-elements'
+            )
+            .to(
+              gsap.utils.toArray([psychoactiveIconH, psychoactiveIconV]),
+              {
+                opacity: 0,
+                duration: 0.01,
+              },
+              'output-of-elements+=0.15'
+            ) /* ======= Dots arrow part ========= */
+            .to(
+              gsap.utils.toArray([dotsArrowIcon, dotsArrowPlusIcons]),
+              {
+                autoAlpha: 0,
+                duration: 0.5,
+                stagger: { each: 0.04, from: 'random' },
+                ease: "rough({ template: circ.easeOut, strength: 5, points: 20, taper: 'out', randomize: true, clamp:  true})",
+              },
+              'output-of-elements'
+            )
+            /* ======= Canvas part ========= */
+            .to(
+              canvas,
+              { scale: 0.4, duration: outputTime, ease: 'power1.out' },
+              'output-of-elements'
+            )
+            /* ======= Circle part ========= */
+            .to(
+              circleContainer,
+              {
+                rotate: 120,
+                opacity: 0,
+                duration: outputTime,
+                ease: 'power1.out',
+              },
+              'output-of-elements'
+            )
+            /* ======= Center line part ========= */
+            .to(
+              centerLine,
+              { scaleX: 0, duration: outputTime, ease: 'power3.out' },
+              'output-of-elements'
+            )
+            .to(
+              centerLeft,
+              {
+                xPercent: 100,
+                x: -4,
+                duration: outputTime,
+                ease: 'power3.out',
+              },
+              'output-of-elements'
+            )
+            .to(
+              centerRight,
+              {
+                xPercent: -100,
+                x: 3,
+                duration: outputTime,
+                ease: 'power3.out',
+              },
+              'output-of-elements'
+            )
+            /* ======= Partners part ========= */
+            .to(
+              partnersContainer,
+              { height: 0, duration: 1, ease: 'power1.out' },
+              'output-of-elements'
+            )
+            .to(
+              partnersLogos,
+              { yPercent: 300, duration: 1, ease: 'power1.out' },
+              'output-of-elements'
+            )
+            .set(partnersLogos, { visibility: 'hidden' })
+            /* ======= Player part ========= */
+            .to(
+              player,
+              { top: '50%', duration: outputTime, ease: 'power1.out' },
+              'output-of-elements'
+            )
+            .fromTo(
+              '.player__dots--tl',
+              {
+                top: isPortrait ? '20%' : '34%',
+                left: isPortrait ? '12%' : '26.5%',
+              },
+              {
+                top: () => getDotsPercent().yPercent,
+                left: () => getDotsPercent().xPercent,
+                duration: outputTime,
+                ease: 'power1.out',
+              },
+              'output-of-elements'
+            )
+            .fromTo(
+              '.player__dots--tr',
+              {
+                top: isPortrait ? '20%' : '34%',
+                right: isPortrait ? '12%' : '26.5%',
+              },
+              {
+                top: getDotsPercent().yPercent,
+                right: getDotsPercent().xPercent,
+                duration: outputTime,
+                ease: 'power1.out',
+              },
+              'output-of-elements'
+            )
+            .fromTo(
+              '.player__dots--bl',
+              {
+                bottom: isPortrait ? '20%' : '34%',
+                left: isPortrait ? '12%' : '26.5%',
+              },
+              {
+                bottom: getDotsPercent().yPercent,
+                left: getDotsPercent().xPercent,
+                duration: outputTime,
+                ease: 'power1.out',
+              },
+              'output-of-elements'
+            )
+            .fromTo(
+              '.player__dots--br',
+              {
+                bottom: isPortrait ? '20%' : '34%',
+                right: isPortrait ? '12%' : '26.5%',
+              },
+              {
+                bottom: getDotsPercent().yPercent,
+                right: getDotsPercent().xPercent,
+                duration: outputTime,
+                ease: 'power1.out',
+              },
+              'output-of-elements'
+            )
+            .to(
+              gsap.utils.toArray([
+                '.player__dots--tl',
+                '.player__dots--tr',
+                '.player__dots--bl',
+                '.player__dots--br',
+              ]),
+              { width: 140, duration: 1, ease: 'power1.out' },
+              'output-of-elements+=0.75'
+            )
+            .fromTo(
+              playerPreview,
+              {
+                scale: isPortrait ? 0.7 : 0.45,
+                clipPath: isPortrait
+                  ? 'inset(15% 0% round 20px)'
+                  : 'inset(20% 0% round 20px)',
+              },
+              {
+                scale: 1,
+                clipPath: 'inset(0% 0% round 20px)',
+                // aspectRatio: 2.222,
+                duration: outputTime + 0.5,
+                ease: 'power1.out',
+              },
+              'output-of-elements'
+            )
+            .set(
+              playerControlTexts,
+              { visibility: 'visible' },
+              'output-of-elements'
+            )
+            .to(
+              playerControlTexts,
+              {
+                duration: 2,
+                scrambleText: {
+                  text: '{original}',
+                  chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%=+<>/?',
+                  tweenLength: false,
+                },
+              },
+              'output-of-elements+=0.3'
+            )
+            .from(
+              playerControlTexts,
+              {
+                opacity: 0,
+                duration: 0.01,
+                stagger: {
+                  amount: 0.5,
+                  from: 'random',
+                },
+              },
+              'output-of-elements+=0.3'
+            )
+            .from(
+              playerControlePlus,
+              {
+                autoAlpha: 0,
+                duration: outputTime,
+                stagger: { each: 0.04, from: 'random' },
+                ease: "rough({ template: circ.easeOut, strength: 5, points: 20, taper: 'out', randomize: true, clamp:  true})",
+              },
+              'output-of-elements+=0.3'
+            );
+        }
+      }
+    );
   });
 };

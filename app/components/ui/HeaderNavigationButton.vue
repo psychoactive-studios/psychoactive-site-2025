@@ -194,6 +194,7 @@ const onMouseLeaveHandler = () => {
 <style lang="scss" scoped>
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 $flicker-time: 0.5s;
 $flicker-ease: ease;
 .header__navigation-button {
@@ -268,6 +269,9 @@ $flicker-ease: ease;
     &::before {
       scale: 0.85;
     }
+  }
+  @include respond(portrait) {
+    right: 24px;
   }
 }
 </style>

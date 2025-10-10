@@ -1,5 +1,69 @@
+@use 'breakpoints' as *;
+
+// define flex center mixin
 @mixin flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+// Universal Media Mixin
+// Usage:
+// @include respond(mobile);
+// @include respond(landscape);
+// @include respond(tablet, portrait);
+
+@mixin respond($arg1, $arg2: null) {
+  $breakpoint: null;
+  $orientation: null;
+  $query: null;
+
+  // Визначаємо, що передано — breakpoint чи orientation
+  @if $arg1 == desktop or $arg1 == laptop or $arg1 == tablet or $arg1 == mobile
+  {
+    $breakpoint: $arg1;
+  } @else if $arg1 == landscape or $arg1 == portrait {
+    $orientation: $arg1;
+  }
+
+  @if $arg2 != null {
+    @if $arg2 ==
+      desktop or
+      $arg2 ==
+      laptop or
+      $arg2 ==
+      tablet or
+      $arg2 ==
+      mobile
+    {
+      $breakpoint: $arg2;
+    } @else if $arg2 == landscape or $arg2 == portrait {
+      $orientation: $arg2;
+    }
+  }
+
+  // Створюємо медіа-запит
+  @if $breakpoint == desktop {
+    $query: '(max-width: #{$bp-desktop})';
+  } @else if $breakpoint == laptop {
+    $query: '(max-width: #{$bp-laptop})';
+  } @else if $breakpoint == tablet {
+    $query: '(max-width: #{$bp-tablet})';
+  } @else if $breakpoint == mobile {
+    $query: '(max-width: #{$bp-mobile})';
+  }
+
+  // Якщо передано лише орієнтацію
+  @if $query == null and $orientation != null {
+    $query: '(orientation: #{$orientation})';
+  }
+
+  // Якщо передано і breakpoint, і orientation
+  @if $query != null and $orientation != null {
+    $query: '#{$query} and (orientation: #{$orientation})';
+  }
+
+  @media #{$query} {
+    @content;
+  }
 }

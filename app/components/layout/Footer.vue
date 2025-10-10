@@ -146,6 +146,7 @@ const briefMouseLeaveHandler = () => {
 <style lang="scss" scoped>
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+@use '~/assets/styles/mixins' as *;
 .footer {
   height: 100vh;
   padding-top: getRem(60);
@@ -155,13 +156,26 @@ const briefMouseLeaveHandler = () => {
   justify-content: space-between;
   position: relative;
   z-index: 1;
+  @include respond(portrait) {
+    padding-top: 160px;
+  }
   .navigation {
     .links {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: getRem(24);
-      padding: 0 $main-padding;
+      padding: 0 clamp(24px, 8vw, 160px);
+      @include respond(portrait) {
+        flex-wrap: wrap;
+        gap: getRem(16) getRem(24);
+        & > li:nth-child(6) {
+          width: 100%;
+          visibility: hidden;
+          height: 0;
+        }
+      }
+
       .link {
         font-family: 'RoobertMono', sans-serif;
         text-transform: uppercase;
@@ -226,7 +240,7 @@ const briefMouseLeaveHandler = () => {
       &_text {
         font-size: 12.448vw;
         line-height: 1.16;
-        letter-spacing: getRem(-16);
+        letter-spacing: -0.835vw;
         color: white(20);
         text-align: center;
         margin: 0 0 getRem(80) 0;
@@ -344,6 +358,11 @@ const briefMouseLeaveHandler = () => {
     display: flex;
     justify-content: space-between;
     padding: 0 getRem(48);
+    @include respond(portrait) {
+      flex-direction: column;
+      align-items: center;
+      gap: getRem(32);
+    }
     &__list {
       display: flex;
       justify-content: center;
