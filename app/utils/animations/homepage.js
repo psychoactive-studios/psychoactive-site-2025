@@ -2,8 +2,6 @@ import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 import { useLoader } from '~/composables/useLoader';
 
-let matchMedia = gsap.matchMedia();
-
 /* ======== Player elements ========= */
 const player = '.video-player.homehero-prepared';
 const playerPreview = '.video-player .player__preview';
@@ -436,6 +434,7 @@ const getDotsPercent = () => {
 
 const outputTime = 1.3;
 export const heroScrollAnimation = (ctx) => {
+  let matchMedia = gsap.matchMedia();
   ctx.add(() => {
     matchMedia.add(
       {
