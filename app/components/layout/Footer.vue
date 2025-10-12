@@ -125,7 +125,7 @@ const briefMouseLeaveHandler = () => {
             @mouseenter="playInteractionSound"
             @focus="playInteractionSound"
           >
-            <NuxtImg :src="award.icon" :alt="award.name" height="28" />
+            <NuxtImg :src="award.icon" :alt="award.name" />
           </a>
         </li>
       </ul>
@@ -159,6 +159,9 @@ const briefMouseLeaveHandler = () => {
   @include respond(portrait) {
     padding-top: 160px;
   }
+  @include respond(mobile) {
+    padding-top: 80px;
+  }
   .navigation {
     .links {
       display: flex;
@@ -176,9 +179,24 @@ const briefMouseLeaveHandler = () => {
         }
       }
 
+      @include respond(mobile) {
+        padding-left: 24px;
+        padding-right: 24px;
+        flex-wrap: wrap;
+        gap: getRem(12) getRem(12);
+        & > li:nth-child(6) {
+          width: 100%;
+          visibility: hidden;
+          height: 0;
+        }
+      }
+
       .link {
         font-family: 'RoobertMono', sans-serif;
         text-transform: uppercase;
+        @include respond(mobile) {
+          font-size: getRem(14);
+        }
         a {
           display: block;
         }
@@ -220,11 +238,18 @@ const briefMouseLeaveHandler = () => {
       display: flex;
       align-items: center;
       justify-content: center;
+      @include respond(mobile) {
+        font-size: getRem(14);
+        margin-bottom: 48px;
+      }
       &_plus {
         display: flex;
         align-items: center;
         width: getRem(140);
         justify-content: space-between;
+        @include respond(mobile) {
+          display: none;
+        }
         & > svg {
           width: getRem(7);
           height: getRem(7);
@@ -246,6 +271,9 @@ const briefMouseLeaveHandler = () => {
         margin: 0 0 getRem(80) 0;
         display: block;
         position: relative;
+        @include respond(mobile) {
+          font-size: clamp(getRem(48), 12.448vw, getRem(76));
+        }
         .text-ai {
           display: inline-block;
           color: white(100);
@@ -281,6 +309,10 @@ const briefMouseLeaveHandler = () => {
           top: 0;
           left: calc(0% - 3px);
           z-index: 1;
+          @include respond(mobile) {
+            width: 4px;
+            height: 4px;
+          }
         }
         &::after {
           content: '';
@@ -293,6 +325,10 @@ const briefMouseLeaveHandler = () => {
           top: 0;
           right: calc(0% - 4px);
           z-index: 1;
+          @include respond(mobile) {
+            width: 4px;
+            height: 4px;
+          }
         }
         .dot-center {
           display: block;
@@ -302,7 +338,11 @@ const briefMouseLeaveHandler = () => {
           background-color: $color-dots;
           position: absolute;
           top: 0;
-          left: calc(50% - 3px);
+          left: calc(50% - 2px);
+          @include respond(mobile) {
+            width: 4px;
+            height: 4px;
+          }
         }
         .dot-left,
         .dot-right {
@@ -320,6 +360,11 @@ const briefMouseLeaveHandler = () => {
             border-radius: 50%;
             top: -3px;
             left: -3px;
+            @include respond(mobile) {
+              width: 4px;
+              height: 4px;
+              top: -2px;
+            }
           }
           &::after {
             content: '';
@@ -330,15 +375,35 @@ const briefMouseLeaveHandler = () => {
             border-radius: 50%;
             top: -3px;
             right: -4px;
+            @include respond(mobile) {
+              width: 4px;
+              height: 4px;
+              top: -2px;
+            }
           }
           &.dot-left {
             left: 0px;
             top: 3px;
+            @include respond(mobile) {
+              &::after {
+                right: -2px;
+              }
+              top: 2px;
+            }
             // background-color: red;
           }
           &.dot-right {
             right: 0px;
             top: 3px;
+            @include respond(mobile) {
+              &::before {
+                left: -2px;
+              }
+              &::after {
+                left: -2px;
+              }
+              top: 2px;
+            }
             // background-color: green;
           }
         }
@@ -347,9 +412,16 @@ const briefMouseLeaveHandler = () => {
 
     &__email {
       text-align: center;
+      @include respond(mobile) {
+        font-size: getRem(14);
+      }
       a {
         color: white(100);
         display: inline-block;
+        @include respond(mobile) {
+          margin-top: getRem(8);
+          display: block;
+        }
       }
     }
   }
@@ -363,12 +435,25 @@ const briefMouseLeaveHandler = () => {
       align-items: center;
       gap: getRem(32);
     }
+    @include respond(mobile) {
+      padding: 0 getRem(24);
+    }
     &__list {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: getRem(108);
+      gap: getRem(16);
+      @include respond(mobile) {
+        width: 280px;
+        justify-content: space-around;
+      }
       li {
+        img {
+          height: 28px;
+          @include respond(mobile) {
+            height: 24px;
+          }
+        }
         a {
           opacity: 0.5;
           &:hover {
@@ -379,9 +464,13 @@ const briefMouseLeaveHandler = () => {
       }
     }
     &__label {
-      & > img {
+      img,
+      svg {
         height: 48px;
         width: auto;
+        @include respond(mobile) {
+          height: 36px;
+        }
       }
     }
   }
