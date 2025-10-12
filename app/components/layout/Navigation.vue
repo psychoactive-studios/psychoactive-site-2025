@@ -143,6 +143,9 @@ const talkButtonHoverHandler = () => {
     backface-visibility: hidden;
     @include respond(portrait) {
       padding: 170px 24px 48px 24px;
+      @include respond(mobile) {
+        padding: 80px 16px 16px 16px;
+      }
     }
   }
   &__grid {
@@ -163,6 +166,9 @@ const talkButtonHoverHandler = () => {
   &__video {
     @include respond(portrait) {
       order: 3;
+      @include respond(mobile) {
+        margin-top: auto;
+      }
     }
     .video-player {
       aspect-ratio: 1.78;
@@ -191,11 +197,17 @@ const talkButtonHoverHandler = () => {
     gap: 2.5vw;
     @include respond(portrait) {
       order: 1;
+      @include respond(mobile) {
+        gap: getRem(24);
+      }
     }
   }
   &__menu {
     @include respond(portrait) {
       width: 100%;
+      @include respond(mobile) {
+        margin: auto 0;
+      }
     }
   }
   &__item {
@@ -204,6 +216,12 @@ const talkButtonHoverHandler = () => {
     display: flex;
     gap: 1.5vw;
     align-items: center;
+    @include respond(mobile) {
+      font-size: getRem(36);
+      line-height: 1;
+      gap: getRem(12);
+      margin-right: 8px;
+    }
     &-line {
       flex-grow: 1;
       .line {
@@ -247,11 +265,14 @@ const talkButtonHoverHandler = () => {
     bottom: 48px;
     left: 48px;
     right: 48px;
-
     @include respond(portrait) {
       width: 100%;
       order: 2;
       position: static;
+      margin-right: 8px;
+    }
+    @include respond(mobile) {
+      gap: getRem(12);
     }
 
     &_line {
@@ -303,6 +324,11 @@ const talkButtonHoverHandler = () => {
       height: 64px;
       text-transform: uppercase;
       width: 212px;
+      @include respond(mobile) {
+        width: 180px;
+        height: 36px;
+        font-size: getRem(14);
+      }
       &::before {
         content: '';
         position: absolute;

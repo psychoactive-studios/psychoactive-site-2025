@@ -149,6 +149,10 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
           top: 20%;
           left: 12%;
         }
+        @include respond(mobile) {
+          top: -8px;
+          left: -8px;
+        }
       }
       &.player__dots--tr {
         top: 34%;
@@ -156,6 +160,10 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
         @include respond(portrait) {
           top: 20%;
           right: 12%;
+        }
+        @include respond(mobile) {
+          top: -8px;
+          right: -8px;
         }
       }
       &.player__dots--bl {
@@ -165,6 +173,10 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
           bottom: 20%;
           left: 12%;
         }
+        @include respond(mobile) {
+          bottom: -8px;
+          left: -8px;
+        }
       }
       &.player__dots--br {
         bottom: 33%;
@@ -172,6 +184,10 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
         @include respond(portrait) {
           bottom: 20%;
           right: 12%;
+        }
+        @include respond(mobile) {
+          bottom: -8px;
+          right: -8px;
         }
       }
     }
@@ -189,11 +205,25 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
         transform: scale(0.7);
         clip-path: inset(15% 0% round 20px);
       }
+      @include respond(mobile) {
+        transform: scale(1);
+        clip-path: none;
+        border-radius: getRem(6);
+      }
       &_controls {
         .plus,
         .play-reel-text,
         .play-time-text {
           visibility: hidden;
+        }
+        @include respond(mobile) {
+          .plus {
+            display: none;
+          }
+          .play-reel-text,
+          .play-time-text {
+            visibility: visible;
+          }
         }
       }
       // video {
@@ -239,6 +269,12 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
       border-radius: 50%;
       top: -3px;
       left: -3px;
+      @include respond(mobile) {
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 4px;
+      }
     }
     &::after {
       content: '';
@@ -249,6 +285,10 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
       border-radius: 50%;
       bottom: -3px;
       right: -3px;
+      @include respond(mobile) {
+        width: 4px;
+        height: 4px;
+      }
     }
     &--tl {
       top: -48px;
@@ -329,6 +369,10 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
       .play-reel-text,
       .play-time-text {
         color: white(80);
+        @include respond(mobile) {
+          font-size: getRem(12);
+          opacity: 0.5;
+        }
       }
       .play-button {
         width: getRem(96);
@@ -337,10 +381,17 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
         border-radius: getRem(48);
         color: $color-background;
         position: relative;
+        @include respond(mobile) {
+          width: 70px;
+          height: 36px;
+        }
         .nuxt-icon {
           position: relative;
           z-index: 1;
           transition: color 0.075s ease-out;
+          @include respond(mobile) {
+            height: 12px;
+          }
         }
         &::before {
           content: '';

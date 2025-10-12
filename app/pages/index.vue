@@ -3,7 +3,7 @@ import Hero from '~/components/homepage/Hero.vue';
 </script>
 
 <template>
-  <main class="container">
+  <main>
     <Hero />
   </main>
 </template>

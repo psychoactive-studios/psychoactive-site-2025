@@ -82,6 +82,12 @@ const onLogoHoverHandler = (e) => {
     @include respond(portrait) {
       left: 24px;
     }
+    @include respond(mobile) {
+      top: 16px;
+      left: 16px;
+      width: 36px;
+      height: 36px;
+    }
   }
   &__sound-button {
     position: fixed;
@@ -112,6 +118,9 @@ const onLogoHoverHandler = (e) => {
     }
     @include respond(portrait) {
       right: 24px;
+    }
+    @include respond(mobile) {
+      display: none;
     }
   }
 }
