@@ -3,11 +3,15 @@ import gsap from 'gsap';
 import useNavigation from '~/composables/useNavigation';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 import useAudioManager from '~/composables/useAudioManager';
+import { useMediaQuery } from '@vueuse/core';
 
 const buttonRef = ref(null);
 const { isOpen: isNavOpen, openNavigation, closeNavigation } = useNavigation();
 const { isOpen: isVideoOpen, onPlayerClose } = useVideoPlayer();
 const { playInteractionSound } = useAudioManager();
+
+const isMobile = useMediaQuery('(max-width: 768px)');
+const isTouchDevice = useMediaQuery('(pointer: coarse)');
 
 let ctx;
 let hoverTimelineIn, hoverTimelineOut;
@@ -15,7 +19,7 @@ let hoverTimelineCloseIn, hoverTimelineCloseOut;
 let transitionTimelineIn, transitionTimelineOut;
 let transitionFromVideoTimelineIn;
 
-onMounted(() => {
+const createTimelines = () => {
   ctx = gsap.context(() => {
     const dots = buttonRef.value.querySelectorAll('.dot');
     const dot1 = buttonRef.value.querySelector('.dot-1');
@@ -34,10 +38,22 @@ onMounted(() => {
         },
         overwrite: 'auto',
       })
-      .set(dot1, { x: 5, y: 5 })
-      .set(dot2, { x: -5, y: 5 })
-      .set(dot3, { x: 5, y: -5 })
-      .set(dot4, { x: -5, y: -5 })
+      .set(dot1, {
+        x: isMobile.value ? 3.5 : 5,
+        y: isMobile.value ? 3.5 : 5,
+      })
+      .set(dot2, {
+        x: isMobile.value ? -3.5 : -5,
+        y: isMobile.value ? 3.5 : 5,
+      })
+      .set(dot3, {
+        x: isMobile.value ? 3.5 : 5,
+        y: isMobile.value ? -3.5 : -5,
+      })
+      .set(dot4, {
+        x: isMobile.value ? -3.5 : -5,
+        y: isMobile.value ? -3.5 : -5,
+      })
       .to(dots, { opacity: 1, duration: 0.001 }, '+=0.1');
 
     hoverTimelineOut = gsap
@@ -92,10 +108,46 @@ onMounted(() => {
 
     transitionTimelineOut = gsap
       .timeline({ paused: true })
-      .to(dot1, { x: 5, y: 5, duration: 0.3, ease: 'power2.inOut' }, 'init')
-      .to(dot2, { x: -5, y: 5, duration: 0.3, ease: 'power2.inOut' }, 'init')
-      .to(dot3, { x: 5, y: -5, duration: 0.3, ease: 'power2.inOut' }, 'init')
-      .to(dot4, { x: -5, y: -5, duration: 0.3, ease: 'power2.inOut' }, 'init')
+      .to(
+        dot1,
+        {
+          x: isMobile ? 0 : 5,
+          y: isMobile ? 0 : 5,
+          duration: 0.3,
+          ease: 'power2.inOut',
+        },
+        'init'
+      )
+      .to(
+        dot2,
+        {
+          x: isMobile ? 0 : -5,
+          y: isMobile ? 0 : 5,
+          duration: 0.3,
+          ease: 'power2.inOut',
+        },
+        'init'
+      )
+      .to(
+        dot3,
+        {
+          x: isMobile ? 0 : 5,
+          y: isMobile ? 0 : -5,
+          duration: 0.3,
+          ease: 'power2.inOut',
+        },
+        'init'
+      )
+      .to(
+        dot4,
+        {
+          x: isMobile ? 0 : -5,
+          y: isMobile ? 0 : -5,
+          duration: 0.3,
+          ease: 'power2.inOut',
+        },
+        'init'
+      )
       .to(lines, { scaleX: 0, duration: 0.3, ease: 'power2.inOut' }, 'init');
 
     transitionFromVideoTimelineIn = gsap
@@ -116,6 +168,14 @@ onMounted(() => {
       scaleX: 0,
     });
   }, buttonRef.value);
+};
+
+onMounted(() => {
+  createTimelines();
+  watch(isMobile, () => {
+    ctx.revert();
+    createTimelines();
+  });
 });
 
 onUnmounted(() => {
@@ -157,6 +217,8 @@ const onClickHandler = () => {
 };
 
 const onMouseEnterHandler = () => {
+  console.log('isTouchDevice', isTouchDevice.value);
+
   playInteractionSound();
   if (isNavOpen.value || isVideoOpen.value) {
     hoverTimelineCloseIn.restart();
@@ -239,6 +301,10 @@ $flicker-ease: ease;
     border-radius: 50%;
     position: relative;
     z-index: 1;
+    @include respond(mobile) {
+      width: 5px;
+      height: 5px;
+    }
     &.dot-1 {
       align-self: self-end;
       justify-self: self-end;
@@ -272,6 +338,13 @@ $flicker-ease: ease;
   }
   @include respond(portrait) {
     right: 24px;
+  }
+  @include respond(mobile) {
+    top: 16px;
+    right: 16px;
+    width: 36px;
+    height: 36px;
+    gap: 2px;
   }
 }
 </style>
