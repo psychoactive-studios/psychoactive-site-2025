@@ -12,10 +12,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useAudioManager from '~/composables/useAudioManager';
 import WebflowLabel from '../ui/WebflowLabel.vue';
+import { Vue3Marquee } from 'vue3-marquee';
+import { useMediaQuery } from '@vueuse/core';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen } = useVideoPlayer();
 const { playInteractionSound } = useAudioManager();
+
+const isMobile = useMediaQuery('(max-width: 768px)');
 
 const container = ref(null);
 let ctx;
@@ -183,10 +187,21 @@ const onScrollDownHandler = () => {
           </div>
         </div>
       </section>
+
       <section class="hero__intro_partners">
         <div class="list">
+          <Vue3Marquee v-if="isMobile" duration="30" :pause-on-hover="true">
+            <NuxtImg
+              v-for="partner in partnersData"
+              :key="partner.id"
+              :src="partner.logo"
+              :alt="partner.name"
+              :class="partner.id"
+            />
+          </Vue3Marquee>
           <NuxtImg
             v-for="partner in partnersData"
+            v-else
             :key="partner.id"
             :src="partner.logo"
             :alt="partner.name"
@@ -203,6 +218,7 @@ const onScrollDownHandler = () => {
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+
 .hero__player {
   * {
     fill: #fff;
@@ -218,9 +234,13 @@ const onScrollDownHandler = () => {
     &_wrapper {
       flex-grow: 1;
       @include flex-center;
+      padding-left: clamp(88px, 8vw, 160px);
+      padding-right: clamp(88px, 8vw, 160px);
       @include respond(portrait) {
         padding-top: 160px;
         padding-bottom: 48px;
+        padding-left: 24px;
+        padding-right: 24px;
       }
       @include respond(mobile) {
         padding-top: 27px;
@@ -597,10 +617,14 @@ const onScrollDownHandler = () => {
         justify-content: space-between;
         align-items: center;
         padding-bottom: 48px;
+        @include respond(mobile) {
+          display: block;
+        }
       }
       img {
         height: auto;
         object-fit: contain;
+        margin: 0 20px;
       }
       .partner-super-ai {
         width: 6.5%;
@@ -634,9 +658,9 @@ const onScrollDownHandler = () => {
       }
     }
   }
-  &__player {
-    background-color: red;
-    height: calc(100vh - 48px - 48px);
-  }
+  // &__player {
+  //   background-color: red;
+  //   height: calc(100vh - 48px - 48px);
+  // }
 }
 </style>
