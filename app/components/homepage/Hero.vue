@@ -139,15 +139,6 @@ const onScrollDownHandler = () => {
             <div class="center__text center__text--play">PLAY REEL</div>
             <div class="center__text center__text--time">01:16 SEC</div>
           </div>
-          <div class="bottom-text">
-            <div class="bottom-text__imagine grey-text">Imagine</div>
-            <div class="bottom-text__scale">
-              scale
-              <div class="bottom-text__scale-arrows">
-                <span>&larr;</span><span>&rarr;</span>
-              </div>
-            </div>
-          </div>
           <button
             class="dots-arrow"
             aria-label="Scroll down"
@@ -181,6 +172,15 @@ const onScrollDownHandler = () => {
             :custom-handler="onPlayVideoHandler"
             aspect-ratio="2.22"
           />
+          <div class="bottom-text">
+            <div class="bottom-text__imagine grey-text">Imagine</div>
+            <div class="bottom-text__scale">
+              scale
+              <div class="bottom-text__scale-arrows">
+                <span>&larr;</span><span>&rarr;</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
       <section class="hero__intro_partners">
@@ -222,6 +222,10 @@ const onScrollDownHandler = () => {
         padding-top: 160px;
         padding-bottom: 48px;
       }
+      @include respond(mobile) {
+        padding-top: 27px;
+        padding-bottom: 24px;
+      }
       .scene {
         aspect-ratio: 2.43;
         width: 100%;
@@ -230,6 +234,12 @@ const onScrollDownHandler = () => {
         @include respond(portrait) {
           aspect-ratio: auto;
           height: 100%;
+        }
+        @include respond(mobile) {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          padding-top: 24px;
         }
         .psychoactive {
           position: absolute;
@@ -243,12 +253,21 @@ const onScrollDownHandler = () => {
           line-height: 1;
           text-transform: uppercase;
           padding: 0 48px 48px 0;
+          @include respond(mobile) {
+            right: 0;
+            text-align: center;
+            font-size: clamp(14px, 0.938vw, 18px);
+            padding: 0;
+          }
           &__horizontal {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             visibility: hidden;
+            @include respond(mobile) {
+              display: none;
+            }
             .psychoactive__icon {
               left: 100%;
             }
@@ -260,6 +279,9 @@ const onScrollDownHandler = () => {
             height: 100%;
             width: 7px;
             visibility: hidden;
+            @include respond(mobile) {
+              display: none;
+            }
             .psychoactive__icon {
               top: 100%;
             }
@@ -279,6 +301,9 @@ const onScrollDownHandler = () => {
           line-height: 88%;
           letter-spacing: -0.2874vw;
           will-change: transform;
+          @include respond(mobile) {
+            font-size: clamp(36px, 9.6vw, 48px);
+          }
         }
         .circle--wrapper {
           position: absolute;
@@ -287,6 +312,9 @@ const onScrollDownHandler = () => {
           left: 50%;
           transform: translate(-50%, -50%) rotate(30deg);
           width: 50%;
+          @include respond(mobile) {
+            display: none;
+          }
           .circle {
             width: 100%;
             height: 100%;
@@ -299,9 +327,12 @@ const onScrollDownHandler = () => {
           top: 0;
           right: 0;
           text-align: right;
+          @include respond(mobile) {
+            position: static;
+          }
           &__label {
             width: auto;
-            height: clamp(32px, 2.5vw, 48px);
+            height: clamp(36px, 2.5vw, 48px);
             margin-left: auto;
           }
           &__agency {
@@ -312,6 +343,10 @@ const onScrollDownHandler = () => {
             line-height: 1;
             text-transform: uppercase;
             margin: 1.25vw 0 1.667vw 0;
+            @include respond(mobile) {
+              font-size: 14px;
+              margin: 20px 0 16px 0;
+            }
           }
           &__innovation {
             line-height: 65%;
@@ -322,6 +357,10 @@ const onScrollDownHandler = () => {
           z-index: 2;
           bottom: 0;
           left: 0;
+          @include respond(mobile) {
+            position: static;
+            align-self: flex-start;
+          }
           &__imagine {
             line-height: 77%;
           }
@@ -332,6 +371,9 @@ const onScrollDownHandler = () => {
             font-weight: 400;
             line-height: 77%;
             letter-spacing: -0.756vw;
+            @include respond(mobile) {
+              font-size: clamp(84px, 22vw, 112px);
+            }
             &-arrows {
               color: $color-grey;
               font-size: 5.5vw;
@@ -349,6 +391,9 @@ const onScrollDownHandler = () => {
           top: 46.5%;
           left: 0;
           right: 0;
+          @include respond(mobile) {
+            display: none;
+          }
           &__line {
             background: white(10);
             height: 1px;
@@ -432,6 +477,9 @@ const onScrollDownHandler = () => {
           height: 62px;
           @include flex-center;
           visibility: hidden;
+          @include respond(mobile) {
+            display: none;
+          }
           &:hover {
             .dots-arrow__icon {
               &_dot {
@@ -512,6 +560,12 @@ const onScrollDownHandler = () => {
           left: 50%;
           transform: translate(-50%, -50%);
           aspect-ratio: 2.22;
+          @include respond(mobile) {
+            position: relative;
+            top: 0 !important;
+            left: 0;
+            transform: none;
+          }
         }
         .homehero-3d-scene--wrapper {
           position: absolute;
@@ -524,6 +578,9 @@ const onScrollDownHandler = () => {
           @include respond(portrait) {
             height: auto;
             aspect-ratio: 1;
+          }
+          @include respond(mobile) {
+            display: none;
           }
           .homehero-3d-scene {
             width: 100%;
