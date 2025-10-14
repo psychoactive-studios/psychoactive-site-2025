@@ -83,10 +83,7 @@ const onLogoHoverHandler = (e) => {
       left: 24px;
     }
     @include respond(mobile) {
-      top: 16px;
-      left: 16px;
-      width: 36px;
-      height: 36px;
+      display: none;
     }
   }
   &__sound-button {

@@ -1,6 +1,7 @@
 <script setup>
 import { useMediaQuery } from '@vueuse/core';
 import Hero from '~/components/homepage/Hero.vue';
+import HeroMobile from '~/components/homepage/HeroMobile.vue';
 import { partnersData } from '~/data/partnersData';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
@@ -8,7 +9,10 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 
 <template>
   <main>
-    <Hero />
+    <section class="hero">
+      <Hero v-if="!isMobile" />
+      <HeroMobile v-if="isMobile" />
+    </section>
     <section class="partners">
       <div class="container">
         <div class="list">

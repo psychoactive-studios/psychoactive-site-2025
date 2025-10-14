@@ -403,6 +403,30 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 };
 
 /* ====================================================
+                  Initial animation mobile
+=======================================================*/
+export const heroInitAnimationMobile = (ctx, scrollSmoother) => {
+  const { stopLoading } = useLoader();
+
+  ctx.add(() => {
+    const loaderElement = document.querySelector('#loader-logo');
+
+    gsap
+      .timeline({ id: 'homepage-initial-animation-mobile' })
+      .to(loaderElement, {
+        scale: 0,
+        duration: 0.5,
+        ease: 'power3.out',
+        delay: 1.6,
+      })
+      .add(() => {
+        stopLoading();
+        scrollSmoother.value.paused(false);
+      });
+  });
+};
+
+/* ====================================================
                   Scroll animation
 =======================================================*/
 
