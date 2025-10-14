@@ -198,6 +198,9 @@ const onScrollDownHandler = () => {
   }
 }
 .hero {
+  @include respond(mobile) {
+    display: none;
+  }
   &__intro {
     height: 100dvh;
     display: flex;

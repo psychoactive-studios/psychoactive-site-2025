@@ -9,33 +9,35 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 
 <template>
   <main>
-    <section class="hero">
-      <Hero v-if="!isMobile" />
-      <HeroMobile v-if="isMobile" />
-    </section>
-    <section class="partners">
-      <div class="container">
-        <div class="list">
-          <Vue3Marquee v-if="isMobile" duration="30" :pause-on-hover="true">
+    <ClientOnly>
+      <section class="hero">
+        <Hero v-if="!isMobile" />
+        <HeroMobile v-if="isMobile" />
+      </section>
+      <section class="partners">
+        <div class="container">
+          <div class="list">
+            <Vue3Marquee v-if="isMobile" :duration="30" :pause-on-hover="true">
+              <NuxtImg
+                v-for="partner in partnersData"
+                :key="partner.id"
+                :src="partner.logo"
+                :alt="partner.name"
+                :class="partner.id"
+              />
+            </Vue3Marquee>
             <NuxtImg
               v-for="partner in partnersData"
+              v-else
               :key="partner.id"
               :src="partner.logo"
               :alt="partner.name"
               :class="partner.id"
             />
-          </Vue3Marquee>
-          <NuxtImg
-            v-for="partner in partnersData"
-            v-else
-            :key="partner.id"
-            :src="partner.logo"
-            :alt="partner.name"
-            :class="partner.id"
-          />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </ClientOnly>
   </main>
 </template>
 

@@ -5,10 +5,14 @@ import HeaderNavigationButton from '../ui/HeaderNavigationButton.vue';
 import useNavigation from '~/composables/useNavigation';
 import useAudioManager from '~/composables/useAudioManager';
 import MainAnimatedLogo from '../ui/MainAnimatedLogo.vue';
+import NavigationMobile from './NavigationMobile.vue';
+import { useMediaQuery } from '@vueuse/core';
 
 const mainLogoRef = ref(null);
 const { isOpen } = useNavigation();
 const { playInteractionSound, isMuted } = useAudioManager();
+
+const isMobile = useMediaQuery('(max-width: 768px)');
 
 const onSoundChangeHandler = () => {
   isMuted.value = !isMuted.value;
@@ -52,7 +56,10 @@ const onLogoHoverHandler = (e) => {
       @mouseenter="playInteractionSound"
       @focus="playInteractionSound"
     />
-    <Navigation />
+    <ClientOnly>
+      <Navigation v-if="!isMobile" />
+      <NavigationMobile v-if="isMobile" />
+    </ClientOnly>
   </header>
 </template>
 
