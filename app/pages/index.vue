@@ -1,11 +1,83 @@
 <script setup>
 import Hero from '~/components/homepage/Hero.vue';
+import { partnersData } from '~/data/partnersData';
 </script>
 
 <template>
   <main>
     <Hero />
+    <section class="partners">
+      <div class="container">
+        <div class="list">
+          <Vue3Marquee v-if="isMobile" duration="30" :pause-on-hover="true">
+            <NuxtImg
+              v-for="partner in partnersData"
+              :key="partner.id"
+              :src="partner.logo"
+              :alt="partner.name"
+              :class="partner.id"
+            />
+          </Vue3Marquee>
+          <NuxtImg
+            v-for="partner in partnersData"
+            v-else
+            :key="partner.id"
+            :src="partner.logo"
+            :alt="partner.name"
+            :class="partner.id"
+          />
+        </div>
+      </div>
+    </section>
   </main>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@use '~/assets/styles/mixins' as *;
+
+.partners {
+  .list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @include respond(mobile) {
+      display: block;
+    }
+  }
+  img {
+    height: auto;
+    object-fit: contain;
+    margin: 0 20px;
+  }
+  .partner-super-ai {
+    width: 6.5%;
+  }
+  .partner-adidas {
+    width: 6.12%;
+  }
+  .partner-ray-white {
+    width: 6.625%;
+  }
+  .partner-hellboy {
+    width: 7.75%;
+  }
+  .partner-blackbird {
+    width: 7.06%;
+  }
+  .partner-wow {
+    width: 7.56%;
+  }
+  .partner-one {
+    width: 7.75%;
+  }
+  .partner-all-blacks {
+    width: 5.25%;
+  }
+  .partner-burgerfuel {
+    width: 7%;
+  }
+  .partner-summer-game {
+    width: 5.62%;
+  }
+}
+</style>

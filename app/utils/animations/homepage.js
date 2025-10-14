@@ -51,10 +51,6 @@ const dotsArrowPlusH = '.dots-arrow__horizontal';
 const dotsArrowPlusV = '.dots-arrow__vertical';
 const dotsArrowPlusIcons = '.dots-arrow__plus';
 
-/* ======== Partners elements ========== */
-const partnersContainer = '.hero__intro_partners';
-const partnersLogos = '.hero__intro_partners .list';
-
 /* ====================================================
               Split text initialization
 =======================================================*/
@@ -361,11 +357,6 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         },
         'secondPart+=0.25'
       )
-      .from(
-        partnersLogos,
-        { opacity: 0, yPercent: 35, duration: 0.9, ease: 'power4.out' },
-        'secondPart+=0.85'
-      )
       /* ======= Layout elements part ========= */
       .from(
         layoutElements,
@@ -567,18 +558,6 @@ export const heroScrollAnimation = (ctx) => {
               },
               'output-of-elements'
             )
-            /* ======= Partners part ========= */
-            .to(
-              partnersContainer,
-              { height: 0, duration: 1, ease: 'power1.out' },
-              'output-of-elements'
-            )
-            .to(
-              partnersLogos,
-              { yPercent: 300, duration: 1, ease: 'power1.out' },
-              'output-of-elements'
-            )
-            .set(partnersLogos, { visibility: 'hidden' })
             /* ======= Player part ========= */
             .to(
               player,

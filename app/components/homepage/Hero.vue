@@ -1,5 +1,4 @@
 <script setup>
-import { partnersData } from '~/data/partnersData';
 import Circle from '../ui/Circle.vue';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
 import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
@@ -12,14 +11,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useAudioManager from '~/composables/useAudioManager';
 import WebflowLabel from '../ui/WebflowLabel.vue';
-import { Vue3Marquee } from 'vue3-marquee';
-import { useMediaQuery } from '@vueuse/core';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen } = useVideoPlayer();
 const { playInteractionSound } = useAudioManager();
-
-const isMobile = useMediaQuery('(max-width: 768px)');
 
 const container = ref(null);
 let ctx;
@@ -185,28 +180,6 @@ const onScrollDownHandler = () => {
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section class="hero__intro_partners">
-        <div class="list">
-          <Vue3Marquee v-if="isMobile" duration="30" :pause-on-hover="true">
-            <NuxtImg
-              v-for="partner in partnersData"
-              :key="partner.id"
-              :src="partner.logo"
-              :alt="partner.name"
-              :class="partner.id"
-            />
-          </Vue3Marquee>
-          <NuxtImg
-            v-for="partner in partnersData"
-            v-else
-            :key="partner.id"
-            :src="partner.logo"
-            :alt="partner.name"
-            :class="partner.id"
-          />
         </div>
       </section>
     </div>
@@ -608,53 +581,6 @@ const onScrollDownHandler = () => {
             will-change: transform;
           }
         }
-      }
-    }
-    &_partners {
-      will-change: transform;
-      .list {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-bottom: 48px;
-        @include respond(mobile) {
-          display: block;
-        }
-      }
-      img {
-        height: auto;
-        object-fit: contain;
-        margin: 0 20px;
-      }
-      .partner-super-ai {
-        width: 6.5%;
-      }
-      .partner-adidas {
-        width: 6.12%;
-      }
-      .partner-ray-white {
-        width: 6.625%;
-      }
-      .partner-hellboy {
-        width: 7.75%;
-      }
-      .partner-blackbird {
-        width: 7.06%;
-      }
-      .partner-wow {
-        width: 7.56%;
-      }
-      .partner-one {
-        width: 7.75%;
-      }
-      .partner-all-blacks {
-        width: 5.25%;
-      }
-      .partner-burgerfuel {
-        width: 7%;
-      }
-      .partner-summer-game {
-        width: 5.62%;
       }
     }
   }
