@@ -442,10 +442,11 @@ const briefMouseLeaveHandler = () => {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: getRem(16);
+      gap: getRem(106);
       @include respond(mobile) {
         width: 280px;
         justify-content: space-around;
+        gap: initial;
       }
       li {
         img {

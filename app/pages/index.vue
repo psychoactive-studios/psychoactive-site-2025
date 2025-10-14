@@ -1,6 +1,9 @@
 <script setup>
+import { useMediaQuery } from '@vueuse/core';
 import Hero from '~/components/homepage/Hero.vue';
 import { partnersData } from '~/data/partnersData';
+
+const isMobile = useMediaQuery('(max-width: 768px)');
 </script>
 
 <template>
@@ -36,6 +39,11 @@ import { partnersData } from '~/data/partnersData';
 @use '~/assets/styles/mixins' as *;
 
 .partners {
+  .container {
+    @include respond(mobile) {
+      padding: 0;
+    }
+  }
   .list {
     display: flex;
     justify-content: space-between;
