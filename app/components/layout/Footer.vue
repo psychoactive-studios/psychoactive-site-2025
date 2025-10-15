@@ -42,7 +42,7 @@ const briefMouseEnterHandler = () => {
   gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
     duration: 0.8,
     clipPath: 'polygon(0% 0, 100% 0, 100% 100%, 0% 100%)',
-    ease: 'power2.in',
+    ease: 'power3.out',
     overwrite: 'auto',
   });
   footerBriefTimeline.repeat(-1).restart();
@@ -51,7 +51,7 @@ const briefMouseLeaveHandler = () => {
   gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
     duration: 0.8,
     clipPath: 'polygon(55% 0, 55% 0, 55% 100%, 55% 100%)',
-    ease: 'power2.in',
+    ease: 'power3.out',
     overwrite: 'auto',
   });
   footerBriefTimeline.repeat(0).reverse();
