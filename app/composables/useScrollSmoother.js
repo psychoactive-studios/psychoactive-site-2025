@@ -9,8 +9,9 @@ export default function () {
   const initScrollSmoother = () => {
     scrollSmoother.value = ScrollSmoother.create({
       smooth: 2,
-      // effects: true,
+      effects: true,
       normalizeScroll: true,
+      ignoreMobileResize: true,
     });
     scrollSmoother.value.scrollTo(0, false);
     scrollSmoother.value.paused(true);

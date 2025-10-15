@@ -1,9 +1,11 @@
 <script setup>
+import IconPlus from '~/assets/icons/icon-plus-1.svg';
 import Navigation from '~/components/layout/Navigation.vue';
 import SoundButton from '../ui/SoundButton.vue';
 import HeaderNavigationButton from '../ui/HeaderNavigationButton.vue';
 import useNavigation from '~/composables/useNavigation';
 import useAudioManager from '~/composables/useAudioManager';
+import useHomeVideoPlayerMobile from '~/composables/useHomeVideoPlayerMobile';
 import MainAnimatedLogo from '../ui/MainAnimatedLogo.vue';
 import NavigationMobile from './NavigationMobile.vue';
 import { useMediaQuery } from '@vueuse/core';
@@ -11,6 +13,7 @@ import { useMediaQuery } from '@vueuse/core';
 const mainLogoRef = ref(null);
 const { isOpen } = useNavigation();
 const { playInteractionSound, isMuted } = useAudioManager();
+const { clickVideoCloseHandler } = useHomeVideoPlayerMobile();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -59,6 +62,16 @@ const onLogoHoverHandler = (e) => {
     <ClientOnly>
       <Navigation v-if="!isMobile" />
       <NavigationMobile v-if="isMobile" />
+      <div class="hero-mobile__navigation">
+        <img src="/img/logo-1.svg" alt="Psychoactive" />
+        <span class="text">psychoactive®</span>
+        <button
+          class="hero-mobile__navigation_button"
+          @click="clickVideoCloseHandler"
+        >
+          <IconPlus class="icon" />
+        </button>
+      </div>
     </ClientOnly>
   </header>
 </template>
@@ -66,6 +79,7 @@ const onLogoHoverHandler = (e) => {
 <style lang="scss" scoped>
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/mixins' as *;
+@use '~/assets/styles/functions' as *;
 .header {
   position: relative;
   .logo {
@@ -126,6 +140,54 @@ const onLogoHoverHandler = (e) => {
     @include respond(mobile) {
       display: none;
     }
+  }
+}
+
+.hero-mobile__navigation {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  height: 42px;
+  z-index: 101000;
+  color: $color-background;
+  font-family: 'RoobertMono', sans-serif;
+  font-size: getRem(14);
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 0;
+  transform-origin: center;
+  img {
+    position: absolute;
+    top: 4px;
+    left: 10px;
+    width: 36px;
+    height: 36px;
+    mix-blend-mode: difference;
+    transform: scale(0.72);
+    z-index: 1;
+  }
+  .text {
+    position: absolute;
+    top: 50%;
+    left: getRem(58);
+    z-index: 1;
+    translate: 0 -50%;
+  }
+  &_button {
+    // position: absolute;
+    // right: 0;
+    // top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: $color-foreground;
+    border-radius: 1rem;
+    justify-content: flex-end;
+    padding-right: 14px;
+    z-index: 0;
   }
 }
 </style>
