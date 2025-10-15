@@ -51,10 +51,6 @@ const dotsArrowPlusH = '.dots-arrow__horizontal';
 const dotsArrowPlusV = '.dots-arrow__vertical';
 const dotsArrowPlusIcons = '.dots-arrow__plus';
 
-/* ======== Partners elements ========== */
-const partnersContainer = '.hero__intro_partners';
-const partnersLogos = '.hero__intro_partners .list';
-
 /* ====================================================
               Split text initialization
 =======================================================*/
@@ -361,11 +357,6 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         },
         'secondPart+=0.25'
       )
-      .from(
-        partnersLogos,
-        { opacity: 0, yPercent: 35, duration: 0.9, ease: 'power4.out' },
-        'secondPart+=0.85'
-      )
       /* ======= Layout elements part ========= */
       .from(
         layoutElements,
@@ -408,6 +399,77 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         heroScrollAnimation(ctx);
         scrollSmoother.value.paused(false);
       }, '-=1');
+  });
+};
+
+/* ====================================================
+                  Initial animation mobile
+=======================================================*/
+export const heroInitAnimationMobile = (ctx, scrollSmoother) => {
+  const { stopLoading } = useLoader();
+
+  ctx.add(() => {
+    const loaderElement = document.querySelector('#loader-logo');
+
+    const centerControlTexts = SplitText.create(
+      '.hero-mobile__player_controls .controls-text',
+      { type: 'chars', charsClass: 'char-control' }
+    ).chars;
+
+    gsap
+      .timeline({ id: 'homepage-initial-animation-mobile' })
+      .to(loaderElement, {
+        scale: 0,
+        duration: 0.5,
+        ease: 'power3.out',
+        delay: 1.6,
+      })
+      .add(() => {
+        stopLoading();
+      })
+      .from('.hero-mobile__preview', {
+        opacity: 0,
+        duration: 0.5,
+      })
+      .from('.controls-button', { scale: 0, duration: 0.5 }, '<')
+      .to(
+        centerControlTexts,
+        {
+          duration: 2.3,
+          scrambleText: {
+            text: '{original}',
+            chars: 'uppercase',
+            tweenLength: false,
+          },
+        },
+        '<+=0.2'
+      )
+      .from(
+        centerControlTexts,
+        {
+          opacity: 0,
+          duration: 0.01,
+          stagger: {
+            amount: 0.9,
+            from: 'random',
+          },
+        },
+        '<'
+      )
+      .from(
+        document.querySelector('.navigation-mobile'),
+        {
+          y: 64,
+          opacity: 0,
+          duration: 1,
+          ease: 'power3.out',
+        },
+        '<+=0.5'
+      )
+      .add(() => {
+        stopLoading();
+        scrollSmoother.value.paused(false);
+      });
   });
 };
 
@@ -567,18 +629,6 @@ export const heroScrollAnimation = (ctx) => {
               },
               'output-of-elements'
             )
-            /* ======= Partners part ========= */
-            .to(
-              partnersContainer,
-              { height: 0, duration: 1, ease: 'power1.out' },
-              'output-of-elements'
-            )
-            .to(
-              partnersLogos,
-              { yPercent: 300, duration: 1, ease: 'power1.out' },
-              'output-of-elements'
-            )
-            .set(partnersLogos, { visibility: 'hidden' })
             /* ======= Player part ========= */
             .to(
               player,

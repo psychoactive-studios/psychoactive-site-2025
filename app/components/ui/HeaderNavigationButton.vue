@@ -345,6 +345,7 @@ $flicker-ease: ease;
     width: 36px;
     height: 36px;
     gap: 2px;
+    display: none;
   }
 }
 </style>

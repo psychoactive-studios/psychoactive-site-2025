@@ -10,6 +10,7 @@ const isOpen = ref(false);
 
 // Ref to the navigation DOM element
 const navigationRef = ref(null);
+const navigationMobileRef = ref(null);
 
 // GSAP timelines for animations
 let openTimelineMain, openTimelineItems, closeTimeline;
@@ -289,6 +290,7 @@ export default function () {
   return {
     isOpen,
     navigationRef,
+    navigationMobileRef,
     initNavigation,
     openNavigation,
     closeNavigation,
