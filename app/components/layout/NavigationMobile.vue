@@ -4,183 +4,13 @@ import IconPlus from '~/assets/icons/icon-plus-1.svg';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 import useNavigation from '~/composables/useNavigation';
 
-let ctx = null;
-
 // Reactive state to track if the navigation is open
 const isOpen = ref(false);
 
 // Ref to the navigation DOM element
 const { navigationMobileRef } = useNavigation();
 
-let navigationTimelineOpen, navigationTimelineClose;
-
-onMounted(() => {
-  ctx = gsap.context(() => {
-    // Initialize the closing timeline
-    navigationTimelineClose = gsap
-      .timeline({ paused: true })
-      .fromTo(
-        '.navigation-mobile__talk-button',
-        { clipPath: 'inset(0% 0% round 36px)' },
-        {
-          clipPath: 'inset(50% 0% round 36px)',
-          duration: 0.5,
-          ease: 'power3.inOut',
-        },
-        'open'
-      )
-      .to(
-        gsap.utils.toArray('.navigation-mobile__item'),
-        {
-          opacity: 0,
-          duration: 0.5,
-          stagger: {
-            each: 0.04,
-            from: 'start',
-          },
-        },
-        'open'
-      )
-      .to(
-        '.navigation-mobile__logo',
-        {
-          top: 'calc(100% - 38px)',
-          left: 10,
-          scale: 0.72,
-          rotate: -360,
-          duration: 0.9,
-          ease: 'expo.inOut',
-        },
-        'open'
-      )
-      .fromTo(
-        '.navigation-mobile__wrapper',
-        {
-          clipPath: 'polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%)',
-        },
-        {
-          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0 100%)',
-          duration: 1,
-          ease: 'expo.inOut',
-        },
-        'open'
-      )
-      .to(
-        '.navigation-mobile__background',
-        {
-          height: '0%',
-          duration: 1,
-          ease: 'expo.inOut',
-        },
-        'open'
-      )
-      .to(
-        '.navigation-mobile__button .icon',
-        { rotate: 0, duration: 1, ease: 'expo.inOut' },
-        'open'
-      )
-      .to(
-        '.navigation-mobile__button .text',
-        { opacity: 1, duration: 0.3 },
-        'open+=0.4'
-      )
-      .set('.navigation-mobile__logo', { clearProps: 'all' });
-
-    // Initialize the opening timeline
-    navigationTimelineOpen = gsap
-      .timeline({ paused: true })
-      .to(
-        '.navigation-mobile__background',
-        {
-          height: '100%',
-          duration: 1,
-          ease: 'expo.inOut',
-        },
-        'open'
-      )
-      .to(
-        '.navigation-mobile__logo',
-        {
-          top: 16,
-          left: 16,
-          scale: 1,
-          rotate: 360,
-          duration: 1.1,
-          ease: 'expo.inOut',
-        },
-        'open'
-      )
-      .to(
-        '.navigation-mobile__button .icon',
-        { rotate: 45, duration: 1, ease: 'expo.inOut' },
-        'open'
-      )
-      .to(
-        '.navigation-mobile__wrapper',
-        {
-          clipPath: 'polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%)',
-          duration: 1,
-          ease: 'expo.inOut',
-        },
-        'open'
-      )
-      .to(
-        '.navigation-mobile__button .text',
-        { opacity: 0, duration: 0.3 },
-        'open+=0.3'
-      )
-      .fromTo(
-        gsap.utils.toArray('.navigation-mobile__item'),
-        {
-          opacity: 0,
-        },
-        {
-          opacity: 1,
-          duration: 0.5,
-          stagger: {
-            each: 0.07,
-            from: 'end',
-          },
-        },
-        'open+=0.4'
-      )
-      .fromTo(
-        gsap.utils.toArray('.navigation-mobile__item-line span'),
-        { width: '0%' },
-        {
-          width: '100%',
-          duration: 1,
-          ease: 'power2.inOut',
-          stagger: {
-            each: 0.07,
-            from: 'end',
-          },
-        },
-        'open+=0.1'
-      )
-      .fromTo(
-        '.navigation-mobile__talk-button',
-        { clipPath: 'inset(50% 0% round 36px)' },
-        {
-          clipPath: 'inset(0% 0% round 36px)',
-          duration: 0.7,
-          ease: 'power2.inOut',
-        },
-        'open+=0.5'
-      );
-  }, navigationMobileRef.value);
-});
-
-onUnmounted(() => {
-  if (ctx) ctx.revert();
-});
-
 const onToggleNavigation = () => {
-  // Prevent re-triggering while animation is running
-  if (navigationTimelineOpen.isActive() || navigationTimelineClose.isActive()) {
-    return;
-  }
-
   if (!isOpen.value) {
     gsap
       .timeline({ paused: false })
@@ -291,7 +121,7 @@ const onToggleNavigation = () => {
       .to(
         '.navigation-mobile__logo',
         {
-          top: 'calc(100% - 38px)',
+          top: 3,
           left: 10,
           scale: 0.72,
           rotate: -360,
@@ -315,7 +145,7 @@ const onToggleNavigation = () => {
       .to(
         '.navigation-mobile__background',
         {
-          height: '0%',
+          height: 42,
           duration: 1,
           ease: 'expo.inOut',
         },
@@ -345,10 +175,11 @@ const onToggleNavigation = () => {
       <span class="text">psychoactive®</span>
       <IconPlus class="icon" />
     </button>
-    <div class="navigation-mobile__background" />
-    <a href="" class="navigation-mobile__logo">
-      <img src="/img/logo-1.svg" alt="Psychoactive" />
-    </a>
+    <div class="navigation-mobile__background">
+      <a href="" class="navigation-mobile__logo">
+        <img src="/img/logo-1.svg" alt="Psychoactive" />
+      </a>
+    </div>
     <div class="navigation-mobile__wrapper">
       <div class="navigation-mobile__talk">
         <button class="navigation-mobile__talk-button">let's talk</button>
@@ -412,7 +243,7 @@ const onToggleNavigation = () => {
   &__button {
     width: 100%;
     height: 42px;
-    background-color: $color-foreground;
+    // background-color: $color-foreground;
     border-radius: 1rem;
     color: $color-background;
     font-family: 'RoobertMono', sans-serif;
@@ -432,7 +263,7 @@ const onToggleNavigation = () => {
     border-radius: 1rem;
     position: absolute;
     width: 100%;
-    height: 0%;
+    height: 42px;
     left: 0;
     bottom: 0;
     z-index: -1;
@@ -442,9 +273,9 @@ const onToggleNavigation = () => {
     width: 36px;
     height: 36px;
     position: absolute;
-    top: calc(100% - 38px);
+    top: 4px;
     left: 10px;
-    transform: scale(0.72) translate3d(0, 0, 0);
+    transform: scale(0.72);
     mix-blend-mode: difference;
     img {
       width: 100%;
