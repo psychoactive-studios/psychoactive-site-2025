@@ -156,6 +156,7 @@ const briefMouseLeaveHandler = () => {
   justify-content: space-between;
   position: relative;
   z-index: 1;
+  background-color: $color-background;
   @include respond(portrait) {
     padding-top: 160px;
   }

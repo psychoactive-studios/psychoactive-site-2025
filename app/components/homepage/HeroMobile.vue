@@ -22,11 +22,16 @@ onMounted(() => {
     heroInitAnimationMobile(ctx, scrollSmoother);
     initializeElements(containerRef.value);
   }
+  nextTick(() => {
+    if (scrollSmoother.value) {
+      scrollSmoother.value.effects('[data-speed]', {});
+    }
+  });
 });
 </script>
 
 <template>
-  <div ref="containerRef" class="hero-mobile">
+  <div ref="containerRef" class="hero-mobile" data-speed="0.5">
     <div class="hero-mobile__player">
       <video
         class="hero-mobile__player_preview"

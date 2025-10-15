@@ -8,7 +8,7 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 </script>
 
 <template>
-  <main>
+  <main class="homepage">
     <ClientOnly>
       <section class="hero">
         <Hero v-if="!isMobile" />
@@ -43,11 +43,15 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 
 <style lang="scss" scoped>
 @use '~/assets/styles/mixins' as *;
+@use '~/assets/styles/variables' as *;
 
 .partners {
+  position: relative;
+  z-index: 1;
+  background-color: $color-background;
   .container {
     @include respond(mobile) {
-      padding: 0;
+      padding: 36px 0 0 0;
     }
   }
   .list {
