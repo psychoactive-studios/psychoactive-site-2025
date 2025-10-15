@@ -2,6 +2,7 @@
 import gsap from 'gsap';
 import IconPlus from '~/assets/icons/icon-plus-1.svg';
 import LinkWithHover from '../ui/LinkWithHover.vue';
+import useNavigation from '~/composables/useNavigation';
 
 let ctx = null;
 
@@ -9,7 +10,7 @@ let ctx = null;
 const isOpen = ref(false);
 
 // Ref to the navigation DOM element
-const navigationRef = ref(null);
+const { navigationMobileRef } = useNavigation();
 
 let navigationTimelineOpen, navigationTimelineClose;
 
@@ -82,7 +83,8 @@ onMounted(() => {
         '.navigation-mobile__button .text',
         { opacity: 1, duration: 0.3 },
         'open+=0.4'
-      );
+      )
+      .set('.navigation-mobile__logo', { clearProps: 'all' });
 
     // Initialize the opening timeline
     navigationTimelineOpen = gsap
@@ -166,7 +168,7 @@ onMounted(() => {
         },
         'open+=0.5'
       );
-  }, navigationRef.value);
+  }, navigationMobileRef.value);
 });
 
 onUnmounted(() => {
@@ -180,16 +182,165 @@ const onToggleNavigation = () => {
   }
 
   if (!isOpen.value) {
-    navigationTimelineOpen.restart();
+    gsap
+      .timeline({ paused: false })
+      .to(
+        '.navigation-mobile__background',
+        {
+          height: '100%',
+          duration: 1,
+          ease: 'expo.inOut',
+        },
+        'open'
+      )
+      .to(
+        '.navigation-mobile__logo',
+        {
+          top: 16,
+          left: 16,
+          scale: 1,
+          rotate: 360,
+          duration: 1.1,
+          ease: 'expo.inOut',
+        },
+        'open'
+      )
+      .to(
+        '.navigation-mobile__button .icon',
+        { rotate: 45, duration: 1, ease: 'expo.inOut' },
+        'open'
+      )
+      .to(
+        '.navigation-mobile__wrapper',
+        {
+          clipPath: 'polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%)',
+          duration: 1,
+          ease: 'expo.inOut',
+        },
+        'open'
+      )
+      .to(
+        '.navigation-mobile__button .text',
+        { opacity: 0, duration: 0.3 },
+        'open+=0.3'
+      )
+      .fromTo(
+        gsap.utils.toArray('.navigation-mobile__item'),
+        {
+          opacity: 0,
+        },
+        {
+          opacity: 1,
+          duration: 0.5,
+          stagger: {
+            each: 0.07,
+            from: 'end',
+          },
+        },
+        'open+=0.4'
+      )
+      .fromTo(
+        gsap.utils.toArray('.navigation-mobile__item-line span'),
+        { width: '0%' },
+        {
+          width: '100%',
+          duration: 1,
+          ease: 'power2.inOut',
+          stagger: {
+            each: 0.07,
+            from: 'end',
+          },
+        },
+        'open+=0.1'
+      )
+      .fromTo(
+        '.navigation-mobile__talk-button',
+        { clipPath: 'inset(50% 0% round 36px)' },
+        {
+          clipPath: 'inset(0% 0% round 36px)',
+          duration: 0.7,
+          ease: 'power2.inOut',
+        },
+        'open+=0.5'
+      );
   } else {
-    navigationTimelineClose.restart();
+    gsap
+      .timeline({ paused: false })
+      .fromTo(
+        '.navigation-mobile__talk-button',
+        { clipPath: 'inset(0% 0% round 36px)' },
+        {
+          clipPath: 'inset(50% 0% round 36px)',
+          duration: 0.5,
+          ease: 'power3.inOut',
+        },
+        'open'
+      )
+      .to(
+        gsap.utils.toArray('.navigation-mobile__item'),
+        {
+          opacity: 0,
+          duration: 0.5,
+          stagger: {
+            each: 0.04,
+            from: 'start',
+          },
+        },
+        'open'
+      )
+      .to(
+        '.navigation-mobile__logo',
+        {
+          top: 'calc(100% - 38px)',
+          left: 10,
+          scale: 0.72,
+          rotate: -360,
+          duration: 0.9,
+          ease: 'expo.inOut',
+        },
+        'open'
+      )
+      .fromTo(
+        '.navigation-mobile__wrapper',
+        {
+          clipPath: 'polygon(0px 0px, 100% 0px, 100% 100%, 0px 100%)',
+        },
+        {
+          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0 100%)',
+          duration: 1,
+          ease: 'expo.inOut',
+        },
+        'open'
+      )
+      .to(
+        '.navigation-mobile__background',
+        {
+          height: '0%',
+          duration: 1,
+          ease: 'expo.inOut',
+        },
+        'open'
+      )
+      .to(
+        '.navigation-mobile__button .icon',
+        { rotate: 0, duration: 1, ease: 'expo.inOut' },
+        'open'
+      )
+      .to(
+        '.navigation-mobile__button .text',
+        { opacity: 1, duration: 0.3 },
+        'open+=0.4'
+      );
   }
   isOpen.value = !isOpen.value;
 };
 </script>
 
 <template>
-  <div ref="navigationRef" :class="['navigation-mobile', { opened: isOpen }]">
+  <div
+    ref="navigationMobileRef"
+    :class="['navigation-mobile', { opened: isOpen }]"
+  >
     <button class="navigation-mobile__button" @click="onToggleNavigation">
       <span class="text">psychoactive®</span>
       <IconPlus class="icon" />
@@ -244,7 +395,6 @@ const onToggleNavigation = () => {
 @use '~/assets/styles/mixins' as *;
 .navigation-mobile {
   position: fixed;
-  top: 25%;
   right: 1rem;
   bottom: 1rem;
   left: 1rem;
@@ -254,6 +404,8 @@ const onToggleNavigation = () => {
   border-radius: 1rem;
   overflow: hidden;
   pointer-events: none;
+  min-height: 560px;
+  height: 75%;
   &.opened {
     pointer-events: all;
   }
@@ -268,7 +420,7 @@ const onToggleNavigation = () => {
     font-weight: 500;
     text-transform: uppercase;
     justify-content: space-between;
-    padding: 0 getRem(16) 0 getRem(58);
+    padding: 0 getRem(14) 0 getRem(58);
     margin-top: auto;
     position: absolute;
     bottom: 0;
@@ -292,7 +444,7 @@ const onToggleNavigation = () => {
     position: absolute;
     top: calc(100% - 38px);
     left: 10px;
-    transform: scale(0.72);
+    transform: scale(0.72) translate3d(0, 0, 0);
     mix-blend-mode: difference;
     img {
       width: 100%;
@@ -349,13 +501,7 @@ const onToggleNavigation = () => {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 2.5vw;
-    @include respond(portrait) {
-      order: 1;
-      @include respond(mobile) {
-        gap: getRem(24);
-      }
-    }
+    gap: getRem(32);
   }
   &__item {
     font-size: clamp(48px, 3.646vw, 70px);

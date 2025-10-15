@@ -411,6 +411,11 @@ export const heroInitAnimationMobile = (ctx, scrollSmoother) => {
   ctx.add(() => {
     const loaderElement = document.querySelector('#loader-logo');
 
+    const centerControlTexts = SplitText.create(
+      '.hero-mobile__player_controls .controls-text',
+      { type: 'chars', charsClass: 'char-control' }
+    ).chars;
+
     gsap
       .timeline({ id: 'homepage-initial-animation-mobile' })
       .to(loaderElement, {
@@ -419,6 +424,48 @@ export const heroInitAnimationMobile = (ctx, scrollSmoother) => {
         ease: 'power3.out',
         delay: 1.6,
       })
+      .add(() => {
+        stopLoading();
+      })
+      .from('.hero-mobile__preview', {
+        opacity: 0,
+        duration: 0.5,
+      })
+      .from('.controls-button', { scale: 0, duration: 0.5 }, '<')
+      .to(
+        centerControlTexts,
+        {
+          duration: 2.3,
+          scrambleText: {
+            text: '{original}',
+            chars: 'uppercase',
+            tweenLength: false,
+          },
+        },
+        '<+=0.2'
+      )
+      .from(
+        centerControlTexts,
+        {
+          opacity: 0,
+          duration: 0.01,
+          stagger: {
+            amount: 0.9,
+            from: 'random',
+          },
+        },
+        '<'
+      )
+      .from(
+        document.querySelector('.navigation-mobile'),
+        {
+          y: 64,
+          opacity: 0,
+          duration: 1,
+          ease: 'power3.out',
+        },
+        '<+=0.5'
+      )
       .add(() => {
         stopLoading();
         scrollSmoother.value.paused(false);
