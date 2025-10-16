@@ -63,7 +63,7 @@ const onLogoHoverHandler = (e) => {
       <Navigation v-if="!isMobile" />
       <NavigationMobile v-if="isMobile" />
       <div class="hero-mobile__navigation">
-        <img src="/img/logo-1.svg" alt="Psychoactive" />
+        <img src="/img/logo-2.svg" alt="Psychoactive" />
         <span class="text">psychoactive®</span>
         <button
           class="hero-mobile__navigation_button"
@@ -166,7 +166,6 @@ const onLogoHoverHandler = (e) => {
     left: 10px;
     width: 36px;
     height: 36px;
-    mix-blend-mode: difference;
     transform: scale(0.72);
     z-index: 1;
   }
