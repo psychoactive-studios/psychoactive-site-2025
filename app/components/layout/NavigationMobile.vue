@@ -6,6 +6,7 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
 import useNavigation from '~/composables/useNavigation';
 import loaderData from '~/assets/lottie/logo-V02.json';
 import lottie from 'lottie-web';
+import { onClickOutside } from '@vueuse/core';
 
 // Reactive state to track if the navigation is open
 const isOpen = ref(false);
@@ -185,6 +186,13 @@ const onToggleNavigation = () => {
   }
   isOpen.value = !isOpen.value;
 };
+
+// Close the navigation when clicking outside
+onClickOutside(navigationMobileRef, () => {
+  if (isOpen.value) {
+    onToggleNavigation();
+  }
+});
 </script>
 
 <template>
