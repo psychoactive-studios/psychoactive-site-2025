@@ -98,7 +98,7 @@ onMounted(() => {
       pointer-events: none;
     }
     &_overlay {
-      background: url('/img/video-player-dots-overlay.svg') repeat;
+      background: url('/img/video-player-dots-overlay-mobile.png') repeat;
       position: absolute;
       inset: 0;
       z-index: 1;
