@@ -1,17 +1,39 @@
 <script setup>
 import gsap from 'gsap';
+
 import IconPlus from '~/assets/icons/icon-plus-1.svg';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 import useNavigation from '~/composables/useNavigation';
+import loaderData from '~/assets/lottie/logo-V02.json';
+import lottie from 'lottie-web';
+import { onClickOutside } from '@vueuse/core';
 
 // Reactive state to track if the navigation is open
 const isOpen = ref(false);
+const lottieLogoContainerRef = ref(null);
+const lottieLogoAnimationRef = ref(null);
 
 // Ref to the navigation DOM element
 const { navigationMobileRef } = useNavigation();
 
+onMounted(() => {
+  if (lottieLogoContainerRef.value) {
+    lottieLogoAnimationRef.value = lottie.loadAnimation({
+      container: lottieLogoContainerRef.value,
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      animationData: loaderData,
+    });
+    // Set the animation speed (1 = normal, 2 = twice as fast, 0.5 = half as fast)
+    lottieLogoAnimationRef.value.setSpeed(1.25);
+  }
+});
+
 const onToggleNavigation = () => {
   if (!isOpen.value) {
+    lottieLogoAnimationRef?.value?.setDirection(1);
+    lottieLogoAnimationRef?.value?.play();
     gsap
       .timeline({ paused: false })
       .to(
@@ -29,7 +51,6 @@ const onToggleNavigation = () => {
           top: 16,
           left: 16,
           scale: 1,
-          rotate: 360,
           duration: 1.1,
           ease: 'expo.inOut',
         },
@@ -94,6 +115,8 @@ const onToggleNavigation = () => {
         'open+=0.5'
       );
   } else {
+    lottieLogoAnimationRef?.value?.setDirection(-1);
+    lottieLogoAnimationRef?.value?.play();
     gsap
       .timeline({ paused: false })
       .fromTo(
@@ -121,10 +144,9 @@ const onToggleNavigation = () => {
       .to(
         '.navigation-mobile__logo',
         {
-          top: 3,
+          top: 4,
           left: 10,
           scale: 0.72,
-          rotate: -360,
           duration: 0.9,
           ease: 'expo.inOut',
         },
@@ -164,6 +186,13 @@ const onToggleNavigation = () => {
   }
   isOpen.value = !isOpen.value;
 };
+
+// Close the navigation when clicking outside
+onClickOutside(navigationMobileRef, () => {
+  if (isOpen.value) {
+    onToggleNavigation();
+  }
+});
 </script>
 
 <template>
@@ -176,9 +205,9 @@ const onToggleNavigation = () => {
       <IconPlus class="icon" />
     </button>
     <div class="navigation-mobile__background">
-      <a href="" class="navigation-mobile__logo">
-        <img src="/img/logo-1.svg" alt="Psychoactive" />
-      </a>
+      <NuxtLink to="/" class="navigation-mobile__logo">
+        <span ref="lottieLogoContainerRef" />
+      </NuxtLink>
     </div>
     <div class="navigation-mobile__wrapper">
       <div class="navigation-mobile__talk">
@@ -276,7 +305,6 @@ const onToggleNavigation = () => {
     top: 4px;
     left: 10px;
     transform: scale(0.72);
-    mix-blend-mode: difference;
     img {
       width: 100%;
       height: 100%;

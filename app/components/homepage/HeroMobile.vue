@@ -35,7 +35,7 @@ onMounted(() => {
     <div class="hero-mobile__player">
       <video
         class="hero-mobile__player_preview"
-        src="/video/preview_reel.mp4"
+        src="/video/mobile_preview_reel.mp4"
         autoplay
         loop
         muted
@@ -46,7 +46,6 @@ onMounted(() => {
         class="hero-mobile__player_video"
         src="https://vjs.zencdn.net/v/oceans.mp4"
         playsinline
-        muted
         @click="videoPlayPauseHandler"
       />
       <div class="hero-mobile__player_overlay" />

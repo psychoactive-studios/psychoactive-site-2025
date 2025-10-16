@@ -162,8 +162,12 @@ const briefMouseLeaveHandler = () => {
   }
   @include respond(mobile) {
     padding-top: 80px;
+    justify-content: space-around;
   }
   .navigation {
+    @include respond(mobile) {
+      display: none;
+    }
     .links {
       display: flex;
       justify-content: space-between;
