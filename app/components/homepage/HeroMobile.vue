@@ -46,7 +46,6 @@ onMounted(() => {
         class="hero-mobile__player_video"
         src="https://vjs.zencdn.net/v/oceans.mp4"
         playsinline
-        muted
         @click="videoPlayPauseHandler"
       />
       <div class="hero-mobile__player_overlay" />

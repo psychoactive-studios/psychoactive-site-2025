@@ -173,6 +173,7 @@ export default function useHomeVideoPlayerMobile() {
           opacity: 0,
           duration: 1,
           ease: 'power3.inOut',
+          onComplete: () => mainVideo.value.pause(),
         },
         'start'
       )
