@@ -397,8 +397,8 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
         &::before {
           content: '';
           position: absolute;
-          inset: -1px;
-          border: 24px solid $color-foreground;
+          inset: -2px;
+          border: 26px solid $color-foreground;
           border-radius: getRem(48);
           z-index: 1;
           transition: border 0.2s cubic-bezier(0, 0, 0.02, 0.99);
@@ -423,7 +423,7 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
                 flicker-effect-3 0.3s ease forwards 0.3s;
             }
             &::before {
-              border: 24px solid $color-foreground;
+              border: 26px solid $color-foreground;
             }
           }
         }
