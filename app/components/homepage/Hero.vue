@@ -210,8 +210,10 @@ const onScrollDownHandler = () => {
     &_wrapper {
       flex-grow: 1;
       @include flex-center;
-      padding-left: clamp(88px, 8vw, 160px);
-      padding-right: clamp(88px, 8vw, 160px);
+      // padding-left: clamp(88px, 8vw, 160px);
+      // padding-right: clamp(88px, 8vw, 160px);
+      padding-left: 160px;
+      padding-right: 160px;
       @include respond(portrait) {
         padding-top: 160px;
         padding-bottom: 48px;
@@ -304,7 +306,7 @@ const onScrollDownHandler = () => {
         .circle--wrapper {
           position: absolute;
           z-index: 1;
-          top: 46.5%;
+          top: 50%;
           left: 50%;
           transform: translate(-50%, -50%) rotate(30deg);
           width: 50%;
@@ -384,7 +386,7 @@ const onScrollDownHandler = () => {
         .center {
           position: absolute;
           z-index: 2;
-          top: 46.5%;
+          top: 50%;
           left: 0;
           right: 0;
           @include respond(mobile) {
@@ -552,7 +554,7 @@ const onScrollDownHandler = () => {
         .video-player {
           position: absolute;
           z-index: 3;
-          top: 46.5%;
+          top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
           aspect-ratio: 2.22;
@@ -566,7 +568,7 @@ const onScrollDownHandler = () => {
         .homehero-3d-scene--wrapper {
           position: absolute;
           z-index: 1;
-          top: 46.5%;
+          top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
           width: 100%;

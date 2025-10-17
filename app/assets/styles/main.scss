@@ -12,7 +12,8 @@ body {
 }
 
 .container {
-  padding: 0 clamp(88px, 8vw, 160px);
+  // padding: 0 clamp(88px, 8vw, 160px);
+  padding: 0 160px;
   margin: 0 auto;
   @include respond(mobile) {
     padding-left: 24px;
