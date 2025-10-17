@@ -141,7 +141,6 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
     width: 100%;
     .player__dots {
       width: 1px;
-      will-change: transform;
       &.player__dots--tl {
         top: 34%;
         left: 26.5%;
@@ -377,10 +376,11 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
       .play-button {
         width: getRem(96);
         height: getRem(48);
-        border: 1px solid white(20);
         border-radius: getRem(48);
         color: $color-background;
+        border: 1px solid white(20);
         position: relative;
+        overflow: hidden;
         @include respond(mobile) {
           width: 70px;
           height: 36px;
@@ -396,12 +396,11 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
         &::before {
           content: '';
           position: absolute;
-          inset: 0;
-          background-color: $color-foreground;
+          inset: -1px;
+          border: 24px solid $color-foreground;
           border-radius: getRem(48);
           z-index: 1;
-          transform: scale(1);
-          transition: transform 0.4s cubic-bezier(0, 0, 0.02, 0.99);
+          transition: border 0.2s cubic-bezier(0, 0, 0.02, 0.99);
           will-change: transform;
         }
         &:hover {
@@ -409,26 +408,34 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
             color: $color-foreground;
           }
           &::before {
-            transform: scale(0);
+            border: 1px solid white(100);
           }
         }
         &--transparent {
           color: $color-foreground;
           &::before {
-            background: $color-foreground;
-            transform: scale(0);
+            border: 1px solid white(100);
           }
           &:hover {
             .nuxt-icon {
-              color: $color-background;
+              animation: change-color 0.00001s forwards 0.3s,
+                flicker-effect-3 0.3s ease forwards 0.3s;
             }
             &::before {
-              transform: scale(1);
+              border: 24px solid $color-foreground;
             }
           }
         }
       }
     }
+  }
+}
+@keyframes change-color {
+  0% {
+    color: $color-foreground;
+  }
+  100% {
+    color: $color-background;
   }
 }
 </style>
