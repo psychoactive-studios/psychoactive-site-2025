@@ -389,6 +389,7 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
           position: relative;
           z-index: 1;
           transition: color 0.075s ease-out;
+          translate: 2px 0px;
           @include respond(mobile) {
             height: 12px;
           }
