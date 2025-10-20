@@ -173,7 +173,7 @@ const briefMouseLeaveHandler = () => {
       justify-content: space-between;
       align-items: center;
       gap: getRem(24);
-      padding: 0 clamp(24px, 8vw, 160px);
+      padding: 0 160px;
       @include respond(portrait) {
         flex-wrap: wrap;
         gap: getRem(16) getRem(24);
