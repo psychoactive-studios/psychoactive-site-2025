@@ -225,7 +225,7 @@ const onScrollDownHandler = () => {
         padding-bottom: 24px;
       }
       .scene {
-        aspect-ratio: 2.43;
+        aspect-ratio: 2;
         width: 100%;
         position: relative;
         will-change: transform;
