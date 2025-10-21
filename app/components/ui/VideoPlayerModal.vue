@@ -51,7 +51,7 @@ onMounted(() => {
     <div class="modal__player">
       <video
         class="player__main_video"
-        src="https://vjs.zencdn.net/v/oceans.mp4"
+        src="/video/psycho_reel_v21.mp4"
         playsinline
         :muted="isMuted"
       />
