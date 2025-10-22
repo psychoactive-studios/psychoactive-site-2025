@@ -2,18 +2,33 @@
 import { useMediaQuery } from '@vueuse/core';
 import Hero from '~/components/homepage/Hero.vue';
 import HeroMobile from '~/components/homepage/HeroMobile.vue';
+import CaseStadyPreview from '~/components/ui/CaseStadyPreview.vue';
 import { partnersData } from '~/data/partnersData';
+import { useLoader } from '~/composables/useLoader';
+import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
+
+// TODO: Remove when loader is removed
+const { stopLoading } = useLoader();
+const { enableScroll } = useScrollSmoother();
+
+onMounted(() => {
+  stopLoading();
+  setTimeout(enableScroll, 1000);
+});
 </script>
 
 <template>
   <main class="homepage">
     <ClientOnly>
+      <!-- Hero Section -->
       <section class="hero">
-        <Hero v-if="!isMobile" />
-        <HeroMobile v-if="isMobile" />
+        <!-- <Hero v-if="!isMobile" /> -->
+        <!-- <HeroMobile v-if="isMobile" /> -->
       </section>
+
+      <!-- Partners Section -->
       <section class="partners">
         <div class="container">
           <div class="list">
@@ -35,6 +50,13 @@ const isMobile = useMediaQuery('(max-width: 768px)');
               :class="partner.id"
             />
           </div>
+        </div>
+      </section>
+
+      <!-- Cases Section -->
+      <section class="cases">
+        <div class="container">
+          <CaseStadyPreview />
         </div>
       </section>
     </ClientOnly>
@@ -97,5 +119,8 @@ const isMobile = useMediaQuery('(max-width: 768px)');
   .partner-summer-game {
     width: 5.62%;
   }
+}
+.cases {
+  margin-top: 160px;
 }
 </style>
