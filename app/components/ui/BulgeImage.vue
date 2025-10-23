@@ -37,8 +37,8 @@ const targetStrength = ref(0);
 
 const settings = {
   animationDuration: 0.5,
-  maxStrength: 1.0,
-  lerpFactor: 0.1, // Interpolation factor
+  maxStrength: 0.7,
+  lerpFactor: 0.05, // Interpolation factor
 };
 
 onMounted(() => {

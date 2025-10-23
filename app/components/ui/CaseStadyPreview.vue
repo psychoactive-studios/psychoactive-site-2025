@@ -28,10 +28,15 @@ const handleMouseLeave = () => {
       /> -->
     </div>
     <div class="case-study-preview__content">
-      <h3 class="case-study-preview__title">Super AI</h3>
-      <p class="case-study-preview__description">
-        Next-gen AI-powered analytics
-      </p>
+      <div class="case-study-preview__title">
+        <h3>SuperAI Conference</h3>
+        <p>Worlds largest AI event</p>
+      </div>
+      <div class="case-study-preview__dots">
+        <span />
+        <span />
+        <span />
+      </div>
     </div>
   </div>
 </template>
@@ -66,23 +71,39 @@ const handleMouseLeave = () => {
     margin-top: getRem(24);
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
   }
 
   &__title {
     color: $color-foreground;
-    font-size: getRem(20);
-    line-height: 1.5;
-    font-weight: 400;
+    h3 {
+      font-size: getRem(20);
+      line-height: 1.5;
+      font-weight: 400;
+    }
+    p {
+      font-family: 'RoobertMono';
+      font-size: getRem(16);
+      font-weight: 500;
+      line-height: 1.5;
+      text-transform: uppercase;
+      opacity: 0.5;
+      mix-blend-mode: difference;
+    }
   }
 
-  &__description {
-    font-family: 'RoobertMono';
-    font-size: getRem(16);
-    font-weight: 500;
-    line-height: 1.5;
-    opacity: 0.5;
-    mix-blend-mode: difference;
-    text-transform: uppercase;
+  &__dots {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 2px;
+    rotate: 90deg;
+    span {
+      display: block;
+      width: 6px;
+      height: 6px;
+      background-color: $color-foreground;
+      border-radius: 50%;
+    }
   }
 }
 </style>
