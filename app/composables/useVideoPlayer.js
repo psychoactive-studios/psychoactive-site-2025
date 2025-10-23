@@ -309,6 +309,9 @@ export default function () {
   const setupVideoListeners = (videoElement) => {
     if (!videoElement) return;
 
+    videoElement.addEventListener('click', playHandler);
+    // videoElement.addEventListener('pause', playHandler);
+
     videoElement.addEventListener('timeupdate', () =>
       updateVideoTime(videoElement)
     );

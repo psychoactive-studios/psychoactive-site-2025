@@ -8,6 +8,11 @@ export default defineNuxtConfig({
       enabled: true
     }
   },
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag === 'mux-player',
+    },
+  },
   modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo'],
   css: ['modern-normalize/modern-normalize.css', '~/assets/styles/main.scss'],
   app: {
