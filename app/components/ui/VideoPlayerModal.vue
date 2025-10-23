@@ -87,7 +87,6 @@ const handleCliclProgressBar = (event) => {
           playback-id="ZHC4c7JwfvzJNZW2ER802sLvCdlj3LQEW026yxwY5JXbQ"
           class="player__main_video"
           poster="https://image.mux.com/ZHC4c7JwfvzJNZW2ER802sLvCdlj3LQEW026yxwY5JXbQ/thumbnail.png?time=0"
-          autohide="-1"
           playsinline
           :muted="isMuted"
         />
