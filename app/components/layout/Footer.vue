@@ -291,7 +291,7 @@ const briefMouseLeaveHandler = () => {
           position: absolute;
           inset: 0;
           color: white(100);
-          // clip-path: polygon(55% 0, 55% 0, 55% 100%, 55% 100%);
+          clip-path: polygon(55% 0, 55% 0, 55% 100%, 55% 100%);
           * {
             fill-opacity: 1;
           }
