@@ -396,7 +396,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
       )
       // The '-=1' offset ensures heroScrollAnimation and scrollSmoother resume 1 second before the timeline ends for a smoother transition.
       .add(() => {
-        heroScrollAnimation(ctx);
+        // heroScrollAnimation(ctx);
         scrollSmoother.value.paused(false);
       }, '-=1');
   });

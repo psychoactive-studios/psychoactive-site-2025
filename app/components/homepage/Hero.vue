@@ -5,16 +5,23 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
 import gsap from 'gsap';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 
-import { heroInitSplitText, heroInitAnimation } from '~/utils';
+import {
+  heroInitSplitText,
+  heroInitAnimation,
+  heroScrollAnimation,
+} from '~/utils';
 import VideoPreview from '../ui/VideoPreview.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useAudioManager from '~/composables/useAudioManager';
 import WebflowLabel from '../ui/WebflowLabel.vue';
+import { useLoader } from '~/composables/useLoader';
+import { set } from '@vueuse/core';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen } = useVideoPlayer();
 const { playInteractionSound } = useAudioManager();
+const { stopLoading } = useLoader();
 
 const container = ref(null);
 let ctx;
@@ -22,8 +29,14 @@ let ctx;
 onMounted(() => {
   if (container.value) {
     ctx = gsap.context(() => {}, container.value);
+    // stopLoading();
     heroInitSplitText();
-    heroInitAnimation(ctx, scrollSmoother);
+    heroScrollAnimation(ctx);
+    // scrollSmoother.value.paused(false);
+
+    setTimeout(() => {
+      heroInitAnimation(ctx, scrollSmoother);
+    }, 3000);
   }
 });
 
@@ -38,7 +51,7 @@ const onPlayVideoHandler = (playerContainerRef) => {
     ?.isActive();
 
   // Check if scrollSmoother and trigger exist
-  if (!scrollSmoother.value || isInitialAnimationPlaying) return;
+  // if (!scrollSmoother.value || isInitialAnimationPlaying) return;
 
   // Get the current progress of the ScrollTrigger
   // const progress = trigger?.progress;
