@@ -5,6 +5,7 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import gsap from 'gsap';
 import WebflowLabel from '../ui/WebflowLabel.vue';
+import BriefOurAIAgent from '~/assets/img/brief-our-AI-agent.svg';
 
 let footerBriefTimeline;
 const briefRef = ref(null);
@@ -71,48 +72,40 @@ const briefMouseLeaveHandler = () => {
       </ul>
     </section>
     <section class="brief">
-      <div class="brief__idea">
-        <div class="brief__idea_plus">
-          <PlusIcon />
-          <PlusIcon />
+      <div class="container">
+        <div class="brief__idea">
+          <div class="brief__idea_plus">
+            <PlusIcon />
+            <PlusIcon />
+          </div>
+          <div class="brief__idea_text">Have an idea?</div>
+          <div class="brief__idea_plus">
+            <PlusIcon />
+            <PlusIcon />
+          </div>
         </div>
-        <div class="brief__idea_text">Have an idea?</div>
-        <div class="brief__idea_plus">
-          <PlusIcon />
-          <PlusIcon />
-        </div>
-      </div>
-      <div
-        ref="briefRef"
-        class="brief__title"
-        @mouseenter="briefMouseEnterHandler"
-        @mouseleave="briefMouseLeaveHandler"
-      >
-        <NuxtLink href="/" class="brief__title_text">
-          <div class="brief__title_text--original">
-            Brief our
-            <div class="text-ai">
-              <span>AI</span>
-              <div class="brief__title_dots">
-                <span class="dot-left" />
-                <span class="dot-center" />
-                <span class="dot-right" />
-              </div>
+        <div
+          ref="briefRef"
+          class="brief__title"
+          @mouseenter="briefMouseEnterHandler"
+          @mouseleave="briefMouseLeaveHandler"
+        >
+          <NuxtLink href="/" class="brief__title_text">
+            <BriefOurAIAgent class="brief__title_text--original" />
+            <BriefOurAIAgent class="brief__title_text--mask" />
+            <div class="brief__title_dots">
+              <span class="dot-left" />
+              <span class="dot-center" />
+              <span class="dot-right" />
             </div>
-            agent
-          </div>
-          <div class="brief__title_text--mask">
-            Brief our
-            <div class="text-ai">AI</div>
-            agent
-          </div>
-        </NuxtLink>
-      </div>
-      <div class="brief__email">
-        Or email the old fashioned way:
-        <LinkWithHover href="mailto:hello@psychoactive.co.nz">
-          hello@psychoactive.co.nz
-        </LinkWithHover>
+          </NuxtLink>
+        </div>
+        <div class="brief__email">
+          Or email the old fashioned way:
+          <LinkWithHover href="mailto:hello@psychoactive.co.nz">
+            hello@psychoactive.co.nz
+          </LinkWithHover>
+        </div>
       </div>
     </section>
 
@@ -175,6 +168,7 @@ const briefMouseLeaveHandler = () => {
       gap: getRem(24);
       padding: 0 160px;
       @include respond(portrait) {
+        padding: 0 48px;
         flex-wrap: wrap;
         gap: getRem(16) getRem(24);
         & > li:nth-child(6) {
@@ -243,6 +237,7 @@ const briefMouseLeaveHandler = () => {
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 60px;
       @include respond(mobile) {
         font-size: getRem(14);
         margin-bottom: 48px;
@@ -268,14 +263,15 @@ const briefMouseLeaveHandler = () => {
     &__title {
       position: relative;
       &_text {
-        font-size: 12.448vw;
-        line-height: 1.16;
-        letter-spacing: -0.835vw;
-        color: white(20);
-        text-align: center;
+        color: white(100);
         margin: 0 0 getRem(80) 0;
         display: block;
         position: relative;
+        svg {
+          // color: #ffffff;
+          width: 100%;
+          height: auto;
+        }
         @include respond(mobile) {
           font-size: clamp(getRem(48), 12.448vw, getRem(76));
         }
@@ -295,14 +291,17 @@ const briefMouseLeaveHandler = () => {
           position: absolute;
           inset: 0;
           color: white(100);
-          clip-path: polygon(55% 0, 55% 0, 55% 100%, 55% 100%);
+          // clip-path: polygon(55% 0, 55% 0, 55% 100%, 55% 100%);
+          * {
+            fill-opacity: 1;
+          }
         }
       }
       &_dots {
         position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 3%;
+        left: 50.8%;
+        right: 38%;
+        bottom: 7%;
         &::before {
           content: '';
           display: block;
