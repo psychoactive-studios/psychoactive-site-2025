@@ -4,6 +4,7 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 import useHomeVideoPlayerMobile from '~/composables/useHomeVideoPlayerMobile';
 import { heroInitAnimationMobile } from '~/utils';
 import PlayIcon from '~/assets/icons/icon-play.svg';
+import '@mux/mux-player';
 
 const containerRef = ref(null);
 let ctx = null;
@@ -41,13 +42,22 @@ onMounted(() => {
         muted
         playsinline
       />
-      <video
+      <mux-player
         ref="mainVideo"
+        playback-id="ZHC4c7JwfvzJNZW2ER802sLvCdlj3LQEW026yxwY5JXbQ"
+        poster="https://image.mux.com/ZHC4c7JwfvzJNZW2ER802sLvCdlj3LQEW026yxwY5JXbQ/thumbnail.png?time=0"
         class="hero-mobile__player_video"
         src="/video/psycho_reel_v21.mp4"
         playsinline
         @click="videoPlayPauseHandler"
       />
+      <!-- <video
+        ref="mainVideo"
+        class="hero-mobile__player_video"
+        src="/video/psycho_reel_v21.mp4"
+        playsinline
+        @click="videoPlayPauseHandler"
+      /> -->
       <div class="hero-mobile__player_overlay" />
       <div class="hero-mobile__player_controls">
         <div class="controls-text">PLAY REEL</div>
@@ -96,6 +106,7 @@ onMounted(() => {
       z-index: 2;
       opacity: 0;
       pointer-events: none;
+      --controls: none;
     }
     &_overlay {
       background: url('/img/video-player-dots-overlay-mobile.png') repeat;

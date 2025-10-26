@@ -17,37 +17,57 @@ const isMobile = useMediaQuery('(max-width: 768px)');
         <HeroMobile v-if="isMobile" />
       </section>
 
-      <!-- Partners Section -->
-      <section class="partners">
-        <div class="container">
-          <div class="list">
-            <Vue3Marquee v-if="isMobile" :duration="30" :pause-on-hover="true">
+      <div class="homepage__content">
+        <!-- Partners Section -->
+        <section class="partners">
+          <div class="container">
+            <div class="list">
+              <Vue3Marquee
+                v-if="isMobile"
+                :duration="30"
+                :pause-on-hover="true"
+              >
+                <NuxtImg
+                  v-for="partner in partnersData"
+                  :key="partner.id"
+                  :src="partner.logo"
+                  :alt="partner.name"
+                  :class="partner.id"
+                />
+              </Vue3Marquee>
               <NuxtImg
                 v-for="partner in partnersData"
+                v-else
                 :key="partner.id"
                 :src="partner.logo"
                 :alt="partner.name"
                 :class="partner.id"
               />
-            </Vue3Marquee>
-            <NuxtImg
-              v-for="partner in partnersData"
-              v-else
-              :key="partner.id"
-              :src="partner.logo"
-              :alt="partner.name"
-              :class="partner.id"
+            </div>
+          </div>
+        </section>
+
+        <!-- Cases Section -->
+        <section class="cases">
+          <div class="container">
+            <CaseStadyPreview
+              src="/img/cases/case-super-ai.png"
+              title="SuperAI Conference"
+              description="Worlds largest AI event"
+            />
+            <CaseStadyPreview
+              src="/img/cases/case-burgerfuel.png"
+              title="Burgerfuel"
+              description="New Zealand’s favourite burger"
+            />
+            <CaseStadyPreview
+              src="/img/cases/case-hellboy.jpg"
+              title="Hellboy Web of Wyrd"
+              description="beat 'em up roguelike Video game"
             />
           </div>
-        </div>
-      </section>
-
-      <!-- Cases Section -->
-      <section class="cases">
-        <div class="container">
-          <CaseStadyPreview />
-        </div>
-      </section>
+        </section>
+      </div>
     </ClientOnly>
   </main>
 </template>
@@ -55,6 +75,14 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 <style lang="scss" scoped>
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/variables' as *;
+
+.homepage {
+  &__content {
+    background-color: $color-background;
+    position: relative;
+    z-index: 1;
+  }
+}
 
 .partners {
   position: relative;
@@ -77,6 +105,15 @@ const isMobile = useMediaQuery('(max-width: 768px)');
     height: auto;
     object-fit: contain;
     margin: 0 20px;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+    @include respond(mobile) {
+      margin: 0 20px;
+    }
   }
   .partner-super-ai {
     width: 6.5%;
@@ -111,5 +148,14 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 }
 .cases {
   margin-top: 160px;
+  .container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 24px;
+    row-gap: 80px;
+    & > *:nth-child(3n + 1) {
+      grid-column: 1 / 3;
+    }
+  }
 }
 </style>

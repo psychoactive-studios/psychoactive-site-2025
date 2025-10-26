@@ -5,7 +5,11 @@ import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
 import gsap from 'gsap';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 
-import { heroInitSplitText, heroInitAnimation } from '~/utils';
+import {
+  heroInitSplitText,
+  heroInitAnimation,
+  heroScrollAnimation,
+} from '~/utils';
 import VideoPreview from '../ui/VideoPreview.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
@@ -22,8 +26,13 @@ let ctx;
 onMounted(() => {
   if (container.value) {
     ctx = gsap.context(() => {}, container.value);
+
     heroInitSplitText();
-    heroInitAnimation(ctx, scrollSmoother);
+    heroScrollAnimation(ctx);
+
+    setTimeout(() => {
+      heroInitAnimation(ctx, scrollSmoother);
+    }, 0);
   }
 });
 
@@ -32,18 +41,6 @@ onMounted(() => {
 const onPlayVideoHandler = (playerContainerRef) => {
   // Get ScrollTrigger by ID
   const trigger = ScrollTrigger.getById('homepage-hero-scrolltrigger');
-
-  const isInitialAnimationPlaying = gsap
-    .getById('homepage-initial-animation')
-    ?.isActive();
-
-  // Check if scrollSmoother and trigger exist
-  if (!scrollSmoother.value || isInitialAnimationPlaying) return;
-
-  // Get the current progress of the ScrollTrigger
-  // const progress = trigger?.progress;
-
-  // If the animation is already complete, just open the video player
 
   // Calculate the target scroll position based on progress
   const y = trigger?.end;

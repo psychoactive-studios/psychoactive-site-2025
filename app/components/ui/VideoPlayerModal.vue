@@ -3,6 +3,9 @@ import useVideoPlayer from '~/composables/useVideoPlayer';
 import PlayIcon from '~/assets/icons/icon-play.svg';
 import PauseIcon from '~/assets/icons/icon-pause.svg';
 import SoundButton from './SoundButton.vue';
+import '@mux/mux-player';
+
+const videoElementRef = ref(null);
 
 const {
   isPlaying,
@@ -28,7 +31,7 @@ const soundHandler = () => {
 };
 
 watch(isPlaying, (state) => {
-  const videoElement = videoPlayerModalRef.value?.querySelector('video');
+  const videoElement = videoElementRef.value;
   if (videoElement) {
     if (state) {
       videoElement.play();
@@ -38,43 +41,89 @@ watch(isPlaying, (state) => {
   }
 });
 
-onMounted(() => {
-  const videoElement = videoPlayerModalRef.value?.querySelector('video');
+onMounted(async () => {
+  // const videoElement = videoPlayerModalRef.value?.querySelector(
+  //   '#modal-video-player-element'
+  // );
+
+  await nextTick();
+  const videoElement = videoElementRef.value;
   if (videoElement) {
     setupVideoListeners(videoElement);
   }
 });
+
+const handleHoverProgressBar = (event) => {
+  const progressBar = event.currentTarget;
+  const rect = progressBar.getBoundingClientRect();
+  const offsetX = event.clientX - rect.left;
+  const hoverPercent = (offsetX / rect.width) * 100;
+
+  const hoverLine = progressBar.querySelector('.progress-hover-line');
+  if (hoverLine) {
+    hoverLine.style.width = `calc(${hoverPercent}% - 3px)`;
+  }
+};
+
+const handleCliclProgressBar = (event) => {
+  const progressBar = event.currentTarget;
+  const rect = progressBar.getBoundingClientRect();
+  const offsetX = event.clientX - rect.left;
+  const clickPercent = offsetX / rect.width;
+
+  const videoElement = videoElementRef.value;
+  if (videoElement) {
+    videoElement.currentTime = videoElement.duration * clickPercent;
+  }
+};
 </script>
 
 <template>
   <div id="video-player-modal" ref="videoPlayerModalRef">
     <div class="modal__player">
-      <video
-        class="player__main_video"
-        src="/video/psycho_reel_v21.mp4"
-        playsinline
-        :muted="isMuted"
-      />
-      <div class="player__controls">
-        <button
-          :class="['control-button', isPlaying ? 'played' : 'paused']"
-          @click="playHandler"
-        >
-          <PlayIcon class="icon-play" />
-          <PauseIcon class="icon-pause" />
-        </button>
-        <SoundButton mode="filled" :muted="isMuted" @click="soundHandler" />
-        <div class="play-time-text">
-          <div class="char-center">{{ formattedTime.minutes[0] }}</div>
-          <div class="char-center">{{ formattedTime.minutes[1] }}</div>
-          <div class="char-center">:</div>
-          <div class="char-center">{{ formattedTime.seconds[0] }}</div>
-          <div class="char-center">{{ formattedTime.seconds[1] }}</div>
+      <ClientOnly>
+        <mux-player
+          ref="videoElementRef"
+          playback-id="ZHC4c7JwfvzJNZW2ER802sLvCdlj3LQEW026yxwY5JXbQ"
+          class="player__main_video"
+          poster="https://image.mux.com/ZHC4c7JwfvzJNZW2ER802sLvCdlj3LQEW026yxwY5JXbQ/thumbnail.png?time=0"
+          playsinline
+          :muted="isMuted"
+        />
+        <!-- <video
+          class="player__main_video"
+          src="/video/psycho_reel_v21.mp4"
+          playsinline
+          :muted="isMuted"
+        /> -->
+        <div class="player__controls">
+          <button
+            :class="['control-button', isPlaying ? 'played' : 'paused']"
+            @click="playHandler"
+          >
+            <PlayIcon class="icon-play" />
+            <PauseIcon class="icon-pause" />
+          </button>
+          <SoundButton mode="filled" :muted="isMuted" @click="soundHandler" />
+          <div class="play-time-text">
+            <div class="char-center">{{ formattedTime.minutes[0] }}</div>
+            <div class="char-center">{{ formattedTime.minutes[1] }}</div>
+            <div class="char-center">:</div>
+            <div class="char-center">{{ formattedTime.seconds[0] }}</div>
+            <div class="char-center">{{ formattedTime.seconds[1] }}</div>
+          </div>
+          <div
+            class="progress-bar"
+            @mousemove="handleHoverProgressBar"
+            @click="handleCliclProgressBar"
+          >
+            <div class="progress-hover-line" />
+            <div class="progress-line">
+              <div class="progress-fill" :style="{ width: `${progress}%` }" />
+            </div>
+          </div>
         </div>
-        <div class="progress-bar">
-          <div class="progress-fill" :style="{ width: `${progress}%` }" />
-        </div>
-      </div>
+      </ClientOnly>
     </div>
   </div>
 </template>
@@ -95,6 +144,13 @@ onMounted(() => {
     display: none;
     position: relative;
     z-index: 1;
+  }
+
+  .player__main_video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    --controls: none;
   }
 
   .close-button {
@@ -171,15 +227,50 @@ onMounted(() => {
     }
     .progress-bar {
       flex-grow: 1;
-      height: 1px;
-      background-color: white(20);
+      display: flex;
+      align-items: center;
+      height: 24px;
       position: relative;
-      border-radius: 2px;
+      cursor: pointer;
+      &:hover {
+        .progress-hover-line {
+          opacity: 1;
+        }
+      }
+      .progress-hover-line {
+        width: 50%;
+        height: 3px;
+        background-color: rgbaColor($color-foreground, 50);
+        position: absolute;
+        border-radius: 3px;
+        left: 0px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        &::after {
+          content: '';
+          position: absolute;
+          top: calc(50% - 3px);
+          left: calc(100%);
+          width: 7px;
+          height: 7px;
+          background-color: $color-foreground;
+          border-radius: 50%;
+          z-index: 0;
+        }
+      }
+      .progress-line {
+        width: 100%;
+        height: 1px;
+        background-color: white(20);
+        position: relative;
+        border-radius: 2px;
+      }
       &::before {
         content: '';
         position: absolute;
         top: calc(50% - 3px);
-        left: 0;
+        left: -3px;
         width: 7px;
         height: 7px;
         background-color: $color-foreground;
@@ -196,7 +287,7 @@ onMounted(() => {
           content: '';
           position: absolute;
           top: calc(50% - 3px);
-          left: 100%;
+          left: calc(100% - 3px);
           width: 7px;
           height: 7px;
           background-color: $color-foreground;
