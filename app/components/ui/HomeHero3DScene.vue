@@ -21,7 +21,7 @@ const colorPalette = [
   new THREE.Color('#23CF48'),
   new THREE.Color('#17FFFF'),
   new THREE.Color('#0646FF'),
-  new THREE.Color('#101012'),
+  // new THREE.Color('#101012'),
 ];
 
 // --- Interactivity variables ---
@@ -42,7 +42,7 @@ function init() {
   scene = new THREE.Scene();
 
   // --- FOG ADDED ---
-  scene.fog = new THREE.FogExp2(0x000000, 0.55);
+  scene.fog = new THREE.FogExp2(0x000000, 0.57);
 
   camera = new THREE.PerspectiveCamera(
     75,

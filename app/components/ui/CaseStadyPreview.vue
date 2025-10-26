@@ -4,6 +4,22 @@ import BulgeImage from '@/components/ui/BulgeImage.vue';
 
 const isHovered = ref(false);
 
+defineProps({
+  src: {
+    type: String,
+    required: true,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: false,
+    default: '',
+  },
+});
+
 const handleMouseEnter = () => {
   isHovered.value = true;
 };
@@ -20,7 +36,7 @@ const handleMouseLeave = () => {
     @mouseleave="handleMouseLeave"
   >
     <div ref="mediaElement" class="case-study-preview__media">
-      <BulgeImage src="/img/cases/case-super-ai.png" :is-visible="isHovered" />
+      <BulgeImage :src="src" :is-visible="isHovered" />
       <!-- <img
         src="/img/cases/case-super-ai.png"
         alt="Super AI Case"
@@ -29,8 +45,8 @@ const handleMouseLeave = () => {
     </div>
     <div class="case-study-preview__content">
       <div class="case-study-preview__title">
-        <h3>SuperAI Conference</h3>
-        <p>Worlds largest AI event</p>
+        <h3>{{ title }}</h3>
+        <p>{{ description }}</p>
       </div>
       <div class="case-study-preview__dots">
         <span />
