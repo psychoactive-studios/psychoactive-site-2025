@@ -15,13 +15,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useAudioManager from '~/composables/useAudioManager';
 import WebflowLabel from '../ui/WebflowLabel.vue';
-import { useLoader } from '~/composables/useLoader';
-import { set } from '@vueuse/core';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen } = useVideoPlayer();
 const { playInteractionSound } = useAudioManager();
-const { stopLoading } = useLoader();
 
 const container = ref(null);
 let ctx;
@@ -29,14 +26,13 @@ let ctx;
 onMounted(() => {
   if (container.value) {
     ctx = gsap.context(() => {}, container.value);
-    // stopLoading();
+
     heroInitSplitText();
     heroScrollAnimation(ctx);
-    // scrollSmoother.value.paused(false);
 
     setTimeout(() => {
       heroInitAnimation(ctx, scrollSmoother);
-    }, 3000);
+    }, 0);
   }
 });
 
@@ -45,18 +41,6 @@ onMounted(() => {
 const onPlayVideoHandler = (playerContainerRef) => {
   // Get ScrollTrigger by ID
   const trigger = ScrollTrigger.getById('homepage-hero-scrolltrigger');
-
-  const isInitialAnimationPlaying = gsap
-    .getById('homepage-initial-animation')
-    ?.isActive();
-
-  // Check if scrollSmoother and trigger exist
-  // if (!scrollSmoother.value || isInitialAnimationPlaying) return;
-
-  // Get the current progress of the ScrollTrigger
-  // const progress = trigger?.progress;
-
-  // If the animation is already complete, just open the video player
 
   // Calculate the target scroll position based on progress
   const y = trigger?.end;

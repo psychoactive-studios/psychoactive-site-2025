@@ -79,9 +79,9 @@ const handleCliclProgressBar = (event) => {
 </script>
 
 <template>
-  <ClientOnly>
-    <div id="video-player-modal" ref="videoPlayerModalRef">
-      <div class="modal__player">
+  <div id="video-player-modal" ref="videoPlayerModalRef">
+    <div class="modal__player">
+      <ClientOnly>
         <mux-player
           ref="videoElementRef"
           playback-id="ZHC4c7JwfvzJNZW2ER802sLvCdlj3LQEW026yxwY5JXbQ"
@@ -91,11 +91,11 @@ const handleCliclProgressBar = (event) => {
           :muted="isMuted"
         />
         <!-- <video
-        class="player__main_video"
-        src="/video/psycho_reel_v21.mp4"
-        playsinline
-        :muted="isMuted"
-      /> -->
+          class="player__main_video"
+          src="/video/psycho_reel_v21.mp4"
+          playsinline
+          :muted="isMuted"
+        /> -->
         <div class="player__controls">
           <button
             :class="['control-button', isPlaying ? 'played' : 'paused']"
@@ -123,9 +123,9 @@ const handleCliclProgressBar = (event) => {
             </div>
           </div>
         </div>
-      </div>
+      </ClientOnly>
     </div>
-  </ClientOnly>
+  </div>
 </template>
 
 <style lang="scss">
