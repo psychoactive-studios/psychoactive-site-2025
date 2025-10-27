@@ -84,9 +84,9 @@ const handleCliclProgressBar = (event) => {
       <ClientOnly>
         <mux-player
           ref="videoElementRef"
-          playback-id="ZHC4c7JwfvzJNZW2ER802sLvCdlj3LQEW026yxwY5JXbQ"
+          playback-id="kTLl2IdTipUpCaX8cymEJqJ5ivXjQVOCxVQFWYx1RCY"
           class="player__main_video"
-          poster="https://image.mux.com/ZHC4c7JwfvzJNZW2ER802sLvCdlj3LQEW026yxwY5JXbQ/thumbnail.png?time=0"
+          poster="https://image.mux.com/kTLl2IdTipUpCaX8cymEJqJ5ivXjQVOCxVQFWYx1RCY/thumbnail.png?time=0"
           playsinline
           :muted="isMuted"
         />
@@ -151,6 +151,7 @@ const handleCliclProgressBar = (event) => {
     height: 100%;
     object-fit: cover;
     --controls: none;
+    --media-object-fit: cover;
   }
 
   .close-button {

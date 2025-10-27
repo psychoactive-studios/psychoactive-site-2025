@@ -44,8 +44,8 @@ onMounted(() => {
       />
       <mux-player
         ref="mainVideo"
-        playback-id="ZHC4c7JwfvzJNZW2ER802sLvCdlj3LQEW026yxwY5JXbQ"
-        poster="https://image.mux.com/ZHC4c7JwfvzJNZW2ER802sLvCdlj3LQEW026yxwY5JXbQ/thumbnail.png?time=0"
+        playback-id="kTLl2IdTipUpCaX8cymEJqJ5ivXjQVOCxVQFWYx1RCY"
+        poster="https://image.mux.com/kTLl2IdTipUpCaX8cymEJqJ5ivXjQVOCxVQFWYx1RCY/thumbnail.png?time=0"
         class="hero-mobile__player_video"
         src="/video/psycho_reel_v21.mp4"
         playsinline
@@ -107,6 +107,7 @@ onMounted(() => {
       opacity: 0;
       pointer-events: none;
       --controls: none;
+      --media-object-fit: cover;
     }
     &_overlay {
       background: url('/img/video-player-dots-overlay-mobile.png') repeat;
