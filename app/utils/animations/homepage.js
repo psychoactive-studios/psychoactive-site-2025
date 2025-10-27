@@ -407,11 +407,10 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
       )
       .fromTo(
         dotsArrowIcon,
-        { opacity: 0, visibility: 'hidden' },
+        { opacity: 0 },
         {
           opacity: 1,
-          visibility: 'visible',
-          duration: 2,
+          duration: 1,
           stagger: { each: 0.05, from: 'random' },
           ease: "rough({ template: power1.out, strength: 5, points: 20, taper: 'none', randomize: true, clamp: false})",
         },
