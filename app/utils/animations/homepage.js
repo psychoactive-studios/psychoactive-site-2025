@@ -215,14 +215,16 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         'firstPart+=0.5'
       )
       /* ======= Canvas part ========= */
-      .from(
+      .fromTo(
         canvas,
-        { scale: 0.7, duration: 2, ease: 'power3.out' },
+        { scale: 0.7, visibility: 'hidden' },
+        { scale: 1, visibility: 'visible', duration: 2, ease: 'power3.out' },
         'firstPart'
       )
-      .from(
+      .fromTo(
         canvas,
-        { opacity: 0, duration: 2, ease: 'power1.out' },
+        { opacity: 0 },
+        { opacity: 1, duration: 2, ease: 'power1.out' },
         'firstPart'
       )
       /* ======= Circle part ========= */
@@ -403,10 +405,12 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         },
         'finalPart'
       )
-      .from(
+      .fromTo(
         dotsArrowIcon,
+        { opacity: 0, visibility: 'hidden' },
         {
-          opacity: 0,
+          opacity: 1,
+          visibility: 'visible',
           duration: 2,
           stagger: { each: 0.05, from: 'random' },
           ease: "rough({ template: power1.out, strength: 5, points: 20, taper: 'none', randomize: true, clamp: false})",
@@ -600,8 +604,9 @@ export const heroScrollAnimation = (ctx) => {
               },
               'output-of-elements+=0.15'
             ) /* ======= Dots arrow part ========= */
-            .to(
+            .fromTo(
               gsap.utils.toArray([dotsArrowIcon, dotsArrowPlusIcons]),
+              { autoAlpha: 1 },
               {
                 autoAlpha: 0,
                 duration: 0.5,
@@ -611,8 +616,9 @@ export const heroScrollAnimation = (ctx) => {
               'output-of-elements'
             )
             /* ======= Canvas part ========= */
-            .to(
+            .fromTo(
               canvas,
+              { scale: 1 },
               { scale: 0.4, duration: outputTime, ease: 'power1.out' },
               'output-of-elements'
             )
@@ -657,11 +663,6 @@ export const heroScrollAnimation = (ctx) => {
               'output-of-elements'
             )
             /* ======= Player part ========= */
-            .to(
-              player,
-              { top: '50%', duration: outputTime, ease: 'power1.out' },
-              'output-of-elements'
-            )
             .fromTo(
               '.player__dots--tl',
               {
