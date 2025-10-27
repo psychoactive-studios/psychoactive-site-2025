@@ -138,26 +138,29 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
       )
       .from(playerButton, { scale: 0, duration: 0.3 }, 'firstPart+=1')
       /* ======= Center line part ========= */
-      .from(
+      .fromTo(
         centerLine,
-        { scaleX: 0, duration: duration1, ease: ease1 },
+        { scaleX: 0, visibility: 'hidden' },
+        { scaleX: 1, visibility: 'visible', duration: duration1, ease: ease1 },
         'firstPart'
       )
-      .from(
+      .fromTo(
         centerLeft,
+        { xPercent: 100, x: -4 },
         {
-          xPercent: 100,
-          x: -4,
+          xPercent: 0,
+          x: 0,
           duration: duration1,
           ease: ease1,
         },
         'firstPart'
       )
-      .from(
+      .fromTo(
         centerRight,
+        { xPercent: -100, x: 3 },
         {
-          xPercent: -100,
-          x: 3,
+          xPercent: 0,
+          x: 0,
           duration: duration1,
           ease: ease1,
         },
@@ -212,14 +215,16 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         'firstPart+=0.5'
       )
       /* ======= Canvas part ========= */
-      .from(
+      .fromTo(
         canvas,
-        { scale: 0.7, duration: 2, ease: 'power3.out' },
+        { scale: 0.7, visibility: 'hidden' },
+        { scale: 1, visibility: 'visible', duration: 2, ease: 'power3.out' },
         'firstPart'
       )
-      .from(
+      .fromTo(
         canvas,
-        { opacity: 0, duration: 2, ease: 'power1.out' },
+        { opacity: 0 },
+        { opacity: 1, duration: 2, ease: 'power1.out' },
         'firstPart'
       )
       /* ======= Circle part ========= */
@@ -252,10 +257,12 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         },
         'secondPart'
       )
-      .from(
+      .fromTo(
         psychoactiveText,
+        { opacity: 0, visibility: 'hidden' },
         {
-          opacity: 0,
+          opacity: 1,
+          visibility: 'visible',
           duration: 0.01,
           stagger: {
             amount: 0.85,
@@ -288,9 +295,15 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         'secondPart'
       )
       /* ======= Top text part ========= */
-      .from(
+      .fromTo(
         labelImage,
-        { xPercent: 175, duration: 1.15, ease: 'power4.out' },
+        { xPercent: 175, visibility: 'hidden' },
+        {
+          xPercent: 0,
+          visibility: 'visible',
+          duration: 1.15,
+          ease: 'power4.out',
+        },
         'secondPart'
       )
       .to(
@@ -305,10 +318,12 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         },
         'secondPart'
       )
-      .from(
+      .fromTo(
         agencyText,
+        { opacity: 0, visibility: 'hidden' },
         {
-          opacity: 0,
+          opacity: 1,
+          visibility: 'visible',
           duration: 0.01,
           stagger: {
             amount: 0.85,
@@ -330,9 +345,15 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         'secondPart'
       )
       /* ======= Bottom text part ========= */
-      .from(
+      .fromTo(
         scaleText,
-        { xPercent: -175, duration: 1.15, ease: 'power4.out' },
+        { xPercent: -175, visibility: 'hidden' },
+        {
+          xPercent: 0,
+          visibility: 'visible',
+          duration: 1.15,
+          ease: 'power4.out',
+        },
         'secondPart'
       )
       .from(
@@ -384,11 +405,12 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         },
         'finalPart'
       )
-      .from(
+      .fromTo(
         dotsArrowIcon,
+        { opacity: 0 },
         {
-          opacity: 0,
-          duration: 2,
+          opacity: 1,
+          duration: 1,
           stagger: { each: 0.05, from: 'random' },
           ease: "rough({ template: power1.out, strength: 5, points: 20, taper: 'none', randomize: true, clamp: false})",
         },
@@ -521,24 +543,28 @@ export const heroScrollAnimation = (ctx) => {
                 // markers: true,
               },
             })
-            .to(
+            .fromTo(
               scaleText,
+              { xPercent: 0 },
               { xPercent: -175, duration: outputTime, ease: 'power1.out' },
               'output-of-elements'
             )
-            .to(
+            .fromTo(
               imagineContainer,
+              { xPercent: 0 },
               { xPercent: -125, duration: outputTime },
               'output-of-elements'
             )
             /* ======= Top text part ========= */
-            .to(
+            .fromTo(
               labelImage,
+              { xPercent: 0 },
               { xPercent: 175, duration: outputTime, ease: 'power1.out' },
               'output-of-elements'
             )
-            .to(
+            .fromTo(
               agencyText,
+              { opacity: 1 },
               {
                 opacity: 0,
                 duration: 0.01,
@@ -549,14 +575,16 @@ export const heroScrollAnimation = (ctx) => {
               },
               'output-of-elements'
             )
-            .to(
+            .fromTo(
               innovationContainer,
+              { xPercent: 0 },
               { xPercent: 175, duration: outputTime, ease: 'power1.out' },
               'output-of-elements'
             )
             /* ======= Psychoactive part ========= */
-            .to(
+            .fromTo(
               psychoactiveText,
+              { opacity: 1 },
               {
                 opacity: 0,
                 duration: 0.01,
@@ -575,8 +603,9 @@ export const heroScrollAnimation = (ctx) => {
               },
               'output-of-elements+=0.15'
             ) /* ======= Dots arrow part ========= */
-            .to(
+            .fromTo(
               gsap.utils.toArray([dotsArrowIcon, dotsArrowPlusIcons]),
+              { autoAlpha: 1 },
               {
                 autoAlpha: 0,
                 duration: 0.5,
@@ -586,8 +615,9 @@ export const heroScrollAnimation = (ctx) => {
               'output-of-elements'
             )
             /* ======= Canvas part ========= */
-            .to(
+            .fromTo(
               canvas,
+              { scale: 1 },
               { scale: 0.4, duration: outputTime, ease: 'power1.out' },
               'output-of-elements'
             )
@@ -603,13 +633,15 @@ export const heroScrollAnimation = (ctx) => {
               'output-of-elements'
             )
             /* ======= Center line part ========= */
-            .to(
+            .fromTo(
               centerLine,
+              { scaleX: 1 },
               { scaleX: 0, duration: outputTime, ease: 'power3.out' },
               'output-of-elements'
             )
-            .to(
+            .fromTo(
               centerLeft,
+              { xPercent: 0, x: 0 },
               {
                 xPercent: 100,
                 x: -4,
@@ -618,8 +650,9 @@ export const heroScrollAnimation = (ctx) => {
               },
               'output-of-elements'
             )
-            .to(
+            .fromTo(
               centerRight,
+              { xPercent: 0, x: 0 },
               {
                 xPercent: -100,
                 x: 3,
@@ -629,11 +662,6 @@ export const heroScrollAnimation = (ctx) => {
               'output-of-elements'
             )
             /* ======= Player part ========= */
-            .to(
-              player,
-              { top: '50%', duration: outputTime, ease: 'power1.out' },
-              'output-of-elements'
-            )
             .fromTo(
               '.player__dots--tl',
               {

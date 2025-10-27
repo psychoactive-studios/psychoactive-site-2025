@@ -254,9 +254,6 @@ onUnmounted(() => {
   if (canvasElement.value) {
     canvasElement.value.removeEventListener('mousemove', onDocumentMouseMove);
   }
-  if (renderer) {
-    renderer.dispose();
-  }
   if (scene) {
     scene.traverse((object) => {
       if (object.geometry) object.geometry.dispose();
@@ -269,6 +266,9 @@ onUnmounted(() => {
       }
     });
   }
+  if (renderer) {
+    renderer.dispose();
+  }
 });
 </script>
 
@@ -279,11 +279,11 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
+@use '~/assets/styles/variables' as *;
 .scene-container {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  font-family: 'Inter', sans-serif;
   position: relative;
 }
 
@@ -291,17 +291,5 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   display: block;
-}
-
-.info {
-  position: absolute;
-  top: 10px;
-  width: 100%;
-  text-align: center;
-  z-index: 100;
-  display: block;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.2);
-  pointer-events: none; // to not intercept mouse events
 }
 </style>
