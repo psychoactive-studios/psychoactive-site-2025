@@ -138,26 +138,29 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
       )
       .from(playerButton, { scale: 0, duration: 0.3 }, 'firstPart+=1')
       /* ======= Center line part ========= */
-      .from(
+      .fromTo(
         centerLine,
-        { scaleX: 0, duration: duration1, ease: ease1 },
+        { scaleX: 0, visibility: 'hidden' },
+        { scaleX: 1, visibility: 'visible', duration: duration1, ease: ease1 },
         'firstPart'
       )
-      .from(
+      .fromTo(
         centerLeft,
+        { xPercent: 100, x: -4 },
         {
-          xPercent: 100,
-          x: -4,
+          xPercent: 0,
+          x: 0,
           duration: duration1,
           ease: ease1,
         },
         'firstPart'
       )
-      .from(
+      .fromTo(
         centerRight,
+        { xPercent: -100, x: 3 },
         {
-          xPercent: -100,
-          x: 3,
+          xPercent: 0,
+          x: 0,
           duration: duration1,
           ease: ease1,
         },
@@ -252,10 +255,12 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         },
         'secondPart'
       )
-      .from(
+      .fromTo(
         psychoactiveText,
+        { opacity: 0, visibility: 'hidden' },
         {
-          opacity: 0,
+          opacity: 1,
+          visibility: 'visible',
           duration: 0.01,
           stagger: {
             amount: 0.85,
@@ -288,9 +293,15 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         'secondPart'
       )
       /* ======= Top text part ========= */
-      .from(
+      .fromTo(
         labelImage,
-        { xPercent: 175, duration: 1.15, ease: 'power4.out' },
+        { xPercent: 175, visibility: 'hidden' },
+        {
+          xPercent: 0,
+          visibility: 'visible',
+          duration: 1.15,
+          ease: 'power4.out',
+        },
         'secondPart'
       )
       .to(
@@ -305,10 +316,12 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         },
         'secondPart'
       )
-      .from(
+      .fromTo(
         agencyText,
+        { opacity: 0, visibility: 'hidden' },
         {
-          opacity: 0,
+          opacity: 1,
+          visibility: 'visible',
           duration: 0.01,
           stagger: {
             amount: 0.85,
@@ -533,19 +546,22 @@ export const heroScrollAnimation = (ctx) => {
               { xPercent: -175, duration: outputTime, ease: 'power1.out' },
               'output-of-elements'
             )
-            .to(
+            .fromTo(
               imagineContainer,
+              { xPercent: 0 },
               { xPercent: -125, duration: outputTime },
               'output-of-elements'
             )
             /* ======= Top text part ========= */
-            .to(
+            .fromTo(
               labelImage,
+              { xPercent: 0 },
               { xPercent: 175, duration: outputTime, ease: 'power1.out' },
               'output-of-elements'
             )
-            .to(
+            .fromTo(
               agencyText,
+              { opacity: 1 },
               {
                 opacity: 0,
                 duration: 0.01,
@@ -556,14 +572,16 @@ export const heroScrollAnimation = (ctx) => {
               },
               'output-of-elements'
             )
-            .to(
+            .fromTo(
               innovationContainer,
+              { xPercent: 0 },
               { xPercent: 175, duration: outputTime, ease: 'power1.out' },
               'output-of-elements'
             )
             /* ======= Psychoactive part ========= */
-            .to(
+            .fromTo(
               psychoactiveText,
+              { opacity: 1 },
               {
                 opacity: 0,
                 duration: 0.01,
@@ -610,13 +628,15 @@ export const heroScrollAnimation = (ctx) => {
               'output-of-elements'
             )
             /* ======= Center line part ========= */
-            .to(
+            .fromTo(
               centerLine,
+              { scaleX: 1 },
               { scaleX: 0, duration: outputTime, ease: 'power3.out' },
               'output-of-elements'
             )
-            .to(
+            .fromTo(
               centerLeft,
+              { xPercent: 0, x: 0 },
               {
                 xPercent: 100,
                 x: -4,
@@ -625,8 +645,9 @@ export const heroScrollAnimation = (ctx) => {
               },
               'output-of-elements'
             )
-            .to(
+            .fromTo(
               centerRight,
+              { xPercent: 0, x: 0 },
               {
                 xPercent: -100,
                 x: 3,
