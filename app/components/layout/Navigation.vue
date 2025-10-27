@@ -164,6 +164,8 @@ const talkButtonHoverHandler = () => {
     }
   }
   &__video {
+    width: 100%;
+    min-width: 0;
     @include respond(portrait) {
       order: 3;
       @include respond(mobile) {
@@ -187,14 +189,16 @@ const talkButtonHoverHandler = () => {
     //   }
     // }
   }
-  // &__menu {
-  // }
+  &__menu {
+    min-width: 0;
+  }
   &__list {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 2.5vw;
+    min-width: 0;
     @include respond(portrait) {
       order: 1;
       @include respond(mobile) {
