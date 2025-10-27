@@ -330,9 +330,15 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         'secondPart'
       )
       /* ======= Bottom text part ========= */
-      .from(
+      .fromTo(
         scaleText,
-        { xPercent: -175, duration: 1.15, ease: 'power4.out' },
+        { xPercent: -175, visibility: 'hidden' },
+        {
+          xPercent: 0,
+          visibility: 'visible',
+          duration: 1.15,
+          ease: 'power4.out',
+        },
         'secondPart'
       )
       .from(
@@ -521,8 +527,9 @@ export const heroScrollAnimation = (ctx) => {
                 // markers: true,
               },
             })
-            .to(
+            .fromTo(
               scaleText,
+              { xPercent: 0 },
               { xPercent: -175, duration: outputTime, ease: 'power1.out' },
               'output-of-elements'
             )

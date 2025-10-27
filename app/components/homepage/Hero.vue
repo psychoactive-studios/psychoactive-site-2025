@@ -30,9 +30,7 @@ onMounted(() => {
     heroInitSplitText();
     heroScrollAnimation(ctx);
 
-    setTimeout(() => {
-      heroInitAnimation(ctx, scrollSmoother);
-    }, 0);
+    heroInitAnimation(ctx, scrollSmoother);
   }
 });
 
