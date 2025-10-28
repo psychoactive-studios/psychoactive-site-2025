@@ -4,8 +4,11 @@
     class="bulge-image-scene"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
+    @mousemove="handleMouseMove"
+    @touchmove="handleMouseMove"
   >
     <canvas ref="canvasEl" />
+    <div ref="cursorRef" class="cursor">Open</div>
   </div>
 </template>
 
@@ -17,6 +20,7 @@ import fragmentShader from '@/utils/glsl/main.frag?raw';
 import gsap from 'gsap';
 
 const isHovered = ref(false);
+const cursorRef = ref(null);
 
 const props = defineProps({
   src: {
@@ -48,9 +52,12 @@ const settings = {
 };
 
 onMounted(() => {
-  initScene();
-  addEventListeners();
-  gsap.ticker.add(animate);
+  // Ensure DOM is ready before initializing
+  nextTick(() => {
+    initScene();
+    addEventListeners();
+    gsap.ticker.add(animate);
+  });
 });
 
 onUnmounted(() => {
@@ -71,12 +78,34 @@ onUnmounted(() => {
   }
 });
 
-const handleMouseEnter = () => {
+const handleMouseEnter = (e) => {
   isHovered.value = true;
+  const rect = rootEl.value.getBoundingClientRect();
+  const eventX = e.clientX;
+  const eventY = e.clientY;
+
+  // Calculate mouse position relative to the element (0 to 1)
+  const relativeX = eventX - rect.left;
+  const relativeY = eventY - rect.top;
+
+  gsap.set(cursorRef.value, {
+    x: relativeX + 16,
+    y: relativeY + 16,
+  });
+  gsap.to(cursorRef.value, {
+    scale: 1,
+    duration: 0.3,
+    ease: 'power3.out',
+  });
 };
 
 const handleMouseLeave = () => {
   isHovered.value = false;
+  gsap.to(cursorRef.value, {
+    scale: 0,
+    duration: 0.3,
+    ease: 'power3.out',
+  });
 };
 
 watch(isHovered, (newValue) => {
@@ -143,18 +172,6 @@ function initScene() {
   handleResize();
 }
 
-function addEventListeners() {
-  window.addEventListener('resize', handleResize, false);
-  window.addEventListener('mousemove', handleMouseMove, false);
-  window.addEventListener('touchmove', handleMouseMove, { passive: false });
-}
-
-function removeEventListeners() {
-  window.removeEventListener('resize', handleResize, false);
-  window.removeEventListener('mousemove', handleMouseMove, false);
-  window.removeEventListener('touchmove', handleMouseMove, false);
-}
-
 function handleResize() {
   if (renderer && material) {
     const width = rootEl.value.clientWidth;
@@ -171,13 +188,25 @@ function handleMouseMove(e) {
   const eventX = isTouch ? e.touches[0].clientX : e.clientX;
   const eventY = isTouch ? e.touches[0].clientY : e.clientY;
 
-  // Just update the raw mouse position
-  mouse.x = gsap.utils.clamp(0, 1, (eventX - rect.left) / rect.width);
-  mouse.y = gsap.utils.clamp(0, 1, 1.0 - (eventY - rect.top) / rect.height);
+  // Calculate mouse position relative to the element (0 to 1)
+  const relativeX = eventX - rect.left;
+  const relativeY = eventY - rect.top;
+
+  gsap.to(cursorRef.value, {
+    x: relativeX + 16,
+    y: relativeY + 16,
+    duration: 0.5,
+    ease: 'power2.out',
+    overwrite: 'auto',
+  });
+
+  mouse.x = gsap.utils.clamp(0, 1, relativeX / rect.width);
+  mouse.y = gsap.utils.clamp(0, 1, 1.0 - relativeY / rect.height);
 }
 
 function animate() {
   // Interpolate mouse position in each frame
+
   lerpedMouse.x = gsap.utils.interpolate(
     lerpedMouse.x,
     mouse.x,
@@ -196,16 +225,42 @@ function animate() {
     renderer.render(scene, camera);
   }
 }
+
+function addEventListeners() {
+  window.addEventListener('resize', handleResize, false);
+}
+
+function removeEventListeners() {
+  window.removeEventListener('resize', handleResize, false);
+}
 </script>
 
 <style scoped lang="scss">
+@use '~/assets/styles/variables' as *;
+@use '~/assets/styles/mixins' as *;
 .bulge-image-scene {
   width: 100%;
   height: 100%;
-  z-index: -1;
+  position: relative;
   canvas {
     width: 100%;
     height: 100%;
+  }
+  .cursor {
+    @include flex-center;
+    width: 96px;
+    height: 48px;
+    color: $color-background;
+    font-family: 'RoobertMono';
+    font-size: 1rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    background-color: $color-foreground;
+    border-radius: 48px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
   }
 }
 </style>
