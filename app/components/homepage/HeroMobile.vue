@@ -41,7 +41,7 @@ onMounted(async () => {
     });
 
     player.src({
-      src: 'SI302H5Ba02lRf3VJHai4txfl6IoU48sA4B1zYLofR2fo',
+      src: 'n9m52aLXTjJ9bPUp7fGCWtD7fDBJflXuv7o8wvlaOIA',
       type: 'video/mux',
     });
   }
