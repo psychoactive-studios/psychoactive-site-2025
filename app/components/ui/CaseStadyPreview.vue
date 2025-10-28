@@ -1,8 +1,5 @@
 <script setup>
-import { ref } from 'vue';
 import BulgeImage from '@/components/ui/BulgeImage.vue';
-
-const isHovered = ref(false);
 
 defineProps({
   src: {
@@ -19,24 +16,12 @@ defineProps({
     default: '',
   },
 });
-
-const handleMouseEnter = () => {
-  isHovered.value = true;
-};
-
-const handleMouseLeave = () => {
-  isHovered.value = false;
-};
 </script>
 
 <template>
-  <div
-    class="case-study-preview"
-    @mouseenter="handleMouseEnter"
-    @mouseleave="handleMouseLeave"
-  >
+  <div class="case-study-preview">
     <div ref="mediaElement" class="case-study-preview__media">
-      <BulgeImage :src="src" :is-visible="isHovered" />
+      <BulgeImage :src="src" />
       <!-- <img
         src="/img/cases/case-super-ai.png"
         alt="Super AI Case"

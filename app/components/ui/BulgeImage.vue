@@ -1,5 +1,10 @@
 <template>
-  <div ref="rootEl" class="bulge-image-scene">
+  <div
+    ref="rootEl"
+    class="bulge-image-scene"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
+  >
     <canvas ref="canvasEl" />
   </div>
 </template>
@@ -10,6 +15,8 @@ import * as THREE from 'three';
 import vertexShader from '@/utils/glsl/main.vert?raw';
 import fragmentShader from '@/utils/glsl/main.frag?raw';
 import gsap from 'gsap';
+
+const isHovered = ref(false);
 
 const props = defineProps({
   src: {
@@ -29,7 +36,6 @@ let scene;
 let camera;
 let mesh;
 let material;
-let animationFrameId;
 
 const mouse = new THREE.Vector2(0.5, 0.5); // Raw mouse position
 const lerpedMouse = new THREE.Vector2(0.5, 0.5); // Smoothed mouse position for shader
@@ -44,14 +50,12 @@ const settings = {
 onMounted(() => {
   initScene();
   addEventListeners();
-  animate(); // Start animation loop immediately
+  gsap.ticker.add(animate);
 });
 
 onUnmounted(() => {
   removeEventListeners();
-  if (animationFrameId) {
-    cancelAnimationFrame(animationFrameId);
-  }
+  gsap.ticker.remove(animate);
   // Clean up Three.js resources
   if (renderer) {
     renderer.dispose();
@@ -67,15 +71,20 @@ onUnmounted(() => {
   }
 });
 
-watch(
-  () => props.isVisible,
-  (newValue) => {
-    gsap.to(targetStrength, {
-      value: newValue ? settings.maxStrength : 0,
-      duration: settings.animationDuration,
-    });
-  }
-);
+const handleMouseEnter = () => {
+  isHovered.value = true;
+};
+
+const handleMouseLeave = () => {
+  isHovered.value = false;
+};
+
+watch(isHovered, (newValue) => {
+  gsap.to(targetStrength, {
+    value: newValue ? settings.maxStrength : 0,
+    duration: settings.animationDuration,
+  });
+});
 
 function initScene() {
   scene = new THREE.Scene();
@@ -168,8 +177,6 @@ function handleMouseMove(e) {
 }
 
 function animate() {
-  animationFrameId = requestAnimationFrame(animate);
-
   // Interpolate mouse position in each frame
   lerpedMouse.x = gsap.utils.interpolate(
     lerpedMouse.x,
@@ -195,7 +202,6 @@ function animate() {
 .bulge-image-scene {
   width: 100%;
   height: 100%;
-  pointer-events: none;
   z-index: -1;
   canvas {
     width: 100%;
