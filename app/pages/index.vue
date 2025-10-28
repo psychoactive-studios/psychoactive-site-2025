@@ -3,6 +3,7 @@ import { useMediaQuery } from '@vueuse/core';
 import Hero from '~/components/homepage/Hero.vue';
 import HeroMobile from '~/components/homepage/HeroMobile.vue';
 import CaseStadyPreview from '~/components/ui/CaseStadyPreview.vue';
+import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import { partnersData } from '~/data/partnersData';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
@@ -65,6 +66,23 @@ const isMobile = useMediaQuery('(max-width: 768px)');
               title="Hellboy Web of Wyrd"
               description="beat 'em up roguelike Video game"
             />
+          </div>
+        </section>
+
+        <section class="filled-text">
+          <div class="container">
+            <OnScrollFilledText>
+              What sets us apart is our
+              <img src="/img/text-icon-1.svg" alt="icon1" /> obsession with the
+              moment your audience first encounters your brand online. That
+              split second where
+              <img src="/img/text-icon-2.svg" alt="icon2" /> curiosity
+              transforms into
+              <img src="/img/text-icon-3.svg" alt="icon3" /> connection. We
+              don't just build websites; we architect
+              <img src="/img/text-icon-4.svg" alt="icon4" /> experiences that
+              linger in minds long after the screen goes dark.
+            </OnScrollFilledText>
           </div>
         </section>
       </div>
@@ -157,5 +175,8 @@ const isMobile = useMediaQuery('(max-width: 768px)');
       grid-column: 1 / 3;
     }
   }
+}
+.filled-text {
+  margin-top: 150px;
 }
 </style>
