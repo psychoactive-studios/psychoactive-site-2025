@@ -3,11 +3,13 @@ import useVideoPlayer from '~/composables/useVideoPlayer';
 import PlayIcon from '~/assets/icons/icon-play.svg';
 import PauseIcon from '~/assets/icons/icon-pause.svg';
 import SoundButton from './SoundButton.vue';
-import '@mux/mux-player';
+import '@mux/videojs-kit/dist/index.css';
 
-const videoElementRef = ref(null);
+let player = null;
 
 const {
+  PLAYBACK_ID,
+  videoElementRef,
   isPlaying,
   currentTime,
   isMuted,
@@ -41,15 +43,36 @@ watch(isPlaying, (state) => {
   }
 });
 
-onMounted(async () => {
-  // const videoElement = videoPlayerModalRef.value?.querySelector(
-  //   '#modal-video-player-element'
-  // );
+watch(PLAYBACK_ID, (newPlaybackId) => {
+  if (player && newPlaybackId) {
+    player.src({
+      src: newPlaybackId,
+      type: 'video/mux',
+    });
+  }
+});
 
-  await nextTick();
-  const videoElement = videoElementRef.value;
-  if (videoElement) {
-    setupVideoListeners(videoElement);
+onMounted(async () => {
+  if (import.meta.client) {
+    const { default: videojs } = await import('@mux/videojs-kit');
+
+    if (videoElementRef.value) {
+      player = videojs(videoElementRef.value, {
+        controls: false,
+        responsive: true,
+        fluid: true,
+        playbackRates: [0.5, 1, 1.5, 2],
+      });
+
+      if (PLAYBACK_ID.value) {
+        player.src({
+          src: PLAYBACK_ID.value,
+          type: 'video/mux',
+        });
+      }
+
+      setupVideoListeners(videoElementRef.value);
+    }
   }
 });
 
@@ -82,20 +105,14 @@ const handleCliclProgressBar = (event) => {
   <div id="video-player-modal" ref="videoPlayerModalRef">
     <div class="modal__player">
       <ClientOnly>
-        <mux-player
+        <video
           ref="videoElementRef"
-          playback-id="kTLl2IdTipUpCaX8cymEJqJ5ivXjQVOCxVQFWYx1RCY"
-          class="player__main_video"
-          poster="https://image.mux.com/kTLl2IdTipUpCaX8cymEJqJ5ivXjQVOCxVQFWYx1RCY/thumbnail.png?time=0"
+          class="video-js player__main_video"
+          type="video/mux"
+          preload="auto"
           playsinline
           :muted="isMuted"
         />
-        <!-- <video
-          class="player__main_video"
-          src="/video/psycho_reel_v21.mp4"
-          playsinline
-          :muted="isMuted"
-        /> -->
         <div class="player__controls">
           <button
             :class="['control-button', isPlaying ? 'played' : 'paused']"

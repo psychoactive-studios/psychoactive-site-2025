@@ -8,6 +8,8 @@ const { enableScroll } = useScrollSmoother();
 
 const currentPreview = ref(null);
 const videoPlayerModalRef = ref(null);
+const videoElementRef = ref(null);
+const PLAYBACK_ID = ref('kTLl2IdTipUpCaX8cymEJqJ5ivXjQVOCxVQFWYx1RCY');
 const isOpen = ref(false);
 const isPlaying = ref(false);
 const isMuted = ref(false);
@@ -46,9 +48,7 @@ export default function () {
       )
     );
     const modal = videoPlayerModalRef.value.querySelector('.modal__player');
-    const videoPlayer = videoPlayerModalRef.value.querySelector(
-      '.player__main_video'
-    );
+    const videoPlayer = videoElementRef.value;
 
     // get the state of the elements before the transition
     const state = Flip.getState(playerWrapper);
@@ -187,9 +187,7 @@ export default function () {
     );
     const videoPlayerBox =
       videoPlayerModalRef.value.querySelector('.modal__player');
-    const videoPlayer = videoPlayerModalRef.value.querySelector(
-      '.player__main_video'
-    );
+    const videoPlayer = videoElementRef.value;
 
     // get the state of the elements before the transition
     const state = Flip.getState(stateContainer);
@@ -325,7 +323,9 @@ export default function () {
 
   return {
     videoPlayerModalRef,
+    videoElementRef,
     currentPreview,
+    PLAYBACK_ID,
     isOpen,
     isPlaying,
     isMuted,
