@@ -18,6 +18,7 @@ import * as THREE from 'three';
 import vertexShader from '@/utils/glsl/main.vert?raw';
 import fragmentShader from '@/utils/glsl/main.frag?raw';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const isHovered = ref(false);
 const cursorRef = ref(null);
@@ -44,6 +45,8 @@ let material;
 const mouse = new THREE.Vector2(0.5, 0.5); // Raw mouse position
 const lerpedMouse = new THREE.Vector2(0.5, 0.5); // Smoothed mouse position for shader
 const targetStrength = ref(0);
+const lastMousePosition = { x: 0, y: 0 }; // Last known global mouse position
+let scrollTriggerInstance = null;
 
 const settings = {
   animationDuration: 0.5,
@@ -55,6 +58,7 @@ onMounted(() => {
   // Ensure DOM is ready before initializing
   nextTick(() => {
     initScene();
+    initScrollTrigger();
     addEventListeners();
     gsap.ticker.add(animate);
   });
@@ -62,6 +66,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   removeEventListeners();
+  cleanupScrollTrigger();
   gsap.ticker.remove(animate);
   // Clean up Three.js resources
   if (renderer) {
@@ -83,6 +88,10 @@ const handleMouseEnter = (e) => {
   const rect = rootEl.value.getBoundingClientRect();
   const eventX = e.clientX;
   const eventY = e.clientY;
+
+  // Store global mouse position
+  lastMousePosition.x = eventX;
+  lastMousePosition.y = eventY;
 
   // Calculate mouse position relative to the element (0 to 1)
   const relativeX = eventX - rect.left;
@@ -188,6 +197,10 @@ function handleMouseMove(e) {
   const eventX = isTouch ? e.touches[0].clientX : e.clientX;
   const eventY = isTouch ? e.touches[0].clientY : e.clientY;
 
+  // Store global mouse position
+  lastMousePosition.x = eventX;
+  lastMousePosition.y = eventY;
+
   // Calculate mouse position relative to the element (0 to 1)
   const relativeX = eventX - rect.left;
   const relativeY = eventY - rect.top;
@@ -202,6 +215,49 @@ function handleMouseMove(e) {
 
   mouse.x = gsap.utils.clamp(0, 1, relativeX / rect.width);
   mouse.y = gsap.utils.clamp(0, 1, 1.0 - relativeY / rect.height);
+}
+
+function handleScroll() {
+  if (!isHovered.value || !rootEl.value) return;
+
+  const rect = rootEl.value.getBoundingClientRect();
+
+  // Calculate mouse position relative to the element using last known global position
+  const relativeX = lastMousePosition.x - rect.left;
+  const relativeY = lastMousePosition.y - rect.top;
+
+  // Update cursor position
+  gsap.to(cursorRef.value, {
+    x: relativeX + 16,
+    y: relativeY + 16,
+    duration: 0.3,
+    ease: 'power2.out',
+    overwrite: 'auto',
+  });
+
+  // Update mouse coordinates for shader
+  mouse.x = gsap.utils.clamp(0, 1, relativeX / rect.width);
+  mouse.y = gsap.utils.clamp(0, 1, 1.0 - relativeY / rect.height);
+}
+
+function initScrollTrigger() {
+  if (!rootEl.value) return;
+
+  scrollTriggerInstance = ScrollTrigger.create({
+    trigger: rootEl.value,
+    start: 'top bottom',
+    end: 'bottom top',
+    onUpdate: () => {
+      handleScroll();
+    },
+  });
+}
+
+function cleanupScrollTrigger() {
+  if (scrollTriggerInstance) {
+    scrollTriggerInstance.kill();
+    scrollTriggerInstance = null;
+  }
 }
 
 function animate() {
@@ -261,6 +317,8 @@ function removeEventListeners() {
     top: 0;
     left: 0;
     z-index: 1;
+    will-change: transform;
+    transform: scale(0);
   }
 }
 </style>
