@@ -1,5 +1,11 @@
 <script setup>
 import BulgeImage from '@/components/ui/BulgeImage.vue';
+import useAudioManager from '~/composables/useAudioManager';
+import gsap from 'gsap';
+
+const { playInteractionSound } = useAudioManager();
+
+const titleRef = ref(null);
 
 defineProps({
   src: {
@@ -16,21 +22,42 @@ defineProps({
     default: '',
   },
 });
+
+const handleMouseEnter = () => {
+  // Stop any ongoing animations on this element
+  if (gsap.isTweening(titleRef.value)) return;
+
+  // Set the width to prevent layout shift
+  const width = titleRef.value.offsetWidth;
+  gsap.set(titleRef.value, { width });
+
+  playInteractionSound();
+
+  // Store the original text
+  gsap.to(titleRef.value, {
+    duration: 0.7,
+    ease: 'none',
+    scrambleText: {
+      text: '{original}',
+      chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+      tweenLength: false,
+    },
+    overwrite: true,
+    onComplete: () => {
+      gsap.set(titleRef.value, { clearProps: 'all' });
+    },
+  });
+};
 </script>
 
 <template>
-  <div class="case-study-preview">
+  <div class="case-study-preview" @mouseenter="handleMouseEnter">
     <div ref="mediaElement" class="case-study-preview__media">
       <BulgeImage :src="src" />
-      <!-- <img
-        src="/img/cases/case-super-ai.png"
-        alt="Super AI Case"
-        class="case-study-preview__image"
-      /> -->
     </div>
     <div class="case-study-preview__content">
       <div class="case-study-preview__title">
-        <h3>{{ title }}</h3>
+        <h3 ref="titleRef">{{ title }}</h3>
         <p>{{ description }}</p>
       </div>
       <div class="case-study-preview__dots">
@@ -77,9 +104,10 @@ defineProps({
 
   &__title {
     color: $color-foreground;
+    margin-top: getRem(-7);
     h3 {
       font-size: getRem(20);
-      line-height: 1.5;
+      line-height: 1.4;
       font-weight: 400;
     }
     p {
@@ -104,6 +132,22 @@ defineProps({
       height: 6px;
       background-color: $color-foreground;
       border-radius: 50%;
+    }
+  }
+
+  &:hover {
+    .case-study-preview__dots {
+      span {
+        &:nth-child(1) {
+          animation: flicker-effect-3 0.5s forwards;
+        }
+        &:nth-child(2) {
+          animation: flicker-effect-3 0.5s forwards 0.2s;
+        }
+        &:nth-child(3) {
+          animation: flicker-effect-3 0.5s forwards 0.3s;
+        }
+      }
     }
   }
 }
