@@ -4,10 +4,11 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 import useHomeVideoPlayerMobile from '~/composables/useHomeVideoPlayerMobile';
 import { heroInitAnimationMobile } from '~/utils';
 import PlayIcon from '~/assets/icons/icon-play.svg';
-import '@mux/mux-player';
+import '@mux/videojs-kit/dist/index.css';
 
 const containerRef = ref(null);
 let ctx = null;
+let player = null;
 
 const { scrollSmoother } = useScrollSmoother();
 const {
@@ -17,7 +18,7 @@ const {
   videoPlayPauseHandler,
 } = useHomeVideoPlayerMobile();
 
-onMounted(() => {
+onMounted(async () => {
   if (containerRef.value) {
     ctx = gsap.context(() => {}, containerRef.value);
     heroInitAnimationMobile(ctx, scrollSmoother);
@@ -28,6 +29,29 @@ onMounted(() => {
       scrollSmoother.value.effects('[data-speed]', {});
     }
   });
+
+  // Initialize Video.js with Mux
+  if (import.meta.client && mainVideo.value) {
+    const { default: videojs } = await import('@mux/videojs-kit');
+
+    player = videojs(mainVideo.value, {
+      controls: false,
+      // responsive: true,
+      // fluid: true,
+    });
+
+    player.src({
+      src: 'kTLl2IdTipUpCaX8cymEJqJ5ivXjQVOCxVQFWYx1RCY',
+      type: 'video/mux',
+    });
+  }
+});
+
+onBeforeUnmount(() => {
+  if (player) {
+    player.dispose();
+    player = null;
+  }
 });
 </script>
 
@@ -42,22 +66,15 @@ onMounted(() => {
         muted
         playsinline
       />
-      <mux-player
+      <video
         ref="mainVideo"
-        playback-id="kTLl2IdTipUpCaX8cymEJqJ5ivXjQVOCxVQFWYx1RCY"
-        poster="https://image.mux.com/kTLl2IdTipUpCaX8cymEJqJ5ivXjQVOCxVQFWYx1RCY/thumbnail.png?time=0"
-        class="hero-mobile__player_video"
-        src="/video/psycho_reel_v21.mp4"
+        class="video-js hero-mobile__player_video"
         playsinline
+      />
+      <div
+        class="hero-mobile__player_video-handler"
         @click="videoPlayPauseHandler"
       />
-      <!-- <video
-        ref="mainVideo"
-        class="hero-mobile__player_video"
-        src="/video/psycho_reel_v21.mp4"
-        playsinline
-        @click="videoPlayPauseHandler"
-      /> -->
       <div class="hero-mobile__player_overlay" />
       <div class="hero-mobile__player_controls">
         <div class="controls-text">PLAY REEL</div>
@@ -105,9 +122,20 @@ onMounted(() => {
       height: 100%;
       z-index: 2;
       opacity: 0;
-      pointer-events: none;
-      --controls: none;
-      --media-object-fit: cover;
+      &-handler {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+      }
+      &.is-playing {
+        pointer-events: auto;
+      }
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
     }
     &_overlay {
       background: url('/img/video-player-dots-overlay-mobile.png') repeat;

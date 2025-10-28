@@ -113,7 +113,7 @@ export default function useHomeVideoPlayerMobile() {
         '<+=0.2'
       )
       .to(
-        mainVideo.value,
+        '.hero-mobile__player_video',
         {
           opacity: 1,
           duration: 1,
@@ -122,7 +122,9 @@ export default function useHomeVideoPlayerMobile() {
             mainVideo.value.currentTime = 0;
             mainVideo.value.play();
             gsap.set(controls, { pointerEvents: 'none' });
-            gsap.set(mainVideo.value, { pointerEvents: 'all' });
+            gsap.set('.hero-mobile__player_video-handler', {
+              pointerEvents: 'all',
+            });
           },
         },
         '<+=0.5'
@@ -137,7 +139,7 @@ export default function useHomeVideoPlayerMobile() {
 
     closeTimeline = gsap
       .timeline()
-      .set(mainVideo.value, { pointerEvents: 'none' })
+      .set('.hero-mobile__player_video-handler', { pointerEvents: 'none' })
       .to(
         currentNavigationButton,
         {
@@ -168,7 +170,7 @@ export default function useHomeVideoPlayerMobile() {
       .set(navigationMobileRef.value, { display: 'block' })
       .set(currentNavigation, { display: 'none' })
       .to(
-        mainVideo.value,
+        '.hero-mobile__player_video',
         {
           opacity: 0,
           duration: 1,
@@ -218,6 +220,7 @@ export default function useHomeVideoPlayerMobile() {
   };
 
   const videoPlayPauseHandler = () => {
+    console.log('mainVideo', mainVideo.value);
     // Prevent re-triggering while animation is running
     if (playPauseTimeline?.isActive()) {
       return;
