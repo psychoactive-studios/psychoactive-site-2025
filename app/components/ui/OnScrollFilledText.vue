@@ -45,12 +45,16 @@ onMounted(async () => {
 @use '~/assets/styles/functions' as *;
 .text-block {
   color: $color-foreground;
-  font-size: getRem(70);
+  font-size: 3.646vw;
   font-style: normal;
   font-weight: 400;
   line-height: 110%;
   letter-spacing: getRem(-1.4);
   position: relative;
+  padding-bottom: 0.15vw;
+  :deep(.dark) {
+    color: white(50);
+  }
   :deep(img) {
     display: inline-block;
     margin: 0 getRem(16);
