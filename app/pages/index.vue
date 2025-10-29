@@ -73,15 +73,18 @@ const isMobile = useMediaQuery('(max-width: 768px)');
           <div class="container">
             <OnScrollFilledText>
               What sets us apart is our
-              <img src="/img/text-icon-1.svg" alt="icon1" /> obsession with the
-              moment your audience first encounters your brand online. That
-              split second where
-              <img src="/img/text-icon-2.svg" alt="icon2" /> curiosity
+              <img src="/img/text-icon-1.svg" alt="icon1" />
+              <span class="dark">obsession</span> with the moment your audience
+              first encounters your brand online. That split second where
+              <img src="/img/text-icon-2.svg" alt="icon2" />
+              <span class="dark">curiosity</span>
               transforms into
-              <img src="/img/text-icon-3.svg" alt="icon3" /> connection. We
-              don't just build websites; we architect
-              <img src="/img/text-icon-4.svg" alt="icon4" /> experiences that
-              linger in minds long after the screen goes dark.
+              <img src="/img/text-icon-3.svg" alt="icon3" />
+              <span class="dark">connection</span>. We don't just build
+              websites; we architect
+              <img src="/img/text-icon-4.svg" alt="icon4" />
+              <span class="dark">experiences</span> that linger in minds long
+              after the screen goes dark.
             </OnScrollFilledText>
           </div>
         </section>
