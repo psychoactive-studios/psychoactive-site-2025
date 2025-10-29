@@ -88,6 +88,31 @@ const isMobile = useMediaQuery('(max-width: 768px)');
             </OnScrollFilledText>
           </div>
         </section>
+
+        <section class="cases">
+          <div class="container">
+            <CaseStadyPreview
+              src="/img/cases/case-world-of-wearableArt.png"
+              title="World of WearableArt"
+              description="New Zealand's Largest theatrical Spectacle"
+            />
+            <CaseStadyPreview
+              src="/img/cases/case-blackbird.png"
+              title="Blackbird Ventures"
+              description="Australasia's leading venture capital firm"
+            />
+            <CaseStadyPreview
+              src="/img/cases/case-summer-game-fest.png"
+              title="Summer Game Fest"
+              description="The global stage for gaming reveals"
+            />
+            <CaseStadyPreview
+              src="/img/cases/case-woolf-university.png"
+              title="WOOLF University"
+              description="Global access to accredited higher education"
+            />
+          </div>
+        </section>
       </div>
     </ClientOnly>
   </main>
