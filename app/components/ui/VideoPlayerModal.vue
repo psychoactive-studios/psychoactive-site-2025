@@ -334,7 +334,7 @@ const handleCliclProgressBar = (event) => {
       aspect-ratio: inherit;
       will-change: clip-path, transform;
       clip-path: inherit;
-      background-color: $color-background;
+      background-color: $color-black;
       &_video {
         aspect-ratio: inherit;
         object-fit: cover;
