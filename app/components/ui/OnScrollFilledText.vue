@@ -85,6 +85,8 @@ onMounted(async () => {
     bottom: 0;
   }
   :deep(.char-center) {
+    will-change: opacity;
+    backface-visibility: hidden;
     opacity: 0.3;
   }
   & > :deep(div:last-child) {
