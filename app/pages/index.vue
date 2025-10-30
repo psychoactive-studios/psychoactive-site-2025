@@ -2,6 +2,7 @@
 import { useMediaQuery } from '@vueuse/core';
 import Hero from '~/components/homepage/Hero.vue';
 import HeroMobile from '~/components/homepage/HeroMobile.vue';
+import HomeNewsList from '~/components/homepage/HomeNewsList.vue';
 import CaseStadyPreview from '~/components/ui/CaseStadyPreview.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import { partnersData } from '~/data/partnersData';
@@ -69,6 +70,7 @@ const isMobile = useMediaQuery('(max-width: 768px)');
           </div>
         </section>
 
+        <!-- Filled Text Section -->
         <section class="filled-text">
           <div class="container">
             <OnScrollFilledText>
@@ -89,6 +91,7 @@ const isMobile = useMediaQuery('(max-width: 768px)');
           </div>
         </section>
 
+        <!-- Cases Section -->
         <section class="cases">
           <div class="container">
             <CaseStadyPreview
@@ -113,6 +116,9 @@ const isMobile = useMediaQuery('(max-width: 768px)');
             />
           </div>
         </section>
+
+        <!-- News Section -->
+        <HomeNewsList />
       </div>
     </ClientOnly>
   </main>
