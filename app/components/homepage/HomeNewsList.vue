@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { newsData } from '~/data/newsData';
 import HomeNewsCard from './HomeNewsCard.vue';
 import LinkWithHover from '../ui/LinkWithHover.vue';

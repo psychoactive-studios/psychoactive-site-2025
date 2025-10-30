@@ -2,6 +2,7 @@
 import { useMediaQuery } from '@vueuse/core';
 import Hero from '~/components/homepage/Hero.vue';
 import HeroMobile from '~/components/homepage/HeroMobile.vue';
+import HomeAwards from '~/components/homepage/HomeAwards.vue';
 import HomeNewsList from '~/components/homepage/HomeNewsList.vue';
 import CaseStadyPreview from '~/components/ui/CaseStadyPreview.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
@@ -119,6 +120,9 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 
         <!-- News Section -->
         <HomeNewsList />
+
+        <!-- Awards Section -->
+        <HomeAwards />
       </div>
     </ClientOnly>
   </main>
