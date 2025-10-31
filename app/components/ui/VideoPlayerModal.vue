@@ -57,12 +57,31 @@ onMounted(async () => {
     const { default: videojs } = await import('@mux/videojs-kit');
 
     if (videoElementRef.value) {
+      console.log(
+        'videoElementRef.value.clientWidth',
+        videoElementRef.value.clientWidth,
+        videoElementRef.value.clientHeight
+      );
+
       player = videojs(videoElementRef.value, {
         controls: false,
         responsive: true,
         fluid: true,
-        playbackRates: [0.5, 1, 1.5, 2],
+        preload: 'auto',
       });
+
+      // const qualityLevels = player.qualityLevels();
+
+      // qualityLevels.on('addqualitylevel', function (event) {
+      //   const qualityLevel = event.qualityLevel;
+
+      //   if (qualityLevel.height > 720) {
+      //     console.log('qualityLevel', qualityLevel);
+      //     qualityLevel.enabled = true;
+      //   } else {
+      //     qualityLevel.enabled = false;
+      //   }
+      // });
 
       if (PLAYBACK_ID.value) {
         player.src({
@@ -70,6 +89,8 @@ onMounted(async () => {
           type: 'video/mux',
         });
       }
+
+      // enableQualityLevel(4);
 
       setupVideoListeners(videoElementRef.value);
     }
@@ -165,10 +186,8 @@ const handleCliclProgressBar = (event) => {
 
   .player__main_video {
     width: 100%;
-    height: 100%;
+    // height: 100%;
     object-fit: cover;
-    --controls: none;
-    --media-object-fit: cover;
   }
 
   .close-button {
