@@ -49,7 +49,7 @@ const handleHoverEffect = () => {
     scrambleText: {
       text: '{original}',
       chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
-      // tweenLength: false,
+      tweenLength: false,
     },
     overwrite: true,
     onComplete: () => {
