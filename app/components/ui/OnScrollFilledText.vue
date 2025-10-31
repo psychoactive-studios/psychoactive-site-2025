@@ -43,6 +43,7 @@ onMounted(async () => {
 <style scoped lang="scss">
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 .text-block {
   color: $color-foreground;
   font-size: 3.646vw;
@@ -52,12 +53,21 @@ onMounted(async () => {
   letter-spacing: getRem(-1.4);
   position: relative;
   padding-bottom: 0.15vw;
+  @include respond(mobile) {
+    font-size: 8vw;
+  }
+
   :deep(.dark) {
     color: white(50);
   }
   :deep(img) {
     display: inline-block;
     margin: 0 getRem(16);
+    @include respond(mobile) {
+      margin: 0 getRem(12);
+      height: 5vw;
+      width: auto;
+    }
   }
   &::before,
   &::after {
@@ -73,6 +83,9 @@ onMounted(async () => {
     color: white(50);
     vertical-align: top;
     margin-top: 0.85rem;
+    @include respond(mobile) {
+      visibility: hidden;
+    }
   }
   &::after {
     content: attr(data-current-time);

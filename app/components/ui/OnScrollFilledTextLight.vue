@@ -15,6 +15,7 @@ onMounted(async () => {
         start: 'top-=50% 50%',
         end: 'bottom+=50% 50%',
         scrub: true,
+        invalidateOnRefresh: true,
       },
       '--bg-width': 100,
       duration: 0.1,

@@ -19,6 +19,9 @@ import vertexShader from '@/utils/glsl/main.vert?raw';
 import fragmentShader from '@/utils/glsl/main.frag?raw';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { usePointer } from '@vueuse/core';
+
+const { pointerType, x: eventX, y: eventY } = usePointer();
 
 const isHovered = ref(false);
 const cursorRef = ref(null);
@@ -83,19 +86,21 @@ onUnmounted(() => {
   }
 });
 
-const handleMouseEnter = (e) => {
+const handleMouseEnter = () => {
   isHovered.value = true;
-  const rect = rootEl.value.getBoundingClientRect();
-  const eventX = e.clientX;
-  const eventY = e.clientY;
 
   // Store global mouse position
-  lastMousePosition.x = eventX;
-  lastMousePosition.y = eventY;
+  lastMousePosition.x = eventX.value;
+  lastMousePosition.y = eventY.value;
+
+  if (pointerType.value !== 'mouse') {
+    return; // Skip cursor animation for non-mouse pointers
+  }
 
   // Calculate mouse position relative to the element (0 to 1)
-  const relativeX = eventX - rect.left;
-  const relativeY = eventY - rect.top;
+  const rect = rootEl.value.getBoundingClientRect();
+  const relativeX = eventX.value - rect.left;
+  const relativeY = eventY.value - rect.top;
 
   gsap.set(cursorRef.value, {
     x: relativeX + 16,
@@ -110,6 +115,9 @@ const handleMouseEnter = (e) => {
 
 const handleMouseLeave = () => {
   isHovered.value = false;
+  if (pointerType.value !== 'mouse') {
+    return; // Skip cursor animation for non-mouse pointers
+  }
   gsap.to(cursorRef.value, {
     scale: 0,
     duration: 0.3,
@@ -190,20 +198,20 @@ function handleResize() {
   }
 }
 
-function handleMouseMove(e) {
+function handleMouseMove() {
   if (!rootEl.value) return;
   const rect = rootEl.value.getBoundingClientRect();
-  const isTouch = e.touches && e.touches.length > 0;
-  const eventX = isTouch ? e.touches[0].clientX : e.clientX;
-  const eventY = isTouch ? e.touches[0].clientY : e.clientY;
+  // const isTouch = e.touches && e.touches.length > 0;
+  // const eventX = isTouch ? e.touches[0].clientX : e.clientX;
+  // const eventY = isTouch ? e.touches[0].clientY : e.clientY;
 
   // Store global mouse position
-  lastMousePosition.x = eventX;
-  lastMousePosition.y = eventY;
+  lastMousePosition.x = eventX.value;
+  lastMousePosition.y = eventY.value;
 
   // Calculate mouse position relative to the element (0 to 1)
-  const relativeX = eventX - rect.left;
-  const relativeY = eventY - rect.top;
+  const relativeX = eventX.value - rect.left;
+  const relativeY = eventY.value - rect.top;
 
   gsap.to(cursorRef.value, {
     x: relativeX + 16,

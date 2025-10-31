@@ -78,8 +78,10 @@ const onClickHandler = async () => {
       <div class="awards__collection">
         <div class="awards__collection_header">
           <div>Platform</div>
-          <div>Prize</div>
-          <div>Project</div>
+          <div class="awards__collection_header--center">
+            <div>Prize</div>
+            <div>Project</div>
+          </div>
           <div>Year</div>
         </div>
         <ul class="awards__collection_list">
@@ -91,25 +93,29 @@ const onClickHandler = async () => {
             <div class="award-platform">
               <img :src="award.platform" :alt="award.project" />
             </div>
-            <div class="award-prize">{{ award.prize }}</div>
-            <div class="award-project">{{ award.project }}</div>
+            <div class="award-details">
+              <div class="award-details--prize">{{ award.prize }}</div>
+              <div class="award-details--project">{{ award.project }}</div>
+            </div>
             <div class="award-year">{{ award.year }}</div>
           </li>
         </ul>
-        <button
-          v-show="offSetRef < awardsData.length"
-          class="awards__show-more"
-          @mouseenter="onMouseEnterHandler"
-          @focus="onFocusHandler"
-          @click="onClickHandler"
-        >
-          <span ref="showMoreRef">Show More</span>
-          <div class="awards__show-more_dots">
-            <span />
-            <span />
-            <span />
-          </div>
-        </button>
+        <div class="awards__show-more">
+          <button
+            v-show="offSetRef < awardsData.length"
+            class="awards__show-more"
+            @mouseenter="onMouseEnterHandler"
+            @focus="onFocusHandler"
+            @click="onClickHandler"
+          >
+            <span ref="showMoreRef">Show More</span>
+            <div class="awards__show-more_dots">
+              <span />
+              <span />
+              <span />
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -117,13 +123,22 @@ const onClickHandler = async () => {
 
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 .awards {
   margin-top: 320px;
   margin-bottom: 160px;
+  @include respond(mobile) {
+    margin-top: 160px;
+    margin-bottom: 120px;
+  }
   &__title {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: getRem(24);
+    @include respond(mobile) {
+      grid-template-columns: 1fr;
+      gap: getRem(56);
+    }
     &_count {
       position: relative;
       sup {
@@ -149,13 +164,16 @@ const onClickHandler = async () => {
       font-weight: 400;
       line-height: 120%;
       letter-spacing: -0.36px;
+      @include respond(mobile) {
+        font-size: max(30px, 8vw);
+      }
     }
   }
   &__collection {
     margin-top: 85px;
     &_header {
       display: grid;
-      grid-template-columns: 0.4fr 1fr 0.6fr 0.3fr;
+      grid-template-columns: 0.3fr 1fr 0.3fr;
       gap: getRem(16);
       color: white(50);
       font-family: 'RoobertMono';
@@ -164,45 +182,83 @@ const onClickHandler = async () => {
       font-weight: 500;
       line-height: 1.92;
       text-transform: uppercase;
-      border-bottom: 1px solid white(20);
+      border-bottom: 1px solid white(10);
       padding-bottom: getRem(6);
+      @include respond(mobile) {
+        display: none;
+      }
+      &--center {
+        display: grid;
+        grid-template-columns: 1fr 0.3fr;
+      }
       & > div:last-child {
         text-align: right;
       }
     }
     &_item {
       display: grid;
-      grid-template-columns: 0.4fr 1fr 0.6fr 0.3fr;
+      grid-template-columns: 0.3fr 1fr 0.3fr;
       gap: getRem(16);
       padding-top: getRem(20);
       padding-bottom: getRem(20);
       align-items: center;
-      border-bottom: 1px solid white(20);
+      border-bottom: 1px solid white(10);
+      @include respond(mobile) {
+        padding-top: getRem(8);
+        border-color: white(20);
+        align-items: flex-start;
+        font-size: getRem(12);
+        &:first-child {
+          border-top: 1px solid white(20);
+        }
+      }
       .award-platform {
         img {
           width: auto;
           height: getRem(54);
           opacity: 0.6;
+          @include respond(mobile) {
+            width: getRem(55);
+            height: auto;
+          }
+        }
+      }
+      .award-details {
+        display: grid;
+        grid-template-columns: 1fr 0.3fr;
+        gap: getRem(16);
+        @include respond(mobile) {
+          grid-template-columns: 1fr;
+          gap: getRem(8);
         }
       }
       .award-year {
         text-align: right;
       }
+      &:last-child {
+        border-bottom: 1px solid white(20);
+      }
     }
   }
   &__show-more {
     margin-top: 64px;
-    padding-bottom: 12px;
-    border-bottom: 1px dotted white(100);
-    font-family: 'RoobertMono';
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 1;
-    text-transform: uppercase;
-    padding-right: 44px;
-    position: relative;
-    min-width: 134px;
+    @include respond(mobile) {
+      margin-top: getRem(24);
+      text-align: center;
+    }
+    button {
+      padding-bottom: 12px;
+      border-bottom: 1px dotted white(100);
+      font-family: 'RoobertMono';
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 1;
+      text-transform: uppercase;
+      padding-right: 44px;
+      position: relative;
+      min-width: 134px;
+    }
     &_dots {
       display: inline-flex;
       gap: 2px;

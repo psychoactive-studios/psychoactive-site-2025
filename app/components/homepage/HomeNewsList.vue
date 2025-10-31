@@ -31,13 +31,19 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
 
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 .news-list {
   margin-top: 160px;
   &__grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    column-gap: getRem(16);
-    row-gap: getRem(18);
+    gap: getRem(16);
+    @media screen and (max-width: 1800px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @include respond(mobile) {
+      grid-template-columns: 1fr;
+    }
   }
   &__more {
     margin-top: 85px;
@@ -50,6 +56,9 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
     font-weight: 500;
     line-height: 27px; /* 168.75% */
     text-transform: uppercase;
+    @include respond(mobile) {
+      margin-top: getRem(64);
+    }
     &_line {
       flex-grow: 1;
       height: 1px;

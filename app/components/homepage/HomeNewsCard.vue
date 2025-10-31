@@ -1,4 +1,11 @@
 <script setup>
+import { usePointer } from '@vueuse/core';
+import gsap from 'gsap';
+import useAudioManager from '~/composables/useAudioManager';
+
+const { playInteractionSound } = useAudioManager();
+const { pointerType } = usePointer();
+
 defineProps({
   title: {
     type: String,
@@ -21,16 +28,58 @@ defineProps({
     required: true,
   },
 });
+
+const titleRef = ref(null);
+
+const handleHoverEffect = () => {
+  // Stop any ongoing animations on this element
+  if (gsap.isTweening(titleRef.value) || pointerType.value === 'touch') return;
+
+  // Set the width to prevent layout shift
+  const width = titleRef.value.offsetWidth;
+  const height = titleRef.value.offsetHeight;
+  gsap.set(titleRef.value, { width, height });
+
+  playInteractionSound();
+
+  // Store the original text
+  gsap.to(titleRef.value, {
+    duration: 1.5,
+    ease: 'none',
+    scrambleText: {
+      text: '{original}',
+      chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+      // tweenLength: false,
+    },
+    overwrite: true,
+    onComplete: () => {
+      gsap.set(titleRef.value, { clearProps: 'all' });
+    },
+  });
+};
+
+const onMouseEnterHandler = (e) => {
+  handleHoverEffect(e.target);
+};
+
+const onFocusHandler = (e) => {
+  handleHoverEffect(e.target);
+};
 </script>
 
 <template>
-  <NuxtLink :to="href" class="news-card">
+  <NuxtLink
+    :to="href"
+    class="news-card"
+    @mouseenter="onMouseEnterHandler"
+    @focus="onFocusHandler"
+  >
     <div class="news-card__description">
       <div class="news-card__description_info">
         <div class="news-card__description_info--category">{{ category }}</div>
         <div class="news-card__description_info--date">{{ date }}</div>
       </div>
-      <h3 class="news-card__description_title">
+      <h3 ref="titleRef" class="news-card__description_title">
         {{ title }}
       </h3>
     </div>
@@ -52,6 +101,7 @@ defineProps({
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    flex-grow: 1;
     &_info {
       display: flex;
       justify-content: space-between;
@@ -65,6 +115,7 @@ defineProps({
       color: white(70);
       padding-left: 14px;
       position: relative;
+      white-space: nowrap;
       &::before {
         content: '';
         position: absolute;
@@ -73,7 +124,8 @@ defineProps({
         transform: translateY(-50%);
         width: 6px;
         height: 6px;
-        background-color: white(50);
+        background-color: white(100);
+        opacity: 0.5;
         border-radius: 50%;
       }
     }
@@ -84,17 +136,30 @@ defineProps({
       line-height: getRem(21);
       margin-top: auto;
       margin-right: 6px;
+      overflow: hidden;
     }
   }
   &__image {
     width: 115px;
     height: 115px;
     flex-shrink: 0;
+    overflow: hidden;
+    border-radius: 8px;
     img {
       width: 100%;
       height: 100%;
-      border-radius: 8px;
       object-fit: cover;
+      transition: transform 1s cubic-bezier(0.33, 1, 0.68, 1);
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+  }
+  &:hover {
+    .news-card__image img {
+      transform: scale(1.25);
+    }
+    .news-card__description_info::before {
+      animation: flicker-effect-5 0.5s forwards;
     }
   }
 }

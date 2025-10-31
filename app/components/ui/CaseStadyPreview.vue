@@ -72,6 +72,7 @@ const handleMouseEnter = () => {
 <style lang="scss" scoped>
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+@use '~/assets/styles/mixins' as *;
 
 .case-study-preview {
   position: relative;
@@ -79,8 +80,11 @@ const handleMouseEnter = () => {
 
   &__media {
     overflow: hidden;
-    border-radius: 16px;
+    border-radius: 10px;
     aspect-ratio: 1.85;
+    @include respond(mobile) {
+      border-radius: 6px;
+    }
   }
 
   &__image {
@@ -118,6 +122,9 @@ const handleMouseEnter = () => {
       text-transform: uppercase;
       opacity: 0.5;
       mix-blend-mode: difference;
+      @include respond(mobile) {
+        font-size: getRem(14);
+      }
     }
   }
 
