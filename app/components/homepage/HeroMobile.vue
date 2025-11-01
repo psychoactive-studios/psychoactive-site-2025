@@ -8,11 +8,11 @@ import '@mux/videojs-kit/dist/index.css';
 
 const containerRef = ref(null);
 let ctx = null;
-let player = null;
 
 const { scrollSmoother } = useScrollSmoother();
 const {
-  mainVideo,
+  mainVideoRef,
+  player,
   initializeElements,
   clickVideoPlayHandler,
   videoPlayPauseHandler,
@@ -31,16 +31,16 @@ onMounted(async () => {
   });
 
   // Initialize Video.js with Mux
-  if (import.meta.client && mainVideo.value) {
+  if (import.meta.client && mainVideoRef.value) {
     const { default: videojs } = await import('@mux/videojs-kit');
 
-    player = videojs(mainVideo.value, {
+    player.value = videojs(mainVideoRef.value, {
       controls: false,
       // responsive: true,
       // fluid: true,
     });
 
-    player.src({
+    player.value.src({
       src: 'n9m52aLXTjJ9bPUp7fGCWtD7fDBJflXuv7o8wvlaOIA',
       type: 'video/mux',
     });
@@ -48,9 +48,9 @@ onMounted(async () => {
 });
 
 onBeforeUnmount(() => {
-  if (player) {
-    player.dispose();
-    player = null;
+  if (player.value) {
+    player.value.dispose();
+    player.value = null;
   }
 });
 </script>
@@ -67,7 +67,7 @@ onBeforeUnmount(() => {
         playsinline
       />
       <video
-        ref="mainVideo"
+        ref="mainVideoRef"
         class="video-js hero-mobile__player_video"
         playsinline
       />

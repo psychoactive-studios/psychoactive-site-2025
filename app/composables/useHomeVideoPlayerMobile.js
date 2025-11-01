@@ -3,7 +3,8 @@ import gsap from 'gsap';
 import useNavigation from '~/composables/useNavigation';
 
 const container = ref(null);
-const mainVideo = ref(null);
+const mainVideoRef = ref(null);
+const player = ref(null);
 
 let currentNavigation = null;
 let currentNavigationLogo = null;
@@ -119,8 +120,8 @@ export default function useHomeVideoPlayerMobile() {
           duration: 1,
           ease: 'power3.inOut',
           onStart: () => {
-            mainVideo.value.currentTime = 0;
-            mainVideo.value.play();
+            player.value.currentTime(0);
+            player.value.play();
             gsap.set(controls, { pointerEvents: 'none' });
             gsap.set('.hero-mobile__player_video-handler', {
               pointerEvents: 'all',
@@ -175,7 +176,7 @@ export default function useHomeVideoPlayerMobile() {
           opacity: 0,
           duration: 1,
           ease: 'power3.inOut',
-          onComplete: () => mainVideo.value.pause(),
+          onComplete: () => player.value.pause(),
         },
         'start'
       )
@@ -220,28 +221,28 @@ export default function useHomeVideoPlayerMobile() {
   };
 
   const videoPlayPauseHandler = () => {
-    console.log('mainVideo', mainVideo.value);
     // Prevent re-triggering while animation is running
     if (playPauseTimeline?.isActive()) {
       return;
     }
 
     playPauseTimeline = gsap.to(button, {
-      scale: mainVideo.value.paused ? 0 : 1,
+      scale: player.value.paused() ? 0 : 1,
       duration: 0.5,
       ease: 'power4.inOut',
     });
 
-    if (mainVideo.value.paused) {
-      mainVideo.value.play();
+    if (player.value.paused()) {
+      player.value.play();
     } else {
-      mainVideo.value.pause();
+      player.value.pause();
     }
   };
 
   return {
     container,
-    mainVideo,
+    mainVideoRef,
+    player,
     initializeElements,
     clickVideoPlayHandler,
     clickVideoCloseHandler,
