@@ -12,11 +12,12 @@ onMounted(async () => {
   stopLoading();
   await nextTick();
   scrollSmoother.value.paused(false);
+  console.log('scrollSmoother', scrollSmoother);
 });
 </script>
 <template>
-  <div class="container">
-    <div class="works">
+  <main class="works">
+    <div class="container">
       <div class="works__title">
         <h1>OUR Projects</h1>
         <p>
@@ -36,13 +37,13 @@ onMounted(async () => {
         </template>
       </div>
     </div>
-  </div>
+  </main>
 </template>
 
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
 .works {
-  margin-top: 160px;
+  padding-top: 160px;
   &__title {
     margin-bottom: 200px;
     max-width: calc(50% - getRem(10));
