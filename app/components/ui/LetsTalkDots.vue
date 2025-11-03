@@ -371,11 +371,10 @@ const talkButtonHoverHandler = () => {
   will-change: transform, opacity;
   transform-origin: center;
   background-color: #ffffff;
-  opacity: 0.2;
   border-radius: 50%;
   width: 1em;
   height: 1em;
   position: relative;
-  transform: translate(0);
+  transform: translate3d(0);
 }
 </style>
