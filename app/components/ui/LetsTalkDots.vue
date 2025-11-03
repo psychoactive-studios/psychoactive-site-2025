@@ -2,9 +2,20 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import { gsap } from 'gsap';
 import { InertiaPlugin } from 'gsap/InertiaPlugin';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { usePointer } from '@vueuse/core';
+import useScrollSmoother from '@/composables/useScrollSmoother';
+import useAudioManager from '~/composables/useAudioManager';
 
-// Register GSAP plugin
-gsap.registerPlugin(InertiaPlugin);
+const { playInteractionSound } = useAudioManager();
+
+const letsTalkButtonRef = ref(null);
+
+// Register GSAP plugins
+gsap.registerPlugin(InertiaPlugin, ScrollTrigger);
+
+const { pointerType: _pointerType, x: eventX, y: eventY } = usePointer();
+const { scrollSmoother } = useScrollSmoother();
 
 const dotsContainerRef = ref(null);
 
@@ -13,10 +24,12 @@ let dotCenters = [];
 let lastTime = 0;
 let lastX = 0;
 let lastY = 0;
+const lastMousePosition = { x: 0, y: 0 }; // Last known global mouse position
+let scrollTriggerInstance = null;
 
-const opacity = { base: 0.2, active: 1 };
+const opacity = { base: 0.1, active: 1 };
 const threshold = 150;
-const speedThreshold = 50;
+const speedThreshold = 150;
 const shockRadius = 250;
 const shockPower = 5;
 const maxSpeed = 5000;
@@ -70,25 +83,44 @@ function buildGrid() {
     dots.push(d);
   }
 
-  requestAnimationFrame(() => {
+  gsap.ticker.add(() => {
     dotCenters = dots
       .filter((d) => !d._isHole)
       .map((d) => {
         const r = d.getBoundingClientRect();
+        // Use current animated scroll position
+        const currentScrollY = scrollSmoother.value
+          ? scrollSmoother.value.scrollTop()
+          : window.scrollY;
+        const currentScrollX = window.scrollX;
         return {
           el: d,
-          x: r.left + window.scrollX + r.width / 2,
-          y: r.top + window.scrollY + r.height / 2,
+          x: r.left + currentScrollX + r.width / 2,
+          y: r.top + currentScrollY + r.height / 2,
         };
       });
-  });
+  }, true);
 }
 
-function handleMouseMove(e) {
+function handleMouseMove() {
+  // Get current smooth scroll position
+  const currentScrollY = scrollSmoother.value
+    ? scrollSmoother.value.scrollTop()
+    : window.scrollY;
+  const currentScrollX = window.scrollX; // Usually X doesn't animate
+
+  // Convert viewport coordinates to page coordinates using current animated scroll
+  const pageX = eventX.value + currentScrollX;
+  const pageY = eventY.value + currentScrollY;
+
+  // Store global mouse position
+  lastMousePosition.x = pageX;
+  lastMousePosition.y = pageY;
+
   const now = performance.now();
   const dt = now - lastTime || 16;
-  const dx = e.pageX - lastX;
-  const dy = e.pageY - lastY;
+  const dx = pageX - lastX;
+  const dy = pageY - lastY;
   let vx = (dx / dt) * 1000;
   let vy = (dy / dt) * 1000;
   let speed = Math.hypot(vx, vy);
@@ -101,39 +133,64 @@ function handleMouseMove(e) {
   }
 
   lastTime = now;
-  lastX = e.pageX;
-  lastY = e.pageY;
+  lastX = pageX;
+  lastY = pageY;
 
-  requestAnimationFrame(() => {
-    dotCenters.forEach(({ el, x, y }) => {
-      const dist = Math.hypot(x - e.pageX, y - e.pageY);
-      const t = Math.max(0, 1 - dist / threshold);
-      const opacityValue = gsap.utils.interpolate(
-        opacity.base,
-        opacity.active,
-        t
-      );
-      gsap.set(el, { opacity: opacityValue });
+  dotCenters.forEach(({ el, x, y }) => {
+    const dist = Math.hypot(x - pageX, y - pageY);
+    const t = Math.max(0, 1 - dist / threshold);
+    const opacityValue = gsap.utils.interpolate(
+      opacity.base,
+      opacity.active,
+      t
+    );
+    gsap.set(el, { opacity: opacityValue });
 
-      if (speed > speedThreshold && dist < threshold && !el._inertiaApplied) {
-        el._inertiaApplied = true;
-        const pushX = x - e.pageX + vx * 0.005;
-        const pushY = y - e.pageY + vy * 0.005;
+    if (speed > speedThreshold && dist < threshold && !el._inertiaApplied) {
+      el._inertiaApplied = true;
+      const pushX = x - pageX + vx * 0.005;
+      const pushY = y - pageY + vy * 0.005;
 
-        gsap.to(el, {
-          inertia: { x: pushX, y: pushY, resistance: 750 },
-          onComplete() {
-            gsap.to(el, {
-              x: 0,
-              y: 0,
-              duration: 1.5,
-              ease: 'elastic.out(1,0.75)',
-            });
-            el._inertiaApplied = false;
-          },
-        });
-      }
-    });
+      gsap.to(el, {
+        inertia: { x: pushX, y: pushY, resistance: 750 },
+        onComplete() {
+          gsap.to(el, {
+            x: 0,
+            y: 0,
+            duration: 1.5,
+            ease: 'elastic.out(1,0.75)',
+          });
+          el._inertiaApplied = false;
+        },
+      });
+    }
+  });
+}
+
+function handleScroll() {
+  // Get current smooth scroll position (the animated position, not target)
+  const currentScrollY = scrollSmoother.value
+    ? scrollSmoother.value.scrollTop()
+    : window.scrollY;
+  const currentScrollX = window.scrollX;
+
+  // Update lastMousePosition with current pointer position during scroll
+  const pageX = eventX.value + currentScrollX;
+  const pageY = eventY.value + currentScrollY;
+
+  lastMousePosition.x = pageX;
+  lastMousePosition.y = pageY;
+
+  // Update effect during scroll using current mouse position
+  dotCenters.forEach(({ el, x, y }) => {
+    const dist = Math.hypot(x - pageX, y - pageY);
+    const t = Math.max(0, 1 - dist / threshold);
+    const opacityValue = gsap.utils.interpolate(
+      opacity.base,
+      opacity.active,
+      t
+    );
+    gsap.set(el, { opacity: opacityValue });
   });
 }
 
@@ -162,18 +219,67 @@ function handleClick(e) {
   });
 }
 
+function initScrollTrigger() {
+  if (!dotsContainerRef.value) return;
+
+  scrollTriggerInstance = ScrollTrigger.create({
+    trigger: dotsContainerRef.value,
+    start: 'top bottom',
+    end: 'bottom top',
+    onUpdate: () => {
+      handleScroll();
+    },
+  });
+}
+
+function cleanupScrollTrigger() {
+  if (scrollTriggerInstance) {
+    scrollTriggerInstance.kill();
+    scrollTriggerInstance = null;
+  }
+}
+
 onMounted(() => {
+  // Initialize lastMousePosition with current pointer position
+  const currentScrollY = scrollSmoother.value
+    ? scrollSmoother.value.scrollTop()
+    : window.scrollY;
+  const currentScrollX = window.scrollX;
+  lastMousePosition.x = eventX.value + currentScrollX;
+  lastMousePosition.y = eventY.value + currentScrollY;
+
   buildGrid();
+
+  // Initialize ScrollTrigger after a small delay to ensure grid is built
+  setTimeout(() => {
+    initScrollTrigger();
+  }, 100);
+
   window.addEventListener('resize', buildGrid);
   window.addEventListener('mousemove', handleMouseMove);
   window.addEventListener('click', handleClick);
 });
 
 onUnmounted(() => {
+  cleanupScrollTrigger();
   window.removeEventListener('resize', buildGrid);
   window.removeEventListener('mousemove', handleMouseMove);
   window.removeEventListener('click', handleClick);
 });
+
+const talkButtonHoverHandler = () => {
+  playInteractionSound();
+  if (gsap.isTweening(letsTalkButtonRef.value)) return;
+  gsap.to(letsTalkButtonRef.value, {
+    duration: 0.5,
+    ease: 'none',
+    scrambleText: {
+      text: '{original}',
+      chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+      tweenLength: false,
+    },
+  });
+};
 </script>
 
 <template>
@@ -181,7 +287,14 @@ onUnmounted(() => {
     <div class="dots-wrap">
       <div ref="dotsContainerRef" class="dots-container" />
     </div>
-    <a href="/" class="lets-talk__link"> let's talk </a>
+    <a
+      ref="letsTalkButtonRef"
+      href="/"
+      class="lets-talk__link"
+      @mouseenter="talkButtonHoverHandler"
+      @focus="talkButtonHoverHandler"
+      >let's talk</a
+    >
   </section>
 </template>
 
@@ -196,12 +309,12 @@ onUnmounted(() => {
   display: flex;
   position: relative;
   &__link {
+    width: 214px;
     color: currentColor;
     text-decoration: none;
     position: absolute;
     @include flex-center;
     height: 64px;
-    background-color: $color-foreground;
     color: $color-background;
     padding: 0 getRem(56);
     border-radius: 32px;
@@ -211,6 +324,23 @@ onUnmounted(() => {
     font-weight: 500;
     line-height: 1.68; /* 168.75% */
     text-transform: uppercase;
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: $color-foreground;
+      border-radius: 48px;
+      z-index: -1;
+      transition: scale 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    &:hover {
+      &::before {
+        scale: 0.85;
+      }
+    }
   }
 }
 
