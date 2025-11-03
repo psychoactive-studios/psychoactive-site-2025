@@ -12,7 +12,6 @@ onMounted(async () => {
   stopLoading();
   await nextTick();
   scrollSmoother.value.paused(false);
-  console.log('scrollSmoother', scrollSmoother);
 });
 </script>
 <template>
