@@ -1,0 +1,91 @@
+export const worksData = [
+  {
+    id: 'superai',
+    title: 'SuperAI',
+    description: 'World’s largest AI event',
+    src: '/img/cases/case-super-ai.png',
+  },
+  {
+    id: 'burgerfuel',
+    title: 'Burgerfuel',
+    description: 'New Zealand’s favourite burger',
+    src: '/img/cases/case-burgerfuel.png',
+  },
+  {
+    id: 'blackbird',
+    title: 'Blackbird Ventures',
+    description: "Australasia's leading venture capital firm",
+    src: '/img/cases/case-blackbird.png',
+  },
+  {
+    id: 'hellboy',
+    title: 'Hellboy Web of Wyrd',
+    description: "beat 'em up roguelike Video game",
+    src: '/img/cases/case-hellboy.jpg',
+  },
+  {
+    id: 'wearableart',
+    title: 'World of WearableArt',
+    description: "New Zealand's Largest theatrical Spectacle",
+    src: '/img/cases/case-world-of-wearableArt.png',
+  },
+  {
+    id: 'summergamefest',
+    title: 'Summer Game Fest',
+    description: 'The global stage for gaming reveals',
+    src: '/img/cases/case-summer-game-fest.png',
+  },
+  {
+    id: 'letstalk',
+    title: 'let’s talk',
+    src: null,
+  },
+  {
+    id: 'mobi',
+    title: 'MOBI',
+    description: 'Digital ordering for hospitality',
+    src: '/img/cases/case-mobi.png',
+  },
+  {
+    id: 'wingz',
+    title: 'Wingz',
+    description: 'Non-Emergency Medical Transportation',
+    src: '/img/cases/case-wingz.png',
+  },
+  {
+    id: 'zendetta',
+    title: 'Zendetta',
+    description: 'A story of survival and revolution',
+    src: '/img/cases/case-zendetta.png',
+  },
+  {
+    id: 'aratek',
+    title: 'Aratek',
+    description: 'Industry Leader in Biometrics Technology',
+    src: '/img/cases/case-aratek.png',
+  },
+  {
+    id: 'showgunners',
+    title: 'Showgunners',
+    description: 'turn-based tactics video game',
+    src: '/img/cases/case-showgunners.png',
+  },
+  {
+    id: 'beyondrealitymedia',
+    title: 'Beyond Reality Media',
+    description: 'Sci-fi, fantasy, and beyond',
+    src: '/img/cases/case-beyond-reality-media.png',
+  },
+  {
+    id: 'hypeentertainment',
+    title: 'Hype Entertainment',
+    description: 'Immersive audio‑visual events',
+    src: '/img/cases/case-hype-entertainment.png',
+  },
+  {
+    id: 'woolfuniversity',
+    title: 'WOOLF University',
+    description: 'Global access to accredited higher education',
+    src: '/img/cases/case-woolf-university.png',
+  },
+];
