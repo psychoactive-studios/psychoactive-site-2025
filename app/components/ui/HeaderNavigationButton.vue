@@ -11,7 +11,6 @@ const { isOpen: isVideoOpen, onPlayerClose } = useVideoPlayer();
 const { playInteractionSound } = useAudioManager();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
-const isTouchDevice = useMediaQuery('(pointer: coarse)');
 
 let ctx;
 let hoverTimelineIn, hoverTimelineOut;
