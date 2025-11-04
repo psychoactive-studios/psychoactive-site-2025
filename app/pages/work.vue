@@ -41,16 +41,25 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 .works {
   padding-top: 160px;
+  @include respond('mobile') {
+    padding-top: 24px;
+  }
   &__title {
     margin-bottom: 200px;
     max-width: calc(50% - getRem(10));
     font-size: getRem(32);
     font-style: normal;
     font-weight: 400;
-    line-height: 121%; /* 45.98px */
+    line-height: 121%;
     letter-spacing: -1.52px;
+    @include respond('mobile') {
+      max-width: 100%;
+      font-size: max(24px, 6.4vw);
+      margin-bottom: 120px;
+    }
     & > h1 {
       font-family: 'RoobertMono';
       font-size: 1rem;
@@ -60,6 +69,9 @@ onMounted(async () => {
       text-transform: uppercase;
       color: white(60);
       margin-bottom: getRem(20);
+      @include respond('mobile') {
+        font-size: getRem(14);
+      }
     }
   }
   &__grid {
@@ -67,6 +79,10 @@ onMounted(async () => {
     grid-template-columns: repeat(2, 1fr);
     column-gap: getRem(20);
     direction: rtl;
+    @include respond('mobile') {
+      grid-template-columns: 1fr;
+      direction: ltr;
+    }
     & > * {
       direction: ltr;
       &:nth-child(even) {
@@ -75,6 +91,12 @@ onMounted(async () => {
       &:nth-child(odd) {
         margin-bottom: 32%;
         margin-top: -70px;
+      }
+      @include respond('mobile') {
+        &:nth-child(even),
+        &:nth-child(odd) {
+          margin: 0 0 getRem(62) 0;
+        }
       }
     }
   }
