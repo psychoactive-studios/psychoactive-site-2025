@@ -5,7 +5,7 @@ const isLoading = ref(true);
 const resourcesToLoad = ref(0);
 let loadedResources = ref(0);
 
-export function useLoader() {
+export default function useLoader() {
   // methods for managing loading state
 
   function addResourceToLoad(quantity) {

@@ -1,6 +1,6 @@
 <script setup>
 import Loader from './components/ui/Loader.vue';
-import { useLoader } from '~/composables/useLoader';
+import useLoader from '~/composables/useLoader';
 const { isLoading } = useLoader();
 </script>
 

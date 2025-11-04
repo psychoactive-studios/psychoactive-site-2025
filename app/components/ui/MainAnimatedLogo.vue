@@ -2,7 +2,7 @@
 import gsap from 'gsap';
 import lottie from 'lottie-web';
 import loaderData from '~/assets/lottie/logo-V02.json';
-import { useLoader } from '~/composables/useLoader';
+import useLoader from '~/composables/useLoader';
 
 const { resourcesToLoad, loadedResources, stopLoading } = useLoader();
 

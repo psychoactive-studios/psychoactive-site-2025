@@ -1,6 +1,6 @@
 import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
-import { useLoader } from '~/composables/useLoader';
+import useLoader from '~/composables/useLoader';
 
 /* ======== Player elements ========= */
 const player = '.video-player.homehero-prepared';

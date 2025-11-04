@@ -57,12 +57,6 @@ onMounted(async () => {
     const { default: videojs } = await import('@mux/videojs-kit');
 
     if (videoElementRef.value) {
-      console.log(
-        'videoElementRef.value.clientWidth',
-        videoElementRef.value.clientWidth,
-        videoElementRef.value.clientHeight
-      );
-
       player = videojs(videoElementRef.value, {
         controls: false,
         responsive: true,

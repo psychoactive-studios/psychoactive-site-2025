@@ -1,4 +1,4 @@
-import { useLoader } from '~/composables/useLoader';
+import useLoader from '~/composables/useLoader';
 import { Howl } from 'howler';
 
 const fileList = [

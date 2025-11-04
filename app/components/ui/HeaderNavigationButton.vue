@@ -217,8 +217,6 @@ const onClickHandler = () => {
 };
 
 const onMouseEnterHandler = () => {
-  console.log('isTouchDevice', isTouchDevice.value);
-
   playInteractionSound();
   if (isNavOpen.value || isVideoOpen.value) {
     hoverTimelineCloseIn.restart();
