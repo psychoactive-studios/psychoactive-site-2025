@@ -90,7 +90,7 @@ export const heroInitSplitText = () => {
                   Initial animation
 =======================================================*/
 export const heroInitAnimation = (ctx, scrollSmoother) => {
-  const { stopLoading } = useLoader();
+  // const { stopLoading } = useLoader();
 
   /* ======== Layout elements Animation ========= */
   const layoutElements = gsap.utils.toArray(
@@ -98,7 +98,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
     document
   );
 
-  const loaderElement = document.querySelector('#loader-logo');
+  // const loaderElement = document.querySelector('#loader-logo');
 
   const ease1 = 'power3.out';
   const duration1 = 2;
@@ -107,15 +107,15 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
   ctx.add(() => {
     gsap
       .timeline({ id: 'homepage-initial-animation' })
-      .to(loaderElement, {
-        scale: 0,
-        duration: 0.5,
-        ease: 'power3.out',
-        delay: 1.6,
-      })
-      .add(() => {
-        stopLoading();
-      })
+      // .to(loaderElement, {
+      //   scale: 0,
+      //   duration: 0.5,
+      //   ease: 'power3.out',
+      //   delay: 1.6,
+      // })
+      // .add(() => {
+      //   stopLoading();
+      // })
       /* =======Player part ========= */
       .from(
         playerPreview,

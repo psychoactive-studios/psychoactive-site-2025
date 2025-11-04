@@ -31,6 +31,8 @@ export function useLoader() {
   return {
     isLoading,
     addResourceToLoad,
+    resourcesToLoad,
+    loadedResources,
     resourceLoaded,
     startLoading,
     stopLoading,

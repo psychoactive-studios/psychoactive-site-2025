@@ -1,6 +1,10 @@
 <script setup>
+import gsap from 'gsap';
 import lottie from 'lottie-web';
 import loaderData from '~/assets/lottie/logo-V02.json';
+import { useLoader } from '~/composables/useLoader';
+
+const { resourcesToLoad, loadedResources, stopLoading } = useLoader();
 
 const animationContainer = ref(null);
 const animationInstance = ref(null);
@@ -21,6 +25,7 @@ onMounted(() => {
       autoplay: true,
       animationData: loaderData,
     });
+    animationInstance.value.addEventListener('loopComplete', onLoopComplete);
   }
 });
 
@@ -34,6 +39,20 @@ defineExpose({
   animationContainer,
   animationInstance,
 });
+
+// Handle loop complete event
+const onLoopComplete = () => {
+  if (resourcesToLoad.value === loadedResources.value) {
+    const loaderElement = document.querySelector('#loader-logo');
+    gsap.to(loaderElement, {
+      scale: 0,
+      duration: 0.5,
+      ease: 'power3.out',
+      delay: 0.3,
+      onComplete: stopLoading,
+    });
+  }
+};
 </script>
 <template>
   <div ref="animationContainer" class="logo" />

@@ -1,17 +1,38 @@
 <script setup>
+import gsap from 'gsap';
 import CaseStadyPreview from '~/components/ui/CaseStadyPreview.vue';
 import LetsTalkDots from '~/components/ui/LetsTalkDots.vue';
-import { useLoader } from '~/composables/useLoader';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import { worksData } from '~/data/worksData';
 
-const { stopLoading } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
 
 onMounted(async () => {
-  stopLoading();
-  await nextTick();
-  scrollSmoother.value.paused(false);
+  // stopLoading();
+  // await nextTick();
+  // scrollSmoother.value.paused(false);
+});
+
+definePageMeta({
+  pageTransition: {
+    css: false,
+    mode: 'out-in',
+    onEnter: (el, done) => {
+      console.log('enter', el);
+      scrollSmoother.value.scrollTop(0);
+      done();
+    },
+    onLeave: (el, done) => {
+      console.log('leave', el);
+      gsap.to(el, {
+        opacity: 0,
+        duration: 3,
+        onComplete: () => {
+          done();
+        },
+      });
+    },
+  },
 });
 </script>
 <template>

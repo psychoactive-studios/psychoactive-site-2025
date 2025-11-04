@@ -4,6 +4,7 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
 import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
 import gsap from 'gsap';
 import useVideoPlayer from '~/composables/useVideoPlayer';
+import { useLoader } from '~/composables/useLoader';
 
 import {
   heroInitSplitText,
@@ -19,6 +20,7 @@ import WebflowLabel from '../ui/WebflowLabel.vue';
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen } = useVideoPlayer();
 const { playInteractionSound } = useAudioManager();
+const { isLoading } = useLoader();
 
 const container = ref(null);
 let ctx;
@@ -30,6 +32,12 @@ onMounted(() => {
     heroInitSplitText();
     heroScrollAnimation(ctx);
 
+    // heroInitAnimation(ctx, scrollSmoother);
+  }
+});
+
+watch(isLoading, (newVal) => {
+  if (!newVal) {
     heroInitAnimation(ctx, scrollSmoother);
   }
 });

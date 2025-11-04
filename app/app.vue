@@ -7,6 +7,6 @@ const { isLoading } = useLoader();
 <template>
   <Loader v-if="isLoading" />
   <NuxtLayout>
-    <NuxtPage />
+    <NuxtPage :transition="{ mode: 'out-in' }" />
   </NuxtLayout>
 </template>
