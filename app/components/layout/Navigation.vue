@@ -5,6 +5,7 @@ import useNavigation from '~/composables/useNavigation';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import gsap from 'gsap';
+import { navigationData } from '~/data/navigationData';
 
 const { navigationRef, initNavigation } = useNavigation();
 const { playInteractionSound } = useAudioManager();
@@ -33,6 +34,10 @@ const talkButtonHoverHandler = () => {
   if (gsap.isTweening('.navigation__talk_button')) return;
   talkButtonHoverTween.restart();
 };
+
+const clickOnLinkHandler = () => {
+  document.querySelector('#header-navigation-button').click();
+};
 </script>
 
 <template>
@@ -56,36 +61,12 @@ const talkButtonHoverHandler = () => {
         </div>
         <div class="navigation__menu">
           <ul class="navigation__list">
-            <li class="navigation__item">
-              <LinkWithHover href="/">About</LinkWithHover>
+            <li  v-for="item in navigationData" :key="item.id" class="navigation__item">
+              <LinkWithHover :href="item.url" @click="clickOnLinkHandler">{{ item.title }}</LinkWithHover>
               <div class="navigation__item-line">
                 <span class="line" />
               </div>
-            </li>
-            <li class="navigation__item">
-              <LinkWithHover href="/">Work</LinkWithHover>
-              <div class="navigation__item-line">
-                <span class="line" />
-              </div>
-            </li>
-            <li class="navigation__item">
-              <LinkWithHover href="/">Services</LinkWithHover>
-              <div class="navigation__item-line">
-                <span class="line" />
-              </div>
-            </li>
-            <li class="navigation__item">
-              <LinkWithHover href="/">Webflow</LinkWithHover>
-              <div class="navigation__item-line">
-                <span class="line" />
-              </div>
-            </li>
-            <li class="navigation__item">
-              <LinkWithHover href="/">Content</LinkWithHover>
-              <div class="navigation__item-line">
-                <span class="line" />
-              </div>
-            </li>
+            </li>            
           </ul>
         </div>
         <div class="navigation__talk">

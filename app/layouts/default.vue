@@ -1,6 +1,5 @@
 <script setup>
 import gsap from 'gsap';
-import Footer from '~/components/layout/Footer.vue';
 import Header from '~/components/layout/Header.vue';
 import ScrollProvider from '~/components/layout/ScrollProvider.vue';
 import ModalContainer from '~/components/ui/VideoPlayerModal.vue';
@@ -48,10 +47,4 @@ watch(
   </div>
 </template>
 
-<!-- <style lang="scss">
-#header-logo,
-#header-navigation-button,
-#header-sound-button {
-  transform: scale(0);
-}
-</style> -->
+
