@@ -4,41 +4,129 @@ import CaseStadyPreview from '~/components/ui/CaseStadyPreview.vue';
 import LetsTalkDots from '~/components/ui/LetsTalkDots.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import { worksData } from '~/data/worksData';
+import useLoader from '~/composables/useLoader';
+import { SplitText } from 'gsap/SplitText';
+import { leaveAnimation } from '~/utils/animations/transitions';
+import Footer from '~/components/layout/Footer.vue';
 
+const { isFirstLoad, isLoading } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
 
-onMounted(async () => {
+const titleRef = ref(null);
+
+onMounted(() => {
+  SplitText.create(titleRef.value.querySelector('p'), {
+    type: 'words,chars',
+    charsClass: 'char-center',
+  });
+
+  // if (isFirstLoad.value) {
+  //   enterAnimation();
+  // }
   // stopLoading();
   // await nextTick();
   // scrollSmoother.value.paused(false);
 });
 
+watch([isLoading, isFirstLoad], ([loading, firstLoad]) => {
+  if (!loading && firstLoad) {
+    enterAnimation();
+  }
+});
+
 definePageMeta({
+  scrollToTop: true,
   pageTransition: {
     css: false,
     mode: 'out-in',
     onEnter: (el, done) => {
-      console.log('enter', el);
-      scrollSmoother.value.scrollTop(0);
       done();
+      scrollSmoother.value.scrollTop(0, false);
+      gsap.set(el, { visibility: 'hidden' });
+
+      setTimeout(() => {
+        enterAnimation(el);
+        // scrollSmoother.value.scrollTop(0, false);
+      }, 50);
     },
     onLeave: (el, done) => {
-      console.log('leave', el);
-      gsap.to(el, {
-        opacity: 0,
-        duration: 3,
-        onComplete: () => {
-          done();
-        },
-      });
+      leaveAnimation(el, done);
     },
   },
 });
+
+function enterAnimation(el) {
+  const layoutElements = gsap.utils.toArray([
+    '#header-logo',
+    '#header-navigation-button',
+    '#header-sound-button',
+  ]);
+
+  if (el) gsap.set(el, { visibility: 'visible' });
+
+  gsap
+    .timeline()
+    .from('.works .works__title', {
+      y: 400,
+      opacity: 0,
+      duration: 1.2,
+      ease: 'power4.out',
+    })
+    .to(
+      '.works .works__title h1',
+      {
+        duration: 1.5,
+        ease: 'none',
+        scrambleText: {
+          text: '{original}',
+          // chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+          tweenLength: false,
+        },
+      },
+      '<'
+    )
+    .from(
+      '.works .works__title p .char-center',
+      {
+        opacity: 0,
+        duration: 0.0001,
+        // ease: 'power3.out',
+        stagger: 0.015,
+      },
+      '<'
+    )
+    .from(
+      '.works .works__grid > *',
+      {
+        y: '100vh',
+        duration: 1.2,
+        ease: 'power4.out',
+        stagger: 0.15,
+      },
+      '<+=0.3'
+    )
+    .to(
+      layoutElements,
+      { scale: 1, opacity: 1, duration: 0.75, ease: 'power3.out' },
+      '<+=1'
+    )
+    .add(() => scrollSmoother.value.paused(false), '<');
+  // if (isFirstLoad.value) {
+  //   tl.from(
+  //     layoutElements,
+  //     { scale: 0, duration: 0.75, ease: 'power3.out' },
+  //     '<+=1'
+  //   ).add(() => {
+  //     isFirstLoad.value = false;
+  //   });
+
+  // tl.add(() => scrollSmoother.value.paused(false), '<');
+}
 </script>
 <template>
   <main class="works">
     <div class="container">
-      <div class="works__title">
+      <div ref="titleRef" class="works__title">
         <h1>OUR Projects</h1>
         <p>
           Where bold ideas become living, breathing digital experiences. Crafted
@@ -57,6 +145,7 @@ definePageMeta({
         </template>
       </div>
     </div>
+    <Footer />
   </main>
 </template>
 

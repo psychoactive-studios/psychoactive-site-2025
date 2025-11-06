@@ -1,9 +1,11 @@
 // composables/useLoader.js
+import gsap from 'gsap';
 import { ref } from 'vue';
 
+const isFirstLoad = ref(true);
 const isLoading = ref(true);
 const resourcesToLoad = ref(0);
-let loadedResources = ref(0);
+const loadedResources = ref(0);
 
 export default function useLoader() {
   // methods for managing loading state
@@ -16,8 +18,21 @@ export default function useLoader() {
     loadedResources.value += 1;
   }
 
-  function startLoading() {
+  async function startLoading() {
     isLoading.value = true;
+    await nextTick();
+    const loaderElement = document.querySelector('#loader-logo');
+    console.log('startLoading', loaderElement);
+
+    gsap.fromTo(
+      loaderElement,
+      { scale: 0 },
+      {
+        scale: 1,
+        duration: 0.5,
+        ease: 'power3.in',
+      }
+    );
   }
 
   function stopLoading() {
@@ -29,6 +44,7 @@ export default function useLoader() {
   // });
 
   return {
+    isFirstLoad,
     isLoading,
     addResourceToLoad,
     resourcesToLoad,

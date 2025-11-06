@@ -1,4 +1,5 @@
 <script setup>
+import gsap from 'gsap';
 import Footer from '~/components/layout/Footer.vue';
 import Header from '~/components/layout/Header.vue';
 import ScrollProvider from '~/components/layout/ScrollProvider.vue';
@@ -7,9 +8,35 @@ import useAudioManager from '~/composables/useAudioManager';
 
 const { loadSounds } = useAudioManager();
 
+const route = useRoute();
+
 onMounted(() => {
+  const layoutElements = gsap.utils.toArray([
+    '#header-logo',
+    '#header-navigation-button',
+    '#header-sound-button',
+  ]);
+  gsap.set(layoutElements, { scale: 0 });
   loadSounds();
 });
+
+watch(
+  () => route.fullPath,
+  (newPath) => {
+    if (newPath === '/') {
+      const layoutElements = gsap.utils.toArray([
+        '#header-logo',
+        '#header-navigation-button',
+        '#header-sound-button',
+      ]);
+      gsap.to(layoutElements, {
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power4.in',
+      });
+    }
+  }
+);
 </script>
 <template>
   <div>
@@ -17,7 +44,14 @@ onMounted(() => {
     <ModalContainer />
     <ScrollProvider>
       <slot />
-      <Footer />
     </ScrollProvider>
   </div>
 </template>
+
+<!-- <style lang="scss">
+#header-logo,
+#header-navigation-button,
+#header-sound-button {
+  transform: scale(0);
+}
+</style> -->

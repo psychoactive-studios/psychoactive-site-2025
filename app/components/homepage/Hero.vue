@@ -36,6 +36,10 @@ onMounted(() => {
   }
 });
 
+onUnmounted(() => {
+  ctx.revert();
+});
+
 watch(isLoading, (newVal) => {
   if (!newVal) {
     heroInitAnimation(ctx, scrollSmoother);

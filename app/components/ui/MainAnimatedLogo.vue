@@ -4,7 +4,8 @@ import lottie from 'lottie-web';
 import loaderData from '~/assets/lottie/logo-V02.json';
 import useLoader from '~/composables/useLoader';
 
-const { resourcesToLoad, loadedResources, stopLoading } = useLoader();
+const { resourcesToLoad, loadedResources, stopLoading, isLoading } =
+  useLoader();
 
 const animationContainer = ref(null);
 const animationInstance = ref(null);
@@ -42,7 +43,8 @@ defineExpose({
 
 // Handle loop complete event
 const onLoopComplete = () => {
-  if (resourcesToLoad.value === loadedResources.value) {
+  if (resourcesToLoad.value === loadedResources.value && isLoading.value) {
+    console.log('onLoopComplete!!!', isLoading.value);
     const loaderElement = document.querySelector('#loader-logo');
     gsap.to(loaderElement, {
       scale: 0,

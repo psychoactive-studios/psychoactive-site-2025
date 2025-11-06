@@ -9,8 +9,30 @@ import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import WebflowLabel from '~/components/ui/WebflowLabel.vue';
 import { partnersData } from '~/data/partnersData';
 import ScaleMobileText from '~/assets/img/scale.svg';
+import { leaveAnimation } from '~/utils/animations/transitions';
+import Footer from '~/components/layout/Footer.vue';
+import useLoader from '~/composables/useLoader';
+import useScrollSmoother from '~/composables/useScrollSmoother';
+
+const { scrollSmoother } = useScrollSmoother();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
+const { startLoading } = useLoader();
+definePageMeta({
+  scrollToTop: true,
+  pageTransition: {
+    css: false,
+    mode: 'out-in',
+    onEnter: (_, done) => {
+      startLoading();
+      scrollSmoother.value.scrollTop(0, false);
+      done();
+    },
+    onLeave: (el, done) => {
+      leaveAnimation(el, done);
+    },
+  },
+});
 </script>
 
 <template>
@@ -184,6 +206,7 @@ const isMobile = useMediaQuery('(max-width: 768px)');
         <HomeAwards />
       </div>
     </ClientOnly>
+    <Footer />
   </main>
 </template>
 

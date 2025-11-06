@@ -90,13 +90,14 @@ export const heroInitSplitText = () => {
                   Initial animation
 =======================================================*/
 export const heroInitAnimation = (ctx, scrollSmoother) => {
-  // const { stopLoading } = useLoader();
+  // const { isFirstLoad } = useLoader();
 
   /* ======== Layout elements Animation ========= */
-  const layoutElements = gsap.utils.toArray(
-    ['#header-logo', '#header-navigation-button', '#header-sound-button'],
-    document
-  );
+  const layoutElements = gsap.utils.toArray([
+    '#header-logo',
+    '#header-navigation-button',
+    '#header-sound-button',
+  ]);
 
   // const loaderElement = document.querySelector('#loader-logo');
 
@@ -104,323 +105,337 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
   const duration1 = 2;
   const easeCircle = 'power3.inOut';
 
-  ctx.add(() => {
-    gsap
-      .timeline({ id: 'homepage-initial-animation' })
-      // .to(loaderElement, {
-      //   scale: 0,
-      //   duration: 0.5,
-      //   ease: 'power3.out',
-      //   delay: 1.6,
-      // })
-      // .add(() => {
-      //   stopLoading();
-      // })
-      /* =======Player part ========= */
-      .from(
-        playerPreview,
-        {
-          clipPath: 'inset(20% 50% round 20px)',
-          duration: duration1,
-          ease: ease1,
+  // ctx.add(() => {
+  gsap
+    .timeline({ id: 'homepage-initial-animation' })
+    // .to(loaderElement, {
+    //   scale: 0,
+    //   duration: 0.5,
+    //   ease: 'power3.out',
+    //   delay: 1.6,
+    // })
+    // .add(() => {
+    //   stopLoading();
+    // })
+    /* =======Player part ========= */
+    .from(
+      playerPreview,
+      {
+        clipPath: 'inset(20% 50% round 20px)',
+        duration: duration1,
+        ease: ease1,
+      },
+      'firstPart'
+    )
+    .from(
+      playerDotsL,
+      { left: '50%', duration: duration1, ease: ease1 },
+      'firstPart'
+    )
+    .from(
+      playerDotsR,
+      { right: '50%', duration: duration1, ease: ease1 },
+      'firstPart'
+    )
+    .from(playerButton, { scale: 0, duration: 0.3 }, 'firstPart+=1')
+    /* ======= Center line part ========= */
+    .fromTo(
+      centerLine,
+      { scaleX: 0, visibility: 'hidden' },
+      { scaleX: 1, visibility: 'visible', duration: duration1, ease: ease1 },
+      'firstPart'
+    )
+    .fromTo(
+      centerLeft,
+      { xPercent: 100, x: -4 },
+      {
+        xPercent: 0,
+        x: 0,
+        duration: duration1,
+        ease: ease1,
+      },
+      'firstPart'
+    )
+    .fromTo(
+      centerRight,
+      { xPercent: -100, x: 3 },
+      {
+        xPercent: 0,
+        x: 0,
+        duration: duration1,
+        ease: ease1,
+      },
+      'firstPart'
+    )
+    .to(
+      centerTexts,
+      {
+        duration: 4.5,
+        scrambleText: {
+          text: '{original}',
+          chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+          tweenLength: false,
         },
-        'firstPart'
-      )
-      .from(
-        playerDotsL,
-        { left: '50%', duration: duration1, ease: ease1 },
-        'firstPart'
-      )
-      .from(
-        playerDotsR,
-        { right: '50%', duration: duration1, ease: ease1 },
-        'firstPart'
-      )
-      .from(playerButton, { scale: 0, duration: 0.3 }, 'firstPart+=1')
-      /* ======= Center line part ========= */
-      .fromTo(
-        centerLine,
-        { scaleX: 0, visibility: 'hidden' },
-        { scaleX: 1, visibility: 'visible', duration: duration1, ease: ease1 },
-        'firstPart'
-      )
-      .fromTo(
-        centerLeft,
-        { xPercent: 100, x: -4 },
-        {
-          xPercent: 0,
-          x: 0,
-          duration: duration1,
-          ease: ease1,
+      },
+      'firstPart'
+    )
+    .from(
+      centerTexts,
+      {
+        opacity: 0,
+        duration: 0.01,
+        stagger: {
+          amount: 1,
+          from: 'random',
         },
-        'firstPart'
-      )
-      .fromTo(
-        centerRight,
-        { xPercent: -100, x: 3 },
-        {
-          xPercent: 0,
-          x: 0,
-          duration: duration1,
-          ease: ease1,
+      },
+      'firstPart'
+    )
+    .to(
+      centerControlTexts,
+      {
+        duration: 2.3,
+        scrambleText: {
+          text: '{original}',
+          chars: 'uppercase',
+          tweenLength: false,
         },
-        'firstPart'
-      )
-      .to(
-        centerTexts,
-        {
-          duration: 4.5,
-          scrambleText: {
-            text: '{original}',
-            chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
-            tweenLength: false,
-          },
+      },
+      'firstPart+=0.5'
+    )
+    .from(
+      centerControlTexts,
+      {
+        opacity: 0,
+        duration: 0.01,
+        stagger: {
+          amount: 0.9,
+          from: 'random',
         },
-        'firstPart'
-      )
-      .from(
-        centerTexts,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 1,
-            from: 'random',
-          },
-        },
-        'firstPart'
-      )
-      .to(
-        centerControlTexts,
-        {
-          duration: 2.3,
-          scrambleText: {
-            text: '{original}',
-            chars: 'uppercase',
-            tweenLength: false,
-          },
-        },
-        'firstPart+=0.5'
-      )
-      .from(
-        centerControlTexts,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 0.9,
-            from: 'random',
-          },
-        },
-        'firstPart+=0.5'
-      )
-      /* ======= Canvas part ========= */
-      .fromTo(
-        canvas,
-        { scale: 0.7, visibility: 'hidden' },
-        { scale: 1, visibility: 'visible', duration: 2, ease: 'power3.out' },
-        'firstPart'
-      )
-      .fromTo(
-        canvas,
-        { opacity: 0 },
-        { opacity: 1, duration: 2, ease: 'power1.out' },
-        'firstPart'
-      )
-      /* ======= Circle part ========= */
-      .from(
-        [circlePath1, circlePath2],
-        {
-          strokeDashoffset: 626.43,
-          duration: 1.85,
-          ease: easeCircle,
-        },
-        'firstPart+=0.3'
-      )
-      .from(
-        circleDots,
-        { autoAlpha: 0, rotate: 0, duration: 1.85, ease: easeCircle },
-        'firstPart+=0.3'
-      )
-      .add('secondPart', 'firstPart+=1.2')
+      },
+      'firstPart+=0.5'
+    )
+    /* ======= Canvas part ========= */
+    .fromTo(
+      canvas,
+      { scale: 0.7, visibility: 'hidden' },
+      { scale: 1, visibility: 'visible', duration: 2, ease: 'power3.out' },
+      'firstPart'
+    )
+    .fromTo(
+      canvas,
+      { opacity: 0 },
+      { opacity: 1, duration: 2, ease: 'power1.out' },
+      'firstPart'
+    )
+    /* ======= Circle part ========= */
+    .from(
+      [circlePath1, circlePath2],
+      {
+        strokeDashoffset: 626.43,
+        duration: 1.85,
+        ease: easeCircle,
+      },
+      'firstPart+=0.3'
+    )
+    .from(
+      circleDots,
+      { autoAlpha: 0, rotate: 0, duration: 1.85, ease: easeCircle },
+      'firstPart+=0.3'
+    )
+    .add('secondPart', 'firstPart+=1.2')
 
-      /* ======= Psychoactive part ========= */
-      .to(
-        psychoactiveText,
-        {
-          duration: 3.2,
-          scrambleText: {
-            text: '{original}',
-            chars: 'uppercase',
-            tweenLength: false,
-          },
+    /* ======= Psychoactive part ========= */
+    .to(
+      psychoactiveText,
+      {
+        duration: 3.2,
+        scrambleText: {
+          text: '{original}',
+          chars: 'uppercase',
+          tweenLength: false,
         },
-        'secondPart'
-      )
-      .fromTo(
-        psychoactiveText,
-        { opacity: 0, visibility: 'hidden' },
-        {
-          opacity: 1,
-          visibility: 'visible',
-          duration: 0.01,
-          stagger: {
-            amount: 0.85,
-            from: 'random',
-          },
+      },
+      'secondPart'
+    )
+    .fromTo(
+      psychoactiveText,
+      { opacity: 0, visibility: 'hidden' },
+      {
+        opacity: 1,
+        visibility: 'visible',
+        duration: 0.01,
+        stagger: {
+          amount: 0.85,
+          from: 'random',
         },
-        'secondPart'
-      )
-      .set(
-        [psychoactiveIconH, psychoactiveIconV],
-        { visibility: 'visible' },
-        'secondPart'
-      )
-      .from(
-        psychoactiveIconH,
-        {
-          xPercent: -100,
-          duration: 1.85,
-          ease: 'power4.out',
+      },
+      'secondPart'
+    )
+    .set(
+      [psychoactiveIconH, psychoactiveIconV],
+      { visibility: 'visible' },
+      'secondPart'
+    )
+    .from(
+      psychoactiveIconH,
+      {
+        xPercent: -100,
+        duration: 1.85,
+        ease: 'power4.out',
+      },
+      'secondPart'
+    )
+    .from(
+      psychoactiveIconV,
+      {
+        yPercent: -100,
+        duration: 1.85,
+        ease: 'power4.out',
+      },
+      'secondPart'
+    )
+    /* ======= Top text part ========= */
+    .fromTo(
+      labelImage,
+      { xPercent: 175, visibility: 'hidden' },
+      {
+        xPercent: 0,
+        visibility: 'visible',
+        duration: 1.15,
+        ease: 'power4.out',
+      },
+      'secondPart'
+    )
+    .to(
+      agencyText,
+      {
+        duration: 3.2,
+        scrambleText: {
+          text: '{original}',
+          chars: 'uppercase',
+          tweenLength: false,
         },
-        'secondPart'
-      )
-      .from(
-        psychoactiveIconV,
-        {
-          yPercent: -100,
-          duration: 1.85,
-          ease: 'power4.out',
+      },
+      'secondPart'
+    )
+    .fromTo(
+      agencyText,
+      { opacity: 0, visibility: 'hidden' },
+      {
+        opacity: 1,
+        visibility: 'visible',
+        duration: 0.01,
+        stagger: {
+          amount: 0.85,
+          from: 'random',
         },
-        'secondPart'
-      )
-      /* ======= Top text part ========= */
-      .fromTo(
-        labelImage,
-        { xPercent: 175, visibility: 'hidden' },
-        {
-          xPercent: 0,
-          visibility: 'visible',
-          duration: 1.15,
-          ease: 'power4.out',
+      },
+      'secondPart'
+    )
+    .from(
+      innovationText,
+      {
+        opacity: 0,
+        duration: 0.01,
+        stagger: {
+          amount: 0.4,
+          from: 'random',
         },
-        'secondPart'
-      )
-      .to(
-        agencyText,
-        {
-          duration: 3.2,
-          scrambleText: {
-            text: '{original}',
-            chars: 'uppercase',
-            tweenLength: false,
-          },
+      },
+      'secondPart'
+    )
+    /* ======= Bottom text part ========= */
+    .fromTo(
+      scaleText,
+      { xPercent: -175, visibility: 'hidden' },
+      {
+        xPercent: 0,
+        visibility: 'visible',
+        duration: 1.15,
+        ease: 'power4.out',
+      },
+      'secondPart'
+    )
+    .from(
+      imagineText,
+      {
+        opacity: 0,
+        duration: 0.01,
+        stagger: {
+          amount: 0.4,
+          from: 'random',
         },
-        'secondPart'
-      )
-      .fromTo(
-        agencyText,
-        { opacity: 0, visibility: 'hidden' },
-        {
-          opacity: 1,
-          visibility: 'visible',
-          duration: 0.01,
-          stagger: {
-            amount: 0.85,
-            from: 'random',
-          },
-        },
-        'secondPart'
-      )
-      .from(
-        innovationText,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 0.4,
-            from: 'random',
-          },
-        },
-        'secondPart'
-      )
-      /* ======= Bottom text part ========= */
-      .fromTo(
-        scaleText,
-        { xPercent: -175, visibility: 'hidden' },
-        {
-          xPercent: 0,
-          visibility: 'visible',
-          duration: 1.15,
-          ease: 'power4.out',
-        },
-        'secondPart'
-      )
-      .from(
-        imagineText,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 0.4,
-            from: 'random',
-          },
-        },
-        'secondPart'
-      )
-      .from(
-        arrows,
-        {
-          opacity: 0,
-          duration: 1.15,
-          letterSpacing: '-3.5vw',
-          ease: 'power4.out',
-        },
-        'secondPart+=0.25'
-      )
-      /* ======= Layout elements part ========= */
-      .from(
-        layoutElements,
-        { scale: 0, duration: 0.75, ease: 'power3.out' },
-        'secondPart+=0.2'
-      )
-      /* ======= Dots arrow part ========= */
-      .add('finalPart', 'secondPart+=1.2')
-      .set(dotsArrowBox, { visibility: 'visible' }, 'finalPart')
-      .from(
-        dotsArrowPlusH,
-        {
-          xPercent: 100,
-          duration: 1.85,
-          ease: 'power4.out',
-        },
-        'finalPart'
-      )
-      .from(
-        dotsArrowPlusV,
-        {
-          yPercent: 100,
-          duration: 1.85,
-          ease: 'power4.out',
-        },
-        'finalPart'
-      )
-      .fromTo(
-        dotsArrowIcon,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 1,
-          stagger: { each: 0.05, from: 'random' },
-          ease: "rough({ template: power1.out, strength: 5, points: 20, taper: 'none', randomize: true, clamp: false})",
-        },
-        'finalPart'
-      )
-      // The '-=1' offset ensures heroScrollAnimation and scrollSmoother resume 1 second before the timeline ends for a smoother transition.
-      .add(() => {
-        scrollSmoother.value.paused(false);
-      }, '-=1');
-  });
+      },
+      'secondPart'
+    )
+    .from(
+      arrows,
+      {
+        opacity: 0,
+        duration: 1.15,
+        letterSpacing: '-3.5vw',
+        ease: 'power4.out',
+      },
+      'secondPart+=0.25'
+    )
+    .to(
+      layoutElements,
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 0.75,
+        ease: 'power3.out',
+      },
+      'secondPart+=0.2'
+    )
+    /* ======= Layout elements part ========= */
+    // if (isFirstLoad.value) {
+    //   tl.to(
+    //     layoutElements,
+    //     { scale: 1, opacity: 1, duration: 0.75, ease: 'power3.out' },
+    //     'secondPart+=0.2'
+    //   );
+    //   isFirstLoad.value = false;
+    // }
+
+    /* ======= Dots arrow part ========= */
+    .add('finalPart', 'secondPart+=1.2')
+    .set(dotsArrowBox, { visibility: 'visible' }, 'finalPart')
+    .from(
+      dotsArrowPlusH,
+      {
+        xPercent: 100,
+        duration: 1.85,
+        ease: 'power4.out',
+      },
+      'finalPart'
+    )
+    .from(
+      dotsArrowPlusV,
+      {
+        yPercent: 100,
+        duration: 1.85,
+        ease: 'power4.out',
+      },
+      'finalPart'
+    )
+    .fromTo(
+      dotsArrowIcon,
+      { opacity: 0 },
+      {
+        opacity: 1,
+        duration: 1,
+        stagger: { each: 0.05, from: 'random' },
+        ease: "rough({ template: power1.out, strength: 5, points: 20, taper: 'none', randomize: true, clamp: false})",
+      },
+      'finalPart'
+    )
+    // The '-=1' offset ensures heroScrollAnimation and scrollSmoother resume 1 second before the timeline ends for a smoother transition.
+    .add(() => {
+      scrollSmoother.value.paused(false);
+    }, '-=1');
+  // });
 };
 
 /* ====================================================
