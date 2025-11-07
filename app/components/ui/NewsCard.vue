@@ -84,9 +84,7 @@ const onFocusHandler = (e) => {
       </h3>
     </div>
     <div class="news-card__image">
-      <div class="news-card__image_wrapper">
-        <NuxtImg :src="src" :alt="title" width="200" height="200" />
-      </div>
+      <NuxtImg :src="src" :alt="title" width="200" height="200" />
     </div>
   </NuxtLink>
 </template>
@@ -96,12 +94,9 @@ const onFocusHandler = (e) => {
 .news-card {
   border-radius: 8px;
   background: #1b1b1b;
-  padding: clamp(0.625rem, 0.833vw, 1rem);
+  padding: 1rem;
   display: flex;
   gap: 1rem;
-  @media screen and (max-width: 1400px) {
-    padding: 1rem;
-  }
   &__description {
     display: flex;
     flex-direction: column;
@@ -112,7 +107,7 @@ const onFocusHandler = (e) => {
       justify-content: space-between;
       align-items: center;
       font-family: 'RoobertMono';
-      font-size: clamp(0.625rem, 0.64vw, 0.75rem);
+      font-size: getRem(12);
       font-style: normal;
       font-weight: 500;
       line-height: 1.75;
@@ -121,9 +116,6 @@ const onFocusHandler = (e) => {
       padding-left: 14px;
       position: relative;
       white-space: nowrap;
-      @media screen and (max-width: 1400px) {
-        font-size: 0.75rem;
-      }
       &::before {
         content: '';
         position: absolute;
@@ -138,32 +130,24 @@ const onFocusHandler = (e) => {
       }
     }
     &_title {
-      font-size: min(1rem, 0.833vw);
+      font-size: getRem(16);
       font-style: normal;
       font-weight: 400;
-      line-height: 131%;
+      line-height: getRem(21);
       margin-top: auto;
+      margin-right: 6px;
       overflow: hidden;
-      @media screen and (max-width: 1400px) {
-        font-size: 1rem;
-      }
     }
   }
   &__image {
-    width: 30%;
+    width: 115px;
+    height: 115px;
     flex-shrink: 0;
-    @media screen and (max-width: 1400px) {
-      width: 115px;
-    }
-    &_wrapper {
-      overflow: hidden;
-      border-radius: 8px;
-      width: 100%;
-      aspect-ratio: 1 / 1;
-    }
+    overflow: hidden;
+    border-radius: 8px;
     img {
       width: 100%;
-      justify-self: 100%;
+      height: 100%;
       object-fit: cover;
       transition: transform 1s cubic-bezier(0.33, 1, 0.68, 1);
       will-change: transform;

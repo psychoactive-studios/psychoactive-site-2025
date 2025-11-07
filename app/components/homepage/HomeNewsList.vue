@@ -38,7 +38,7 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: getRem(16);
-    @media screen and (max-width: 1800px) {
+    @media screen and (max-width: 1400px) {
       grid-template-columns: repeat(2, 1fr);
     }
     @include respond(mobile) {
