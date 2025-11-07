@@ -7,6 +7,9 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  /* Remove tap highlight on touch devices */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
 /* Remove default body margin, set font smoothing */
@@ -44,6 +47,7 @@ button {
   align-items: center;
   justify-content: center;
   outline: none !important;
+  box-sizing: border-box;
 }
 
 /* Remove list styles for ul/ol */
@@ -70,10 +74,10 @@ p {
 }
 
 /* Optional: smoother focus outline for accessibility */
-:focus {
-  outline: 2px solid #3498db;
-  outline-offset: 2px;
-}
+// :focus {
+//   outline: 2px solid #3498db;
+//   outline-offset: 2px;
+// }
 
 /* Optional: reduce motion for users who prefer it */
 @media (prefers-reduced-motion: reduce) {
@@ -84,4 +88,8 @@ p {
     transition-duration: 0s !important;
     scroll-behavior: auto !important;
   }
+}
+
+svg.nuxt-icon {
+  margin: 0;
 }

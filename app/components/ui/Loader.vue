@@ -1,15 +1,10 @@
 <script setup>
-import loaderData from '~/assets/lottie/logo-V02.json';
-
-const animationRef = ref(null);
-console.log('animationRef', animationRef);
+import MainAnimatedLogo from './MainAnimatedLogo.vue';
 </script>
 
 <template>
   <div class="loader">
-    <div class="loader__animation">
-      <Lottie ref="animationRef" :data="loaderData" />
-    </div>
+    <MainAnimatedLogo id="loader-logo" aria-label="Loading..." loop />
   </div>
 </template>
 
@@ -23,12 +18,5 @@ console.log('animationRef', animationRef);
   inset: 0;
   background-color: $color-background;
   z-index: 9999; /* Ensure it overlays other content */
-  &__animation {
-    width: 80px;
-    height: auto;
-    * {
-      fill: $color-foreground;
-    }
-  }
 }
 </style>

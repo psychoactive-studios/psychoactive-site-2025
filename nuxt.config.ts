@@ -8,11 +8,29 @@ export default defineNuxtConfig({
       enabled: true
     }
   },
-  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo', 'nuxt-lottie'],
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag === 'mux-player',
+    },
+  },
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo'],
   css: ['modern-normalize/modern-normalize.css', '~/assets/styles/main.scss'],
   app: {
     head: {
+      title: 'Psychoactive Studios | Web Design Agency | Webflow Partner',
+      meta: [
+        { name: 'description', content: 'Award-Winning Multidisciplinary Digital Experience Agency | We design and develop websites, web apps & motion graphics for brands who want to push boundaries' },
+      ],
       link: [
+        {
+          rel: 'shortcut icon',
+          href: '/favicon.gif',
+          type: 'image/x-icon'
+        },
+        {
+          rel: 'apple-touch-icon',
+          href: '/favicon-256x256.gif'
+        },
         {
           rel: 'preload',
           as: 'font',

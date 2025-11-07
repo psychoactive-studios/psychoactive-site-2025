@@ -2,8 +2,9 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import * as THREE from 'three';
 import { createNoise3D } from 'simplex-noise';
+import { useDebounceFn, useEventListener } from '@vueuse/core';
 
-const canvasContainer = ref(null);
+const canvasElement = ref(null);
 
 // --- Scene, camera, and renderer initialization ---
 let scene, camera, renderer; // controls removed
@@ -11,6 +12,7 @@ let spherePoints;
 const clock = new THREE.Clock();
 const simplex = createNoise3D();
 let animationFrameId;
+let removeResizeListener; // Додаємо змінну для зберігання функції відписки
 
 // --- Gradient color palette ---
 const colorPalette = [
@@ -19,7 +21,7 @@ const colorPalette = [
   new THREE.Color('#23CF48'),
   new THREE.Color('#17FFFF'),
   new THREE.Color('#0646FF'),
-  new THREE.Color('#101012'),
+  // new THREE.Color('#101012'),
 ];
 
 // --- Interactivity variables ---
@@ -35,28 +37,34 @@ const SPRING_CONSTANT = 0.0008; // Spring constant that returns points
 const DAMPING = 0.96; // Damping (resistance to motion)
 
 function init() {
-  if (!canvasContainer.value) return;
+  if (!canvasElement.value) return;
 
   scene = new THREE.Scene();
 
   // --- FOG ADDED ---
-  scene.fog = new THREE.FogExp2(0x000000, 0.55);
+  scene.fog = new THREE.FogExp2(0x000000, 0.57);
 
   camera = new THREE.PerspectiveCamera(
     75,
-    canvasContainer.value.clientWidth / canvasContainer.value.clientHeight,
+    canvasElement.value.clientWidth / canvasElement.value.clientHeight,
     0.1,
     1000
   );
   camera.position.z = 4;
 
-  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer = new THREE.WebGLRenderer({
+    canvas: canvasElement.value,
+    antialias: true,
+    alpha: true,
+  });
   renderer.setClearColor(0x000000, 0); // Set transparent background
+
   renderer.setSize(
-    canvasContainer.value.clientWidth,
-    canvasContainer.value.clientHeight
+    canvasElement.value.clientWidth,
+    canvasElement.value.clientHeight,
+    false // не міняє inline-стилі canvas
   );
-  canvasContainer.value.appendChild(renderer.domElement);
+  renderer.setPixelRatio(window.devicePixelRatio);
 
   /*
   controls = new OrbitControls(camera, renderer.domElement);
@@ -94,24 +102,26 @@ function init() {
 
   raycaster.params.Points.threshold = 0.15;
 
-  window.addEventListener('resize', onWindowResize, false);
-  renderer.domElement.addEventListener('mousemove', onDocumentMouseMove, false);
+  // Save the unsubscribe function for resize event
+  removeResizeListener = useEventListener(window, 'resize', onWindowResize);
+  canvasElement.value.addEventListener('mousemove', onDocumentMouseMove, false);
 }
 
-function onWindowResize() {
-  if (!canvasContainer.value) return;
+const onWindowResize = useDebounceFn(() => {
+  if (!canvasElement.value) return;
   camera.aspect =
-    canvasContainer.value.clientWidth / canvasContainer.value.clientHeight;
+    canvasElement.value.clientWidth / canvasElement.value.clientHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(
-    canvasContainer.value.clientWidth,
-    canvasContainer.value.clientHeight
+    canvasElement.value.clientWidth,
+    canvasElement.value.clientHeight,
+    false // Don't update canvas style
   );
-}
+}, 200);
 
 function onDocumentMouseMove(event) {
-  if (!canvasContainer.value) return;
-  const rect = canvasContainer.value.getBoundingClientRect();
+  if (!canvasElement.value) return;
+  const rect = canvasElement.value.getBoundingClientRect();
   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
@@ -235,11 +245,14 @@ onMounted(() => {
 
 onUnmounted(() => {
   cancelAnimationFrame(animationFrameId);
-  window.removeEventListener('resize', onWindowResize);
-  if (renderer) {
-    // Remove event listener as OrbitControls is no longer used
-    renderer.domElement.removeEventListener('mousemove', onDocumentMouseMove);
-    renderer.dispose();
+
+  // Remove resize event listeners
+  if (removeResizeListener) {
+    removeResizeListener();
+  }
+
+  if (canvasElement.value) {
+    canvasElement.value.removeEventListener('mousemove', onDocumentMouseMove);
   }
   if (scene) {
     scene.traverse((object) => {
@@ -253,36 +266,30 @@ onUnmounted(() => {
       }
     });
   }
+  if (renderer) {
+    renderer.dispose();
+  }
 });
 </script>
 
 <template>
-  <div class="scene-container" ref="canvasContainer" />
+  <div class="scene-container">
+    <canvas ref="canvasElement" class="three-canvas" />
+  </div>
 </template>
 
 <style lang="scss" scoped>
+@use '~/assets/styles/variables' as *;
 .scene-container {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  /* background-color: #050a14; removed for transparency */
-  font-family: 'Inter', sans-serif;
   position: relative;
 }
 
-canvas {
-  display: block;
-}
-
-.info {
-  position: absolute;
-  top: 10px;
+.three-canvas {
   width: 100%;
-  text-align: center;
-  z-index: 100;
+  height: 100%;
   display: block;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.2);
-  pointer-events: none; // to not intercept mouse events
 }
 </style>
