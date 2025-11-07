@@ -13,11 +13,15 @@ import { leaveAnimation } from '~/utils/animations/transitions';
 import Footer from '~/components/layout/Footer.vue';
 import useLoader from '~/composables/useLoader';
 import useScrollSmoother from '~/composables/useScrollSmoother';
+import useNavigation from '~/composables/useNavigation';
+import gsap from 'gsap';
 
 const { scrollSmoother } = useScrollSmoother();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 const { startLoading } = useLoader();
+const { transitionFromNavigation } = useNavigation();
+
 definePageMeta({
   scrollToTop: true,
   pageTransition: {
@@ -29,6 +33,16 @@ definePageMeta({
       done();
     },
     onLeave: (el, done) => {
+      if (transitionFromNavigation.value) {
+        gsap
+          .timeline()
+          .set(el, { opacity: 0 })
+          .add(() => {
+            transitionFromNavigation.value = false;
+            done();
+          }, '+=0.85');
+        return;
+      }
       leaveAnimation(el, done);
     },
   },

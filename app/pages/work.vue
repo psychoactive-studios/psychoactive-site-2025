@@ -8,9 +8,11 @@ import useLoader from '~/composables/useLoader';
 import { SplitText } from 'gsap/SplitText';
 import { leaveAnimation } from '~/utils/animations/transitions';
 import Footer from '~/components/layout/Footer.vue';
+import useNavigation from '~/composables/useNavigation';
 
 const { isFirstLoad, isLoading } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
+const { transitionFromNavigation } = useNavigation();
 
 const titleRef = ref(null);
 
@@ -50,6 +52,16 @@ definePageMeta({
       }, 50);
     },
     onLeave: (el, done) => {
+      if (transitionFromNavigation.value) {
+        gsap
+          .timeline()
+          .set(el, { opacity: 0 })
+          .add(() => {
+            transitionFromNavigation.value = false;
+            done();
+          }, '+=0.85');
+        return;
+      }
       leaveAnimation(el, done);
     },
   },

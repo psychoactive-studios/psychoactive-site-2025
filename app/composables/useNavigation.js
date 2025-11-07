@@ -12,6 +12,9 @@ const isOpen = ref(false);
 const navigationRef = ref(null);
 const navigationMobileRef = ref(null);
 
+// Reactive state to track if the transition is from navigation
+const transitionFromNavigation = ref(false);
+
 // GSAP timelines for animations
 let openTimelineMain, openTimelineItems, closeTimeline;
 
@@ -294,5 +297,6 @@ export default function () {
     initNavigation,
     openNavigation,
     closeNavigation,
+    transitionFromNavigation,
   };
 }

@@ -44,7 +44,6 @@ defineExpose({
 // Handle loop complete event
 const onLoopComplete = () => {
   if (resourcesToLoad.value === loadedResources.value && isLoading.value) {
-    console.log('onLoopComplete!!!', isLoading.value);
     const loaderElement = document.querySelector('#loader-logo');
     gsap.to(loaderElement, {
       scale: 0,

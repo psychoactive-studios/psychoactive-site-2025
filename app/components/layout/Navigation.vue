@@ -7,7 +7,8 @@ import useAudioManager from '~/composables/useAudioManager';
 import gsap from 'gsap';
 import { navigationData } from '~/data/navigationData';
 
-const { navigationRef, initNavigation } = useNavigation();
+const { navigationRef, initNavigation, transitionFromNavigation } =
+  useNavigation();
 const { playInteractionSound } = useAudioManager();
 
 let talkButtonHoverTween;
@@ -36,6 +37,7 @@ const talkButtonHoverHandler = () => {
 };
 
 const clickOnLinkHandler = () => {
+  transitionFromNavigation.value = true;
   document.querySelector('#header-navigation-button').click();
 };
 </script>
@@ -61,12 +63,18 @@ const clickOnLinkHandler = () => {
         </div>
         <div class="navigation__menu">
           <ul class="navigation__list">
-            <li  v-for="item in navigationData" :key="item.id" class="navigation__item">
-              <LinkWithHover :href="item.url" @click="clickOnLinkHandler">{{ item.title }}</LinkWithHover>
+            <li
+              v-for="item in navigationData"
+              :key="item.id"
+              class="navigation__item"
+            >
+              <LinkWithHover :href="item.url" @click="clickOnLinkHandler">{{
+                item.title
+              }}</LinkWithHover>
               <div class="navigation__item-line">
                 <span class="line" />
               </div>
-            </li>            
+            </li>
           </ul>
         </div>
         <div class="navigation__talk">
