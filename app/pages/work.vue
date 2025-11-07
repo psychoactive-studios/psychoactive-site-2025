@@ -59,7 +59,7 @@ definePageMeta({
           .add(() => {
             transitionFromNavigation.value = false;
             done();
-          }, '+=0.85');
+          }, '+=1');
         return;
       }
       leaveAnimation(el, done);
