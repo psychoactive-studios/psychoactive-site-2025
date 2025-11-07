@@ -163,7 +163,7 @@ const onFocusHandler = (e) => {
     }
     img {
       width: 100%;
-      justify-self: 100%;
+      height: 100%;
       object-fit: cover;
       transition: transform 1s cubic-bezier(0.33, 1, 0.68, 1);
       will-change: transform;
