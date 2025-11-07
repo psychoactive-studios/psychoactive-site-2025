@@ -115,7 +115,7 @@ const onFocusHandler = (e) => {
       font-size: clamp(0.625rem, 0.64vw, 0.75rem);
       font-style: normal;
       font-weight: 500;
-      line-height: 1.75;
+      line-height: 1;
       text-transform: uppercase;
       color: white(70);
       padding-left: 14px;
