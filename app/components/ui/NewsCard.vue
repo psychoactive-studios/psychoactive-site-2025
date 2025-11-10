@@ -84,7 +84,9 @@ const onFocusHandler = (e) => {
       </h3>
     </div>
     <div class="news-card__image">
-      <NuxtImg :src="src" :alt="title" width="200" height="200" />
+      <div class="news-card__image_wrapper">
+        <NuxtImg :src="src" :alt="title" width="230" height="230" />
+      </div>
     </div>
   </NuxtLink>
 </template>
@@ -130,21 +132,24 @@ const onFocusHandler = (e) => {
       }
     }
     &_title {
-      font-size: getRem(16);
+      font-size: clamp(24px, 1.67vw, 32px);
       font-style: normal;
       font-weight: 400;
-      line-height: getRem(21);
+      line-height: 1.12;
       margin-top: auto;
       margin-right: 6px;
       overflow: hidden;
     }
   }
   &__image {
-    width: 115px;
-    height: 115px;
+    width: 30.3%;
     flex-shrink: 0;
-    overflow: hidden;
-    border-radius: 8px;
+    &_wrapper {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 8px;
+    }
     img {
       width: 100%;
       height: 100%;
