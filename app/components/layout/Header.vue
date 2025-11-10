@@ -11,7 +11,7 @@ import NavigationMobile from './NavigationMobile.vue';
 import { useMediaQuery } from '@vueuse/core';
 
 const mainLogoRef = ref(null);
-const { isOpen } = useNavigation();
+const { isOpen, transitionFromNavigation } = useNavigation();
 const { playInteractionSound, isMuted } = useAudioManager();
 const { clickVideoCloseHandler } = useHomeVideoPlayerMobile();
 
@@ -19,6 +19,13 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 
 const onSoundChangeHandler = () => {
   isMuted.value = !isMuted.value;
+};
+
+const onLogoClickHandler = () => {
+  if (isOpen.value) {
+    transitionFromNavigation.value = true;
+    document.querySelector('#header-navigation-button').click();
+  }
 };
 
 const onLogoHoverHandler = (e) => {
@@ -41,6 +48,7 @@ const onLogoHoverHandler = (e) => {
       aria-describedby="main-logo"
       @mouseenter="playInteractionSound"
       @focus="playInteractionSound"
+      @click="onLogoClickHandler"
     >
       <MainAnimatedLogo
         id="header-logo"
