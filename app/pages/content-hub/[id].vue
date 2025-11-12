@@ -1,15 +1,122 @@
 <script setup>
-import Footer from '~/components/layout/Footer.vue';
+import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
+import Brief from '~/components/layout/Brief.vue';
 import LetsTalkDots from '~/components/ui/LetsTalkDots.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
+import useNavigation from '~/composables/useNavigation';
+import useLoader from '~/composables/useLoader';
+import { leaveAnimation } from '~/utils/animations/transitions';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const { scrollSmoother } = useScrollSmoother();
+const { transitionFromNavigation } = useNavigation();
+const { isLoading } = useLoader();
+const router = useRouter();
 
-onMounted(() => {
-  setTimeout(() => {
-    scrollSmoother.value.paused(false);
-  }, 100);
+const footerScrollTextRef = ref(null);
+
+onMounted(async () => {
+  SplitText.create(footerScrollTextRef.value, {
+    type: 'words,chars',
+    charsClass: 'char-center',
+  });
+  setTimeout(footerTextAnimationInit, 100);
 });
+
+onUnmounted(() => {
+  ScrollTrigger.getAll().forEach((st) => st.kill());
+});
+
+watch(isLoading, (loading) => {
+  if (!loading) {
+    enterAnimation();
+  }
+});
+
+definePageMeta({
+  scrollToTop: true,
+  pageTransition: {
+    css: false,
+    mode: 'out-in',
+    onEnter: (el, done) => {
+      done();
+      scrollSmoother.value.scrollTop(0, false);
+      gsap.set(el, { visibility: 'hidden' });
+      setTimeout(() => {
+        enterAnimation(el);
+      }, 50);
+    },
+    onLeave: (el, done) => {
+      if (transitionFromNavigation.value) {
+        gsap
+          .timeline()
+          .set(el, { opacity: 0 })
+          .add(() => {
+            transitionFromNavigation.value = false;
+            done();
+          }, '+=1');
+        return;
+      }
+      leaveAnimation(el, done);
+    },
+  },
+});
+
+function enterAnimation(el) {
+  const layoutElements = gsap.utils.toArray([
+    '#header-logo',
+    '#header-navigation-button',
+    '#header-sound-button',
+  ]);
+
+  if (el) gsap.set(el, { visibility: 'visible' });
+
+  gsap
+    .timeline()
+    // .from('.content-hub .content-hub__title', {
+    //   y: 400,
+    //   opacity: 0,
+    //   duration: 1.2,
+    //   ease: 'power4.out',
+    // })
+    // .from(
+    //   '.content-hub .content-hub__grid > *',
+    //   {
+    //     y: '100vh',
+    //     duration: 1.2,
+    //     ease: 'power4.out',
+    //     stagger: 0.1,
+    //   },
+    //   '<+=0.3'
+    // )
+    .to(layoutElements, {
+      scale: 1,
+      opacity: 1,
+      duration: 0.75,
+      ease: 'power3.out',
+    })
+    .add(() => scrollSmoother.value.paused(false), '<');
+}
+
+function footerTextAnimationInit() {
+  gsap.to(footerScrollTextRef.value.querySelectorAll('.char-center'), {
+    scrollTrigger: {
+      trigger: footerScrollTextRef.value,
+      start: 'top bottom',
+      end: document.querySelector('.article__footer').getBoundingClientRect()
+        .top,
+      scrub: true,
+      markers: true,
+      onLeave: () => {
+        router.push('/content-hub');
+      },
+    },
+    opacity: 1,
+    duration: 0.1,
+    stagger: 0.05,
+  });
+}
 </script>
 <template>
   <main class="article">
@@ -218,7 +325,14 @@ onMounted(() => {
         </article>
       </div>
     </div>
-    <Footer />
+    <footer class="article__footer">
+      <Brief />
+      <div class="article__footer_scroll">
+        <div class="container">
+          <h2 ref="footerScrollTextRef">Scroll to back Content Hub</h2>
+        </div>
+      </div>
+    </footer>
   </main>
 </template>
 
@@ -483,6 +597,30 @@ onMounted(() => {
       }
       ul {
         list-style-type: disc;
+      }
+    }
+  }
+  &__footer {
+    padding: 160px 0;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    &_scroll {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      h2 {
+        font-size: clamp(48px, 3.65vw, 70px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: 88%; /* 61.6px */
+        letter-spacing: -0.035em;
+        color: $color-foreground;
+        :deep(.char-center) {
+          will-change: opacity;
+          backface-visibility: hidden;
+          opacity: 0.3;
+        }
       }
     }
   }
