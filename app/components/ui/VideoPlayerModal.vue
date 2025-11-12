@@ -32,6 +32,8 @@ const soundHandler = () => {
   isMuted.value = !isMuted.value;
 };
 
+console.log('PLAYBACK_ID', PLAYBACK_ID);
+
 watch(isPlaying, (state) => {
   const videoElement = videoElementRef.value;
   if (videoElement) {
