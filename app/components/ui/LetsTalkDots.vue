@@ -11,6 +11,13 @@ const { playInteractionSound } = useAudioManager();
 
 const letsTalkButtonRef = ref(null);
 
+defineProps({
+  mode: {
+    type: String,
+    default: 'dark', // 'dark' or 'light'
+  },
+});
+
 // Register GSAP plugins
 gsap.registerPlugin(InertiaPlugin, ScrollTrigger);
 
@@ -283,7 +290,12 @@ const talkButtonHoverHandler = () => {
 </script>
 
 <template>
-  <section class="lets-talk">
+  <section
+    :class="[
+      'lets-talk',
+      mode === 'light' ? 'lets-talk--light' : 'lets-talk--dark',
+    ]"
+  >
     <div class="dots-wrap">
       <div ref="dotsContainerRef" class="dots-container" />
     </div>
@@ -293,8 +305,9 @@ const talkButtonHoverHandler = () => {
       class="lets-talk__link"
       @mouseenter="talkButtonHoverHandler"
       @focus="talkButtonHoverHandler"
-      >let's talk</a
     >
+      let's talk
+    </a>
   </section>
 </template>
 
@@ -313,9 +326,9 @@ const talkButtonHoverHandler = () => {
     color: currentColor;
     text-decoration: none;
     position: absolute;
+    z-index: 0;
     @include flex-center;
     height: 64px;
-    color: $color-background;
     padding: 0 getRem(56);
     border-radius: 32px;
     font-family: 'RoobertMono';
@@ -331,7 +344,6 @@ const talkButtonHoverHandler = () => {
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: $color-foreground;
       border-radius: 48px;
       z-index: -1;
       transition: scale 0.3s cubic-bezier(0.33, 1, 0.68, 1);
@@ -340,6 +352,28 @@ const talkButtonHoverHandler = () => {
       &::before {
         scale: 0.85;
       }
+    }
+  }
+  &--dark {
+    .lets-talk__link {
+      color: $color-background;
+      &::before {
+        background-color: $color-foreground;
+      }
+    }
+    :deep(.dot) {
+      background-color: #ffffff;
+    }
+  }
+  &--light {
+    .lets-talk__link {
+      color: $color-foreground;
+      &::before {
+        background-color: $color-background;
+      }
+    }
+    :deep(.dot) {
+      background-color: $color-background;
     }
   }
 }
