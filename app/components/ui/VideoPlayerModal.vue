@@ -59,8 +59,8 @@ onMounted(async () => {
     if (videoElementRef.value) {
       player = videojs(videoElementRef.value, {
         controls: false,
-        responsive: true,
-        fluid: true,
+        // responsive: true,
+        // fluid: true,
         preload: 'auto',
       });
 
@@ -180,7 +180,7 @@ const handleCliclProgressBar = (event) => {
 
   .player__main_video {
     width: 100%;
-    // height: 100%;
+    height: 100%;
     object-fit: cover;
   }
 
