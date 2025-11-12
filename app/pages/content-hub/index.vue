@@ -97,7 +97,7 @@ function enterAnimation(el) {
         y: '100vh',
         duration: 1.2,
         ease: 'power4.out',
-        stagger: 0.15,
+        stagger: 0.1,
       },
       '<+=0.3'
     )
