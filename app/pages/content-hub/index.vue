@@ -29,10 +29,8 @@ definePageMeta({
       done();
       scrollSmoother.value.scrollTop(0, false);
       gsap.set(el, { visibility: 'hidden' });
-
       setTimeout(() => {
         enterAnimation(el);
-        // scrollSmoother.value.scrollTop(0, false);
       }, 50);
     },
     onLeave: (el, done) => {
@@ -68,29 +66,6 @@ function enterAnimation(el) {
       duration: 1.2,
       ease: 'power4.out',
     })
-    // .to(
-    //   '.works .works__title h1',
-    //   {
-    //     duration: 1.5,
-    //     ease: 'none',
-    //     scrambleText: {
-    //       text: '{original}',
-    //       // chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
-    //       tweenLength: false,
-    //     },
-    //   },
-    //   '<'
-    // )
-    // .from(
-    //   '.works .works__title p .char-center',
-    //   {
-    //     opacity: 0,
-    //     duration: 0.0001,
-    //     // ease: 'power3.out',
-    //     stagger: 0.015,
-    //   },
-    //   '<'
-    // )
     .from(
       '.content-hub .content-hub__grid > *',
       {
