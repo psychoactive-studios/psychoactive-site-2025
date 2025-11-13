@@ -74,28 +74,48 @@ function enterAnimation(el) {
 
   gsap
     .timeline()
-    // .from('.content-hub .content-hub__title', {
-    //   y: 400,
-    //   opacity: 0,
-    //   duration: 1.2,
-    //   ease: 'power4.out',
-    // })
-    // .from(
-    //   '.content-hub .content-hub__grid > *',
-    //   {
-    //     y: '100vh',
-    //     duration: 1.2,
-    //     ease: 'power4.out',
-    //     stagger: 0.1,
-    //   },
-    //   '<+=0.3'
-    // )
-    .to(layoutElements, {
-      scale: 1,
-      opacity: 1,
-      duration: 0.75,
-      ease: 'power3.out',
+    .from('.article__hero_image--bg', {
+      y: '100vh',
+      duration: 1,
+      ease: 'power4.out',
     })
+    .from(
+      '.article__hero_image img',
+      {
+        y: '100vh',
+        duration: 1,
+        ease: 'power4.out',
+      },
+      '<0.3'
+    )
+    .from(
+      '.article__hero_title h1',
+      {
+        y: '100vh',
+        duration: 1,
+        ease: 'power4.out',
+      },
+      '<0.2'
+    )
+    .to(
+      layoutElements,
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 0.75,
+        ease: 'power3.out',
+      },
+      '<0.5'
+    )
+    .from(
+      '.article__hero_info, .article__body',
+      {
+        opacity: 0,
+        duration: 0.75,
+        ease: 'power3.out',
+      },
+      '<'
+    )
     .add(() => scrollSmoother.value.paused(false), '<');
 }
 
@@ -104,10 +124,10 @@ function footerTextAnimationInit() {
     scrollTrigger: {
       trigger: footerScrollTextRef.value,
       start: 'top bottom',
-      end: document.querySelector('.article__footer').getBoundingClientRect()
-        .top,
+      end: () =>
+        document.querySelector('.article__footer').getBoundingClientRect().top,
       scrub: true,
-      markers: true,
+      invalidateOnRefresh: true,
       onLeave: () => {
         router.push('/content-hub');
       },
@@ -148,6 +168,7 @@ function footerTextAnimationInit() {
             src="/img/test-article-image.jpg"
             sizes="100vw md:70vw xl:1600px"
           />
+          <div class="article__hero_image--bg" />
         </div>
       </div>
     </div>
@@ -408,13 +429,12 @@ function footerTextAnimationInit() {
     }
     &_image {
       position: relative;
-      &::after {
-        content: '';
+      &--bg {
         position: absolute;
         top: 50%;
         left: -50vw;
         right: -50vw;
-        height: 51%;
+        height: 100vh;
         background-color: $color-foreground;
         z-index: -1;
       }
