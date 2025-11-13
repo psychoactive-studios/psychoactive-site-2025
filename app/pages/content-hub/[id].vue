@@ -125,7 +125,9 @@ function footerTextAnimationInit() {
       trigger: footerScrollTextRef.value,
       start: 'top bottom',
       end: () =>
-        document.querySelector('.article__footer').getBoundingClientRect().top,
+        document
+          .querySelector('.article__footer_scroll')
+          .getBoundingClientRect().top,
       scrub: true,
       invalidateOnRefresh: true,
       onLeave: () => {
@@ -347,7 +349,9 @@ function footerTextAnimationInit() {
       </div>
     </div>
     <footer class="article__footer">
-      <Brief />
+      <div class="article__footer_brief">
+        <Brief />
+      </div>
       <div class="article__footer_scroll">
         <div class="container">
           <h2 ref="footerScrollTextRef">Scroll to back Content Hub</h2>
@@ -621,12 +625,13 @@ function footerTextAnimationInit() {
     }
   }
   &__footer {
-    padding: 160px 0;
-    min-height: 100dvh;
     display: flex;
     flex-direction: column;
+    &_brief {
+      padding: 160px 0;
+    }
     &_scroll {
-      flex-grow: 1;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       h2 {
@@ -636,6 +641,7 @@ function footerTextAnimationInit() {
         line-height: 88%; /* 61.6px */
         letter-spacing: -0.035em;
         color: $color-foreground;
+        text-align: center;
         :deep(.char-center) {
           will-change: opacity;
           backface-visibility: hidden;
