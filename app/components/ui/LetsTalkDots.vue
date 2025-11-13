@@ -255,10 +255,9 @@ onMounted(() => {
   lastMousePosition.x = eventX.value + currentScrollX;
   lastMousePosition.y = eventY.value + currentScrollY;
 
-  buildGrid();
-
   // Initialize ScrollTrigger after a small delay to ensure grid is built
   setTimeout(() => {
+    buildGrid();
     initScrollTrigger();
   }, 100);
 
