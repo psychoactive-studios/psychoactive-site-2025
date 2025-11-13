@@ -122,6 +122,7 @@ export default function () {
         isPlaying.value = true;
         videoPlayer.currentTime = 0;
         videoPlayer.play();
+        gsap.set('#header-navigation-button', { mixBlendMode: 'normal' });
       }, '<')
       .fromTo(
         playerButtons,
@@ -195,6 +196,7 @@ export default function () {
     videoPlayer.pause();
     isPlaying.value = false;
     isOpen.value = false;
+    gsap.set('#header-navigation-button', { clearProps: 'mix-blend-mode' });
 
     gsap
       .timeline({ id: 'close-video-modal-timeline' })

@@ -43,7 +43,7 @@ const onLogoHoverHandler = (e) => {
   <header class="header">
     <NuxtLink
       to="/"
-      :class="['logo', { dark: isOpen }]"
+      class="logo"
       aria-label="Go to homepage"
       aria-describedby="main-logo"
       @mouseenter="playInteractionSound"
@@ -61,7 +61,7 @@ const onLogoHoverHandler = (e) => {
     <HeaderNavigationButton />
     <SoundButton
       id="header-sound-button"
-      :class="['header__sound-button', { dark: isOpen }]"
+      class="header__sound-button"
       :muted="isMuted"
       @click="onSoundChangeHandler"
       @mouseenter="playInteractionSound"
@@ -95,6 +95,7 @@ const onLogoHoverHandler = (e) => {
     top: 48px;
     left: 48px;
     z-index: 100;
+    mix-blend-mode: exclusion;
     & * {
       transition: fill 0.3s ease;
       transition-delay: 0.3s;
@@ -120,6 +121,7 @@ const onLogoHoverHandler = (e) => {
     top: 110px;
     right: 48px;
     z-index: 100;
+    mix-blend-mode: exclusion;
     &::after {
       transition: background-color 0.3s ease;
       transition-delay: 0.3s;

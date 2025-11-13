@@ -236,7 +236,7 @@ const onMouseLeaveHandler = () => {
   <button
     id="header-navigation-button"
     ref="buttonRef"
-    :class="['header__navigation-button', { dark: isNavOpen && !isVideoOpen }]"
+    class="header__navigation-button"
     @click="onClickHandler"
     @mouseenter="onMouseEnterHandler"
     @mouseleave="onMouseLeaveHandler"
@@ -272,6 +272,7 @@ $flicker-ease: ease;
   z-index: 102;
   transition: color 0.3s ease;
   transition-delay: 0.3s;
+  mix-blend-mode: exclusion;
   &.dark {
     color: $color-foreground;
     &::before {
