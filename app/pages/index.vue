@@ -88,12 +88,12 @@ definePageMeta({
         <section class="cases">
           <div class="container">
             <CaseStadyPreview
-              src="/img/cases/case-super-ai.png"
+              src="/img/cases/case-super-ai.jpg"
               title="SuperAI Conference"
               description="Worlds largest AI event"
             />
             <CaseStadyPreview
-              src="/img/cases/case-burgerfuel.png"
+              src="/img/cases/case-burgerfuel.jpg"
               title="Burgerfuel"
               description="New Zealand’s favourite burger"
             />
@@ -144,22 +144,22 @@ definePageMeta({
         <section v-if="!isMobile" class="cases">
           <div class="container">
             <CaseStadyPreview
-              src="/img/cases/case-world-of-wearableArt.png"
+              src="/img/cases/case-world-of-wearableArt.jpg"
               title="World of WearableArt"
               description="New Zealand's Largest theatrical Spectacle"
             />
             <CaseStadyPreview
-              src="/img/cases/case-blackbird.png"
+              src="/img/cases/case-blackbird.jpg"
               title="Blackbird Ventures"
               description="Australasia's leading venture capital firm"
             />
             <CaseStadyPreview
-              src="/img/cases/case-summer-game-fest.png"
+              src="/img/cases/case-summer-game-fest.jpg"
               title="Summer Game Fest"
               description="The global stage for gaming reveals"
             />
             <CaseStadyPreview
-              src="/img/cases/case-woolf-university.png"
+              src="/img/cases/case-woolf-university.jpg"
               title="WOOLF University"
               description="Global access to accredited higher education"
             />
@@ -169,12 +169,12 @@ definePageMeta({
         <section v-if="isMobile" class="mobile-cases-second-part">
           <div class="container">
             <CaseStadyPreview
-              src="/img/cases/case-world-of-wearableArt.png"
+              src="/img/cases/case-world-of-wearableArt.jpg"
               title="World of WearableArt"
               description="New Zealand's Largest theatrical Spectacle"
             />
             <CaseStadyPreview
-              src="/img/cases/case-blackbird.png"
+              src="/img/cases/case-blackbird.jpg"
               title="Blackbird Ventures"
               description="Australasia's leading venture capital firm"
             />
@@ -201,12 +201,12 @@ definePageMeta({
           </div>
           <div class="container">
             <CaseStadyPreview
-              src="/img/cases/case-summer-game-fest.png"
+              src="/img/cases/case-summer-game-fest.jpg"
               title="Summer Game Fest"
               description="The global stage for gaming reveals"
             />
             <CaseStadyPreview
-              src="/img/cases/case-woolf-university.png"
+              src="/img/cases/case-woolf-university.jpg"
               title="WOOLF University"
               description="Global access to accredited higher education"
             />
