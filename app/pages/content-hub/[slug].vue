@@ -407,13 +407,29 @@ function footerTextAnimationInit() {
 .article {
   &__hero {
     padding-top: 160px;
+    @include respond(mobile) {
+      padding-top: 24px;
+    }
     &_grid {
       display: grid;
       grid-template-columns: 1fr 74%;
       gap: getRem(24);
       margin-bottom: 80px;
+      @include respond(tablet) {
+        margin-bottom: 60px;
+      }
+      @include respond(mobile) {
+        grid-template-columns: 1fr;
+        gap: getRem(120);
+        margin-bottom: getRem(48);
+      }
     }
     &_info {
+      @include respond(mobile) {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        gap: getRem(16);
+      }
       & > ul {
         position: relative;
         padding: 15px 0 11px 0;
@@ -432,6 +448,12 @@ function footerTextAnimationInit() {
         & > li {
           padding-left: 17px;
           position: relative;
+          @include respond(tablet) {
+            font-size: getRem(14);
+          }
+          @include respond(mobile) {
+            font-size: getRem(12);
+          }
           &::before {
             content: '';
             position: absolute;
@@ -464,11 +486,11 @@ function footerTextAnimationInit() {
     }
     &_title {
       h1 {
-        font-size: getRem(96);
+        font-size: clamp(getRem(32), 5vw, getRem(96));
         font-style: normal;
         font-weight: 400;
         line-height: 100%; /* 96px */
-        letter-spacing: -5.76px;
+        letter-spacing: -0.057em;
       }
     }
     &_image {
@@ -486,6 +508,9 @@ function footerTextAnimationInit() {
         width: 100%;
         height: auto;
         border-radius: getRem(10);
+        @include respond(mobile) {
+          border-radius: getRem(6);
+        }
       }
     }
   }
@@ -494,6 +519,10 @@ function footerTextAnimationInit() {
     color: $color-background;
     padding-top: 120px;
     padding-bottom: 160px;
+    @include respond(mobile) {
+      padding-top: getRem(16);
+      padding-bottom: getRem(80);
+    }
     &_wrapper {
       position: relative;
     }
@@ -504,6 +533,12 @@ function footerTextAnimationInit() {
       position: absolute;
       top: 0;
       left: 0;
+      @include respond(mobile) {
+        position: static;
+        flex-direction: row;
+        margin-bottom: getRem(48);
+        flex-wrap: wrap;
+      }
       & > h3 {
         font-family: 'RoobertMono';
         font-size: 1rem;
@@ -511,6 +546,9 @@ function footerTextAnimationInit() {
         font-weight: 500;
         line-height: 100%;
         text-transform: uppercase;
+        @include respond(mobile) {
+          width: 100%;
+        }
       }
       & > a {
         @include flex-center;
@@ -521,175 +559,6 @@ function footerTextAnimationInit() {
         &:hover {
           animation: flicker-effect-1 0.5s forwards;
         }
-      }
-    }
-    article {
-      & > *:first-child {
-        margin-top: 0;
-      }
-      & > *:last-child {
-        margin-bottom: 0;
-      }
-      & > * {
-        width: 50%;
-        margin-left: auto;
-        margin-right: auto;
-      }
-      h2 {
-        margin-bottom: 60px;
-        font-size: getRem(64);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100%; /* 64px */
-        letter-spacing: -0.05em;
-      }
-      h3 {
-        margin-bottom: 60px;
-        font-size: getRem(56);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100%;
-        letter-spacing: -0.04em;
-      }
-      h4 {
-        margin-bottom: 60px;
-        font-size: getRem(48);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 120%;
-        letter-spacing: -0.04em;
-      }
-      h5 {
-        margin-bottom: 60px;
-        font-size: getRem(40);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100%; /* 40px */
-        letter-spacing: -0.04em;
-      }
-      h6 {
-        font-family: 'RoobertMono';
-        font-size: 1rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 100%;
-        text-transform: uppercase;
-        margin-bottom: getRem(12);
-      }
-      p {
-        font-size: getRem(24);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 1.25; /* 125% */
-        margin-bottom: getRem(40);
-        &.large-body {
-          font-size: getRem(32);
-          line-height: 112.5%;
-        }
-      }
-      .image {
-        margin-top: 120px;
-        margin-bottom: 120px;
-        width: 100%;
-        img {
-          width: 100%;
-          height: auto;
-        }
-        &-double {
-          margin-top: 120px;
-          margin-bottom: 120px;
-          width: 100%;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: getRem(20);
-          img {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-          }
-        }
-      }
-      .quote {
-        margin-bottom: getRem(60);
-        &__wrapper {
-          position: relative;
-          &::before {
-            content: '';
-            display: block;
-            width: 1px;
-            position: absolute;
-            top: 0.8rem;
-            left: 3px;
-            bottom: 0.8rem;
-            background-color: $color-background;
-            opacity: 0.2;
-          }
-          blockquote {
-            font-size: getRem(38);
-            font-style: normal;
-            font-weight: 400;
-            line-height: 120%; /* 45.6px */
-            letter-spacing: -0.04em;
-            padding-left: 50px;
-            margin-bottom: 48px;
-            &::before {
-              content: '';
-              display: block;
-              width: 7px;
-              height: 7px;
-              border-radius: 50%;
-              background-color: $color-background;
-              position: absolute;
-              top: 0.6rem;
-              left: 0;
-              opacity: 0.5;
-            }
-            &::after {
-              content: '';
-              display: block;
-              width: 7px;
-              height: 7px;
-              border-radius: 50%;
-              background-color: $color-background;
-              position: absolute;
-              bottom: 0.6rem;
-              left: 0;
-              opacity: 0.5;
-            }
-          }
-        }
-        &__author {
-          font-family: 'RoobertMono';
-          font-size: 1rem;
-          font-style: normal;
-          font-weight: 500;
-          line-height: 100%;
-          text-transform: uppercase;
-        }
-      }
-      .spacer {
-        overflow: hidden;
-      }
-      .cta {
-        margin-top: 120px;
-        margin-bottom: 120px;
-      }
-      ol,
-      ul {
-        font-size: getRem(24);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 1.25;
-        padding-left: getRem(32);
-        li {
-          margin-bottom: getRem(40);
-        }
-      }
-      ol {
-        list-style-type: decimal;
-      }
-      ul {
-        list-style-type: disc;
       }
     }
   }

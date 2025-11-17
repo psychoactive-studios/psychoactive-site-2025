@@ -20,7 +20,11 @@ defineProps({
       >
         <template v-for="(item, itemIndex) in block.body" :key="itemIndex">
           <!-- Headings -->
-          <h2 v-if="item.type === 'heading' && item.level === 2">
+          <h2
+            v-if="
+              item.type === 'heading' && (item.level === 1 || item.level === 2)
+            "
+          >
             <template
               v-for="(child, childIndex) in item.children"
               :key="childIndex"
@@ -150,8 +154,10 @@ defineProps({
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+@use '~/assets/styles/mixins' as *;
 
 .article {
+  font-size: clamp(getRem(16), 1.25vw, getRem(24));
   & > *:first-child {
     margin-top: 0;
   }
@@ -162,30 +168,42 @@ defineProps({
     width: 50%;
     margin-left: auto;
     margin-right: auto;
+    @include respond(mobile) {
+      width: auto;
+    }
   }
   h2 {
     margin-bottom: 60px;
-    font-size: getRem(64);
+    font-size: clamp(getRem(24), 3.125vw, getRem(64));
     font-style: normal;
     font-weight: 400;
     line-height: 100%; /* 64px */
     letter-spacing: -0.05em;
+    @include respond(mobile) {
+      margin-bottom: 24px;
+    }
   }
   h3 {
     margin-bottom: 60px;
-    font-size: getRem(56);
+    font-size: clamp(getRem(20), 2.917vw, getRem(56));
     font-style: normal;
     font-weight: 400;
     line-height: 100%;
     letter-spacing: -0.04em;
+    @include respond(mobile) {
+      margin-bottom: 24px;
+    }
   }
   h4 {
     margin-bottom: 60px;
-    font-size: getRem(48);
+    font-size: clamp(getRem(18), 2.5vw, getRem(48));
     font-style: normal;
     font-weight: 400;
     line-height: 120%;
     letter-spacing: -0.04em;
+    @include respond(mobile) {
+      margin-bottom: 24px;
+    }
   }
   h5 {
     margin-bottom: 60px;
@@ -194,6 +212,9 @@ defineProps({
     font-weight: 400;
     line-height: 100%; /* 40px */
     letter-spacing: -0.04em;
+    @include respond(mobile) {
+      margin-bottom: 24px;
+    }
   }
   h6 {
     font-family: 'RoobertMono';
@@ -203,15 +224,22 @@ defineProps({
     line-height: 100%;
     text-transform: uppercase;
     margin-bottom: getRem(12);
+    @include respond(mobile) {
+      font-size: getRem(14);
+      margin-bottom: getRem(8);
+    }
   }
   p {
-    font-size: getRem(24);
+    font-size: clamp(getRem(16), 1.25vw, getRem(24));
     font-style: normal;
     font-weight: 400;
     line-height: 1.25; /* 125% */
     margin-bottom: getRem(40);
+    @include respond(mobile) {
+      margin-bottom: 24px;
+    }
     &.large-body {
-      font-size: getRem(32);
+      font-size: clamp(getRem(16), 1.667vw, getRem(32));
       line-height: 112.5%;
     }
   }
@@ -219,6 +247,10 @@ defineProps({
     margin-top: 120px;
     margin-bottom: 120px;
     width: 100%;
+    @include respond(mobile) {
+      margin-top: 48px;
+      margin-bottom: 48px;
+    }
     img {
       width: 100%;
       height: auto;
@@ -230,6 +262,11 @@ defineProps({
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: getRem(20);
+      @include respond(mobile) {
+        margin-top: 48px;
+        margin-bottom: 48px;
+        grid-template-columns: 1fr;
+      }
       img {
         width: 100%;
         aspect-ratio: 1 / 1;
@@ -239,6 +276,9 @@ defineProps({
   }
   .quote {
     margin-bottom: getRem(60);
+    @include respond(mobile) {
+      margin-bottom: getRem(48);
+    }
     &__wrapper {
       position: relative;
       &::before {
@@ -253,13 +293,16 @@ defineProps({
         opacity: 0.2;
       }
       blockquote {
-        font-size: getRem(38);
+        font-size: clamp(getRem(18), 1.9795vw, getRem(38));
         font-style: normal;
         font-weight: 400;
         line-height: 120%; /* 45.6px */
         letter-spacing: -0.04em;
         padding-left: 50px;
         margin-bottom: 48px;
+        @include respond(mobile) {
+          margin-bottom: getRem(24);
+        }
         &::before {
           content: '';
           display: block;
@@ -293,6 +336,9 @@ defineProps({
       font-weight: 500;
       line-height: 100%;
       text-transform: uppercase;
+      @include respond(mobile) {
+        font-size: getRem(14);
+      }
     }
   }
   .spacer {
@@ -301,16 +347,20 @@ defineProps({
   .cta {
     margin-top: 120px;
     margin-bottom: 120px;
+    @include respond(mobile) {
+      margin-top: 48px;
+      margin-bottom: 48px;
+    }
   }
   ol,
   ul {
-    font-size: getRem(24);
+    font-size: inherit;
     font-style: normal;
     font-weight: 400;
     line-height: 1.25;
     padding-left: getRem(32);
     li {
-      margin-bottom: getRem(40);
+      margin-bottom: 1.67em;
     }
   }
   ol {
