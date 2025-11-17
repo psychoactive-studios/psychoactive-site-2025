@@ -1,7 +1,7 @@
 <script setup>
 import LetsTalkDots from './LetsTalkDots.vue';
 
-const props = defineProps({
+defineProps({
   data: {
     type: Array,
     required: false,
