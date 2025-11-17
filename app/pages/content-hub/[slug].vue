@@ -1,14 +1,15 @@
 <script setup>
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
+
 import Brief from '~/components/layout/Brief.vue';
-import LetsTalkDots from '~/components/ui/LetsTalkDots.vue';
+import ArticleContent from '~/components/ui/ArticleContent.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useNavigation from '~/composables/useNavigation';
 import useLoader from '~/composables/useLoader';
+
 import { leaveAnimation } from '~/utils/animations/transitions';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import ArticleContent from '~/components/ui/ArticleContent.vue';
 
 const { NUXT_PUBLIC_STRAPI_KEY, NUXT_PUBLIC_STRAPI_BASE_URL } = process.env;
 
