@@ -8,6 +8,9 @@ import useNavigation from '~/composables/useNavigation';
 import useLoader from '~/composables/useLoader';
 import { leaveAnimation } from '~/utils/animations/transitions';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import ArticleContent from '~/components/ui/ArticleContent.vue';
+
+const { NUXT_PUBLIC_STRAPI_KEY, NUXT_PUBLIC_STRAPI_BASE_URL } = process.env;
 
 const { scrollSmoother } = useScrollSmoother();
 const { transitionFromNavigation } = useNavigation();
@@ -15,6 +18,23 @@ const { isLoading } = useLoader();
 const router = useRouter();
 
 const footerScrollTextRef = ref(null);
+
+const { params } = useRoute();
+
+const { data: articleData, error } = await useFetch(
+  `/api/articles/${params.slug}`,
+  {
+    baseURL: NUXT_PUBLIC_STRAPI_BASE_URL,
+    headers: {
+      Authorization: `Bearer ${NUXT_PUBLIC_STRAPI_KEY}`,
+    },
+    key: `article-${params.slug}`,
+  }
+);
+
+if (error.value) {
+  console.error('Error fetching article data:', error.value);
+}
 
 onMounted(async () => {
   SplitText.create(footerScrollTextRef.value, {
@@ -148,26 +168,26 @@ function footerTextAnimationInit() {
           <div class="article__hero_info">
             <ul>
               <li>Author</li>
-              <li>Andrew Hillstead</li>
+              <li>{{ articleData?.data?.author?.name }}</li>
             </ul>
             <ul>
               <li>DATE</li>
-              <li>Dec 4 2025</li>
+              <li>
+                {{ formatDate(articleData?.data?.updatedAt) }}
+              </li>
             </ul>
             <ul>
               <li>TIME</li>
-              <li>5 min</li>
+              <li>{{ articleData?.data?.timeToRead }} min</li>
             </ul>
           </div>
           <div class="article__hero_title">
-            <h1>
-              Harnessing the power of community for small Māori businesses
-            </h1>
+            <h1>{{ articleData?.data?.title }}</h1>
           </div>
         </div>
         <div class="article__hero_image">
           <NuxtImg
-            src="/img/test-article-image.jpg"
+            :src="articleData.data.cover.url"
             sizes="100vw md:70vw xl:1600px"
           />
           <div class="article__hero_image--bg" />
@@ -176,176 +196,194 @@ function footerTextAnimationInit() {
     </div>
     <div class="article__body">
       <div class="container">
-        <article>
-          <h2>
-            Small business owners with their sights on the future are
-            recognising the value of collaboration.
-          </h2>
-
-          <p class="large-body">
-            Through the Te Puni Kōkiri Cadetship programme, three creative
-            companies are sharing their baskets of knowledge, so their kaimahi
-            and businesses can thrive. Watch this video about their
-            collaboration.
-          </p>
-          <p>
-            Andrew Hillstead founded Psychoactive Studios digital design agency
-            to create beautiful, interactive, user friendly web products and
-            experiences. He is now teaming up with cultural storytelling tech
-            company VAKA and cultural photography business Soldiers Rd
-            Portraits. All three are on the brink of big, bold expansion.
-          </p>
-          <p>Find out more about Vaka’s basket of knowledge.</p>
-          <p>Find out more about Soldiers Rd’s basket of knowledge.</p>
-
-          <div class="image">
-            <NuxtImg
-              src="/img/test-article-image-2.jpg"
-              sizes="100vw md:70vw xl:1600px"
-            />
+        <div class="article__body_wrapper">
+          <div class="article__body_share">
+            <h3>Share:</h3>
+            <a href="#" aria-label="Share on Facebook">
+              <img src="/img/icon-x.svg" alt="" />
+            </a>
+            <a href="#" aria-label="Share on Facebook">
+              <img src="/img/icon-f.svg" alt="" />
+            </a>
+            <a href="#" aria-label="Share on Facebook">
+              <img src="/img/icon-in.svg" alt="" />
+            </a>
           </div>
+          <ArticleContent :data="articleData?.data?.article" />
+          <!-- <article>
+            <h2>
+              Small business owners with their sights on the future are
+              recognising the value of collaboration.
+            </h2>
 
-          <h2>Knowledge is community</h2>
+            <p class="large-body">
+              Through the Te Puni Kōkiri Cadetship programme, three creative
+              companies are sharing their baskets of knowledge, so their kaimahi
+              and businesses can thrive. Watch this video about their
+              collaboration.
+            </p>
+            <p>
+              Andrew Hillstead founded Psychoactive Studios digital design
+              agency to create beautiful, interactive, user friendly web
+              products and experiences. He is now teaming up with cultural
+              storytelling tech company VAKA and cultural photography business
+              Soldiers Rd Portraits. All three are on the brink of big, bold
+              expansion.
+            </p>
+            <p>Find out more about Vaka’s basket of knowledge.</p>
+            <p>Find out more about Soldiers Rd’s basket of knowledge.</p>
 
-          <div class="quote">
-            <div class="quote__wrapper">
-              <blockquote>
-                “We want to connect Jesse with my employee Callum Mudgway to
-                create a supportive environment where he can grow. Callum’s an
-                amazing designer. He now needs to be able to stand with mana and
-                strength to present and work with clients every day,”
-              </blockquote>
+            <div class="image">
+              <NuxtImg
+                src="/img/test-article-image-2.jpg"
+                sizes="100vw md:70vw xl:1600px"
+              />
             </div>
-            <div class="quote__author">– says Andrew.</div>
-          </div>
 
-          <p>
-            At the same time, Andrew is sharing his web skills with the owners
-            of cultural portrait photography business, Soldiers Rd Portraits.
-          </p>
-          <p>
-            For nearly eight years, sisters-in-law Taaniko and Vienna Nordstrom
-            have been styling customers in Māori regalia for indigenous inspired
-            vintage portraits that plant a seed of cultural identity and
-            integrity. The business is now preparing to expand nationwide.
-          </p>
-          <p>
-            Andrew’s helping us to bring the visual side of our business to life
-            in a way that will be perfect for expanding and telling our stories
-            explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te Wairoa,
-            Rongomaiwahine, Waikato-Tainui).
-          </p>
+            <h2>Knowledge is community</h2>
 
-          <p class="spacer"></p>
+            <div class="quote">
+              <div class="quote__wrapper">
+                <blockquote>
+                  “We want to connect Jesse with my employee Callum Mudgway to
+                  create a supportive environment where he can grow. Callum’s an
+                  amazing designer. He now needs to be able to stand with mana
+                  and strength to present and work with clients every day,”
+                </blockquote>
+              </div>
+              <div class="quote__author">– says Andrew.</div>
+            </div>
 
-          <h3>Knowledge is community text community text</h3>
-
-          <p>
-            At the same time, Andrew is sharing his web skills with the owners
-            of cultural portrait photography business, Soldiers Rd Portraits:
-          </p>
-          <ol>
-            <li>
+            <p>
+              At the same time, Andrew is sharing his web skills with the owners
+              of cultural portrait photography business, Soldiers Rd Portraits.
+            </p>
+            <p>
               For nearly eight years, sisters-in-law Taaniko and Vienna
               Nordstrom have been styling customers in Māori regalia for
               indigenous inspired vintage portraits that plant a seed of
               cultural identity and integrity. The business is now preparing to
               expand nationwide.
-            </li>
-            <li>
+            </p>
+            <p>
               Andrew’s helping us to bring the visual side of our business to
               life in a way that will be perfect for expanding and telling our
-              stories” explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te
+              stories explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te
               Wairoa, Rongomaiwahine, Waikato-Tainui).
-            </li>
-          </ol>
-          <p>“He’s showing us how to update our website</p>
-          <p>
-            He’s showing us how to update our website so that it's fresh,
-            modern, showcases our work and gives people an idea of what we do at
-            a glance,” agrees Vienna (Ngāti Porou).
-          </p>
-          <div class="cta">
-            <LetsTalkDots mode="light" />
-          </div>
-          <h6>sub header text</h6>
-          <h2>Knowledge is community</h2>
-          <p>
-            At the same time, Andrew is sharing his web skills with the owners
-            of cultural portrait photography business, Soldiers Rd Portraits.
-          </p>
+            </p>
 
-          <ul>
-            <li>
-              For nearly eight years, sisters-in-law Taaniko and Vienna
-              Nordstrom have been styling customers in Māori regalia for
-              indigenous inspired vintage portraits that plant a seed of
-              cultural identity and integrity. The business is now preparing to
-              expand nationwide.
-            </li>
-            <li>
-              Andrew’s helping us to bring the visual side of our business to
-              life in a way that will be perfect for expanding and telling our
-              stories” explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te
-              Wairoa, Rongomaiwahine, Waikato-Tainui).
-            </li>
-            <li>
+            <p class="spacer" />
+
+            <h3>Knowledge is community text community text</h3>
+
+            <p>
+              At the same time, Andrew is sharing his web skills with the owners
+              of cultural portrait photography business, Soldiers Rd Portraits:
+            </p>
+            <ol>
+              <li>
+                For nearly eight years, sisters-in-law Taaniko and Vienna
+                Nordstrom have been styling customers in Māori regalia for
+                indigenous inspired vintage portraits that plant a seed of
+                cultural identity and integrity. The business is now preparing
+                to expand nationwide.
+              </li>
+              <li>
+                Andrew’s helping us to bring the visual side of our business to
+                life in a way that will be perfect for expanding and telling our
+                stories” explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te
+                Wairoa, Rongomaiwahine, Waikato-Tainui).
+              </li>
+            </ol>
+            <p>“He’s showing us how to update our website</p>
+            <p>
               He’s showing us how to update our website so that it's fresh,
               modern, showcases our work and gives people an idea of what we do
               at a glance,” agrees Vienna (Ngāti Porou).
-            </li>
-            <li>
+            </p>
+            <div class="cta">
+              <LetsTalkDots mode="light" />
+            </div>
+            <h6>sub header text</h6>
+            <h2>Knowledge is community</h2>
+            <p>
+              At the same time, Andrew is sharing his web skills with the owners
+              of cultural portrait photography business, Soldiers Rd Portraits.
+            </p>
+
+            <ul>
+              <li>
+                For nearly eight years, sisters-in-law Taaniko and Vienna
+                Nordstrom have been styling customers in Māori regalia for
+                indigenous inspired vintage portraits that plant a seed of
+                cultural identity and integrity. The business is now preparing
+                to expand nationwide.
+              </li>
+              <li>
+                Andrew’s helping us to bring the visual side of our business to
+                life in a way that will be perfect for expanding and telling our
+                stories” explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te
+                Wairoa, Rongomaiwahine, Waikato-Tainui).
+              </li>
+              <li>
+                He’s showing us how to update our website so that it's fresh,
+                modern, showcases our work and gives people an idea of what we
+                do at a glance,” agrees Vienna (Ngāti Porou).
+              </li>
+              <li>
+                As Cadets, Taaniko and Vienna see Andrew’s support as crucial to
+                helping them achieve their business goals.
+              </li>
+            </ul>
+            <div class="image-double">
+              <img src="/img/test-article-image-2.jpg" alt="" />
+              <img src="/img/news/news-image-3.png" alt="" />
+            </div>
+            <p>
+              At the same time, Andrew is sharing his web skills with the owners
+              of cultural portrait photography business, Soldiers Rd Portraits.
+            </p>
+            <p>
+              For nearly eight years, sisters-in-law Taaniko and Vienna
+              Nordstrom have been styling customers in Māori regalia for
+              indigenous inspired vintage portraits that plant a seed of
+              cultural identity and integrity. The business is now preparing to
+              expand nationwide.
+            </p>
+            <p>
+              “Andrew’s helping us to bring the visual side of our business to
+              life in a way that will be perfect for expanding and telling our
+              stories” explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te
+              Wairoa, Rongomaiwahine, Waikato-Tainui).
+            </p>
+            <p>
+              “He’s showing us how to update our website so that it's fresh,
+              modern, showcases our work and gives people an idea of what we do
+              at a glance,” agrees Vienna (Ngāti Porou).
+            </p>
+            <p>
               As Cadets, Taaniko and Vienna see Andrew’s support as crucial to
               helping them achieve their business goals.
-            </li>
-          </ul>
-          <div class="image-double">
-            <img src="/img/test-article-image-2.jpg" alt="" />
-            <img src="/img/news/news-image-3.png" alt="" />
-          </div>
-          <p>
-            At the same time, Andrew is sharing his web skills with the owners
-            of cultural portrait photography business, Soldiers Rd Portraits.
-          </p>
-          <p>
-            For nearly eight years, sisters-in-law Taaniko and Vienna Nordstrom
-            have been styling customers in Māori regalia for indigenous inspired
-            vintage portraits that plant a seed of cultural identity and
-            integrity. The business is now preparing to expand nationwide.
-          </p>
-          <p>
-            “Andrew’s helping us to bring the visual side of our business to
-            life in a way that will be perfect for expanding and telling our
-            stories” explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te Wairoa,
-            Rongomaiwahine, Waikato-Tainui).
-          </p>
-          <p>
-            “He’s showing us how to update our website so that it's fresh,
-            modern, showcases our work and gives people an idea of what we do at
-            a glance,” agrees Vienna (Ngāti Porou).
-          </p>
-          <p>
-            As Cadets, Taaniko and Vienna see Andrew’s support as crucial to
-            helping them achieve their business goals.
-          </p>
+            </p>
 
-          <h2>
-            Title H2 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Quae, praesentium?
-          </h2>
-          <h3>
-            Title H3 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Quae, praesentium?
-          </h3>
-          <h4>
-            Title H4 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Quae, praesentium?
-          </h4>
-          <h5>
-            Title H5 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Quae, praesentium?
-          </h5>
-        </article>
+            <h2>
+              Title H2 Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Quae, praesentium?
+            </h2>
+            <h3>
+              Title H3 Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Quae, praesentium?
+            </h3>
+            <h4>
+              Title H4 Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Quae, praesentium?
+            </h4>
+            <h5>
+              Title H5 Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Quae, praesentium?
+            </h5>
+          </article> -->
+        </div>
       </div>
     </div>
     <footer class="article__footer">
@@ -364,6 +402,7 @@ function footerTextAnimationInit() {
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+@use '~/assets/styles/mixins' as *;
 .article {
   &__hero {
     padding-top: 160px;
@@ -454,6 +493,35 @@ function footerTextAnimationInit() {
     color: $color-background;
     padding-top: 120px;
     padding-bottom: 160px;
+    &_wrapper {
+      position: relative;
+    }
+    &_share {
+      display: flex;
+      flex-direction: column;
+      gap: getRem(12);
+      position: absolute;
+      top: 0;
+      left: 0;
+      & > h3 {
+        font-family: 'RoobertMono';
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 100%;
+        text-transform: uppercase;
+      }
+      & > a {
+        @include flex-center;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid rgbaColor($color-background, 20);
+        &:hover {
+          animation: flicker-effect-1 0.5s forwards;
+        }
+      }
+    }
     article {
       & > *:first-child {
         margin-top: 0;
