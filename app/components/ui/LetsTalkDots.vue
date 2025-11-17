@@ -16,6 +16,10 @@ defineProps({
     type: String,
     default: 'dark', // 'dark' or 'light'
   },
+  text: {
+    type: String,
+    default: "let's talk",
+  },
 });
 
 // Register GSAP plugins
@@ -305,7 +309,7 @@ const talkButtonHoverHandler = () => {
       @mouseenter="talkButtonHoverHandler"
       @focus="talkButtonHoverHandler"
     >
-      let's talk
+      {{ text }}
     </a>
   </section>
 </template>

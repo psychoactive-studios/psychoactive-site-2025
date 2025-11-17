@@ -22,7 +22,6 @@ export default function useLoader() {
     isLoading.value = true;
     await nextTick();
     const loaderElement = document.querySelector('#loader-logo');
-    console.log('startLoading', loaderElement);
 
     gsap.fromTo(
       loaderElement,
