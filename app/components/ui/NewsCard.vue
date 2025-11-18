@@ -1,35 +1,27 @@
 <script setup>
-import { usePointer } from '@vueuse/core';
+import { useDateFormat, usePointer } from '@vueuse/core';
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 
 const { playInteractionSound } = useAudioManager();
 const { pointerType } = usePointer();
 
-defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: String,
-    required: true,
-  },
-  src: {
-    type: String,
-    required: true,
-  },
-  href: {
-    type: String,
+const props = defineProps({
+  data: {
+    type: Object,
     required: true,
   },
 });
 
+const { data } = props;
+
 const titleRef = ref(null);
+
+const formatter = shallowRef('MMM YY');
+const lang = shallowRef('en-US');
+const publishedAt = useDateFormat(data.publishedAt, formatter, {
+  locales: lang,
+});
 
 const handleHoverEffect = () => {
   // Stop any ongoing animations on this element
@@ -69,23 +61,32 @@ const onFocusHandler = (e) => {
 
 <template>
   <NuxtLink
-    :to="href"
+    :to="`/content-hub/${data.slug}`"
     class="news-card"
     @mouseenter="onMouseEnterHandler"
     @focus="onFocusHandler"
   >
     <div class="news-card__description">
       <div class="news-card__description_info">
-        <div class="news-card__description_info--category">{{ category }}</div>
-        <div class="news-card__description_info--date">{{ date }}</div>
+        <div class="news-card__description_info--category">
+          {{ data.category.name }}
+        </div>
+        <div class="news-card__description_info--date">
+          {{ publishedAt }}
+        </div>
       </div>
       <h3 ref="titleRef" class="news-card__description_title">
-        {{ title }}
+        {{ data.title }}
       </h3>
     </div>
     <div class="news-card__image">
       <div class="news-card__image_wrapper">
-        <NuxtImg :src="src" :alt="title" width="230" height="230" />
+        <NuxtImg
+          :src="data.preview.url"
+          :alt="data.title"
+          width="230"
+          height="230"
+        />
       </div>
     </div>
   </NuxtLink>

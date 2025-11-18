@@ -6,13 +6,28 @@ import useNavigation from '~/composables/useNavigation';
 import NewsCard from '~/components/ui/NewsCard.vue';
 import useLoader from '~/composables/useLoader';
 
-import { newsData } from '~/data/newsData';
-
 import { leaveAnimation } from '~/utils/animations/transitions';
+
+const { NUXT_PUBLIC_STRAPI_KEY, NUXT_PUBLIC_STRAPI_BASE_URL } = process.env;
 
 const { transitionFromNavigation } = useNavigation();
 const { scrollSmoother } = useScrollSmoother();
 const { isLoading } = useLoader();
+
+const { data: articlesData, error } = await useFetch(`/api/articles`, {
+  baseURL: NUXT_PUBLIC_STRAPI_BASE_URL,
+  query: {
+    populate: ['category', 'preview'],
+  },
+  headers: {
+    Authorization: `Bearer ${NUXT_PUBLIC_STRAPI_KEY}`,
+  },
+  key: `article-list`,
+});
+
+if (error.value) {
+  console.error('Error fetching article data:', error.value);
+}
 
 watch(isLoading, (loading) => {
   if (!loading) {
@@ -88,16 +103,16 @@ function enterAnimation(el) {
   <main class="content-hub">
     <div class="container">
       <h1 class="content-hub__title">Content <sup>HUB</sup></h1>
-      <div class="content-hub__grid">
+      <div v-if="articlesData?.data" class="content-hub__grid">
         <NewsCard
-          v-for="news in newsData"
-          :key="news.id"
-          :title="news.title"
-          :category="news.category"
-          :date="news.date"
-          :src="news.src"
-          :href="news.href"
+          v-for="news in articlesData?.data"
+          :key="news.documentId"
+          :data="news"
         />
+      </div>
+      <div v-else class="no-data">
+        <p>Something went wrong.</p>
+        <p>No data available.</p>
       </div>
     </div>
     <Footer />
@@ -146,5 +161,12 @@ function enterAnimation(el) {
       grid-template-columns: 1fr;
     }
   }
+}
+.no-data {
+  @include flex-center;
+  font-size: 48px;
+  flex-direction: column;
+  padding: 20vh 0;
+  opacity: 0.5;
 }
 </style>

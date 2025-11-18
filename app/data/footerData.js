@@ -6,12 +6,12 @@ import awwwardsLogo from '/img/Awwwards-logo.png';
 
 export const footerData = {
   links: [
-    { title: 'About', url: '/about' },
+    { title: 'About', url: '/' },
     { title: 'Work', url: '/work' },
-    { title: 'Services', url: '/services' },
-    { title: 'Webflow', url: '/webflow' },
+    { title: 'Services', url: '/' },
+    { title: 'Webflow', url: '/' },
     { title: 'Content Hub', url: '/content-hub' },
-    { title: 'let’s talk', url: '/contact' },
+    { title: 'let’s talk', url: '/' },
   ],
   awards: [
     {

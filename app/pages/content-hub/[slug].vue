@@ -162,7 +162,7 @@ function footerTextAnimationInit() {
 }
 </script>
 <template>
-  <main class="article">
+  <main v-if="articleData?.data" class="article">
     <div class="article__hero">
       <div class="container">
         <div class="article__hero_grid">
@@ -398,6 +398,10 @@ function footerTextAnimationInit() {
       </div>
     </footer>
   </main>
+  <div v-else class="no-data">
+    <p>Something went wrong.</p>
+    <p>No data available.</p>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -588,5 +592,12 @@ function footerTextAnimationInit() {
       }
     }
   }
+}
+.no-data {
+  @include flex-center;
+  font-size: 48px;
+  flex-direction: column;
+  min-height: 100vh;
+  opacity: 0.5;
 }
 </style>
