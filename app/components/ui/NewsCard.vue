@@ -17,8 +17,6 @@ const { data } = props;
 
 const titleRef = ref(null);
 
-console.log('data', data);
-
 const formatter = shallowRef('MMM YY');
 const lang = shallowRef('en-US');
 const publishedAt = useDateFormat(data.publishedAt, formatter, {
