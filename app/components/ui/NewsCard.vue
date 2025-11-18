@@ -17,10 +17,19 @@ const { data } = props;
 
 const titleRef = ref(null);
 
+console.log('data', data);
+
 const formatter = shallowRef('MMM YY');
 const lang = shallowRef('en-US');
 const publishedAt = useDateFormat(data.publishedAt, formatter, {
   locales: lang,
+});
+
+const href = computed(() => {
+  if (data.externalLink) {
+    return data.externalLink;
+  }
+  return `/content-hub/${data.slug}`;
 });
 
 const handleHoverEffect = () => {
@@ -61,7 +70,8 @@ const onFocusHandler = (e) => {
 
 <template>
   <NuxtLink
-    :to="`/content-hub/${data.slug}`"
+    :to="href"
+    :target="data.externalLink ? '_blank' : '_self'"
     class="news-card"
     @mouseenter="onMouseEnterHandler"
     @focus="onFocusHandler"
