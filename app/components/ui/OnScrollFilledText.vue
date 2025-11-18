@@ -9,6 +9,14 @@ const currenTime = new Date().toLocaleTimeString([], {
   timeZone: 'Pacific/Auckland',
 });
 
+const currentDay = computed(() => {
+  const startDate = new Date('2018-10-01');
+  const today = new Date();
+  const diffTime = Math.abs(today - startDate);
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+});
+
 onMounted(async () => {
   SplitText.create(elementRef.value, {
     type: 'words,chars',
@@ -35,6 +43,7 @@ onMounted(async () => {
     ref="elementRef"
     class="text-block"
     :data-current-time="`${currenTime} NZT`"
+    :data-current-days="`${currentDay} days`"
   >
     <slot />
   </div>
@@ -71,7 +80,7 @@ onMounted(async () => {
   }
   &::before,
   &::after {
-    content: '2400 days';
+    content: attr(data-current-days);
     display: inline-block;
     width: 10%;
     font-family: 'RoobertMono';
