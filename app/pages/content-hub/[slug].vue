@@ -8,7 +8,7 @@ import ArticleContent from '~/components/ui/ArticleContent.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useNavigation from '~/composables/useNavigation';
 import useLoader from '~/composables/useLoader';
-
+import { calculateReadingTime } from '~/utils/comput';
 import { leaveAnimation } from '~/utils/animations/transitions';
 
 // Config Strapi variables
@@ -20,6 +20,7 @@ const { isLoading } = useLoader();
 const router = useRouter();
 
 const footerScrollTextRef = ref(null);
+const articleBodyRef = ref(null);
 
 const { params } = useRoute();
 
@@ -46,12 +47,19 @@ if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
 
+const readingTime = computed(() => {
+  const plainText =
+    articleBodyRef.value?.innerText || articleBodyRef?.value?.textContent || '';
+  return calculateReadingTime(plainText);
+});
+
 onMounted(async () => {
   SplitText.create(footerScrollTextRef.value, {
     type: 'words,chars',
     charsClass: 'char-center',
   });
   setTimeout(footerTextAnimationInit, 100);
+  await nextTick();
 });
 
 onUnmounted(() => {
@@ -188,7 +196,7 @@ function footerTextAnimationInit() {
             </ul>
             <ul>
               <li>TIME</li>
-              <li>{{ articleData?.data?.timeToRead }} min</li>
+              <li>{{ readingTime }} min</li>
             </ul>
           </div>
           <div class="article__hero_title">
@@ -204,7 +212,7 @@ function footerTextAnimationInit() {
         </div>
       </div>
     </div>
-    <div class="article__body">
+    <div ref="articleBodyRef" class="article__body">
       <div class="container">
         <div class="article__body_wrapper">
           <div class="article__body_share">
