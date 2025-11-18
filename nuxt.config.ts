@@ -4,8 +4,8 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   ssr: true,
   routeRules: {
-    '/content-hub': { isr: true },
-    '/content-hub/**': { isr: true },
+    '/content-hub': { isr: 60 },
+    '/content-hub/**': { isr: 60 },
   },
 
   runtimeConfig: {
