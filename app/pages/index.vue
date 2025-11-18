@@ -120,8 +120,7 @@ definePageMeta({
               <span class="dark">connection</span>. We don't just build
               websites; we architect
               <img src="/img/text-icon-4.svg" alt="icon4" />
-              <span class="dark">experiences</span> that linger in minds long
-              after the screen goes dark.
+              <span class="dark">experiences</span> that linger in the mind.
             </OnScrollFilledText>
           </div>
         </section>
