@@ -38,8 +38,6 @@ if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
 
-console.log('articlesData', articlesData.value);
-
 watch(isLoading, (loading) => {
   if (!loading) {
     enterAnimation();
