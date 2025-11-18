@@ -8,26 +8,37 @@ import useLoader from '~/composables/useLoader';
 
 import { leaveAnimation } from '~/utils/animations/transitions';
 
-const { NUXT_PUBLIC_STRAPI_KEY, NUXT_PUBLIC_STRAPI_BASE_URL } = process.env;
+// Config Strapi variables
+const config = useRuntimeConfig();
 
 const { transitionFromNavigation } = useNavigation();
 const { scrollSmoother } = useScrollSmoother();
 const { isLoading } = useLoader();
 
 const { data: articlesData, error } = await useFetch(`/api/articles`, {
-  baseURL: NUXT_PUBLIC_STRAPI_BASE_URL,
+  baseURL: config.public.strapiBaseUrl,
   query: {
     populate: ['category', 'preview'],
   },
   headers: {
-    Authorization: `Bearer ${NUXT_PUBLIC_STRAPI_KEY}`,
+    Authorization: `Bearer ${config.public.strapiApiKey}`,
   },
   key: `article-list`,
+  // Get cached data to prevent refetching
+  getCachedData(key) {
+    const nuxtApp = useNuxtApp();
+    const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+    if (data) {
+      return data;
+    }
+  },
 });
 
 if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
+
+console.log('articlesData', articlesData.value);
 
 watch(isLoading, (loading) => {
   if (!loading) {

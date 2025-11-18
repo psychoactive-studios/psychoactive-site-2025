@@ -11,7 +11,8 @@ import useLoader from '~/composables/useLoader';
 
 import { leaveAnimation } from '~/utils/animations/transitions';
 
-const { NUXT_PUBLIC_STRAPI_KEY, NUXT_PUBLIC_STRAPI_BASE_URL } = process.env;
+// Config Strapi variables
+const config = useRuntimeConfig();
 
 const { scrollSmoother } = useScrollSmoother();
 const { transitionFromNavigation } = useNavigation();
@@ -25,11 +26,19 @@ const { params } = useRoute();
 const { data: articleData, error } = await useFetch(
   `/api/articles/${params.slug}`,
   {
-    baseURL: NUXT_PUBLIC_STRAPI_BASE_URL,
+    baseURL: config.public.strapiBaseUrl,
     headers: {
-      Authorization: `Bearer ${NUXT_PUBLIC_STRAPI_KEY}`,
+      Authorization: `Bearer ${config.public.strapiApiKey}`,
     },
     key: `article-${params.slug}`,
+    // Get cached data to prevent refetching
+    getCachedData(key) {
+      const nuxtApp = useNuxtApp();
+      const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+      if (data) {
+        return data;
+      }
+    },
   }
 );
 

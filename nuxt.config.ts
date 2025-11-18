@@ -4,9 +4,17 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   ssr: true,
   routeRules: {
-    '/content-hub': { prerender: true },
-    '/content-hub/**': { prerender: true },
+    '/content-hub': { isr: true },
+    '/content-hub/**': { isr: true },
   },
+
+  runtimeConfig: {
+    public: {
+      strapiBaseUrl: process.env.NUXT_PUBLIC_STRAPI_BASE_URL || 'http://localhost:1337',
+      strapiApiKey: process.env.NUXT_PUBLIC_STRAPI_KEY || '',
+    }
+  },
+
   devtools: {
     enabled: true,
     timeline: {
