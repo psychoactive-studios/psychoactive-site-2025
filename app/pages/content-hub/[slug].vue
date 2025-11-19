@@ -205,7 +205,7 @@ function footerTextAnimationInit() {
         </div>
         <div class="article__hero_image">
           <NuxtImg
-            :src="articleData.data.cover.url"
+            :src="articleData?.data?.cover?.url"
             sizes="100vw md:70vw xl:1600px"
           />
           <div class="article__hero_image--bg" />

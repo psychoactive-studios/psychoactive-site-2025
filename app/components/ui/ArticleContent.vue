@@ -110,7 +110,7 @@ defineProps({
 
       <!-- Media Component -->
       <div v-else-if="block.__component === 'shared.media'" class="image">
-        <NuxtImg :src="block.file.url" sizes="100vw md:70vw xl:1600px" />
+        <NuxtImg :src="block?.file?.url" sizes="100vw md:70vw xl:1600px" />
         <!-- <NuxtImg
           provider="cloudinary"
           :public-id="block.file.url"
@@ -143,7 +143,7 @@ defineProps({
         <img
           v-for="image in block.mediaGrid"
           :key="image.id"
-          :src="image.url"
+          :src="image?.url"
           alt=""
         />
       </div>

@@ -90,7 +90,7 @@ const onFocusHandler = (e) => {
     <div class="news-card__image">
       <div class="news-card__image_wrapper">
         <NuxtImg
-          :src="data.preview.url"
+          :src="data?.preview?.url"
           :alt="data.title"
           width="230"
           height="230"
