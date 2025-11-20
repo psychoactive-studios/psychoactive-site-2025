@@ -5,6 +5,7 @@ import HeroCenterLine from './HeroCenterLine.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import WebflowLabel from '../ui/WebflowLabel.vue';
 import useLoader from '~/composables/useLoader';
+import ButtonDotsArrow from '../ui/ButtonDotsArrow.vue';
 
 const { playInteractionSound } = useAudioManager();
 
@@ -78,6 +79,7 @@ onMounted(async () => {
             <WebflowLabel class="right-text__label" />
           </a>
         </div>
+        <ButtonDotsArrow class="bottom-down" />
       </div>
     </div>
   </section>
@@ -203,5 +205,11 @@ onMounted(async () => {
   &__label {
     margin-top: getRem(30);
   }
+}
+.bottom-down {
+  position: absolute;
+  bottom: 24px;
+  z-index: 1;
+  mix-blend-mode: difference;
 }
 </style>
