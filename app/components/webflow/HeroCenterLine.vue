@@ -22,6 +22,7 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
   </div>
 </template>
 <style scoped lang="scss">
+@use 'sass:math';
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/animations';
 .center {
@@ -66,12 +67,12 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
       @for $i from 1 through 5 {
         &:nth-child(#{$i}) {
           svg:nth-child(1) {
-            animation: flicker-pause-#{random(3)} 3s linear infinite;
-            animation-delay: #{random(20) / 10}s;
+            animation: flicker-pause-#{math.random(3)} 3s linear infinite;
+            animation-delay: #{math.div(math.random(20), 10)}s;
           }
           svg:nth-child(2) {
-            animation: flicker-pause-#{random(3)} 3s linear infinite;
-            animation-delay: #{random(20) / 10}s;
+            animation: flicker-pause-#{math.random(3)} 3s linear infinite;
+            animation-delay: #{math.div(math.random(20), 10)}s;
           }
         }
       }
