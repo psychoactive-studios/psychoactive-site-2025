@@ -4,6 +4,7 @@ import Footer from '~/components/layout/Footer.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import VideoPreview from '~/components/ui/VideoPreview.vue';
 import Hero from '~/components/webflow/Hero.vue';
+import Timeline from '~/components/webflow/Timeline.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { enableScroll } = useScrollSmoother();
@@ -38,12 +39,15 @@ onMounted(() => {
           </p>
         </OnScrollFilledText>
       </section>
-      <section class="video-reels">
+      <section class="webflow__video-reels">
         <VideoPreview
           preview="/video/preview_reel.mp4"
           src="https://vjs.zencdn.net/v/oceans.mp4"
           aspect-ratio="2.22"
         />
+      </section>
+      <section class="webflow__timeline">
+        <Timeline />
       </section>
     </div>
     <Footer />
@@ -56,6 +60,8 @@ onMounted(() => {
     max-width: 56vw;
     margin: 0 auto 120px auto;
     text-align: center;
+  }
+  &__timeline {
   }
 }
 </style>
