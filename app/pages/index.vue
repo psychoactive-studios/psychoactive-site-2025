@@ -5,7 +5,7 @@ import HeroMobile from '~/components/homepage/HeroMobile.vue';
 import HomeAwards from '~/components/homepage/HomeAwards.vue';
 import HomeNewsList from '~/components/homepage/HomeNewsList.vue';
 import CaseStadyPreview from '~/components/ui/CaseStadyPreview.vue';
-import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
+import HomeOnScrollFilledText from '~/components/homepage/HomeOnScrollFilledText.vue';
 import WebflowLabel from '~/components/ui/WebflowLabel.vue';
 import { partnersData } from '~/data/partnersData';
 import ScaleMobileText from '~/assets/img/scale.svg';
@@ -108,7 +108,7 @@ definePageMeta({
         <!-- Filled Text Section -->
         <section v-if="!isMobile" class="filled-text">
           <div class="container">
-            <OnScrollFilledText>
+            <HomeOnScrollFilledText>
               What sets us apart is our
               <img src="/img/text-icon-1.svg" alt="icon1" />
               <span class="dark">obsession</span> with the moment your audience
@@ -121,7 +121,7 @@ definePageMeta({
               websites; we architect
               <img src="/img/text-icon-4.svg" alt="icon4" />
               <span class="dark">experiences</span> that linger in the mind.
-            </OnScrollFilledText>
+            </HomeOnScrollFilledText>
           </div>
         </section>
 
