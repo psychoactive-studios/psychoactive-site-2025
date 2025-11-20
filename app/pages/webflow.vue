@@ -2,6 +2,7 @@
 import gsap from 'gsap';
 import Footer from '~/components/layout/Footer.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
+import VideoPreview from '~/components/ui/VideoPreview.vue';
 import Hero from '~/components/webflow/Hero.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
@@ -36,6 +37,13 @@ onMounted(() => {
             <span class="dark">in an AI-driven world</span>.
           </p>
         </OnScrollFilledText>
+      </section>
+      <section class="video-reels">
+        <VideoPreview
+          preview="/video/preview_reel.mp4"
+          src="https://vjs.zencdn.net/v/oceans.mp4"
+          aspect-ratio="2.22"
+        />
       </section>
     </div>
     <Footer />
