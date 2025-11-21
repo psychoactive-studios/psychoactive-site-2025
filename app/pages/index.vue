@@ -15,6 +15,7 @@ import useLoader from '~/composables/useLoader';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useNavigation from '~/composables/useNavigation';
 import gsap from 'gsap';
+import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
 
 const { scrollSmoother } = useScrollSmoother();
 
@@ -62,15 +63,7 @@ definePageMeta({
         <!-- Partners Section -->
         <section class="partners">
           <div class="container">
-            <div class="list">
-              <NuxtImg
-                v-for="partner in partnersData"
-                :key="partner.id"
-                :src="partner.logo"
-                :alt="partner.name"
-                :class="partner.id"
-              />
-            </div>
+            <PartnersDesktop />
           </div>
         </section>
 
@@ -247,58 +240,6 @@ definePageMeta({
     @include respond(mobile) {
       padding: 36px 0 0 0;
     }
-  }
-  .list {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    @include respond(mobile) {
-      display: block;
-    }
-  }
-  img {
-    height: auto;
-    object-fit: contain;
-    margin: 0 20px;
-    &:first-child {
-      margin-left: 0;
-    }
-    &:last-child {
-      margin-right: 0;
-    }
-    @include respond(mobile) {
-      margin: 0 20px;
-    }
-  }
-  .partner-super-ai {
-    width: 6.5%;
-  }
-  .partner-adidas {
-    width: 6.12%;
-  }
-  .partner-ray-white {
-    width: 6.625%;
-  }
-  .partner-hellboy {
-    width: 7.75%;
-  }
-  .partner-blackbird {
-    width: 7.06%;
-  }
-  .partner-wow {
-    width: 7.56%;
-  }
-  .partner-one {
-    width: 7.75%;
-  }
-  .partner-all-blacks {
-    width: 5.25%;
-  }
-  .partner-burgerfuel {
-    width: 7%;
-  }
-  .partner-summer-game {
-    width: 5.62%;
   }
 }
 
