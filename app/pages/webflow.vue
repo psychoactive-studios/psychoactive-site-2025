@@ -6,6 +6,7 @@ import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
 import VideoPreview from '~/components/ui/VideoPreview.vue';
 import CasesSwiper from '~/components/webflow/CasesSwiper.vue';
 import Hero from '~/components/webflow/Hero.vue';
+import Statistics from '~/components/webflow/Statistics.vue';
 import Timeline from '~/components/webflow/Timeline.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
@@ -58,6 +59,10 @@ onMounted(() => {
       <section class="webflow__cases">
         <CasesSwiper />
       </section>
+
+      <section class="webflow__statistics">
+        <Statistics />
+      </section>
     </div>
     <Footer />
   </main>
@@ -75,6 +80,9 @@ onMounted(() => {
   &__partners {
   }
   &__cases {
+    margin-top: 160px;
+  }
+  &__statistics {
     margin-top: 160px;
   }
 }
