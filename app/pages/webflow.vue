@@ -2,10 +2,12 @@
 import gsap from 'gsap';
 import Footer from '~/components/layout/Footer.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
+import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
 import VideoPreview from '~/components/ui/VideoPreview.vue';
 import Hero from '~/components/webflow/Hero.vue';
 import Timeline from '~/components/webflow/Timeline.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
+import { partnersData } from '~/data/partnersData';
 
 const { enableScroll } = useScrollSmoother();
 
@@ -48,6 +50,9 @@ onMounted(() => {
       </section>
       <section class="webflow__timeline">
         <Timeline />
+      </section>
+      <section class="partners">
+        <PartnersDesktop />
       </section>
     </div>
     <Footer />
