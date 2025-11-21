@@ -5,6 +5,7 @@ import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
 import VideoPreview from '~/components/ui/VideoPreview.vue';
 import CasesSwiper from '~/components/webflow/CasesSwiper.vue';
+import ClientsSaySwiper from '~/components/webflow/ClientsSaySwiper.vue';
 import Hero from '~/components/webflow/Hero.vue';
 import Statistics from '~/components/webflow/Statistics.vue';
 import Timeline from '~/components/webflow/Timeline.vue';
@@ -63,6 +64,10 @@ onMounted(() => {
       <section class="webflow__statistics">
         <Statistics />
       </section>
+
+      <section class="webflow__clients-say">
+        <ClientsSaySwiper />
+      </section>
     </div>
     <Footer />
   </main>
@@ -83,6 +88,9 @@ onMounted(() => {
     margin-top: 160px;
   }
   &__statistics {
+    margin-top: 160px;
+  }
+  &__clients-say {
     margin-top: 160px;
   }
 }

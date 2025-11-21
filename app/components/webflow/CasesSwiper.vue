@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'; // onMounted більше не потрібен для подій
+import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import ButtonDotsArrow from '../ui/ButtonDotsArrow.vue';
 import CaseStadyPreview from '../ui/CaseStadyPreview.vue';
 
@@ -19,41 +19,37 @@ const prev = () => containerRef.value?.swiper.slidePrev();
 <template>
   <ClientOnly>
     <div class="cases-swiper">
-      <swiper-container
-        ref="containerRef"
-        class="swiper"
-        space-between="20"
-        speed="1000"
-        @swiperslidechange="onSlideChange"
+      <Splide
+        :options="{ type: 'loop', arrows: false, gap: 20 }"
+        aria-label="My Favorite Images"
       >
-        <swiper-slide>
+        <SplideSlide>
           <CaseStadyPreview
             src="/img/cases/case-super-ai.jpg"
             title="SuperAI Conference"
             description="Worlds largest AI event"
           />
-        </swiper-slide>
-        <swiper-slide>
+        </SplideSlide>
+        <SplideSlide>
           <CaseStadyPreview
             src="/img/cases/case-burgerfuel.jpg"
             title="Burgerfuel"
             description="New Zealand’s favourite burger"
           />
-        </swiper-slide>
-        <swiper-slide
+        </SplideSlide>
+        <SplideSlide
           ><CaseStadyPreview
             src="/img/cases/case-hellboy.jpg"
             title="Hellboy Web of Wyrd"
             description="beat 'em up roguelike Video game"
-        /></swiper-slide>
-        <swiper-slide>
-          <CaseStadyPreview
+        /></SplideSlide>
+        <SplideSlide
+          ><CaseStadyPreview
             src="/img/cases/case-world-of-wearableArt.jpg"
             title="World of WearableArt"
             description="New Zealand's Largest theatrical Spectacle"
-          />
-        </swiper-slide>
-      </swiper-container>
+        /></SplideSlide>
+      </Splide>
 
       <ButtonDotsArrow
         direction="left"

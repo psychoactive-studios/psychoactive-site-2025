@@ -26,7 +26,7 @@ export default defineNuxtConfig({
       isCustomElement: (tag) => tag === 'mux-player',
     },
   },
-  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo', 'nuxt-swiper'],
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo',],
   css: ['modern-normalize/modern-normalize.css', '~/assets/styles/main.scss'],
   app: {
     head: {
