@@ -25,12 +25,7 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div
-    ref="elementRef"
-    class="text-block"
-    :data-current-time="`${currenTime} NZT`"
-    :data-current-days="`${currentDay} days`"
-  >
+  <div ref="elementRef" class="text-block">
     <slot />
   </div>
 </template>
