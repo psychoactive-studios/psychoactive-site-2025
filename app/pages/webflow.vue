@@ -4,10 +4,10 @@ import Footer from '~/components/layout/Footer.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
 import VideoPreview from '~/components/ui/VideoPreview.vue';
+import CasesSwiper from '~/components/webflow/CasesSwiper.vue';
 import Hero from '~/components/webflow/Hero.vue';
 import Timeline from '~/components/webflow/Timeline.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
-import { partnersData } from '~/data/partnersData';
 
 const { enableScroll } = useScrollSmoother();
 
@@ -51,8 +51,12 @@ onMounted(() => {
       <section class="webflow__timeline">
         <Timeline />
       </section>
-      <section class="partners">
+      <section class="webflow__partners">
         <PartnersDesktop />
+      </section>
+
+      <section class="webflow__cases">
+        <CasesSwiper />
       </section>
     </div>
     <Footer />
@@ -67,6 +71,11 @@ onMounted(() => {
     text-align: center;
   }
   &__timeline {
+  }
+  &__partners {
+  }
+  &__cases {
+    margin-top: 160px;
   }
 }
 </style>
