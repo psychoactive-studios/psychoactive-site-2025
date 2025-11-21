@@ -7,7 +7,6 @@ import HomeNewsList from '~/components/homepage/HomeNewsList.vue';
 import CaseStadyPreview from '~/components/ui/CaseStadyPreview.vue';
 import HomeOnScrollFilledText from '~/components/homepage/HomeOnScrollFilledText.vue';
 import WebflowLabel from '~/components/ui/WebflowLabel.vue';
-import { partnersData } from '~/data/partnersData';
 import ScaleMobileText from '~/assets/img/scale.svg';
 import { leaveAnimation } from '~/utils/animations/transitions';
 import Footer from '~/components/layout/Footer.vue';

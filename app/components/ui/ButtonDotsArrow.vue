@@ -1,11 +1,31 @@
 <script setup>
 import useAudioManager from '~/composables/useAudioManager';
 
+defineProps({
+  direction: {
+    type: String,
+    default: 'down',
+  },
+  rounded: {
+    type: Boolean,
+    default: true,
+  },
+  bordered: {
+    type: Boolean,
+    default: false,
+  },
+});
+
 const { playInteractionSound } = useAudioManager();
 </script>
 <template>
   <button
-    class="dots-arrow"
+    :class="[
+      'dots-arrow',
+      `dots-arrow--${direction}`,
+      { 'dots-arrow--rounded': rounded },
+      { 'dots-arrow--bordered': bordered },
+    ]"
     aria-label="Scroll down"
     @mouseenter="playInteractionSound"
     @focus="playInteractionSound"
@@ -22,9 +42,13 @@ const { playInteractionSound } = useAudioManager();
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/variables' as *;
 .dots-arrow {
-  width: 62px;
-  height: 62px;
   @include flex-center;
+  width: 48px;
+  height: 48px;
+  &:disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
   &:hover {
     .dots-arrow__icon {
       &_dot {
@@ -63,6 +87,32 @@ const { playInteractionSound } = useAudioManager();
         bottom: 1px;
         left: calc(50% - 3px);
       }
+    }
+  }
+  &--bordered {
+    border: 1px solid white(10);
+  }
+  &--rounded {
+    border-radius: 50%;
+  }
+  &--down {
+    .dots-arrow__icon {
+      transform: rotate(0deg);
+    }
+  }
+  &--up {
+    .dots-arrow__icon {
+      transform: rotate(180deg);
+    }
+  }
+  &--left {
+    .dots-arrow__icon {
+      transform: rotate(90deg);
+    }
+  }
+  &--right {
+    .dots-arrow__icon {
+      transform: rotate(270deg);
     }
   }
 }
