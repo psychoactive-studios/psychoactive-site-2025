@@ -45,6 +45,7 @@ const { playInteractionSound } = useAudioManager();
   @include flex-center;
   width: 48px;
   height: 48px;
+  transition: opacity 0.3s ease;
   &:disabled {
     opacity: 0.4;
     pointer-events: none;

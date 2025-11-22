@@ -1,71 +1,67 @@
 <script setup>
-import { Splide, SplideSlide } from '@splidejs/vue-splide';
+import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 import ButtonDotsArrow from '../ui/ButtonDotsArrow.vue';
 import CaseStadyPreview from '../ui/CaseStadyPreview.vue';
 
 const containerRef = ref(null);
-const activeIndex = ref(0);
-
-const onSlideChange = (e) => {
-  const swiperInstance = e.detail[0];
-  activeIndex.value = swiperInstance.activeIndex;
-};
 
 // Functions for navigation buttons
-const next = () => containerRef.value?.swiper.slideNext();
-const prev = () => containerRef.value?.swiper.slidePrev();
 </script>
 
 <template>
   <ClientOnly>
     <div class="cases-swiper">
       <Splide
-        :options="{ type: 'loop', arrows: false, gap: 20 }"
+        ref="containerRef"
+        :has-track="false"
+        :options="{
+          gap: 20,
+          speed: 600,
+          easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+        }"
         aria-label="My Favorite Images"
       >
-        <SplideSlide>
-          <CaseStadyPreview
-            src="/img/cases/case-super-ai.jpg"
-            title="SuperAI Conference"
-            description="Worlds largest AI event"
+        <SplideTrack>
+          <SplideSlide>
+            <CaseStadyPreview
+              src="/img/cases/case-super-ai.jpg"
+              title="SuperAI Conference"
+              description="Worlds largest AI event"
+            />
+          </SplideSlide>
+          <SplideSlide>
+            <CaseStadyPreview
+              src="/img/cases/case-burgerfuel.jpg"
+              title="Burgerfuel"
+              description="New Zealand’s favourite burger"
+            />
+          </SplideSlide>
+          <SplideSlide
+            ><CaseStadyPreview
+              src="/img/cases/case-hellboy.jpg"
+              title="Hellboy Web of Wyrd"
+              description="beat 'em up roguelike Video game"
+          /></SplideSlide>
+          <SplideSlide
+            ><CaseStadyPreview
+              src="/img/cases/case-world-of-wearableArt.jpg"
+              title="World of WearableArt"
+              description="New Zealand's Largest theatrical Spectacle"
+          /></SplideSlide>
+        </SplideTrack>
+        <div class="splide__arrows">
+          <ButtonDotsArrow
+            direction="left"
+            bordered
+            class="cases-swiper__button cases-swiper__button--prev splide__arrow splide__arrow--prev"
           />
-        </SplideSlide>
-        <SplideSlide>
-          <CaseStadyPreview
-            src="/img/cases/case-burgerfuel.jpg"
-            title="Burgerfuel"
-            description="New Zealand’s favourite burger"
+          <ButtonDotsArrow
+            direction="right"
+            bordered
+            class="cases-swiper__button cases-swiper__button--next splide__arrow splide__arrow--next"
           />
-        </SplideSlide>
-        <SplideSlide
-          ><CaseStadyPreview
-            src="/img/cases/case-hellboy.jpg"
-            title="Hellboy Web of Wyrd"
-            description="beat 'em up roguelike Video game"
-        /></SplideSlide>
-        <SplideSlide
-          ><CaseStadyPreview
-            src="/img/cases/case-world-of-wearableArt.jpg"
-            title="World of WearableArt"
-            description="New Zealand's Largest theatrical Spectacle"
-        /></SplideSlide>
+        </div>
       </Splide>
-
-      <ButtonDotsArrow
-        direction="left"
-        bordered
-        class="cases-swiper__button cases-swiper__button--prev"
-        :disabled="activeIndex === 0"
-        @click="prev()"
-      />
-
-      <ButtonDotsArrow
-        direction="right"
-        bordered
-        class="cases-swiper__button cases-swiper__button--next"
-        :disabled="activeIndex === containerRef?.swiper?.slides.length - 1"
-        @click="next()"
-      />
     </div>
   </ClientOnly>
 </template>
@@ -85,14 +81,8 @@ const prev = () => containerRef.value?.swiper.slidePrev();
       right: -80px;
     }
   }
-  swiper-container {
-    &::part(container) {
-      overflow: visible;
-    }
-    &::part(wrapper) {
-      transition-duration: 0.8s;
-      transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
-    }
+  .splide__track {
+    overflow: visible;
   }
 }
 </style>
