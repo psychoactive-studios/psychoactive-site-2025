@@ -35,6 +35,4 @@ import { clientsData } from '~/data/clientsData';
     overflow: visible;
   }
 }
-.splide__slide {
-}
 </style>
