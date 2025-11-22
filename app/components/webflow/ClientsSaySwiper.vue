@@ -1,13 +1,40 @@
 <script setup>
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
+import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
+import ClientsSaySlide from './ClientsSaySlide.vue';
+import { clientsData } from '~/data/clientsData';
 </script>
 <template>
   <Splide
-    :options="{ type: 'loop', arrows: false }"
+    :extensions="{ AutoScroll }"
+    :options="{
+      type: 'loop',
+      drag: 'free',
+      focus: 'center',
+      perPage: 2,
+      gap: '20px',
+      arrows: false,
+      pagination: false,
+      autoScroll: {
+        speed: 1,
+        pauseOnHover: true,
+        pauseOnFocus: false,
+      },
+    }"
     aria-label="My Favorite Images"
+    class="clients-swiper"
   >
-    <SplideSlide> 111111 </SplideSlide>
-    <SplideSlide> 222222 </SplideSlide>
+    <SplideSlide v-for="client in clientsData" :key="client.id">
+      <ClientsSaySlide :client="client" />
+    </SplideSlide>
   </Splide>
 </template>
-<style></style>
+<style scoped lang="scss">
+.clients-swiper {
+  &:deep(.splide__track) {
+    overflow: visible;
+  }
+}
+.splide__slide {
+}
+</style>
