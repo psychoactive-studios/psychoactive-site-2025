@@ -6,12 +6,17 @@ import useAudioManager from '~/composables/useAudioManager';
 import WebflowLabel from '../ui/WebflowLabel.vue';
 import useLoader from '~/composables/useLoader';
 import ButtonDotsArrow from '../ui/ButtonDotsArrow.vue';
+import { heroScrollAnimation } from '~/utils/animations/webflow.js';
 
 const { playInteractionSound } = useAudioManager();
 
 const { addResourceToLoad, resourceLoaded } = useLoader();
 
+// Indicate that this component has a resource to load
 addResourceToLoad(1);
+
+const containerRef = ref(null);
+let ctx;
 
 const onClickHandler = () => {
   gsap.to('h1', { duration: 1, scale: 1.3, ease: 'power3.out' });
@@ -25,16 +30,31 @@ const onClickHandler = () => {
 const heroVideoResource = ref(null);
 
 onMounted(async () => {
+  if (containerRef.value) {
+    ctx = gsap.context(() => {}, containerRef.value);
+
+    // heroInitSplitText();
+    // heroScrollAnimation(ctx);
+
+    // heroInitAnimation(ctx, scrollSmoother);
+  }
+
   const blob = await $fetch('/video/webflow_frog3.mp4', {
     responseType: 'blob',
   });
   heroVideoResource.value = URL.createObjectURL(blob);
   resourceLoaded();
+
+  heroScrollAnimation(ctx);
+});
+
+onUnmounted(() => {
+  ctx.revert();
 });
 </script>
 
 <template>
-  <section class="hero">
+  <section ref="containerRef" class="hero">
     <div class="container">
       <div class="scene">
         <div class="video">
@@ -99,8 +119,11 @@ onMounted(async () => {
   text-transform: uppercase;
 }
 .hero {
-  @include flex-center;
-  min-height: 100dvh;
+  .container {
+    @include flex-center;
+    flex-direction: column;
+    height: 100dvh;
+  }
 }
 .scene {
   width: 100%;
