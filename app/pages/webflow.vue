@@ -46,11 +46,13 @@ onMounted(() => {
         </OnScrollFilledText>
       </section>
       <section class="webflow__video-reels">
-        <VideoPreview
-          preview="/video/preview_reel.mp4"
-          src="https://vjs.zencdn.net/v/oceans.mp4"
-          aspect-ratio="2.22"
-        />
+        <ClientOnly>
+          <VideoPreview
+            preview="/video/preview_reel.mp4"
+            src="https://vjs.zencdn.net/v/oceans.mp4"
+            aspect-ratio="2.22"
+          />
+        </ClientOnly>
       </section>
       <section class="webflow__timeline">
         <Timeline />
