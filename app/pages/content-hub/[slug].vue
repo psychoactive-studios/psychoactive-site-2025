@@ -43,6 +43,8 @@ const { data: articleData, error } = await useFetch(
   }
 );
 
+console.log('articleData', articleData.value);
+
 if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
@@ -189,7 +191,13 @@ function footerTextAnimationInit() {
               <li>{{ articleData?.data?.author?.name }}</li>
             </ul>
             <ul>
-              <li>DATE</li>
+              <li>Published</li>
+              <li>
+                {{ formatDate(articleData?.data?.createdAt) }}
+              </li>
+            </ul>
+            <ul>
+              <li>Updated</li>
               <li>
                 {{ formatDate(articleData?.data?.updatedAt) }}
               </li>
@@ -448,7 +456,7 @@ function footerTextAnimationInit() {
     &_info {
       @include respond(mobile) {
         display: grid;
-        grid-template-columns: repeat(3, auto);
+        grid-template-columns: repeat(2, auto);
         gap: getRem(16);
       }
       & > ul {
@@ -457,6 +465,21 @@ function footerTextAnimationInit() {
         display: flex;
         flex-direction: column;
         gap: getRem(12);
+        @include respond(mobile) {
+          padding: 0;
+          &:nth-child(1) {
+            order: 1;
+          }
+          &:nth-child(2) {
+            order: 3;
+          }
+          &:nth-child(3) {
+            order: 4;
+          }
+          &:nth-child(4) {
+            order: 2;
+          }
+        }
         &::before {
           content: '';
           position: absolute;
@@ -465,6 +488,10 @@ function footerTextAnimationInit() {
           bottom: 1.55rem;
           width: 1px;
           background-color: white(20);
+          @include respond(mobile) {
+            top: 0.55rem;
+            bottom: 0.35rem;
+          }
         }
         & > li {
           padding-left: 17px;
