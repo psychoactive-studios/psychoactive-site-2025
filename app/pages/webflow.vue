@@ -7,6 +7,7 @@ import VideoPreview from '~/components/ui/VideoPreview.vue';
 import CasesSwiper from '~/components/webflow/CasesSwiper.vue';
 import ClientsSaySwiper from '~/components/webflow/ClientsSaySwiper.vue';
 import Hero from '~/components/webflow/Hero.vue';
+import Services from '~/components/webflow/Services.vue';
 import Statistics from '~/components/webflow/Statistics.vue';
 import Timeline from '~/components/webflow/Timeline.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
@@ -53,6 +54,9 @@ onMounted(() => {
       <section class="webflow__timeline">
         <Timeline />
       </section>
+      <section class="webflow__services">
+        <Services />
+      </section>
       <section class="webflow__partners">
         <PartnersDesktop />
       </section>
@@ -83,6 +87,7 @@ onMounted(() => {
   &__timeline {
   }
   &__partners {
+    margin-top: 240px;
   }
   &__cases {
     margin-top: 160px;
