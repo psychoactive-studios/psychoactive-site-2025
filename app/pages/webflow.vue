@@ -10,6 +10,7 @@ import Hero from '~/components/webflow/Hero.vue';
 import Services from '~/components/webflow/Services.vue';
 import Statistics from '~/components/webflow/Statistics.vue';
 import Timeline from '~/components/webflow/Timeline.vue';
+import WetsUs from '~/components/webflow/WetsUs.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { enableScroll } = useScrollSmoother();
@@ -73,6 +74,9 @@ onMounted(() => {
         <ClientsSaySwiper />
       </section>
     </div>
+    <section class="webflow__sets-us">
+      <WetsUs />
+    </section>
     <Footer />
   </main>
 </template>
@@ -97,6 +101,9 @@ onMounted(() => {
   }
   &__clients-say {
     margin-top: 160px;
+  }
+  &__sets-us {
+    margin-top: 240px;
   }
 }
 </style>
