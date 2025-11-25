@@ -10,6 +10,7 @@ import Hero from '~/components/webflow/Hero.vue';
 import Services from '~/components/webflow/Services.vue';
 import Statistics from '~/components/webflow/Statistics.vue';
 import Timeline from '~/components/webflow/Timeline.vue';
+import VideoReel from '~/components/webflow/VideoReel.vue';
 import WetsUs from '~/components/webflow/WetsUs.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
@@ -46,13 +47,7 @@ onMounted(() => {
         </OnScrollFilledText>
       </section>
       <section class="webflow__video-reels">
-        <ClientOnly>
-          <VideoPreview
-            preview="/video/preview_reel.mp4"
-            src="https://vjs.zencdn.net/v/oceans.mp4"
-            aspect-ratio="2.22"
-          />
-        </ClientOnly>
+        <VideoReel />
       </section>
       <section class="webflow__timeline">
         <Timeline />
