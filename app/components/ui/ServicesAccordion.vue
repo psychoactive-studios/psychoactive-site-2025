@@ -49,6 +49,10 @@ const toggle = (index) => {
   }
 };
 
+defineExpose({
+  toggle,
+});
+
 const beforeEnter = (el) => {
   gsap.set(el, { height: 0, opacity: 0 });
 };
