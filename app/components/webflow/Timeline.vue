@@ -1,7 +1,13 @@
 <script setup>
+import gsap from 'gsap';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
+import { timelineScrollAnimation } from '~/utils/animations/webflow';
 const timelineData = {
   years: [
+    '2015',
+    '2016',
+    '2017',
+    '2018',
     '2019',
     '2020',
     '2021',
@@ -14,71 +20,101 @@ const timelineData = {
     '2028',
   ],
 };
+
+const containerRef = ref(null);
+const currentYear = ref(2015);
+let ctx = null;
+
+onMounted(() => {
+  console.log('containerRef', containerRef.value);
+  ctx = gsap.context(() => {}, containerRef.value);
+  timelineScrollAnimation(ctx, currentYear);
+});
 </script>
 
 <template>
-  <div class="timeline">
-    <div class="timeline__year">2018</div>
-    <div class="timeline__yearline">
-      <ul class="timeline__yearline_list">
-        <li v-for="year in timelineData.years" :key="year">{{ year }}</li>
-      </ul>
-      <div class="timeline__yearline_marquee">
-        <PlusIcon v-for="i in 22" :key="i" />
+  <div ref="containerRef" class="timeline">
+    <div class="timeline__inner">
+      <div class="timeline__year">{{ Math.floor(currentYear) }}</div>
+      <div class="timeline__yearline">
+        <ul class="timeline__yearline_list">
+          <li v-for="year in timelineData.years" :key="year">{{ year }}</li>
+        </ul>
+        <div class="timeline__yearline_marquee">
+          <PlusIcon v-for="i in 22" :key="i" />
+        </div>
       </div>
-    </div>
-    <div class="timeline__through">
-      <ul class="timeline__through_list">
-        <li class="item">
-          <div class="item__title">
-            <img src="/img/webflow-logo.svg" alt="" />
-            <h3>Early Adopter</h3>
-          </div>
-          <div class="item__dot" />
-          <div class="item__info">
-            <h4>Psychoactive began</h4>
-            <p>experimenting with Webflow</p>
-          </div>
-        </li>
-        <li class="item">
-          <div class="item__title">
-            <img src="/img/webflow-logo.svg" alt="" />
-            <h3>Certified Partner</h3>
-          </div>
-          <div class="item__dot" />
-          <div class="item__info">
-            <h4>Psychoactive becomes</h4>
-            <p>New Zealand's first</p>
-            <p>Certified Webflow Agency</p>
-          </div>
-        </li>
-        <li class="item">
-          <div class="item__title">
-            <img src="/img/webflow-logo.svg" alt="" />
-            <h3>Certified Partner</h3>
-            <div class="enterprise">Enterprise</div>
-          </div>
-          <div class="item__dot" />
-          <div class="item__info">
-            <h4>Psychoactive becomes</h4>
-            <p>New Zealand's first</p>
-            <p>Enterprise Webflow Partner</p>
-          </div>
-        </li>
-        <li class="item">
-          <div class="item__title">
-            <img src="/img/webflow-logo.svg" alt="" />
-            <h3>Premium Partner</h3>
-            <div class="enterprise blue">Enterprise</div>
-          </div>
-          <div class="item__dot" />
-          <div class="item__info">
-            <h4>Psychoactive is</h4>
-            <p>A globally trusted</p>
-            <p>Premium Webflow Partner</p>
-          </div>
-        </li>
-      </ul>
+      <div class="timeline__through">
+        <div class="timeline__arrow">
+          <div class="timeline__arrow_line" />
+          <div class="timeline__arrow_dot" />
+          <img
+            class="timeline__arrow_blick"
+            src="/img/webflow-timeline-blick.png"
+            alt=""
+          />
+        </div>
+        <ul class="timeline__through_list">
+          <li class="item entry">
+            <div class="item__title">
+              <img src="/img/webflow-logo.svg" alt="" />
+              <h3>Early Adopter</h3>
+            </div>
+            <div class="item__dot" />
+            <div class="item__info">
+              <h4>Psychoactive began</h4>
+              <div class="item__info_text">
+                <p>experimenting with Webflow</p>
+                <p />
+              </div>
+            </div>
+          </li>
+          <li class="item main">
+            <div class="item__title">
+              <img src="/img/webflow-logo.svg" alt="" />
+              <h3>Certified Partner</h3>
+            </div>
+            <div class="item__dot" />
+            <div class="item__info">
+              <h4>Psychoactive becomes</h4>
+              <div class="item__info_text">
+                <p>New Zealand's first</p>
+                <p>Certified Webflow Agency</p>
+              </div>
+            </div>
+          </li>
+          <li class="item main">
+            <div class="item__title">
+              <img src="/img/webflow-logo.svg" alt="" />
+              <h3>Certified Partner</h3>
+              <div class="enterprise">Enterprise</div>
+            </div>
+            <div class="item__dot" />
+            <div class="item__info">
+              <h4>Psychoactive becomes</h4>
+              <div class="item__info_text">
+                <p>New Zealand's first</p>
+                <p>Enterprise Webflow Partner</p>
+              </div>
+            </div>
+          </li>
+          <li class="item main">
+            <div class="item__title">
+              <img src="/img/webflow-logo.svg" alt="" />
+              <h3>Premium Partner</h3>
+              <div class="enterprise blue">Enterprise</div>
+            </div>
+            <div class="item__dot" />
+            <div class="item__info">
+              <h4>Psychoactive is</h4>
+              <div class="item__info_text">
+                <p>A globally trusted</p>
+                <p>Premium Webflow Partner</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -95,10 +131,12 @@ $max: 15;
 $range: $max - $min + 1;
 
 .timeline {
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  &__inner {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
   &__year {
     font-size: 14.6vw;
     font-style: normal;
@@ -106,11 +144,15 @@ $range: $max - $min + 1;
     line-height: 100%; /* 280px */
     letter-spacing: -0.07em;
     color: white(10);
+    position: relative;
+    z-index: 2;
   }
   &__yearline {
-    padding-left: 55%;
+    padding-left: 33%;
     position: relative;
+    z-index: 2;
     &_list {
+      min-width: max-content;
       display: flex;
       gap: 19.5vw;
       font-family: 'RoobertMono';
@@ -146,14 +188,18 @@ $range: $max - $min + 1;
   }
   &__through {
     margin-top: 180px;
+    position: relative;
     &_list {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
+      position: relative;
+      z-index: 2;
       .item {
         &__title {
           display: flex;
           align-items: center;
+          min-height: getRem(28);
           img {
             width: auto;
             height: 20px;
@@ -212,6 +258,40 @@ $range: $max - $min + 1;
           }
         }
       }
+    }
+  }
+  &__arrow {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: calc((100% - (1rem * 3)) / 4 + 1rem + 6px);
+    text-align: right;
+    z-index: 1;
+    &_dot {
+      display: block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: $color-foreground;
+      margin-left: auto;
+    }
+    &_line {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, #000 0%, #fff 100%);
+      margin: 0 auto 8px auto;
+      position: absolute;
+      top: 3px;
+      right: 0;
+      transform-origin: right;
+    }
+    &_blick {
+      position: absolute;
+      max-width: initial;
+      top: calc(50% - 32vh);
+      right: -2vh;
+      height: 64vh;
+      aspect-ratio: 1;
     }
   }
 }
