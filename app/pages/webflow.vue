@@ -3,7 +3,6 @@ import gsap from 'gsap';
 import Footer from '~/components/layout/Footer.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
-import VideoPreview from '~/components/ui/VideoPreview.vue';
 import CasesSwiper from '~/components/webflow/CasesSwiper.vue';
 import ClientsSaySwiper from '~/components/webflow/ClientsSaySwiper.vue';
 import Hero from '~/components/webflow/Hero.vue';
