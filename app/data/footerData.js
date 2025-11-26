@@ -9,7 +9,7 @@ export const footerData = {
     { title: 'About', url: '/' },
     { title: 'Work', url: '/work' },
     { title: 'Services', url: '/' },
-    { title: 'Webflow', url: '/' },
+    { title: 'Webflow', url: '/webflow' },
     { title: 'Content Hub', url: '/content-hub' },
     { title: 'let’s talk', url: '/' },
   ],
