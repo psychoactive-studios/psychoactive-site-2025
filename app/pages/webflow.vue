@@ -10,7 +10,7 @@ import Services from '~/components/webflow/Services.vue';
 import Statistics from '~/components/webflow/Statistics.vue';
 import Timeline from '~/components/webflow/Timeline.vue';
 import VideoReel from '~/components/webflow/VideoReel.vue';
-import WetsUs from '~/components/webflow/WetsUs.vue';
+import WatsUs from '~/components/webflow/WatsUs.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { enableScroll } = useScrollSmoother();
@@ -71,7 +71,7 @@ onMounted(() => {
       </section>
     </div>
     <section class="webflow__sets-us">
-      <WetsUs />
+      <WatsUs />
     </section>
     <Footer />
   </main>
