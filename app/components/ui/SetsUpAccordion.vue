@@ -1,6 +1,5 @@
 <script setup>
 import gsap from 'gsap';
-import Icon from '~/assets/img/icon-accordion-button.svg';
 
 const props = defineProps({
   list: {

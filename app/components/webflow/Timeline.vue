@@ -26,7 +26,6 @@ const currentYear = ref(2015);
 let ctx = null;
 
 onMounted(() => {
-  console.log('containerRef', containerRef.value);
   ctx = gsap.context(() => {}, containerRef.value);
   timelineScrollAnimation(ctx, currentYear);
 });
