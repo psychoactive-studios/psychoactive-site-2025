@@ -1,5 +1,7 @@
 <script setup>
+import gsap from 'gsap';
 import ServicesAccordion from '../ui/ServicesAccordion.vue';
+import { SplitText } from 'gsap/SplitText';
 
 const list = [
   {
@@ -28,13 +30,66 @@ const list = [
       'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
   },
 ];
+
+const containerRef = ref(null);
+const accordionRef = ref(null);
+let ctx = null;
+
+onMounted(async () => {
+  SplitText.create(containerRef.value.querySelector('h2'), {
+    type: 'words,chars',
+    charsClass: 'char-center',
+  });
+
+  await nextTick();
+
+  ctx = gsap.context(() => {
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: containerRef.value,
+          start: 'top center',
+          end: 'bottom center',
+        },
+      })
+      .to(
+        'h2 .char-center',
+        {
+          duration: 3,
+          scrambleText: {
+            text: '{original}',
+            chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+            tweenLength: false,
+          },
+        },
+        'firstPart'
+      )
+      .from(
+        'h2 .char-center',
+        {
+          opacity: 0,
+          duration: 0.01,
+          stagger: {
+            amount: 1,
+            from: 'random',
+          },
+        },
+        'firstPart'
+      )
+      .add(() => accordionRef.value.toggle(0), 'firstPart+=0.8');
+  }, containerRef.value);
+});
+
+onUnmounted(() => {
+  if (ctx) ctx.revert();
+});
 </script>
 
 <template>
-  <div class="our-services">
+  <div ref="containerRef" class="our-services">
     <div class="our-services__accordion">
       <h2>OUR SERVICES</h2>
-      <ServicesAccordion :list="list" :default-open="0" />
+      <ServicesAccordion ref="accordionRef" :list="list" />
     </div>
     <div class="our-services__media">
       <NuxtImg

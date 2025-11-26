@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from 'vue';
 import gsap from 'gsap';
 
 const props = defineProps({
@@ -85,7 +84,39 @@ const leave = (el, done) => {
       <button class="accordion__header" @click="toggle(index)">
         <span class="accordion__title">{{ item.title }}</span>
         <span class="accordion__header_icon">
-          <img src="/img/icon-accordion-button.svg" :alt="item.title" />
+          <svg
+            width="48"
+            height="48"
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              x="0.5"
+              y="0.5"
+              width="47"
+              height="47"
+              rx="23.5"
+              stroke="#101012"
+              stroke-opacity="0.1"
+            />
+            <path
+              d="M24 29C25.6569 29 27 30.3431 27 32C27 33.6569 25.6569 35 24 35C22.3431 35 21 33.6569 21 32C21 30.3431 22.3431 29 24 29Z"
+              fill="black"
+            />
+            <path
+              d="M16 21C17.6569 21 19 22.3431 19 24C19 25.6569 17.6569 27 16 27C14.3431 27 13 25.6569 13 24C13 22.3431 14.3431 21 16 21Z"
+              fill="black"
+            />
+            <path
+              d="M32 21C33.6569 21 35 22.3431 35 24C35 25.6569 33.6569 27 32 27C30.3431 27 29 25.6569 29 24C29 22.3431 30.3431 21 32 21Z"
+              fill="black"
+            />
+            <path
+              d="M24 13C25.6569 13 27 14.3431 27 16C27 17.6569 25.6569 19 24 19C22.3431 19 21 17.6569 21 16C21 14.3431 22.3431 13 24 13Z"
+              fill="black"
+            />
+          </svg>
         </span>
         <div class="accordion__header_border">
           <div class="accordion__header_overlay" />
@@ -195,6 +226,22 @@ const leave = (el, done) => {
       }
       &::after {
         right: -3px;
+      }
+    }
+    &:hover {
+      .accordion__header_icon {
+        svg path {
+          animation: flicker-effect-3 0.5s forwards;
+          &:nth-child(2) {
+            animation-delay: 0.2s;
+          }
+          &:nth-child(3) {
+            animation-delay: 0.3s;
+          }
+          &:nth-child(4) {
+            animation-delay: 0.4s;
+          }
+        }
       }
     }
   }

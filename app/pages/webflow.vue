@@ -3,28 +3,47 @@ import gsap from 'gsap';
 import Footer from '~/components/layout/Footer.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
-import VideoPreview from '~/components/ui/VideoPreview.vue';
 import CasesSwiper from '~/components/webflow/CasesSwiper.vue';
 import ClientsSaySwiper from '~/components/webflow/ClientsSaySwiper.vue';
 import Hero from '~/components/webflow/Hero.vue';
 import Services from '~/components/webflow/Services.vue';
 import Statistics from '~/components/webflow/Statistics.vue';
 import Timeline from '~/components/webflow/Timeline.vue';
-import WetsUs from '~/components/webflow/WetsUs.vue';
+import VideoReel from '~/components/webflow/VideoReel.vue';
+import WatsUs from '~/components/webflow/WatsUs.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
+import useLoader from '~/composables/useLoader';
+import useNavigation from '~/composables/useNavigation';
+import { leaveAnimation } from '~/utils/animations/transitions';
 
-const { enableScroll } = useScrollSmoother();
+const { scrollSmoother } = useScrollSmoother();
+const { startLoading } = useLoader();
+const { transitionFromNavigation } = useNavigation();
 
-onMounted(() => {
-  const layoutElements = gsap.utils.toArray([
-    '#header-logo',
-    '#header-navigation-button',
-    '#header-sound-button',
-  ]);
-  setTimeout(() => {
-    gsap.set(layoutElements, { scale: 1 });
-    enableScroll();
-  }, 100);
+definePageMeta({
+  scrollToTop: true,
+  pageTransition: {
+    css: false,
+    mode: 'out-in',
+    onEnter: (_, done) => {
+      startLoading();
+      scrollSmoother.value.scrollTop(0, false);
+      done();
+    },
+    onLeave: (el, done) => {
+      if (transitionFromNavigation.value) {
+        gsap
+          .timeline()
+          .set(el, { opacity: 0 })
+          .add(() => {
+            transitionFromNavigation.value = false;
+            done();
+          }, '+=1');
+        return;
+      }
+      leaveAnimation(el, done);
+    },
+  },
 });
 </script>
 
@@ -46,11 +65,7 @@ onMounted(() => {
         </OnScrollFilledText>
       </section>
       <section class="webflow__video-reels">
-        <VideoPreview
-          preview="/video/preview_reel.mp4"
-          src="https://vjs.zencdn.net/v/oceans.mp4"
-          aspect-ratio="2.22"
-        />
+        <VideoReel />
       </section>
       <section class="webflow__timeline">
         <Timeline />
@@ -75,7 +90,7 @@ onMounted(() => {
       </section>
     </div>
     <section class="webflow__sets-us">
-      <WetsUs />
+      <WatsUs />
     </section>
     <Footer />
   </main>
@@ -104,6 +119,7 @@ onMounted(() => {
   }
   &__sets-us {
     margin-top: 240px;
+    margin-bottom: 100px;
   }
 }
 </style>

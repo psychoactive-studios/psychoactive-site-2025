@@ -144,7 +144,7 @@
     border-radius: 50%;
   }
   &::before {
-    top: calc(50% + 3px);
+    top: calc(50%);
     left: -2px;
     background: rgba(255, 154, 154, 0.5);
   }

@@ -6,35 +6,59 @@ import useAudioManager from '~/composables/useAudioManager';
 import WebflowLabel from '../ui/WebflowLabel.vue';
 import useLoader from '~/composables/useLoader';
 import ButtonDotsArrow from '../ui/ButtonDotsArrow.vue';
+import {
+  heroInitSplitText,
+  heroInitAnimation,
+  heroScrollAnimation,
+} from '~/utils/animations/webflow.js';
 
 const { playInteractionSound } = useAudioManager();
+const { scrollSmoother } = useScrollSmoother();
 
-const { addResourceToLoad, resourceLoaded } = useLoader();
+const { isLoading, addResourceToLoad, resourceLoaded } = useLoader();
 
+// Indicate that this component has a resource to load
 addResourceToLoad(1);
 
-const onClickHandler = () => {
-  gsap.to('h1', { duration: 1, scale: 1.3, ease: 'power3.out' });
-  gsap.to('.left-text .grey-text', {
-    duration: 1,
-    y: '-3.5vw',
-    ease: 'power3.out',
-  });
-};
+const containerRef = ref(null);
+let ctx;
 
 const heroVideoResource = ref(null);
 
 onMounted(async () => {
+  if (containerRef.value) {
+    ctx = gsap.context(() => {}, containerRef.value);
+
+    heroInitSplitText();
+
+    // heroInitSplitText();
+    // heroScrollAnimation(ctx);
+
+    // heroInitAnimation(ctx, scrollSmoother);
+  }
+
   const blob = await $fetch('/video/webflow_frog3.mp4', {
     responseType: 'blob',
   });
   heroVideoResource.value = URL.createObjectURL(blob);
   resourceLoaded();
+
+  heroScrollAnimation(ctx);
+});
+
+onUnmounted(() => {
+  ctx.revert();
+});
+
+watch(isLoading, (newVal) => {
+  if (!newVal) {
+    heroInitAnimation(ctx, scrollSmoother);
+  }
 });
 </script>
 
 <template>
-  <section class="hero">
+  <section ref="containerRef" class="hero">
     <div class="container">
       <div class="scene">
         <div class="video">
@@ -61,11 +85,9 @@ onMounted(async () => {
         <div class="left-text" @click="onClickHandler">
           <div class="grey-text">Premium</div>
           <h1>
-            <span>Webflow</span>
-            <br />
-            Enterprise
-            <br />
-            Partner
+            <span class="blue">Webflow</span>
+            <span>Enterprise</span>
+            <span>Partner</span>
           </h1>
         </div>
         <div class="right-text">
@@ -99,8 +121,11 @@ onMounted(async () => {
   text-transform: uppercase;
 }
 .hero {
-  @include flex-center;
-  min-height: 100dvh;
+  .container {
+    @include flex-center;
+    flex-direction: column;
+    height: 100dvh;
+  }
 }
 .scene {
   width: 100%;
@@ -193,7 +218,10 @@ onMounted(async () => {
     letter-spacing: -0.06em;
     transform-origin: left bottom;
     span {
-      color: #136df4;
+      display: block;
+      &.blue {
+        color: #136df4;
+      }
     }
   }
 }
