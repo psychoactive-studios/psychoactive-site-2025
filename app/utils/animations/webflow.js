@@ -1,13 +1,16 @@
 import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
-import useLoader from '~/composables/useLoader';
 
 const videoCircle = '.scene .video';
 const dotsWrapper = '.scene .dots';
 const dots = '.scene .dots span';
 const circle = '.scene .circle-wrapper';
 const title = '.left-text h1';
-const greyText = '.left-text .grey-text';
+const titleLetters = '.left-text h1 .char-center';
+const leftGreyText = '.left-text .grey-text';
+const leftGreyTextLetters = '.left-text .grey-text .char-center';
+const rightGreyTextLetters = '.right-text .grey-text .char-center';
+const rightLabel = '.right-text__label';
 
 /* ======== Player elements ========= */
 const player = '.video-reel__video';
@@ -17,9 +20,168 @@ const playerControlTexts =
 const playerControlePlus =
   '.player.video-reel__video .player__preview_controls .plus';
 
+export const heroInitSplitText = () => {
+  SplitText.create(gsap.utils.toArray(['.grey-text', '.left-text h1 span']), {
+    type: 'chars',
+    charsClass: 'char-center',
+  }).chars;
+};
+
 /* ====================================================
                   Initial animation
 =======================================================*/
+export const heroInitAnimation = (ctx, scrollSmoother) => {
+  ctx.add(() => {
+    const layoutElements = gsap.utils.toArray([
+      document.querySelector('#header-logo'),
+      document.querySelector('#header-navigation-button'),
+      document.querySelector('#header-sound-button'),
+    ]);
+
+    gsap
+      .timeline({ id: 'webflow-hero-init-animation' })
+      // .timeScale(0.5)
+      .fromTo(
+        videoCircle,
+        { clipPath: 'circle(0% at 50% 50%)' },
+        {
+          clipPath: 'circle(50% at 50% 50%)',
+          duration: 1.8,
+          ease: 'power3.out',
+        },
+        'firstPart'
+      )
+      .fromTo(
+        dotsWrapper,
+        { scale: 0.2 },
+        { scale: 1, duration: 2, ease: 'power3.out' },
+        'firstPart'
+      )
+      .fromTo(
+        dots,
+        { scale: 2.3 },
+        { scale: 1, duration: 2, ease: 'power3.out' },
+        'firstPart'
+      )
+      .add('secondPart', '-=1.2')
+      .fromTo(
+        '.circle-dots-start, .circle-dots-end',
+        { opacity: 0 },
+        { opacity: 1, duration: 0.3 },
+        'firstPart+=0.8'
+      )
+      .fromTo(
+        '.circle-dots-end',
+        { rotate: 0 },
+        { rotate: 91, duration: 1.2, ease: 'power2.inOut' },
+        'firstPart+=0.8'
+      )
+      .fromTo(
+        '.circle-path-1, .circle-path-2',
+        { strokeDashoffset: 626.43 },
+        { strokeDashoffset: 467.92, duration: 1.2, ease: 'power2.inOut' },
+        'firstPart+=0.8'
+      )
+      .fromTo(
+        '.center, .sight',
+        { scaleX: 0 },
+        { scaleX: 1, duration: 1, ease: 'power3.out' },
+        'firstPart+=0.8'
+      )
+      .to(
+        leftGreyTextLetters,
+        {
+          duration: 2.2,
+          scrambleText: {
+            text: '{original}',
+            chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+            tweenLength: false,
+          },
+        },
+        'secondPart'
+      )
+      .from(
+        leftGreyTextLetters,
+        {
+          opacity: 0,
+          duration: 0.01,
+          stagger: {
+            amount: 0.8,
+            from: 'random',
+          },
+        },
+        'secondPart'
+      )
+      .to(
+        rightGreyTextLetters,
+        {
+          duration: 2.5,
+          scrambleText: {
+            text: '{original}',
+            chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+            tweenLength: false,
+          },
+        },
+        'secondPart'
+      )
+      .from(
+        rightGreyTextLetters,
+        {
+          opacity: 0,
+          duration: 0.01,
+          stagger: {
+            amount: 0.8,
+            from: 'random',
+          },
+        },
+        'secondPart'
+      )
+      .fromTo(
+        titleLetters,
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.1,
+          stagger: {
+            amount: 0.8,
+            from: 'random',
+          },
+          ease: 'power3.out',
+        },
+        'secondPart'
+      )
+      .fromTo(
+        rightLabel,
+        { xPercent: 200 },
+        { xPercent: 0, duration: 1.15, ease: 'power4.out' },
+        'secondPart'
+      )
+      .fromTo(
+        '.dots-arrow__icon_dot',
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 1,
+          stagger: { each: 0.05, from: 'random' },
+          ease: "rough({ template: power1.out, strength: 5, points: 20, taper: 'none', randomize: true, clamp: false})",
+        },
+        'secondPart+=0.5'
+      )
+      .to(
+        layoutElements,
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.75,
+          ease: 'power3.out',
+        },
+        'secondPart+=0.2'
+      )
+      .add(() => {
+        scrollSmoother.value.paused(false);
+      }, '-=1');
+  });
+};
 
 /* ====================================================
                   Initial animation mobile
@@ -102,7 +264,7 @@ export const heroScrollAnimation = (ctx) => {
             'start'
           )
           .to(
-            greyText,
+            leftGreyText,
             {
               y: '-7vw',
               duration: inputTime,
