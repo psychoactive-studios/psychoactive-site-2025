@@ -59,8 +59,6 @@ onMounted(async () => {
           trigger: containerRef.value,
           start: 'top center',
           end: 'bottom center',
-          // invalidateOnRefresh: true,
-          markers: true,
         },
       })
       .from(

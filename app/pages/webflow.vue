@@ -19,17 +19,11 @@ import { useMediaQuery } from '@vueuse/core';
 import VideoReelMobile from '~/components/webflow/VideoReelMobile.vue';
 import PartnersMobile from '~/components/ui/PartnersMobile.vue';
 
-const { scrollSmoother, enableScroll } = useScrollSmoother();
+const { scrollSmoother } = useScrollSmoother();
 const { startLoading } = useLoader();
 const { transitionFromNavigation } = useNavigation();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
-
-onMounted(() => {
-  setTimeout(() => {
-    enableScroll();
-  }, 100);
-});
 
 definePageMeta({
   scrollToTop: true,

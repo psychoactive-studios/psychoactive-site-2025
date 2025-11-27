@@ -36,12 +36,11 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
     matchMedia.add(
       {
         // set up any number of arbitrarily-named conditions. The function below will be called when ANY of them match.
-        isPortrait: `(orientation: portrait)`,
         isDesktop: `(min-width: 768px)`,
       },
       (context) => {
         // context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
-        let { isDesktop, isPortrait } = context.conditions;
+        let { isDesktop } = context.conditions;
 
         const layoutElements = gsap.utils.toArray([
           document.querySelector('#header-logo'),
@@ -230,96 +229,80 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 };
 
 /* ====================================================
-                  Initial animation mobile
-=======================================================*/
-
-/* ====================================================
                   Hero Scroll animation
 =======================================================*/
 const inputTime = 1;
 export const heroScrollAnimation = (ctx) => {
-  let matchMedia = gsap.matchMedia();
   ctx.add(() => {
-    matchMedia.add(
-      {
-        // set up any number of arbitrarily-named conditions. The function below will be called when ANY of them match.
-        isPortrait: `(orientation: portrait)`,
-        isDesktop: `(min-width: 768px)`,
-      },
-      (context) => {
-        // context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
-        let { isDesktop, isPortrait } = context.conditions;
-        gsap
-          .timeline({
-            id: 'webflow-scroll-animation',
-            scrollTrigger: {
-              id: 'webflow-hero-scrolltrigger',
-              trigger: '.container',
-              pin: true, // pin the trigger element while active
-              start: 'top top', // when the top of the trigger hits the top of the viewport
-              end: 'bottom top', // end after scrolling 500px beyond the start
-              scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-              invalidateOnRefresh: true,
-              // markers: true,
-            },
-          })
-          .to(
-            videoCircle,
-            {
-              clipPath: 'circle(30% at 50% 50%)',
-              duration: inputTime,
-              ease: 'power3.in',
-            },
-            'start'
-          )
-          .to(
-            circle,
-            {
-              scale: 0.7,
-              opacity: 0,
-              duration: inputTime,
-              ease: 'power3.in',
-            },
-            'start'
-          )
-          .to(
-            dots,
-            {
-              scale: 1.7,
-              duration: inputTime,
-              ease: 'power3.in',
-            },
-            'start'
-          )
-          .to(
-            dotsWrapper,
-            {
-              scale: 0.55,
-              duration: inputTime,
-              ease: 'power1.in',
-            },
-            'start'
-          )
-          .to(
-            title,
-            {
-              scale: 1.55,
-              duration: inputTime,
-              ease: 'power3.in',
-            },
-            'start'
-          )
-          .to(
-            leftGreyText,
-            {
-              y: '-7vw',
-              duration: inputTime,
-              ease: 'power3.in',
-            },
-            'start'
-          );
-      }
-    );
+    gsap
+      .timeline({
+        id: 'webflow-scroll-animation',
+        scrollTrigger: {
+          id: 'webflow-hero-scrolltrigger',
+          trigger: '.container',
+          pin: true, // pin the trigger element while active
+          start: 'top top', // when the top of the trigger hits the top of the viewport
+          end: 'bottom top', // end after scrolling 500px beyond the start
+          scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+          invalidateOnRefresh: true,
+          // markers: true,
+        },
+      })
+      .to(
+        videoCircle,
+        {
+          clipPath: 'circle(30% at 50% 50%)',
+          duration: inputTime,
+          ease: 'power3.in',
+        },
+        'start'
+      )
+      .to(
+        circle,
+        {
+          scale: 0.7,
+          opacity: 0,
+          duration: inputTime,
+          ease: 'power3.in',
+        },
+        'start'
+      )
+      .to(
+        dots,
+        {
+          scale: 1.7,
+          duration: inputTime,
+          ease: 'power3.in',
+        },
+        'start'
+      )
+      .to(
+        dotsWrapper,
+        {
+          scale: 0.55,
+          duration: inputTime,
+          ease: 'power1.in',
+        },
+        'start'
+      )
+      .to(
+        title,
+        {
+          scale: 1.55,
+          duration: inputTime,
+          ease: 'power3.in',
+        },
+        'start'
+      )
+      .to(
+        leftGreyText,
+        {
+          y: '-7vw',
+          duration: inputTime,
+          ease: 'power3.in',
+        },
+        'start'
+      );
   });
 };
 
@@ -513,284 +496,250 @@ export const timelineData = {
 const introDuctionTime = 0.4;
 const mainDuctionTime = 0.5;
 export const timelineScrollAnimation = (ctx, currentYear) => {
-  let matchMedia = gsap.matchMedia();
   ctx.add(() => {
-    matchMedia.add(
-      {
-        // set up any number of arbitrarily-named conditions. The function below will be called when ANY of them match.
-        isPortrait: `(orientation: portrait)`,
-        isDesktop: `(min-width: 768px)`,
-      },
-      (context) => {
-        // context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
-        let { isDesktop, isPortrait } = context.conditions;
-
-        if (isDesktop) {
-          gsap
-            .timeline({
-              id: 'webflow-timeline-scroll-animation',
-              scrollTrigger: {
-                id: 'webflow-timeline-scrolltrigger',
-                trigger: '.timeline__inner',
-                //pin: true, // pin the trigger element while active
-                start: 'top bottom-=20%', // when the top of the trigger hits the top of the viewport
-                end: 'bottom top', // end after scrolling 500px beyond the start
-                scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-                invalidateOnRefresh: true,
-                // markers: true,
-              },
-            })
-            .fromTo(
-              currentYear,
-              { value: 2015 },
-              {
-                value: 2018,
-                duration: introDuctionTime,
-                ease: 'none',
-                //ease: 'power1.in',
-              },
-              'intro'
-            )
-            .fromTo(
-              '.timeline__yearline_list',
-              { xPercent: 0 },
-              {
-                xPercent: -22,
-                duration: introDuctionTime,
-                ease: 'none',
-                //ease: 'power1.in',
-              },
-              'intro'
-            )
-            .fromTo(
-              '.timeline__arrow',
-              { xPercent: -50 },
-              {
-                xPercent: 0,
-                duration: introDuctionTime,
-                ease: 'none',
-              },
-              'intro'
-            )
-            .fromTo(
-              '.timeline__arrow_blick',
-              { rotate: -60, scale: 0.5 },
-              {
-                rotate: -15,
-                scale: 0.75,
-                duration: introDuctionTime,
-                ease: 'none',
-              },
-              'intro'
-            )
-            .fromTo(
-              '.timeline__through_list .item.entry .item__title',
-              { opacity: 0.2 },
-              { opacity: 1, duration: introDuctionTime, ease: 'none' },
-              'intro'
-            )
-            .fromTo(
-              '.timeline__arrow',
-              { x: '0vw' },
-              {
-                x: '60vw',
-                duration: mainDuctionTime,
-                ease: 'none',
-              },
-              'main'
-            )
-            .fromTo(
-              '.timeline__arrow_blick',
-              { rotate: -10, scale: 0.75 },
-              {
-                rotate: 0,
-                scale: 1,
-                duration: mainDuctionTime,
-                ease: 'none',
-              },
-              'main'
-            )
-            .fromTo(
-              currentYear,
-              { value: 2018 },
-              {
-                value: 2025,
-                duration: mainDuctionTime,
-                ease: 'none',
-                //ease: 'power1.in',
-              },
-              'main'
-            )
-            .fromTo(
-              '.timeline__yearline_list',
-              { xPercent: -22 },
-              {
-                xPercent: -78,
-                duration: mainDuctionTime,
-                ease: 'none',
-                //ease: 'power1.in',
-              },
-              'main'
-            );
-          gsap
-            .timeline({
-              id: 'webflow-timeline-scroll-animation',
-              scrollTrigger: {
-                id: 'webflow-timeline-scrolltrigger',
-                trigger: '.timeline__inner',
-                pin: true, // pin the trigger element while active
-                start: 'top top', // when the top of the trigger hits the top of the viewport
-                end: 'bottom top', // end after scrolling 500px beyond the start
-                scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-                invalidateOnRefresh: true,
-                // markers: true,
-              },
-            })
-            .fromTo(
-              '.timeline__arrow_line',
-              {
-                scaleX: 1,
-                background: 'linear-gradient(90deg, #000 0%, #fff 100%)',
-              },
-              {
-                scaleX: 3,
-                background: 'linear-gradient(90deg, #000 0%, #136DF4 100%)',
-                duration: 1,
-                ease: 'none',
-                //ease: 'none',
-                immediateRender: false,
-              }
-            )
-            .fromTo(
-              '.timeline__arrow_dot',
-              {
-                backgroundColor: '#fff',
-              },
-              {
-                backgroundColor: '#136DF4',
-                duration: 1,
-                ease: 'none',
-                //ease: 'none',
-                immediateRender: false,
-              },
-              '<'
-            )
-            .fromTo(
-              '.timeline__year',
-              {
-                color: 'rgba(255, 255, 255, 0.1)',
-              },
-              {
-                color: '#136DF4',
-                duration: 1,
-                ease: 'none',
-                //ease: 'none',
-                immediateRender: false,
-              },
-              '<'
-            )
-
-            .fromTo(
-              gsap.utils.toArray(
-                '.timeline__through_list .item.main .item__title'
-              ),
-              { opacity: 0.2 },
-              {
-                opacity: 1,
-                duration: introDuctionTime,
-                ease: 'none',
-                stagger: 0.3,
-              },
-              '<'
-            )
-            .fromTo(
-              gsap.utils.toArray(
-                '.timeline__through_list .item.main .item__dot'
-              ),
-              { opacity: 0.2 },
-              {
-                opacity: 1,
-                duration: introDuctionTime,
-                ease: 'none',
-                stagger: 0.3,
-              },
-              '<'
-            )
-            .fromTo(
-              gsap.utils.toArray(
-                '.timeline__through_list .item.main .item__info h4'
-              ),
-              { opacity: 0.5 },
-              {
-                opacity: 1,
-                duration: introDuctionTime,
-                ease: 'none',
-                stagger: 0.3,
-              },
-              '<'
-            )
-            .fromTo(
-              gsap.utils.toArray(
-                '.timeline__through_list .item.main .item__info_text'
-              ),
-              { opacity: 0.01 },
-              {
-                opacity: 1,
-                duration: introDuctionTime,
-                ease: 'none',
-                stagger: 0.3,
-              },
-              '<'
-            )
-            .to(
-              gsap.utils.toArray(
-                '.timeline__through_list .item.main .item__info_text p:nth-child(1)'
-              ),
-              {
-                duration: introDuctionTime,
-                ease: 'none',
-                stagger: 0.28,
-                scrambleText: {
-                  text: '{original}',
-                  chars:
-                    '//⟟+o  [_⋉o.⌿..⟟..+o] ⏃⟟+ //: ⌿+⟟⏁ / +o...[++_⋉//⟟+o..⌿..⟟..+o] ⏃',
-                  tweenLength: false,
-                },
-              },
-              '<'
-            )
-            .to(
-              gsap.utils.toArray(
-                '.timeline__through_list .item.main .item__info_text p:nth-child(2)'
-              ),
-              {
-                duration: introDuctionTime,
-                ease: 'none',
-                stagger: 0.28,
-                scrambleText: {
-                  text: '{original}',
-                  chars:
-                    '//⟟+o  [_⋉o.⌿..⟟..+o] ⏃⟟+ //: ⌿+⟟⏁ / +o...[++_⋉//⟟+o..⌿..⟟..+o] ⏃',
-                  tweenLength: false,
-                },
-              },
-              '<'
-            );
-
-          // .fromTo(
-          //   '.timeline__yearline_list',
-          //   { xPercent: -22 },
-          //   {
-          //     xPercent: -74,
-          //     duration: 1,
-          //     ease: 'none',
-          //     //ease: 'none',
-          //     immediateRender: false,
-          //   },
-          //   '<'
-          // );
+    gsap
+      .timeline({
+        id: 'webflow-timeline-scroll-animation',
+        scrollTrigger: {
+          id: 'webflow-timeline-scrolltrigger',
+          trigger: '.timeline__inner',
+          //pin: true, // pin the trigger element while active
+          start: 'top bottom-=20%', // when the top of the trigger hits the top of the viewport
+          end: 'bottom top', // end after scrolling 500px beyond the start
+          scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+          invalidateOnRefresh: true,
+          // markers: true,
+        },
+      })
+      .fromTo(
+        currentYear,
+        { value: 2015 },
+        {
+          value: 2018,
+          duration: introDuctionTime,
+          ease: 'none',
+          //ease: 'power1.in',
+        },
+        'intro'
+      )
+      .fromTo(
+        '.timeline__yearline_list',
+        { xPercent: 0 },
+        {
+          xPercent: -22,
+          duration: introDuctionTime,
+          ease: 'none',
+          //ease: 'power1.in',
+        },
+        'intro'
+      )
+      .fromTo(
+        '.timeline__arrow',
+        { xPercent: -50 },
+        {
+          xPercent: 0,
+          duration: introDuctionTime,
+          ease: 'none',
+        },
+        'intro'
+      )
+      .fromTo(
+        '.timeline__arrow_blick',
+        { rotate: -60, scale: 0.5 },
+        {
+          rotate: -15,
+          scale: 0.75,
+          duration: introDuctionTime,
+          ease: 'none',
+        },
+        'intro'
+      )
+      .fromTo(
+        '.timeline__through_list .item.entry .item__title',
+        { opacity: 0.2 },
+        { opacity: 1, duration: introDuctionTime, ease: 'none' },
+        'intro'
+      )
+      .fromTo(
+        '.timeline__arrow',
+        { x: '0vw' },
+        {
+          x: '60vw',
+          duration: mainDuctionTime,
+          ease: 'none',
+        },
+        'main'
+      )
+      .fromTo(
+        '.timeline__arrow_blick',
+        { rotate: -10, scale: 0.75 },
+        {
+          rotate: 0,
+          scale: 1,
+          duration: mainDuctionTime,
+          ease: 'none',
+        },
+        'main'
+      )
+      .fromTo(
+        currentYear,
+        { value: 2018 },
+        {
+          value: 2025,
+          duration: mainDuctionTime,
+          ease: 'none',
+          //ease: 'power1.in',
+        },
+        'main'
+      )
+      .fromTo(
+        '.timeline__yearline_list',
+        { xPercent: -22 },
+        {
+          xPercent: -78,
+          duration: mainDuctionTime,
+          ease: 'none',
+          //ease: 'power1.in',
+        },
+        'main'
+      );
+    gsap
+      .timeline({
+        id: 'webflow-timeline-scroll-animation',
+        scrollTrigger: {
+          id: 'webflow-timeline-scrolltrigger',
+          trigger: '.timeline__inner',
+          pin: true, // pin the trigger element while active
+          start: 'top top', // when the top of the trigger hits the top of the viewport
+          end: 'bottom top', // end after scrolling 500px beyond the start
+          scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+          invalidateOnRefresh: true,
+          // markers: true,
+        },
+      })
+      .fromTo(
+        '.timeline__arrow_line',
+        {
+          scaleX: 1,
+          background: 'linear-gradient(90deg, #000 0%, #fff 100%)',
+        },
+        {
+          scaleX: 3,
+          background: 'linear-gradient(90deg, #000 0%, #136DF4 100%)',
+          duration: 1,
+          ease: 'none',
+          //ease: 'none',
+          immediateRender: false,
         }
-      }
-    );
+      )
+      .fromTo(
+        '.timeline__arrow_dot',
+        {
+          backgroundColor: '#fff',
+        },
+        {
+          backgroundColor: '#136DF4',
+          duration: 1,
+          ease: 'none',
+          //ease: 'none',
+          immediateRender: false,
+        },
+        '<'
+      )
+      .fromTo(
+        '.timeline__year',
+        {
+          color: 'rgba(255, 255, 255, 0.1)',
+        },
+        {
+          color: '#136DF4',
+          duration: 1,
+          ease: 'none',
+          //ease: 'none',
+          immediateRender: false,
+        },
+        '<'
+      )
+
+      .fromTo(
+        gsap.utils.toArray('.timeline__through_list .item.main .item__title'),
+        { opacity: 0.2 },
+        {
+          opacity: 1,
+          duration: introDuctionTime,
+          ease: 'none',
+          stagger: 0.3,
+        },
+        '<'
+      )
+      .fromTo(
+        gsap.utils.toArray('.timeline__through_list .item.main .item__dot'),
+        { opacity: 0.2 },
+        {
+          opacity: 1,
+          duration: introDuctionTime,
+          ease: 'none',
+          stagger: 0.3,
+        },
+        '<'
+      )
+      .fromTo(
+        gsap.utils.toArray('.timeline__through_list .item.main .item__info h4'),
+        { opacity: 0.5 },
+        {
+          opacity: 1,
+          duration: introDuctionTime,
+          ease: 'none',
+          stagger: 0.3,
+        },
+        '<'
+      )
+      .fromTo(
+        gsap.utils.toArray(
+          '.timeline__through_list .item.main .item__info_text'
+        ),
+        { opacity: 0.01 },
+        {
+          opacity: 1,
+          duration: introDuctionTime,
+          ease: 'none',
+          stagger: 0.3,
+        },
+        '<'
+      )
+      .to(
+        gsap.utils.toArray(
+          '.timeline__through_list .item.main .item__info_text p:nth-child(1)'
+        ),
+        {
+          duration: introDuctionTime,
+          ease: 'none',
+          stagger: 0.28,
+          scrambleText: {
+            text: '{original}',
+            chars:
+              '//⟟+o  [_⋉o.⌿..⟟..+o] ⏃⟟+ //: ⌿+⟟⏁ / +o...[++_⋉//⟟+o..⌿..⟟..+o] ⏃',
+            tweenLength: false,
+          },
+        },
+        '<'
+      )
+      .to(
+        gsap.utils.toArray(
+          '.timeline__through_list .item.main .item__info_text p:nth-child(2)'
+        ),
+        {
+          duration: introDuctionTime,
+          ease: 'none',
+          stagger: 0.28,
+          scrambleText: {
+            text: '{original}',
+            chars:
+              '//⟟+o  [_⋉o.⌿..⟟..+o] ⏃⟟+ //: ⌿+⟟⏁ / +o...[++_⋉//⟟+o..⌿..⟟..+o] ⏃',
+            tweenLength: false,
+          },
+        },
+        '<'
+      );
   });
 };
