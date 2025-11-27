@@ -15,7 +15,6 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 import useLoader from '~/composables/useLoader';
 import useNavigation from '~/composables/useNavigation';
 import { leaveAnimation } from '~/utils/animations/transitions';
-import HeroMobile from '~/components/homepage/HeroMobile.vue';
 import { useMediaQuery } from '@vueuse/core';
 import VideoReelMobile from '~/components/webflow/VideoReelMobile.vue';
 import PartnersMobile from '~/components/ui/PartnersMobile.vue';
@@ -146,9 +145,16 @@ definePageMeta({
   }
   &__cases {
     margin-top: 160px;
+    @include respond(mobile) {
+      margin-top: 120px;
+      padding-right: 10%;
+    }
   }
   &__statistics {
     margin-top: 160px;
+    @include respond(mobile) {
+      margin-top: 60px;
+    }
   }
   &__clients-say {
     margin-top: 160px;
