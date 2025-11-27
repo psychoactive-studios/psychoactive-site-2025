@@ -100,9 +100,14 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 .grid {
   display: flex;
   justify-content: space-between;
+  @include respond(mobile) {
+    flex-direction: column;
+    gap: getRem(60);
+  }
   &__item {
     &_number {
       font-size: 6.25vw;
@@ -111,10 +116,13 @@ onUnmounted(() => {
       line-height: 100%; /* 120px */
       letter-spacing: -0.06em;
       color: white(80);
+      @include respond(mobile) {
+        font-size: max(10.25vw, 42px);
+      }
     }
     &_info {
-      margin-top: getRem(46);
-      font-size: getRem(20);
+      margin-top: 2.4vw;
+      font-size: clamp(12px, 1.042vw, 20px);
       font-style: normal;
       font-weight: 400;
       line-height: 130%; /* 26px */
@@ -122,11 +130,12 @@ onUnmounted(() => {
       align-items: center;
       gap: getRem(12);
       clip-path: inset(0 100% 0 0);
+      position: relative;
       &::before {
         content: 'Sold out event';
         border-radius: 50%;
         font-family: 'RoobertMono';
-        font-size: 1rem;
+        font-size: clamp(12px, 0.833vw, 16px);
         font-style: normal;
         font-weight: 500;
         line-height: 100%; /* 16px */

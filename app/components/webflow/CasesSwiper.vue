@@ -2,8 +2,11 @@
 import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 import ButtonDotsArrow from '../ui/ButtonDotsArrow.vue';
 import CaseStadyPreview from '../ui/CaseStadyPreview.vue';
+import { useMediaQuery } from '@vueuse/core';
 
 const containerRef = ref(null);
+
+const isMobile = useMediaQuery('(max-width: 768px)');
 
 // Functions for navigation buttons
 </script>
@@ -14,7 +17,7 @@ const containerRef = ref(null);
       ref="containerRef"
       :has-track="false"
       :options="{
-        gap: 20,
+        gap: isMobile ? 24 : 20,
         speed: 600,
         easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
       }"
@@ -65,6 +68,7 @@ const containerRef = ref(null);
 </template>
 
 <style scoped lang="scss">
+@use '~/assets/styles/mixins' as *;
 .cases-swiper {
   position: relative;
   &__button {
@@ -77,6 +81,9 @@ const containerRef = ref(null);
     }
     &--next {
       right: -80px;
+    }
+    @include respond(mobile) {
+      display: none;
     }
   }
   .splide__track {
