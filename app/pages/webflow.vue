@@ -15,10 +15,15 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 import useLoader from '~/composables/useLoader';
 import useNavigation from '~/composables/useNavigation';
 import { leaveAnimation } from '~/utils/animations/transitions';
+import HeroMobile from '~/components/homepage/HeroMobile.vue';
+import { useMediaQuery } from '@vueuse/core';
+import VideoReelMobile from '~/components/webflow/VideoReelMobile.vue';
 
 const { scrollSmoother, enableScroll } = useScrollSmoother();
 const { startLoading } = useLoader();
 const { transitionFromNavigation } = useNavigation();
+
+const isMobile = useMediaQuery('(max-width: 768px)');
 
 onMounted(() => {
   setTimeout(() => {
@@ -55,7 +60,7 @@ definePageMeta({
 
 <template>
   <main class="webflow">
-    <Hero />
+    <!-- <Hero /> -->
     <div class="container">
       <section class="webflow__onscroll-text">
         <OnScrollFilledText>
@@ -70,9 +75,16 @@ definePageMeta({
           </p>
         </OnScrollFilledText>
       </section>
-      <section class="webflow__video-reels">
-        <VideoReel />
-      </section>
+    </div>
+    <section class="webflow__video-reels">
+      <ClientOnly>
+        <div v-if="!isMobile" class="container">
+          <VideoReel />
+        </div>
+        <VideoReelMobile v-if="isMobile" />
+      </ClientOnly>
+    </section>
+    <div class="container">
       <section class="webflow__timeline">
         <Timeline />
       </section>

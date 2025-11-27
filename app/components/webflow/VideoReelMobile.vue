@@ -1,15 +1,12 @@
 <script setup>
 import gsap from 'gsap';
-import useScrollSmoother from '~/composables/useScrollSmoother';
 import useHomeVideoPlayerMobile from '~/composables/useHomeVideoPlayerMobile';
-import { heroInitAnimationMobile } from '~/utils';
 import PlayIcon from '~/assets/icons/icon-play.svg';
 import '@mux/videojs-kit/dist/index.css';
+import { SplitText } from 'gsap/SplitText';
 
 const containerRef = ref(null);
-let ctx = null;
 
-const { scrollSmoother } = useScrollSmoother();
 const {
   mainVideoRef,
   player,
@@ -20,15 +17,17 @@ const {
 
 onMounted(async () => {
   if (containerRef.value) {
-    ctx = gsap.context(() => {}, containerRef.value);
-    heroInitAnimationMobile(ctx, scrollSmoother);
+    SplitText.create(
+      gsap.utils.toArray([
+        containerRef.value.querySelectorAll('.controls-text'),
+      ]),
+      {
+        type: 'words,chars',
+        charsClass: 'char-control',
+      }
+    );
     initializeElements(containerRef.value);
   }
-  nextTick(() => {
-    if (scrollSmoother.value) {
-      scrollSmoother.value.effects('[data-speed]', {});
-    }
-  });
 
   // Initialize Video.js with Mux
   if (import.meta.client && mainVideoRef.value) {
@@ -56,7 +55,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="containerRef" class="hero-mobile" data-speed="0.5">
+  <div ref="containerRef" class="hero-mobile">
     <div class="hero-mobile__player">
       <video
         class="hero-mobile__player_preview"

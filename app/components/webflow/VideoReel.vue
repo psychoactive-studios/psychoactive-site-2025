@@ -18,16 +18,14 @@ onUnmounted(() => {
 });
 </script>
 <template>
-  <ClientOnly>
-    <div ref="containerRef">
-      <div class="video-reel__inner">
-        <VideoPreview
-          class="video-reel__video homehero-prepared"
-          preview="/video/preview_reel.mp4"
-          src="https://vjs.zencdn.net/v/oceans.mp4"
-          aspect-ratio="2.22"
-        />
-      </div>
+  <div ref="containerRef">
+    <div class="video-reel__inner">
+      <VideoPreview
+        class="video-reel__video homehero-prepared"
+        preview="/video/preview_reel.mp4"
+        src="https://vjs.zencdn.net/v/oceans.mp4"
+        aspect-ratio="2.22"
+      />
     </div>
-  </ClientOnly>
+  </div>
 </template>

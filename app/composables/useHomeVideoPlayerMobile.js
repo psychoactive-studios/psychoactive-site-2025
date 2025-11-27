@@ -58,6 +58,8 @@ export default function useHomeVideoPlayerMobile() {
       return;
     }
 
+    console.log('controlsTexts', controlsTexts);
+
     playTimeline = gsap
       .timeline()
       .set(navigationMobileRef.value, { display: 'none' })
