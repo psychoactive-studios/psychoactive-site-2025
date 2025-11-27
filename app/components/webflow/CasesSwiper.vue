@@ -9,61 +9,59 @@ const containerRef = ref(null);
 </script>
 
 <template>
-  <ClientOnly>
-    <div class="cases-swiper">
-      <Splide
-        ref="containerRef"
-        :has-track="false"
-        :options="{
-          gap: 20,
-          speed: 600,
-          easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-        }"
-        aria-label="My Favorite Images"
-      >
-        <SplideTrack>
-          <SplideSlide>
-            <CaseStadyPreview
-              src="/img/cases/case-super-ai.jpg"
-              title="SuperAI Conference"
-              description="Worlds largest AI event"
-            />
-          </SplideSlide>
-          <SplideSlide>
-            <CaseStadyPreview
-              src="/img/cases/case-burgerfuel.jpg"
-              title="Burgerfuel"
-              description="New Zealand’s favourite burger"
-            />
-          </SplideSlide>
-          <SplideSlide
-            ><CaseStadyPreview
-              src="/img/cases/case-hellboy.jpg"
-              title="Hellboy Web of Wyrd"
-              description="beat 'em up roguelike Video game"
-          /></SplideSlide>
-          <SplideSlide
-            ><CaseStadyPreview
-              src="/img/cases/case-world-of-wearableArt.jpg"
-              title="World of WearableArt"
-              description="New Zealand's Largest theatrical Spectacle"
-          /></SplideSlide>
-        </SplideTrack>
-        <div class="splide__arrows">
-          <ButtonDotsArrow
-            direction="left"
-            bordered
-            class="cases-swiper__button cases-swiper__button--prev splide__arrow splide__arrow--prev"
+  <div class="cases-swiper">
+    <Splide
+      ref="containerRef"
+      :has-track="false"
+      :options="{
+        gap: 20,
+        speed: 600,
+        easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+      }"
+      aria-label="My Favorite Images"
+    >
+      <SplideTrack>
+        <SplideSlide>
+          <CaseStadyPreview
+            src="/img/cases/case-super-ai.jpg"
+            title="SuperAI Conference"
+            description="Worlds largest AI event"
           />
-          <ButtonDotsArrow
-            direction="right"
-            bordered
-            class="cases-swiper__button cases-swiper__button--next splide__arrow splide__arrow--next"
+        </SplideSlide>
+        <SplideSlide>
+          <CaseStadyPreview
+            src="/img/cases/case-burgerfuel.jpg"
+            title="Burgerfuel"
+            description="New Zealand’s favourite burger"
           />
-        </div>
-      </Splide>
-    </div>
-  </ClientOnly>
+        </SplideSlide>
+        <SplideSlide
+          ><CaseStadyPreview
+            src="/img/cases/case-hellboy.jpg"
+            title="Hellboy Web of Wyrd"
+            description="beat 'em up roguelike Video game"
+        /></SplideSlide>
+        <SplideSlide
+          ><CaseStadyPreview
+            src="/img/cases/case-world-of-wearableArt.jpg"
+            title="World of WearableArt"
+            description="New Zealand's Largest theatrical Spectacle"
+        /></SplideSlide>
+      </SplideTrack>
+      <div class="splide__arrows">
+        <ButtonDotsArrow
+          direction="left"
+          bordered
+          class="cases-swiper__button cases-swiper__button--prev splide__arrow splide__arrow--prev"
+        />
+        <ButtonDotsArrow
+          direction="right"
+          bordered
+          class="cases-swiper__button cases-swiper__button--next splide__arrow splide__arrow--next"
+        />
+      </div>
+    </Splide>
+  </div>
 </template>
 
 <style scoped lang="scss">
