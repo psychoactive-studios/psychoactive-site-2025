@@ -31,156 +31,202 @@ export const heroInitSplitText = () => {
                   Initial animation
 =======================================================*/
 export const heroInitAnimation = (ctx, scrollSmoother) => {
+  let matchMedia = gsap.matchMedia();
   ctx.add(() => {
-    const layoutElements = gsap.utils.toArray([
-      document.querySelector('#header-logo'),
-      document.querySelector('#header-navigation-button'),
-      document.querySelector('#header-sound-button'),
-    ]);
+    matchMedia.add(
+      {
+        // set up any number of arbitrarily-named conditions. The function below will be called when ANY of them match.
+        isPortrait: `(orientation: portrait)`,
+        isDesktop: `(min-width: 768px)`,
+      },
+      (context) => {
+        // context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
+        let { isDesktop, isPortrait } = context.conditions;
 
-    gsap
-      .timeline({ id: 'webflow-hero-init-animation' })
-      // .timeScale(0.5)
-      .fromTo(
-        videoCircle,
-        { clipPath: 'circle(0% at 50% 50%)' },
-        {
-          clipPath: 'circle(50% at 50% 50%)',
-          duration: 1.8,
-          ease: 'power3.out',
-        },
-        'firstPart'
-      )
-      .fromTo(
-        dotsWrapper,
-        { scale: 0.2 },
-        { scale: 1, duration: 2, ease: 'power3.out' },
-        'firstPart'
-      )
-      .fromTo(
-        dots,
-        { scale: 2.3 },
-        { scale: 1, duration: 2, ease: 'power3.out' },
-        'firstPart'
-      )
-      .add('secondPart', '-=1.2')
-      .fromTo(
-        '.circle-dots-start, .circle-dots-end',
-        { opacity: 0 },
-        { opacity: 1, duration: 0.3 },
-        'firstPart+=0.8'
-      )
-      .fromTo(
-        '.circle-dots-end',
-        { rotate: 0 },
-        { rotate: 91, duration: 1.2, ease: 'power2.inOut' },
-        'firstPart+=0.8'
-      )
-      .fromTo(
-        '.circle-path-1, .circle-path-2',
-        { strokeDashoffset: 626.43 },
-        { strokeDashoffset: 467.92, duration: 1.2, ease: 'power2.inOut' },
-        'firstPart+=0.8'
-      )
-      .fromTo(
-        '.center, .sight',
-        { scaleX: 0 },
-        { scaleX: 1, duration: 1, ease: 'power3.out' },
-        'firstPart+=0.8'
-      )
-      .to(
-        leftGreyTextLetters,
-        {
-          duration: 2.2,
-          scrambleText: {
-            text: '{original}',
-            chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
-            tweenLength: false,
-          },
-        },
-        'secondPart'
-      )
-      .from(
-        leftGreyTextLetters,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 0.8,
-            from: 'random',
-          },
-        },
-        'secondPart'
-      )
-      .to(
-        rightGreyTextLetters,
-        {
-          duration: 2.5,
-          scrambleText: {
-            text: '{original}',
-            chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
-            tweenLength: false,
-          },
-        },
-        'secondPart'
-      )
-      .from(
-        rightGreyTextLetters,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 0.8,
-            from: 'random',
-          },
-        },
-        'secondPart'
-      )
-      .fromTo(
-        titleLetters,
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.1,
-          stagger: {
-            amount: 0.8,
-            from: 'random',
-          },
-          ease: 'power3.out',
-        },
-        'secondPart'
-      )
-      .fromTo(
-        rightLabel,
-        { xPercent: 200 },
-        { xPercent: 0, duration: 1.15, ease: 'power4.out' },
-        'secondPart'
-      )
-      .fromTo(
-        '.dots-arrow__icon_dot',
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 1,
-          stagger: { each: 0.05, from: 'random' },
-          ease: "rough({ template: power1.out, strength: 5, points: 20, taper: 'none', randomize: true, clamp: false})",
-        },
-        'secondPart+=0.5'
-      )
-      .to(
-        layoutElements,
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.75,
-          ease: 'power3.out',
-        },
-        'secondPart+=0.2'
-      )
-      .add(() => {
-        scrollSmoother.value.paused(false);
-      }, '-=1');
+        const layoutElements = gsap.utils.toArray([
+          document.querySelector('#header-logo'),
+          document.querySelector('#header-navigation-button'),
+          document.querySelector('#header-sound-button'),
+        ]);
+
+        const timeline = gsap
+          .timeline({ id: 'webflow-hero-init-animation' })
+          /* ======= Video circle part ========= */
+          .fromTo(
+            videoCircle,
+            { clipPath: 'circle(0% at 50% 50%)' },
+            {
+              clipPath: 'circle(50% at 50% 50%)',
+              duration: 1.8,
+              ease: 'power3.out',
+            },
+            'firstPart'
+          )
+          /* ======= Dots wrapper part ========= */
+          .fromTo(
+            dotsWrapper,
+            { scale: 0.2 },
+            { scale: 1, duration: 2, ease: 'power3.out' },
+            'firstPart'
+          )
+          .fromTo(
+            dots,
+            { scale: 2.3 },
+            { scale: 1, duration: 2, ease: 'power3.out' },
+            'firstPart'
+          )
+          .add('secondPart', '-=1.2')
+          /* ======= Circle dots part ========= */
+          .fromTo(
+            '.circle-dots-start, .circle-dots-end',
+            { opacity: 0 },
+            { opacity: 1, duration: 0.3 },
+            'firstPart+=0.8'
+          )
+          .fromTo(
+            '.circle-dots-end',
+            { rotate: 0 },
+            { rotate: 91, duration: 1.2, ease: 'power2.inOut' },
+            'firstPart+=0.8'
+          )
+          .fromTo(
+            '.circle-path-1, .circle-path-2',
+            { strokeDashoffset: 626.43 },
+            { strokeDashoffset: 467.92, duration: 1.2, ease: 'power2.inOut' },
+            'firstPart+=0.8'
+          )
+          /* ======= Center and sight part ========= */
+          .fromTo(
+            '.center, .sight',
+            { scaleX: 0 },
+            { scaleX: 1, duration: 1, ease: 'power3.out' },
+            'firstPart+=0.8'
+          )
+          /* ======= Left grey text part ========= */
+          .to(
+            leftGreyTextLetters,
+            {
+              duration: 2.2,
+              scrambleText: {
+                text: '{original}',
+                chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+                tweenLength: false,
+              },
+            },
+            'secondPart'
+          )
+          .from(
+            leftGreyTextLetters,
+            {
+              opacity: 0,
+              duration: 0.01,
+              stagger: {
+                amount: 0.8,
+                from: 'random',
+              },
+            },
+            'secondPart'
+          )
+          /* ======= Right grey text part ========= */
+          .to(
+            rightGreyTextLetters,
+            {
+              duration: 2.5,
+              scrambleText: {
+                text: '{original}',
+                chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+                tweenLength: false,
+              },
+            },
+            'secondPart'
+          )
+          .from(
+            rightGreyTextLetters,
+            {
+              opacity: 0,
+              duration: 0.01,
+              stagger: {
+                amount: 0.8,
+                from: 'random',
+              },
+            },
+            'secondPart'
+          )
+          /* ======= Title part ========= */
+          .fromTo(
+            titleLetters,
+            { opacity: 0 },
+            {
+              opacity: 1,
+              duration: 0.1,
+              stagger: {
+                amount: 0.8,
+                from: 'random',
+              },
+              ease: 'power3.out',
+            },
+            'secondPart'
+          )
+          /* ======= Dots arrow part ========= */
+          .fromTo(
+            '.dots-arrow__icon_dot',
+            { opacity: 0 },
+            {
+              opacity: 1,
+              duration: 1,
+              stagger: { each: 0.05, from: 'random' },
+              ease: "rough({ template: power1.out, strength: 5, points: 20, taper: 'none', randomize: true, clamp: false})",
+            },
+            'secondPart+=0.5'
+          );
+        if (isDesktop) {
+          /* ======= Label part desktop ========= */
+          timeline
+            .fromTo(
+              rightLabel,
+              { xPercent: 200 },
+              { xPercent: 0, duration: 1.15, ease: 'power4.out' },
+              'secondPart'
+            )
+            /* ======= Layout elements part desktop ========= */
+            .to(
+              layoutElements,
+              {
+                scale: 1,
+                opacity: 1,
+                duration: 0.75,
+                ease: 'power3.out',
+              },
+              'secondPart+=0.2'
+            );
+        } else {
+          /* ======= Label part mobile ========= */
+          timeline
+            .fromTo(
+              rightLabel,
+              { yPercent: -200 },
+              { yPercent: 0, duration: 1.15, ease: 'power4.out' },
+              'secondPart'
+            )
+            /* ======= Layout elements part mobile ========= */
+            .fromTo(
+              document.querySelector('.navigation-mobile'),
+              { yPercent: 200 },
+              {
+                yPercent: 0,
+                duration: 1,
+                ease: 'power3.out',
+              },
+              'secondPart+=0.2'
+            );
+        }
+        timeline.add(() => {
+          scrollSmoother.value.paused(false);
+        }, '-=1');
+      }
+    );
   });
+  ctx.add(() => {});
 };
 
 /* ====================================================
