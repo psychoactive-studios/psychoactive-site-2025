@@ -3,9 +3,6 @@ import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
 import ClientsSaySlide from './ClientsSaySlide.vue';
 import { clientsData } from '~/data/clientsData';
-import { useMediaQuery } from '@vueuse/core';
-
-const isMobile = useMediaQuery('(max-width: 768px)');
 </script>
 <template>
   <Splide
