@@ -133,7 +133,7 @@ const leave = (el, done) => {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: getRem(32);
+    font-size: clamp(20px, 1.666666vw, 32px);
     font-style: normal;
     font-weight: 400;
     line-height: 112.5%;
@@ -150,15 +150,15 @@ const leave = (el, done) => {
   }
 
   &__content {
-    font-size: getRem(20);
+    font-size: clamp(16px, 1.042vw, 20px);
     font-style: normal;
     font-weight: 400;
     line-height: 130%;
     color: white(80);
     position: relative;
-    margin-top: getRem(42);
-    margin-bottom: getRem(42);
-    padding-left: getRem(42);
+    margin-top: clamp(20px, 2.19vw, 42px);
+    margin-bottom: clamp(20px, 2.19vw, 42px);
+    padding-left: clamp(20px, 2.19vw, 42px);
     &::before,
     &::after {
       content: '';

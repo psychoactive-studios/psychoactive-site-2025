@@ -60,7 +60,7 @@ definePageMeta({
 
 <template>
   <main class="webflow">
-    <Hero />
+    <!-- <Hero /> -->
     <div class="container">
       <section class="webflow__onscroll-text">
         <OnScrollFilledText>
@@ -126,7 +126,10 @@ definePageMeta({
       margin-top: 1rem;
     }
   }
-  &__timeline {
+  &__services {
+    @include respond(mobile) {
+      margin-top: 120px;
+    }
   }
   &__partners {
     margin-top: 240px;

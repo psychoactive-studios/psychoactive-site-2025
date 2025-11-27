@@ -104,18 +104,25 @@ onUnmounted(() => {
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+@use '~/assets/styles/mixins' as *;
 
 .our-services {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: getRem(24);
+  @include respond(mobile) {
+    grid-template-columns: 1fr;
+  }
   &__accordion {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    @include respond(mobile) {
+      order: 2;
+    }
     h2 {
       font-family: 'RoobertMono';
-      font-size: 1rem;
+      font-size: clamp(12px, 0.8333vw, 16px);
       font-style: normal;
       font-weight: 500;
       line-height: 100%; /* 16px */
@@ -129,6 +136,9 @@ onUnmounted(() => {
     border-radius: getRem(10);
     overflow: hidden;
     background-color: $color-foreground;
+    @include respond(mobile) {
+      order: 1;
+    }
     & > * {
       width: 100%;
       height: 100%;
