@@ -114,7 +114,7 @@ watch(isLoading, (newVal) => {
 .grey-text {
   color: white(50);
   font-family: 'RoobertMono';
-  font-size: 1rem;
+  font-size: clamp(12px, 0.938vw, 18px);
   font-style: normal;
   font-weight: 500;
   line-height: 100%; /* 16px */
@@ -125,6 +125,14 @@ watch(isLoading, (newVal) => {
     @include flex-center;
     flex-direction: column;
     height: 100dvh;
+    @include respond(portrait) {
+      padding-top: 160px;
+      padding-bottom: 48px;
+    }
+    @include respond(mobile) {
+      padding-top: 24px;
+      padding-bottom: 74px;
+    }
   }
 }
 .scene {
@@ -133,6 +141,10 @@ watch(isLoading, (newVal) => {
   position: relative;
   @include flex-center;
   position: relative;
+  @include respond(portrait) {
+    aspect-ratio: auto;
+    height: 100%;
+  }
 }
 .video {
   width: 50%;
@@ -140,6 +152,9 @@ watch(isLoading, (newVal) => {
   background-color: $color-foreground;
   position: absolute;
   clip-path: circle(50% at 50% 50%);
+  @include respond(mobile) {
+    width: calc(100% - 48px);
+  }
 
   video {
     width: 100%;
@@ -152,6 +167,9 @@ watch(isLoading, (newVal) => {
   width: 44%;
   aspect-ratio: 1 / 1;
   transform: rotate(-45deg);
+  @include respond(mobile) {
+    width: calc(89% - 48px);
+  }
   svg {
     width: 100%;
     height: 100%;
@@ -180,6 +198,9 @@ watch(isLoading, (newVal) => {
   position: absolute;
   width: 50%;
   aspect-ratio: 1.2;
+  @include respond(mobile) {
+    width: calc(100% - 48px);
+  }
   span {
     display: block;
     width: 6px;
@@ -211,7 +232,7 @@ watch(isLoading, (newVal) => {
   bottom: 0;
   h1 {
     margin-top: getRem(4);
-    font-size: 4.8vw;
+    font-size: max(4.8vw, 32px);
     font-style: normal;
     font-weight: 400;
     line-height: 88%; /* 80.96px */
@@ -223,6 +244,16 @@ watch(isLoading, (newVal) => {
         color: #136df4;
       }
     }
+    @include respond(mobile) {
+      line-height: 121%;
+      span {
+        display: inline-block;
+        margin-right: 0.3em;
+        &.blue {
+          display: block;
+        }
+      }
+    }
   }
 }
 .right-text {
@@ -230,8 +261,27 @@ watch(isLoading, (newVal) => {
   right: 0;
   bottom: 0;
   text-align: right;
+  @include respond(mobile) {
+    bottom: auto;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    &__label {
+      order: 1;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    .grey-text {
+      order: 2;
+    }
+  }
   &__label {
-    margin-top: getRem(30);
+    margin-top: min(1.56vw, 30px);
+    margin-left: auto;
+    height: clamp(36px, 2.5vw, 48px);
+    width: auto;
   }
 }
 .bottom-down {
@@ -239,5 +289,8 @@ watch(isLoading, (newVal) => {
   bottom: 24px;
   z-index: 1;
   mix-blend-mode: difference;
+  @include respond(mobile) {
+    display: none;
+  }
 }
 </style>

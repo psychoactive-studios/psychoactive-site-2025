@@ -25,6 +25,7 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
 @use 'sass:math';
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/animations';
+@use '~/assets/styles/mixins' as *;
 .center {
   position: absolute;
   top: calc(50% - 3px);
@@ -52,6 +53,9 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
     display: flex;
     gap: 10vw;
     justify-content: flex-start;
+    @include respond(mobile) {
+      gap: 25vw;
+    }
     span {
       width: 64px;
       display: flex;
