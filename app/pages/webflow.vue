@@ -18,6 +18,7 @@ import { leaveAnimation } from '~/utils/animations/transitions';
 import HeroMobile from '~/components/homepage/HeroMobile.vue';
 import { useMediaQuery } from '@vueuse/core';
 import VideoReelMobile from '~/components/webflow/VideoReelMobile.vue';
+import PartnersMobile from '~/components/ui/PartnersMobile.vue';
 
 const { scrollSmoother, enableScroll } = useScrollSmoother();
 const { startLoading } = useLoader();
@@ -60,56 +61,62 @@ definePageMeta({
 
 <template>
   <main class="webflow">
-    <!-- <Hero /> -->
-    <div class="container">
-      <section class="webflow__onscroll-text">
-        <OnScrollFilledText>
-          <p>
-            Webflow development <span class="dark">for</span> innovative brands.
-          </p>
-          <p>
-            Custom code <span class="dark">and</span> enterprise-grade builds,
-            <span class="dark">crafted for</span>
-            performance, scalability <span class="dark">and</span> visibility
-            <span class="dark">in an AI-driven world</span>.
-          </p>
-        </OnScrollFilledText>
-      </section>
-    </div>
-    <section class="webflow__video-reels">
-      <ClientOnly>
+    <ClientOnly>
+      <!-- <Hero /> -->
+      <div class="container">
+        <section class="webflow__onscroll-text">
+          <OnScrollFilledText>
+            <p>
+              Webflow development <span class="dark">for</span> innovative
+              brands.
+            </p>
+            <p>
+              Custom code <span class="dark">and</span> enterprise-grade builds,
+              <span class="dark">crafted for</span>
+              performance, scalability <span class="dark">and</span> visibility
+              <span class="dark">in an AI-driven world</span>.
+            </p>
+          </OnScrollFilledText>
+        </section>
+      </div>
+      <section class="webflow__video-reels">
         <div v-if="!isMobile" class="container">
           <VideoReel />
         </div>
         <VideoReelMobile v-if="isMobile" />
-      </ClientOnly>
-    </section>
-    <div class="container">
-      <section v-if="!isMobile" class="webflow__timeline">
-        <Timeline />
       </section>
-      <section class="webflow__services">
-        <Services />
-      </section>
+      <div class="container">
+        <section v-if="!isMobile" class="webflow__timeline">
+          <Timeline />
+        </section>
+        <section class="webflow__services">
+          <Services />
+        </section>
+      </div>
       <section class="webflow__partners">
-        <PartnersDesktop />
+        <div v-if="!isMobile" class="container">
+          <PartnersDesktop />
+        </div>
+        <PartnersMobile v-if="isMobile" />
       </section>
+      <div class="container">
+        <section class="webflow__cases">
+          <CasesSwiper />
+        </section>
 
-      <section class="webflow__cases">
-        <CasesSwiper />
-      </section>
+        <section class="webflow__statistics">
+          <Statistics />
+        </section>
 
-      <section class="webflow__statistics">
-        <Statistics />
-      </section>
+        <section class="webflow__clients-say">
+          <ClientsSaySwiper />
+        </section>
+      </div>
 
-      <section class="webflow__clients-say">
-        <ClientsSaySwiper />
+      <section class="webflow__sets-us">
+        <WatsUs />
       </section>
-    </div>
-    <section class="webflow__sets-us">
-      <WatsUs />
-    </section>
+    </ClientOnly>
     <Footer />
   </main>
 </template>
@@ -133,6 +140,9 @@ definePageMeta({
   }
   &__partners {
     margin-top: 240px;
+    @include respond(mobile) {
+      margin-top: 120px;
+    }
   }
   &__cases {
     margin-top: 160px;

@@ -3,7 +3,7 @@ import { partnersData } from '~/data/partnersData';
 </script>
 
 <template>
-  <Vue3Marquee :duration="30" :pause-on-hover="true">
+  <Vue3Marquee :duration="30" :pause-on-hover="true" class="partners-mobile">
     <NuxtImg
       v-for="partner in partnersData"
       :key="partner.id"
@@ -13,3 +13,11 @@ import { partnersData } from '~/data/partnersData';
     />
   </Vue3Marquee>
 </template>
+
+<style scoped lang="scss">
+.partners-mobile {
+  img {
+    margin: 0 12px;
+  }
+}
+</style>
