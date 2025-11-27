@@ -42,6 +42,15 @@ onMounted(async () => {
   line-height: 120%;
   letter-spacing: -0.02em;
   position: relative;
+  @include respond(mobile) {
+    font-size: 6.4vw;
+    line-height: 121%;
+    text-align: left;
+    :deep(p) {
+      display: inline;
+    }
+  }
+
   :deep(.dark) {
     color: white(50);
   }
