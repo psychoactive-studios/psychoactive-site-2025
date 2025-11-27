@@ -16,9 +16,15 @@ import useLoader from '~/composables/useLoader';
 import useNavigation from '~/composables/useNavigation';
 import { leaveAnimation } from '~/utils/animations/transitions';
 
-const { scrollSmoother } = useScrollSmoother();
+const { scrollSmoother, enableScroll } = useScrollSmoother();
 const { startLoading } = useLoader();
 const { transitionFromNavigation } = useNavigation();
+
+onMounted(() => {
+  setTimeout(() => {
+    enableScroll();
+  }, 100);
+});
 
 definePageMeta({
   scrollToTop: true,
@@ -97,11 +103,16 @@ definePageMeta({
 </template>
 
 <style scoped lang="scss">
+@use '~/assets/styles/mixins' as *;
 .webflow {
   &__onscroll-text {
     max-width: 56vw;
     margin: 0 auto 120px auto;
     text-align: center;
+    @include respond(mobile) {
+      max-width: initial;
+      margin-top: 1rem;
+    }
   }
   &__timeline {
   }
