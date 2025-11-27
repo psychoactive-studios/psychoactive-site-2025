@@ -22,8 +22,8 @@ body {
     padding-right: 48px;
   }
   @include respond(mobile) {
-    padding-left: 24px;
-    padding-right: 24px;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
 

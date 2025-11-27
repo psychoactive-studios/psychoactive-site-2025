@@ -17,7 +17,7 @@ const isMobile = useMediaQuery('(max-width: 768px)');
       ref="containerRef"
       :has-track="false"
       :options="{
-        gap: isMobile ? 24 : 20,
+        gap: isMobile ? 16 : 20,
         speed: 600,
         easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
       }"
