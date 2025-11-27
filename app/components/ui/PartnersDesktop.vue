@@ -26,15 +26,12 @@ import { partnersData } from '~/data/partnersData';
   img {
     height: auto;
     object-fit: contain;
-    margin: 0 20px;
+    margin: 0 clamp(8px, 1.042vw, 20px);
     &:first-child {
       margin-left: 0;
     }
     &:last-child {
       margin-right: 0;
-    }
-    @include respond(mobile) {
-      margin: 0 20px;
     }
   }
   .partner-super-ai {
