@@ -85,7 +85,7 @@ definePageMeta({
       </ClientOnly>
     </section>
     <div class="container">
-      <section class="webflow__timeline">
+      <section v-if="!isMobile" class="webflow__timeline">
         <Timeline />
       </section>
       <section class="webflow__services">
