@@ -155,7 +155,7 @@ $range: $max - $min + 1;
       display: flex;
       gap: 19.5vw;
       font-family: 'RoobertMono';
-      font-size: 1rem;
+      font-size: clamp(14px, 0.833vw, 16px);
       font-style: normal;
       font-weight: 500;
       line-height: 100%; /* 16px */
@@ -199,33 +199,43 @@ $range: $max - $min + 1;
           display: flex;
           align-items: center;
           min-height: getRem(28);
+          white-space: nowrap;
+          @include respond(tablet) {
+            position: relative;
+          }
           img {
             width: auto;
-            height: 20px;
+            height: clamp(14px, 1.05vw, 20px);
             margin-right: getRem(4);
           }
           h3 {
-            font-size: getRem(18);
+            font-size: clamp(12px, 0.94vw, 18px);
             font-style: normal;
             font-weight: 600;
             line-height: 1;
             color: $color-foreground;
           }
           .enterprise {
-            font-size: getRem(14);
+            font-size: clamp(12px, 0.73vw, 14px);
             font-style: normal;
             font-weight: 600;
-            line-height: 150%; /* 21.3px */
-            padding: 2px 12px;
+            line-height: 1; /* 21.3px */
+            padding: 2px clamp(8px, 0.63vw, 12px);
             background-color: $color-foreground;
             color: $color-black;
             border-radius: 4px;
             margin-left: 12px;
-            height: 28px;
+            height: clamp(18px, 1.459vw, 28px);
             @include flex-center;
             &.blue {
               background-color: #136df4;
               color: $color-foreground;
+            }
+            @include respond(tablet) {
+              position: absolute;
+              top: 100%;
+              left: 0;
+              margin-left: 0;
             }
           }
         }
@@ -241,7 +251,7 @@ $range: $max - $min + 1;
           margin-top: 72px;
           h4 {
             font-family: 'RoobertMono';
-            font-size: 1rem;
+            font-size: clamp(12px, 0.833vw, 16px);
             font-style: normal;
             font-weight: 500;
             line-height: 100%;
@@ -250,7 +260,7 @@ $range: $max - $min + 1;
             margin-bottom: getRem(6);
           }
           p {
-            font-size: getRem(20);
+            font-size: clamp(12px, 1.042vw, 20px);
             font-style: normal;
             font-weight: 400;
             line-height: 130%;
