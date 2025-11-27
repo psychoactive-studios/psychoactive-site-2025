@@ -60,7 +60,7 @@ definePageMeta({
 
 <template>
   <main class="webflow">
-    <!-- <Hero /> -->
+    <Hero />
     <div class="container">
       <section class="webflow__onscroll-text">
         <OnScrollFilledText>

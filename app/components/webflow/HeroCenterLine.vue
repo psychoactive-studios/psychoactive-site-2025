@@ -47,6 +47,9 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
     overflow: hidden;
     .center__tunnel span {
       animation-name: tunnel-right;
+      @include respond(mobile) {
+        animation-name: tunnel-right-mobile;
+      }
     }
   }
   &__tunnel {
@@ -80,6 +83,10 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
           }
         }
       }
+
+      @include respond(mobile) {
+        animation: tunnel-left-mobile 10s linear infinite;
+      }
     }
   }
   @keyframes tunnel-left {
@@ -93,6 +100,22 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
   @keyframes tunnel-right {
     from {
       transform: translateX(calc(-10vw - 64px));
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @keyframes tunnel-left-mobile {
+    from {
+      transform: translateX(calc(25vw + 64px));
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @keyframes tunnel-right-mobile {
+    from {
+      transform: translateX(calc(-25vw - 64px));
     }
     to {
       transform: translateX(0);
