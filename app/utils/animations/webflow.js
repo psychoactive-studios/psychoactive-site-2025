@@ -37,8 +37,10 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
       {
         // set up any number of arbitrarily-named conditions. The function below will be called when ANY of them match.
         isDesktop: `(min-width: 768px)`,
+        isMobile: `(max-width: 767px)`,
       },
       (context) => {
+        console.log('heroInitAnimation');
         // context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
         let { isDesktop } = context.conditions;
 

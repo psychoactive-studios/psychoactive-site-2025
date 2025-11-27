@@ -205,7 +205,11 @@ onClickOutside(navigationMobileRef, () => {
       <IconPlus class="icon" />
     </button>
     <div class="navigation-mobile__background">
-      <NuxtLink to="/" class="navigation-mobile__logo">
+      <NuxtLink
+        to="/"
+        class="navigation-mobile__logo"
+        @click="onToggleNavigation"
+      >
         <span ref="lottieLogoContainerRef" />
       </NuxtLink>
     </div>
@@ -215,31 +219,41 @@ onClickOutside(navigationMobileRef, () => {
       </div>
       <ul class="navigation-mobile__list">
         <li class="navigation-mobile__item">
-          <LinkWithHover href="/">About</LinkWithHover>
+          <LinkWithHover href="/" @click="onToggleNavigation">
+            About
+          </LinkWithHover>
           <div class="navigation-mobile__item-line">
             <span class="line" />
           </div>
         </li>
         <li class="navigation-mobile__item">
-          <LinkWithHover href="/">Work</LinkWithHover>
+          <LinkWithHover href="/work" @click="onToggleNavigation">
+            Work
+          </LinkWithHover>
           <div class="navigation-mobile__item-line">
             <span class="line" />
           </div>
         </li>
         <li class="navigation-mobile__item">
-          <LinkWithHover href="/">Services</LinkWithHover>
+          <LinkWithHover href="/" @click="onToggleNavigation">
+            Services
+          </LinkWithHover>
           <div class="navigation-mobile__item-line">
             <span class="line" />
           </div>
         </li>
         <li class="navigation-mobile__item">
-          <LinkWithHover href="/">Webflow</LinkWithHover>
+          <LinkWithHover href="/webflow" @click="onToggleNavigation">
+            Webflow
+          </LinkWithHover>
           <div class="navigation-mobile__item-line">
             <span class="line" />
           </div>
         </li>
         <li class="navigation-mobile__item">
-          <LinkWithHover href="/">Content</LinkWithHover>
+          <LinkWithHover href="/content-hub" @click="onToggleNavigation">
+            Content
+          </LinkWithHover>
           <div class="navigation-mobile__item-line">
             <span class="line" />
           </div>
