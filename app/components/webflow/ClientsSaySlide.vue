@@ -29,45 +29,66 @@ defineProps({
 
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 .slide {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px;
   border-radius: 24px;
   background: #1b1b1b;
   padding: getRem(24);
+  height: 100%;
+  @include respond(mobile) {
+    display: flex;
+    flex-direction: column;
+    gap: getRem(12);
+    padding: getRem(12);
+    border-radius: getRem(12);
+  }
   &__photo {
     aspect-ratio: 0.53;
+    @include respond(mobile) {
+      aspect-ratio: 1;
+      overflow: hidden;
+    }
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: getRem(10);
+      object-position: top;
+      border-radius: getRem(12);
     }
   }
   &__body {
     display: flex;
     flex-direction: column;
+    @include respond(mobile) {
+      flex-grow: 1;
+    }
     h3 {
       font-family: 'RoobertMono';
-      font-size: 0.835vw;
+      font-size: max(0.835vw, 12px);
       font-style: normal;
       font-weight: 500;
       line-height: 100%; /* 16px */
       text-transform: uppercase;
       color: white(50);
       margin-bottom: getRem(48);
+      @include respond(mobile) {
+        margin-bottom: getRem(24);
+      }
     }
     &-text {
-      font-size: 1.25vw;
+      font-size: max(1.25vw, 16px);
       font-style: normal;
       font-weight: 400;
       line-height: 125%;
+      margin-bottom: getRem(24);
     }
     &-author {
       margin-top: auto;
       &-name {
-        font-size: 1.25vw;
+        font-size: max(1.25vw, 16px);
         font-style: normal;
         font-weight: 400;
         line-height: 125%;
@@ -76,7 +97,7 @@ defineProps({
       }
       &-position {
         font-family: 'RoobertMono';
-        font-size: 0.835vw;
+        font-size: max(0.835vw, 12px);
         font-style: normal;
         font-weight: 500;
         line-height: 100%; /* 16px */

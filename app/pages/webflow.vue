@@ -158,6 +158,10 @@ definePageMeta({
   }
   &__clients-say {
     margin-top: 160px;
+    @include respond(mobile) {
+      margin-top: 64px;
+      padding-right: 10%;
+    }
   }
   &__sets-us {
     margin-top: 240px;

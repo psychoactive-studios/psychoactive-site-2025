@@ -3,6 +3,9 @@ import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
 import ClientsSaySlide from './ClientsSaySlide.vue';
 import { clientsData } from '~/data/clientsData';
+import { useMediaQuery } from '@vueuse/core';
+
+const isMobile = useMediaQuery('(max-width: 768px)');
 </script>
 <template>
   <Splide
@@ -12,7 +15,7 @@ import { clientsData } from '~/data/clientsData';
       drag: 'free',
       focus: 'center',
       perPage: 2,
-      gap: '20px',
+      gap: 20,
       arrows: false,
       pagination: false,
       autoScroll: {
@@ -20,8 +23,18 @@ import { clientsData } from '~/data/clientsData';
         pauseOnHover: true,
         pauseOnFocus: false,
       },
+      breakpoints: {
+        1200: {
+          perPage: 1,
+        },
+        768: {
+          drag: true,
+          gap: 16,
+          autoScroll: false,
+        },
+      },
     }"
-    aria-label="My Favorite Images"
+    aria-label="Clients testimonials"
     class="clients-swiper"
   >
     <SplideSlide v-for="client in clientsData" :key="client.id">
