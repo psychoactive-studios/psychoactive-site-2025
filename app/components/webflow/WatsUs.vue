@@ -59,6 +59,8 @@ onMounted(async () => {
           trigger: containerRef.value,
           start: 'top center',
           end: 'bottom center',
+          // invalidateOnRefresh: true,
+          markers: true,
         },
       })
       .from(
@@ -88,10 +90,13 @@ onMounted(async () => {
         },
         'secotndPart'
       )
-      .from(
+      .fromTo(
         '.accordion__header_border',
         {
-          width: 0,
+          width: '0%',
+        },
+        {
+          width: '100%',
           duration: 1.5,
           stagger: 0.1,
           ease: 'power3.inOut',
@@ -229,23 +234,28 @@ const onFocusHandler = () => {
   background-color: $color-foreground;
   color: $color-background;
   padding: 160px 0 190px 0;
+  @include respond(mobile) {
+    padding: 48px 0 120px 0;
+  }
   &__wrapper {
     max-width: 83.125%;
     margin: auto;
+    @include respond(tablet) {
+      max-width: 100%;
+    }
   }
   h2 {
-    font-size: clamp(64px, 5vw, 96px);
+    font-size: clamp(32px, 5vw, 96px);
     font-style: normal;
     font-weight: 400;
     line-height: 100%;
     letter-spacing: -0.06em;
-    margin-bottom: 80px;
+    margin-bottom: clamp(24px, 4.18vw, 80px);
   }
   &__show-more {
     margin-top: 48px;
     transform-origin: left;
     @include respond(mobile) {
-      margin-top: getRem(24);
       text-align: center;
     }
     button {

@@ -147,12 +147,16 @@ const leave = (el, done) => {
 <style lang="scss" scoped>
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+@use '~/assets/styles/mixins' as *;
 
 .accordion {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: getRem(32);
+  @include respond(mobile) {
+    gap: getRem(14);
+  }
 
   &__item {
     &--active {
@@ -171,7 +175,7 @@ const leave = (el, done) => {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: clamp(32px, 2.1vw, 40px);
+    font-size: clamp(20px, 2.1vw, 40px);
     font-style: normal;
     font-weight: 400;
     line-height: 112.5%;
@@ -181,8 +185,8 @@ const leave = (el, done) => {
     display: flex;
     justify-content: space-between;
     width: 100%;
-    padding-bottom: 42px;
-    padding-right: 32px;
+    padding-bottom: clamp(14px, 2.19vw, 42px);
+    padding-right: clamp(0px, 1.67vw, 32px);
     position: relative;
     &_icon {
       transition: transform 0.5s ease-in-out;
@@ -255,7 +259,7 @@ const leave = (el, done) => {
   }
 
   &__content {
-    font-size: getRem(24);
+    font-size: clamp(16px, 1.25vw, 24px);
     font-style: normal;
     font-weight: 400;
     line-height: 125%;
@@ -263,6 +267,13 @@ const leave = (el, done) => {
     &_inner {
       max-width: 60%;
       margin: auto;
+      @include respond(tablet) {
+        max-width: 80%;
+      }
+      @include respond(mobile) {
+        max-width: 100%;
+        padding: 0 getRem(16);
+      }
     }
   }
 }
