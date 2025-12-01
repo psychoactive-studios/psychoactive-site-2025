@@ -118,6 +118,7 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding-right: 15%;
     @include respond(mobile) {
       order: 2;
     }
