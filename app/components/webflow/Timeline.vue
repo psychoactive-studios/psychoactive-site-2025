@@ -186,7 +186,7 @@ $range: $max - $min + 1;
     }
   }
   &__through {
-    margin-top: 180px;
+    margin-top: 80px;
     position: relative;
     &_list {
       display: grid;

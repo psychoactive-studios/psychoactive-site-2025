@@ -25,11 +25,11 @@ const list = [
     content:
       'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
   },
-  {
-    title: 'Maintenance & Partnership',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
-  },
+  // {
+  //   title: 'Maintenance & Partnership',
+  //   content:
+  //     'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
+  // },
 ];
 
 const { playInteractionSound } = useAudioManager();
@@ -229,9 +229,11 @@ const onFocusHandler = () => {
 @use '~/assets/styles/mixins' as *;
 
 .what-sets-us {
+  @include flex-center;
   background-color: $color-foreground;
   color: $color-background;
-  padding: 160px 0 190px 0;
+  min-height: 100dvh;
+  padding: 60px 0 60px 0;
   @include respond(mobile) {
     padding: 48px 0 120px 0;
   }

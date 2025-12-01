@@ -118,8 +118,11 @@ definePageMeta({
 @use '~/assets/styles/mixins' as *;
 .webflow {
   &__onscroll-text {
+    display: flex;
+    align-items: center;
+    min-height: 100dvh;
     max-width: 56vw;
-    margin: 0 auto 120px auto;
+    margin: 0 auto;
     text-align: center;
     @include respond(mobile) {
       max-width: initial;
@@ -127,12 +130,13 @@ definePageMeta({
     }
   }
   &__services {
+    @include flex-center;
+    min-height: 100dvh;
     @include respond(mobile) {
       margin-top: 120px;
     }
   }
   &__partners {
-    margin-top: 240px;
     @include respond(mobile) {
       margin-top: 120px;
     }
