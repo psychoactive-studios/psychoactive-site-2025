@@ -36,7 +36,8 @@ onMounted(async () => {
   });
   heroVideoResource.value = URL.createObjectURL(blob);
   resourceLoaded();
-  heroScrollAnimation(ctx);
+
+  setTimeout(() => heroScrollAnimation(ctx), 200);
 });
 
 onUnmounted(() => {
