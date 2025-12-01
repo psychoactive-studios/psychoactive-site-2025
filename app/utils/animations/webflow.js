@@ -246,7 +246,7 @@ export const heroScrollAnimation = (ctx) => {
         end: 'bottom top', // end after scrolling 500px beyond the start
         //scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
         invalidateOnRefresh: true,
-        markers: true,
+        //markers: true,
       },
     });
 
@@ -261,7 +261,7 @@ export const heroScrollAnimation = (ctx) => {
           end: '200% top', // end after scrolling 500px beyond the start
           scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
           invalidateOnRefresh: true,
-          markers: true,
+          //markers: true,
         },
       })
       .fromTo(
@@ -289,16 +289,16 @@ export const heroScrollAnimation = (ctx) => {
         {
           scale: 1.7,
           duration: inputTime,
-          ease: 'power1.in',
+          ease: 'power2.in',
         },
         'start'
       )
       .to(
         dotsWrapper,
         {
-          scale: 0.55,
+          scale: 0,
           duration: inputTime,
-          //ease: 'power1.in',
+          ease: 'power2.in',
         },
         'start'
       )
@@ -589,10 +589,11 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
       )
       .fromTo(
         '.timeline__arrow_blick',
-        { rotate: -10, scale: 0.75 },
+        { rotate: -40, scale: 0.75, opacity: 0 },
         {
           rotate: 0,
           scale: 1,
+          opacity: 1,
           duration: mainDuctionTime,
           ease: 'none',
         },

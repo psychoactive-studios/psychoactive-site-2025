@@ -264,6 +264,7 @@ const leave = (el, done) => {
     font-weight: 400;
     line-height: 125%;
     padding-top: getRem(48);
+    padding-bottom: getRem(64);
     &_inner {
       max-width: 60%;
       margin: auto;
