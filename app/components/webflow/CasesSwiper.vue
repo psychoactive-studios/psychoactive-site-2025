@@ -4,24 +4,32 @@ import ButtonDotsArrow from '../ui/ButtonDotsArrow.vue';
 import CaseStadyPreview from '../ui/CaseStadyPreview.vue';
 import { useMediaQuery } from '@vueuse/core';
 
+const wrapperRef = ref(null);
 const containerRef = ref(null);
 
 const isMobile = useMediaQuery('(max-width: 768px)');
+
+onBeforeUnmount(() => {
+  const originalSlider = containerRef.value.root;
+  const clonedSlider = containerRef.value.root.cloneNode(true);
+  originalSlider.parentNode.replaceChild(clonedSlider, originalSlider);
+});
 
 // Functions for navigation buttons
 </script>
 
 <template>
-  <div class="cases-swiper">
+  <div ref="wrapperRef" class="cases-swiper">
     <Splide
       ref="containerRef"
       :has-track="false"
       :options="{
+        type: 'loop',
         gap: isMobile ? 16 : 20,
         speed: 600,
-        easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+        // easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
       }"
-      aria-label="My Favorite Images"
+      aria-label="Case studies showcase"
     >
       <SplideTrack>
         <SplideSlide>
@@ -69,8 +77,30 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
+@use '~/assets/styles/variables' as *;
 .cases-swiper {
   position: relative;
+  width: 100%;
+  // &::before {
+  //   content: '';
+  //   display: block;
+  //   position: absolute;
+  //   z-index: 1;
+  //   top: 0;
+  //   right: 100%;
+  //   bottom: 0;
+  //   width: 160px;
+  //   background-color: $color-background;
+  //   background: linear-gradient(90deg, $color-background 90%, transparent 100%);
+  //   opacity: 0.8;
+  // }
+  // .splide__slide {
+  //   opacity: 0.2;
+  //   transition: opacity 0.3s ease;
+  //   &.is-active {
+  //     opacity: 1;
+  //   }
+  // }
   &__button {
     position: absolute;
     top: 50%;
