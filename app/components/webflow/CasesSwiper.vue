@@ -9,6 +9,10 @@ const containerRef = ref(null);
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 
+onMounted(() => {
+  setTimeout(() => containerRef.value.splide.refresh(), 100);
+});
+
 onBeforeUnmount(() => {
   const originalSlider = containerRef.value.root;
   const clonedSlider = containerRef.value.root.cloneNode(true);
@@ -27,7 +31,7 @@ onBeforeUnmount(() => {
         type: 'loop',
         gap: isMobile ? 16 : 20,
         speed: 600,
-        // easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
+        easing: isMobile ? 'inherit' : 'cubic-bezier(0.65, 0, 0.35, 1)',
       }"
       aria-label="Case studies showcase"
     >
