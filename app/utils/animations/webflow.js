@@ -510,7 +510,7 @@ export const timelineData = {
   currentYear: 2015,
 };
 
-const introDuctionTime = 0.4;
+const introDuctionTime = 0.2;
 const mainDuctionTime = 0.5;
 export const timelineScrollAnimation = (ctx, currentYear) => {
   ctx.add(() => {
@@ -522,7 +522,7 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
           trigger: '.timeline__inner',
           //pin: true, // pin the trigger element while active
           start: 'top bottom-=20%', // when the top of the trigger hits the top of the viewport
-          end: 'bottom top', // end after scrolling 500px beyond the start
+          end: 'bottom -100%', // end after scrolling 500px beyond the start
           scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
           invalidateOnRefresh: true,
           // markers: true,
@@ -543,7 +543,7 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
         '.timeline__yearline_list',
         { xPercent: 0 },
         {
-          xPercent: -22,
+          xPercent: -18,
           duration: introDuctionTime,
           ease: 'none',
           //ease: 'power1.in',
@@ -562,9 +562,9 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
       )
       .fromTo(
         '.timeline__arrow_blick',
-        { rotate: -60, scale: 0.5 },
+        { rotate: -90, scale: 0.5 },
         {
-          rotate: -15,
+          rotate: -60,
           scale: 0.75,
           duration: introDuctionTime,
           ease: 'none',
@@ -581,7 +581,7 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
         '.timeline__arrow',
         { x: '0vw' },
         {
-          x: '60vw',
+          x: '115vw',
           duration: mainDuctionTime,
           ease: 'none',
         },
@@ -589,12 +589,12 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
       )
       .fromTo(
         '.timeline__arrow_blick',
-        { rotate: -40, scale: 0.75, opacity: 0 },
+        { rotate: -60, scale: 0.75, opacity: 0 },
         {
           rotate: 0,
           scale: 1,
           opacity: 1,
-          duration: mainDuctionTime,
+          duration: mainDuctionTime / 2,
           ease: 'none',
         },
         'main'
@@ -603,8 +603,8 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
         currentYear,
         { value: 2018 },
         {
-          value: 2025,
-          duration: mainDuctionTime,
+          value: 2030,
+          duration: mainDuctionTime / 1.3,
           ease: 'none',
           //ease: 'power1.in',
         },
@@ -612,9 +612,9 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
       )
       .fromTo(
         '.timeline__yearline_list',
-        { xPercent: -22 },
+        { xPercent: -18 },
         {
-          xPercent: -78,
+          xPercent: -100,
           duration: mainDuctionTime,
           ease: 'none',
           //ease: 'power1.in',

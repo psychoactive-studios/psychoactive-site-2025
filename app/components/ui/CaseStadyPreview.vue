@@ -81,7 +81,7 @@ const handleMouseEnter = () => {
   &__media {
     overflow: hidden;
     border-radius: 10px;
-    aspect-ratio: 1.85;
+    aspect-ratio: 2;
     @include respond(mobile) {
       border-radius: 6px;
     }
