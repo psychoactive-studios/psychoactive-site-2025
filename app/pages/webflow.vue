@@ -127,8 +127,14 @@ definePageMeta({
     margin: 0 auto;
     text-align: center;
     @include respond(mobile) {
+      min-height: auto;
       max-width: initial;
-      margin-top: 1rem;
+      margin-top: getRem(80);
+    }
+  }
+  &__video-reels {
+    @include respond(mobile) {
+      margin-top: 52px;
     }
   }
   &__services {
@@ -136,6 +142,7 @@ definePageMeta({
     min-height: 100dvh;
     @include respond(mobile) {
       margin-top: 120px;
+      min-height: auto;
     }
   }
   &__partners {
@@ -148,8 +155,9 @@ definePageMeta({
     @include flex-center;
     min-height: 100dvh;
     @include respond(mobile) {
+      min-height: auto;
       margin-top: 120px;
-      padding-right: 10%;
+      padding-right: 24px;
     }
   }
   &__statistics {

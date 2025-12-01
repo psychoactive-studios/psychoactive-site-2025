@@ -235,6 +235,7 @@ const onFocusHandler = () => {
   min-height: 100dvh;
   padding: 60px 0 60px 0;
   @include respond(mobile) {
+    min-height: auto;
     padding: 48px 0 120px 0;
   }
   &__wrapper {

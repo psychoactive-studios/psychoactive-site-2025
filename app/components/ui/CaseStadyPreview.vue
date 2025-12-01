@@ -88,7 +88,7 @@ const handleMouseEnter = () => {
   &__media {
     overflow: hidden;
     border-radius: 10px;
-    aspect-ratio: 2;
+    aspect-ratio: 1.95;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
