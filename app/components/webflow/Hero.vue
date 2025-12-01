@@ -28,13 +28,7 @@ const heroVideoResource = ref(null);
 onMounted(async () => {
   if (containerRef.value) {
     ctx = gsap.context(() => {}, containerRef.value);
-
     heroInitSplitText();
-
-    // heroInitSplitText();
-    // heroScrollAnimation(ctx);
-
-    // heroInitAnimation(ctx, scrollSmoother);
   }
 
   const blob = await $fetch('/video/webflow_frog3.mp4', {
@@ -42,7 +36,6 @@ onMounted(async () => {
   });
   heroVideoResource.value = URL.createObjectURL(blob);
   resourceLoaded();
-
   heroScrollAnimation(ctx);
 });
 
@@ -59,49 +52,51 @@ watch(isLoading, (newVal) => {
 
 <template>
   <section ref="containerRef" class="hero">
-    <div class="container">
-      <div class="scene">
-        <div class="video">
-          <video
-            v-if="heroVideoResource"
-            :src="heroVideoResource"
-            autoplay
-            loop
-            muted
-            playsinline
-          />
+    <div class="hero__wrapper">
+      <div class="container">
+        <div class="scene">
+          <div class="video">
+            <video
+              v-if="heroVideoResource"
+              :src="heroVideoResource"
+              autoplay
+              loop
+              muted
+              playsinline
+            />
+          </div>
+          <div class="circle-wrapper">
+            <CircleDashed />
+          </div>
+          <div class="sight" />
+          <HeroCenterLine />
+          <div class="dots">
+            <span class="dots--tl" />
+            <span class="dots--tr" />
+            <span class="dots--bl" />
+            <span class="dots--br" />
+          </div>
+          <div class="left-text" @click="onClickHandler">
+            <div class="grey-text">Premium</div>
+            <h1>
+              <span class="blue">Webflow</span>
+              <span>Enterprise</span>
+              <span>Partner</span>
+            </h1>
+          </div>
+          <div class="right-text">
+            <div class="grey-text">Pushing the boundaries of the web</div>
+            <a
+              href="https://webflow.com/@Psychoactive-Studios"
+              target="_blank"
+              @mouseenter="playInteractionSound"
+              @focus="playInteractionSound"
+            >
+              <WebflowLabel class="right-text__label" />
+            </a>
+          </div>
+          <ButtonDotsArrow class="bottom-down" />
         </div>
-        <div class="circle-wrapper">
-          <CircleDashed />
-        </div>
-        <div class="sight" />
-        <HeroCenterLine />
-        <div class="dots">
-          <span class="dots--tl" />
-          <span class="dots--tr" />
-          <span class="dots--bl" />
-          <span class="dots--br" />
-        </div>
-        <div class="left-text" @click="onClickHandler">
-          <div class="grey-text">Premium</div>
-          <h1>
-            <span class="blue">Webflow</span>
-            <span>Enterprise</span>
-            <span>Partner</span>
-          </h1>
-        </div>
-        <div class="right-text">
-          <div class="grey-text">Pushing the boundaries of the web</div>
-          <a
-            href="https://webflow.com/@Psychoactive-Studios"
-            target="_blank"
-            @mouseenter="playInteractionSound"
-            @focus="playInteractionSound"
-          >
-            <WebflowLabel class="right-text__label" />
-          </a>
-        </div>
-        <ButtonDotsArrow class="bottom-down" />
       </div>
     </div>
   </section>

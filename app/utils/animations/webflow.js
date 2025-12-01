@@ -236,36 +236,51 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 const inputTime = 1;
 export const heroScrollAnimation = (ctx) => {
   ctx.add(() => {
+    gsap.timeline({
+      id: 'webflow-scroll-animation',
+      scrollTrigger: {
+        id: 'webflow-hero-scrolltrigger',
+        trigger: '.container',
+        pin: true, // pin the trigger element while active
+        start: 'top top', // when the top of the trigger hits the top of the viewport
+        end: 'bottom top', // end after scrolling 500px beyond the start
+        //scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+        invalidateOnRefresh: true,
+        markers: true,
+      },
+    });
+
     gsap
       .timeline({
         id: 'webflow-scroll-animation',
         scrollTrigger: {
           id: 'webflow-hero-scrolltrigger',
-          trigger: '.container',
-          pin: true, // pin the trigger element while active
+          trigger: '.hero__wrapper',
+          //pin: true, // pin the trigger element while active
           start: 'top top', // when the top of the trigger hits the top of the viewport
-          end: 'bottom top', // end after scrolling 500px beyond the start
+          end: '200% top', // end after scrolling 500px beyond the start
           scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
           invalidateOnRefresh: true,
-          // markers: true,
+          markers: true,
         },
       })
-      .to(
+      .fromTo(
         videoCircle,
+        { clipPath: 'circle(50% at 50% 50%)' },
         {
-          clipPath: 'circle(30% at 50% 50%)',
+          clipPath: 'circle(0% at 50% 50%)',
           duration: inputTime,
-          ease: 'power3.in',
+          ease: 'power1.in',
         },
         'start'
       )
       .to(
         circle,
         {
-          scale: 0.7,
+          scale: 0,
           opacity: 0,
           duration: inputTime,
-          ease: 'power3.in',
+          ease: 'power1.in',
         },
         'start'
       )
@@ -274,7 +289,7 @@ export const heroScrollAnimation = (ctx) => {
         {
           scale: 1.7,
           duration: inputTime,
-          ease: 'power3.in',
+          ease: 'power1.in',
         },
         'start'
       )
@@ -283,25 +298,25 @@ export const heroScrollAnimation = (ctx) => {
         {
           scale: 0.55,
           duration: inputTime,
-          ease: 'power1.in',
+          //ease: 'power1.in',
         },
         'start'
       )
       .to(
         title,
         {
-          scale: 1.55,
+          scale: 2.3,
           duration: inputTime,
-          ease: 'power3.in',
+          ease: 'power1.in',
         },
         'start'
       )
       .to(
         leftGreyText,
         {
-          y: '-7vw',
+          y: '-15.3vw',
           duration: inputTime,
-          ease: 'power3.in',
+          ease: 'power1.in',
         },
         'start'
       );
