@@ -85,6 +85,7 @@ onBeforeUnmount(() => {
 .cases-swiper {
   position: relative;
   width: 100%;
+
   // &::before {
   //   content: '';
   //   display: block;
@@ -93,9 +94,22 @@ onBeforeUnmount(() => {
   //   top: 0;
   //   right: 100%;
   //   bottom: 0;
-  //   width: 160px;
+  //   width: 50%;
   //   background-color: $color-background;
-  //   background: linear-gradient(90deg, $color-background 90%, transparent 100%);
+  //   background: linear-gradient(90deg, $color-background 70%, transparent 100%);
+  //   opacity: 0.8;
+  // }
+  // &::after {
+  //   content: '';
+  //   display: block;
+  //   position: absolute;
+  //   z-index: 1;
+  //   top: 0;
+  //   left: 100%;
+  //   bottom: 0;
+  //   width: 50%;
+  //   background-color: $color-background;
+  //   background: linear-gradient(90deg, transparent 0%, $color-background 25%);
   //   opacity: 0.8;
   // }
   // .splide__slide {
