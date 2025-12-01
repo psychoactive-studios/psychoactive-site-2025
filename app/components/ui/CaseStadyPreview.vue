@@ -52,12 +52,19 @@ const handleMouseEnter = () => {
 
 <template>
   <div class="case-study-preview" @mouseenter="handleMouseEnter">
-    <div ref="mediaElement" class="case-study-preview__media">
+    <div
+      ref="mediaElement"
+      class="case-study-preview__media"
+      :style="{ backgroundImage: `url(${src})` }"
+    >
       <BulgeImage :src="src" />
     </div>
     <div class="case-study-preview__content">
       <div class="case-study-preview__title">
-        <h3 ref="titleRef">{{ title }}</h3>
+        <div class="case-study-preview__title-wapper">
+          <div class="case-study-preview__title-text">{{ title }}</div>
+          <h3 ref="titleRef">{{ title }}</h3>
+        </div>
         <p>{{ description }}</p>
       </div>
       <div class="case-study-preview__dots">
@@ -82,6 +89,9 @@ const handleMouseEnter = () => {
     overflow: hidden;
     border-radius: 10px;
     aspect-ratio: 2;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     @include respond(mobile) {
       border-radius: 6px;
     }
@@ -109,6 +119,18 @@ const handleMouseEnter = () => {
   &__title {
     color: $color-foreground;
     margin-top: getRem(-7);
+    flex-grow: 1;
+    &-wapper {
+      position: relative;
+      h3 {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+    }
+    &-text {
+      visibility: hidden;
+    }
     h3 {
       font-size: getRem(20);
       line-height: 1.4;

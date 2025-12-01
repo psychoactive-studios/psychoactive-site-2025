@@ -32,8 +32,10 @@ definePageMeta({
     mode: 'out-in',
     onEnter: (_, done) => {
       startLoading();
-      scrollSmoother.value.scrollTop(0, false);
-      done();
+      setTimeout(() => {
+        scrollSmoother.value.scrollTop(0, false);
+        done();
+      }, 50);
     },
     onLeave: (el, done) => {
       if (transitionFromNavigation.value) {
@@ -143,6 +145,8 @@ definePageMeta({
   }
   &__cases {
     margin-top: 160px;
+    @include flex-center;
+    min-height: 100dvh;
     @include respond(mobile) {
       margin-top: 120px;
       padding-right: 10%;

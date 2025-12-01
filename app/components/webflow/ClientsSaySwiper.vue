@@ -3,13 +3,22 @@ import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
 import ClientsSaySlide from './ClientsSaySlide.vue';
 import { clientsData } from '~/data/clientsData';
+
+const containerRef = ref(null);
+
+onBeforeUnmount(() => {
+  const originalSlider = containerRef.value.root;
+  const clonedSlider = containerRef.value.root.cloneNode(true);
+  originalSlider.replaceWith(clonedSlider);
+});
 </script>
 <template>
   <Splide
+    ref="containerRef"
     :extensions="{ AutoScroll }"
     :options="{
       type: 'loop',
-      drag: 'free',
+      drag: true,
       focus: 'center',
       perPage: 2,
       gap: 20,
