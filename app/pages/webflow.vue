@@ -161,7 +161,7 @@ definePageMeta({
     }
   }
   &__statistics {
-    margin-top: 160px;
+    margin-top: 80px;
     @include respond(mobile) {
       margin-top: 60px;
     }
