@@ -16,7 +16,7 @@ onMounted(() => {
       .timeline({
         scrollTrigger: {
           trigger: containerRef.value,
-          start: 'top center',
+          start: 'top 90%',
           end: 'bottom center',
         },
       })
