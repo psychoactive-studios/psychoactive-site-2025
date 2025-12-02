@@ -43,8 +43,6 @@ const { data: articleData, error } = await useFetch(
   }
 );
 
-console.log('articleData', articleData.value);
-
 if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
