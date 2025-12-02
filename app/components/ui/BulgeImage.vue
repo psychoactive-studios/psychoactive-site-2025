@@ -2,26 +2,28 @@
   <div
     ref="rootEl"
     class="bulge-image-scene"
+    :style="{ backgroundImage: `url(${src})` }"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @mousemove="handleMouseMove"
     @touchmove="handleMouseMove"
   >
-    <canvas ref="canvasEl" />
-    <div ref="cursorRef" class="cursor">Open</div>
+    <canvas v-if="shouldActivate" ref="canvasEl" />
+    <div v-if="shouldActivate" ref="cursorRef" class="cursor">Open</div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, computed, nextTick } from 'vue';
 import * as THREE from 'three';
 import vertexShader from '@/utils/glsl/main.vert?raw';
 import fragmentShader from '@/utils/glsl/main.frag?raw';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { usePointer } from '@vueuse/core';
+import { useMediaQuery, usePointer } from '@vueuse/core';
 
 const { pointerType, x: eventX, y: eventY } = usePointer();
+const isMobile = useMediaQuery('(max-width: 768px)');
 
 const isHovered = ref(false);
 const cursorRef = ref(null);
@@ -57,36 +59,67 @@ const settings = {
   lerpFactor: 0.05, // Interpolation factor
 };
 
-onMounted(() => {
-  // Ensure DOM is ready before initializing
-  nextTick(() => {
-    initScene();
-    initScrollTrigger();
-    addEventListeners();
-    gsap.ticker.add(animate);
-  });
-});
+const shouldActivate = computed(
+  () => !isMobile.value && pointerType.value === 'mouse'
+);
 
-onUnmounted(() => {
+function init() {
+  initScene();
+  initScrollTrigger();
+  addEventListeners();
+  gsap.ticker.add(animate);
+}
+
+function destroy() {
   removeEventListeners();
   cleanupScrollTrigger();
   gsap.ticker.remove(animate);
   // Clean up Three.js resources
   if (renderer) {
     renderer.dispose();
+    renderer = null;
   }
   if (material) {
     if (material.uniforms.uTexture.value) {
       material.uniforms.uTexture.value.dispose();
     }
     material.dispose();
+    material = null;
   }
   if (mesh && mesh.geometry) {
     mesh.geometry.dispose();
   }
+  if (scene) {
+    scene.clear();
+    scene = null;
+  }
+}
+
+watch(shouldActivate, (val) => {
+  if (val) {
+    nextTick(() => {
+      init();
+    });
+  } else {
+    destroy();
+  }
+});
+
+onMounted(() => {
+  // Ensure DOM is ready before initializing
+  nextTick(() => {
+    if (shouldActivate.value) {
+      init();
+    }
+  });
+});
+
+onUnmounted(() => {
+  destroy();
 });
 
 const handleMouseEnter = () => {
+  if (!shouldActivate.value) return;
   isHovered.value = true;
 
   // Store global mouse position
@@ -114,6 +147,7 @@ const handleMouseEnter = () => {
 };
 
 const handleMouseLeave = () => {
+  if (!shouldActivate.value) return;
   isHovered.value = false;
   if (pointerType.value !== 'mouse') {
     return; // Skip cursor animation for non-mouse pointers
@@ -199,7 +233,7 @@ function handleResize() {
 }
 
 function handleMouseMove() {
-  if (!rootEl.value) return;
+  if (!rootEl.value || !shouldActivate.value) return;
   const rect = rootEl.value.getBoundingClientRect();
   // const isTouch = e.touches && e.touches.length > 0;
   // const eventX = isTouch ? e.touches[0].clientX : e.clientX;
@@ -306,6 +340,9 @@ function removeEventListeners() {
   width: 100%;
   height: 100%;
   position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   canvas {
     width: 100%;
     height: 100%;

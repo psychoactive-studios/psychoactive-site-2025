@@ -52,11 +52,7 @@ const handleMouseEnter = () => {
 
 <template>
   <div class="case-study-preview" @mouseenter="handleMouseEnter">
-    <div
-      ref="mediaElement"
-      class="case-study-preview__media"
-      :style="{ backgroundImage: `url(${src})` }"
-    >
+    <div ref="mediaElement" class="case-study-preview__media">
       <BulgeImage :src="src" />
     </div>
     <div class="case-study-preview__content">
@@ -89,9 +85,6 @@ const handleMouseEnter = () => {
     overflow: hidden;
     border-radius: 10px;
     aspect-ratio: 1.95;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
     @include respond(mobile) {
       border-radius: 6px;
     }
