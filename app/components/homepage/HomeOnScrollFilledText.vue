@@ -66,10 +66,10 @@ onMounted(async () => {
     font-size: 8vw;
   }
 
-  :deep(.dark) {
+  &:deep(.dark) {
     color: white(50);
   }
-  :deep(img) {
+  &:deep(img) {
     display: inline-block;
     margin: 0 getRem(16);
     @include respond(mobile) {

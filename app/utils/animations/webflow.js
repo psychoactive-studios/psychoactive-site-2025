@@ -40,7 +40,6 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         isMobile: `(max-width: 767px)`,
       },
       (context) => {
-        console.log('heroInitAnimation');
         // context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
         let { isDesktop } = context.conditions;
 
@@ -223,11 +222,10 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         }
         timeline.add(() => {
           scrollSmoother.value.paused(false);
-        }, '-=1');
+        }, '-=0.5');
       }
     );
   });
-  ctx.add(() => {});
 };
 
 /* ====================================================

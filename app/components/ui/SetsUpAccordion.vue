@@ -166,8 +166,6 @@ const leave = (el, done) => {
       .accordion__header_overlay {
         opacity: 1;
       }
-      .accordion__header {
-      }
     }
   }
 

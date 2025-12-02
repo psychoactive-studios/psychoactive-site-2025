@@ -43,10 +43,10 @@ definePageMeta({
     mode: 'out-in',
     onEnter: (el, done) => {
       done();
-      scrollSmoother.value.scrollTop(0, false);
       gsap.set(el, { visibility: 'hidden' });
 
       setTimeout(() => {
+        scrollSmoother.value.scrollTop(0, false);
         enterAnimation(el);
         // scrollSmoother.value.scrollTop(0, false);
       }, 50);

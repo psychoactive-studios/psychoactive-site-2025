@@ -172,7 +172,7 @@ definePageMeta({
           </div>
           <div class="filled-text">
             <div class="container">
-              <OnScrollFilledText>
+              <HomeOnScrollFilledText>
                 What sets us apart is our
                 <img src="/img/text-icon-mobile-1.svg" alt="icon1" />
                 <span class="dark">obsession</span> with the moment your
@@ -187,7 +187,7 @@ definePageMeta({
                 <img src="/img/text-icon-mobile-4.svg" alt="icon4" />
                 <span class="dark">experiences</span> that linger in minds long
                 after the screen goes dark.
-              </OnScrollFilledText>
+              </HomeOnScrollFilledText>
             </div>
           </div>
           <div class="container">
