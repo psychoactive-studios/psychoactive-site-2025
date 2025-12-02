@@ -81,7 +81,14 @@ onBeforeUnmount(() => {
         <button
           class="controls-button"
           ria-label="Play video"
-          @click="clickVideoPlayHandler"
+          @click="
+            () => {
+              console.log('player', player);
+
+              clickVideoPlayHandler();
+              player.play();
+            }
+          "
         >
           <PlayIcon />
         </button>
