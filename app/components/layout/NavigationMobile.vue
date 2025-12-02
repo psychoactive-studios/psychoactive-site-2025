@@ -200,7 +200,10 @@ onClickOutside(navigationMobileRef, () => {
     ref="navigationMobileRef"
     :class="['navigation-mobile', { opened: isOpen }]"
   >
-    <button class="navigation-mobile__button" @click="onToggleNavigation">
+    <button
+      class="navigation-mobile__button"
+      @pointerup.prevent="onToggleNavigation"
+    >
       <span class="text">psychoactive®</span>
       <IconPlus class="icon" />
     </button>
@@ -218,6 +221,14 @@ onClickOutside(navigationMobileRef, () => {
         <button class="navigation-mobile__talk-button">let's talk</button>
       </div>
       <ul class="navigation-mobile__list">
+        <li class="navigation-mobile__item">
+          <LinkWithHover href="/" @click="onToggleNavigation">
+            Home
+          </LinkWithHover>
+          <div class="navigation-mobile__item-line">
+            <span class="line" />
+          </div>
+        </li>
         <li class="navigation-mobile__item">
           <LinkWithHover href="/" @click="onToggleNavigation">
             About
