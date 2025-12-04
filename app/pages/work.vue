@@ -101,8 +101,7 @@ function enterAnimation(el) {
       '.works .works__title p .char-center',
       {
         opacity: 0,
-        duration: 0.0001,
-        // ease: 'power3.out',
+        duration: 0.0001,        
         stagger: 0.015,
       },
       '<'
