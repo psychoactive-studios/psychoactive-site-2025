@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import Hero from '~/components/services/Hero.vue';
+import ServicesList from '~/components/services/ServicesList.vue';
+import Stepper from '~/components/services/Stepper.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
@@ -30,6 +32,12 @@ onMounted(() => {
         </OnScrollFilledText>
       </section>
     </div>
+    <section class="services__list">
+      <ServicesList />
+    </section>
+    <section class="services__stepper">
+      <Stepper />
+    </section>
   </main>
 </template>
 
