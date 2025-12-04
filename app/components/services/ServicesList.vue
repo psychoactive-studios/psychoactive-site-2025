@@ -1,11 +1,24 @@
 <script setup>
+import gsap from 'gsap';
 import { listData } from '~/data/servicesData';
+import { servicesListAnimation } from '~/utils/animations/services';
 
-onMounted(() => {});
+const containerRef = ref(null);
+let ctx = null;
+
+onMounted(async () => {
+  await nextTick();
+  ctx = gsap.context(() => {}, containerRef.value);
+  servicesListAnimation(ctx, containerRef.value);
+});
+
+onUnmounted(() => {
+  if (ctx) ctx.revert();
+});
 </script>
 
 <template>
-  <div class="services-list">
+  <div ref="containerRef" class="services-list">
     <ClientOnly>
       <Teleport to="#services-list-video-teleport">
         <div class="services-list__video">
@@ -44,8 +57,9 @@ onMounted(() => {});
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
 .services-list {
+  padding: 50dvh 0;
   &__video {
-    width: 40%;
+    width: calc((100% - 160px - 160px) * 0.4);
     aspect-ratio: 1;
     margin: auto;
     position: fixed;
@@ -56,7 +70,7 @@ onMounted(() => {});
       width: 100%;
       height: 100%;
       object-fit: cover;
-      clip-path: circle(50% at 50% 50%);
+      clip-path: circle(0% at 50% 50%);
     }
   }
   &__items {
