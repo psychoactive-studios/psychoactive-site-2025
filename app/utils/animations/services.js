@@ -34,8 +34,7 @@ export const servicesListAnimation = (ctx, root) => {
         .timeline({
           scrollTrigger: {
             trigger: item,
-            start: 'top center',
-            end: 'bottom center',
+            start: 'top 75%',
             markers: true,
           },
         })
