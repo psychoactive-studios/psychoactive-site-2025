@@ -13,6 +13,8 @@ const clock = new THREE.Clock();
 const simplex = createNoise3D();
 let animationFrameId;
 let removeResizeListener;
+let observer;
+let isLooping = false;
 
 // --- Gradient color palette ---
 const colorPalette = [
@@ -258,10 +260,28 @@ function animate() {
 
 onMounted(() => {
   init();
-  animate();
+
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        if (!isLooping) {
+          isLooping = true;
+          animate();
+        }
+      } else {
+        isLooping = false;
+        cancelAnimationFrame(animationFrameId);
+      }
+    });
+  });
+
+  if (canvasElement.value) {
+    observer.observe(canvasElement.value);
+  }
 });
 
 onUnmounted(() => {
+  if (observer) observer.disconnect();
   cancelAnimationFrame(animationFrameId);
 
   // Remove resize event listeners
