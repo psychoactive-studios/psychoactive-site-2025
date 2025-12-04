@@ -42,6 +42,7 @@ onMounted(async () => {
   line-height: 120%;
   letter-spacing: -0.02em;
   position: relative;
+  isolation: isolate;
   @include respond(mobile) {
     font-size: 6.4vw;
     line-height: 121%;
