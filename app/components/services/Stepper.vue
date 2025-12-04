@@ -74,7 +74,8 @@ import StepperPagination from './StepperPagination.vue';
 
   &__scene {
     width: 100%;
-    aspect-ratio: 2;
+    height: calc(85dvh);
+    // aspect-ratio: 2;
     position: relative;
     display: flex;
     justify-content: center;
