@@ -1,8 +1,41 @@
 <script setup>
+import gsap from 'gsap';
 import Circle from '../ui/Circle.vue';
 import ServicesHero3DScene from '../ui/ServicesHero3DScene.vue';
 import WebflowLabel from '../ui/WebflowLabel.vue';
 import HeroCenterLine from './HeroCenterLine.vue';
+import useLoader from '~/composables/useLoader';
+import useScrollSmoother from '~/composables/useScrollSmoother';
+import {
+  heroInitAnimation,
+  heroScrollAnimation,
+} from '~/utils/animations/services.js';
+
+const { isLoading } = useLoader();
+const { scrollSmoother } = useScrollSmoother();
+
+const containerRef = ref(null);
+let ctx;
+
+onMounted(() => {
+  if (containerRef.value) {
+    ctx = gsap.context(() => {}, containerRef.value);
+
+    heroScrollAnimation(ctx, containerRef.value);
+
+    // heroInitAnimation(ctx, scrollSmoother);
+  }
+});
+
+onUnmounted(() => {
+  ctx.revert();
+});
+
+watch(isLoading, (newVal) => {
+  if (!newVal) {
+    heroInitAnimation(ctx, scrollSmoother);
+  }
+});
 </script>
 
 <template>
@@ -58,7 +91,6 @@ import HeroCenterLine from './HeroCenterLine.vue';
     position: relative;
     @include flex-center;
     position: relative;
-    border: 2px dashed rgba(255, 255, 255, 0.25);
     @include respond(portrait) {
       aspect-ratio: auto;
       height: 100%;
@@ -81,7 +113,7 @@ import HeroCenterLine from './HeroCenterLine.vue';
       z-index: 1;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%) rotate(0deg);
+      transform: translate(-50%, -50%) rotate(90deg);
       width: 60%;
       @include respond(mobile) {
         display: none;
@@ -89,8 +121,14 @@ import HeroCenterLine from './HeroCenterLine.vue';
       .circle {
         width: 100%;
         height: 100%;
+        &:deep(.circle-path-1) {
+          stroke-dashoffset: 783.3;
+        }
+        &:deep(.circle-path-2) {
+          stroke-dashoffset: 783.3;
+        }
         &:deep(.circle-dots) {
-          transform: rotate(0deg);
+          transform: rotate(-90deg);
           &::before {
             top: 50%;
           }
