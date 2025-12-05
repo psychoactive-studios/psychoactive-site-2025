@@ -508,7 +508,6 @@ export const stepperAnimation = (ctx) => {
           end: 'bottom bottom',
           scrub: true,
           invalidateOnRefresh: true,
-          markers: true,
         },
       })
       .to(
@@ -521,7 +520,7 @@ export const stepperAnimation = (ctx) => {
         'start'
       )
       .to(
-        '.stepper__videos_overlay, .stepper__videos .video.step-2',
+        '.stepper__videos .video.step-2',
         {
           clipPath: 'circle(50% at 50% 50%)',
           duration: params.step.videoDuration,
@@ -612,6 +611,129 @@ export const stepperAnimation = (ctx) => {
       )
       .from(
         '.stepper__pagination .step-2 .number',
+        {
+          opacity: 0,
+          duration: 0.5,
+        },
+        'start+=9.5'
+      );
+
+    /* ==============================================
+                      Step 2 Animation
+       =============================================*/
+
+    gsap
+      .timeline({
+        scrollTrigger: {
+          id: 'stepper-step-2-animation',
+          trigger: '.stepper__trigger_step-2',
+          start: 'top bottom',
+          end: 'bottom bottom',
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      })
+      .to(
+        '.stepper__titles',
+        {
+          xPercent: -60,
+          duration: 10,
+          ease: 'none',
+        },
+        'start'
+      )
+      .to(
+        '.stepper__videos .video.step-3',
+        {
+          clipPath: 'circle(50% at 50% 50%)',
+          duration: params.step.videoDuration,
+        },
+        `start+=${params.step.videoOffset}`
+      )
+      .to(
+        '.stepper__step-texts .text.step-2 .char-center',
+        {
+          opacity: 0,
+          duration: 0.01,
+          stagger: {
+            amount: params.step.outDuration,
+            from: 'random',
+          },
+          // immediateRender: false,
+        },
+        `start+=${params.step.outOffset}`
+      )
+      .fromTo(
+        '.stepper__step-texts .text.step-3 .char-center',
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.01,
+          stagger: {
+            amount: params.step.inDuration,
+          },
+        },
+        `start+=${params.step.inOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-2 .path-active path',
+        { drawSVG: '100% 100%', duration: params.step.outDuration },
+        `start+=${params.step.outOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-2 .dot-active-start',
+        {
+          motionPath: {
+            path: '.stepper__pagination .step-2 .path-grey path',
+            align: '.stepper__pagination .step-2 .path-grey path',
+            alignOrigin: [0.5, 0.5],
+            start: 0,
+            end: 1,
+            fromCurrent: true,
+          },
+          duration: params.step.outDuration,
+        },
+        `start+=${params.step.outOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-2 .number',
+        {
+          opacity: 0,
+          duration: 0.1,
+        },
+        `start+=${params.step.inOffset}`
+      )
+      .from(
+        '.stepper__pagination .step-3 .dot-active-start, .stepper__pagination .step-3 .dot-active-end',
+        {
+          opacity: 0,
+          duration: 0.1,
+        },
+        `start+=${params.step.inOffset}`
+      )
+      .fromTo(
+        '.stepper__pagination .step-3 .path-active path',
+        { drawSVG: '0% 0%' },
+        { drawSVG: '100% 0%', duration: params.step.inDuration },
+        `start+=${params.step.inOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-3 .dot-active-end',
+        {
+          motionPath: {
+            path: '.stepper__pagination .step-3 .path-grey path',
+            align: '.stepper__pagination .step-3 .path-grey path',
+            alignOrigin: [0.5, 0.5],
+            start: 1,
+            end: 0,
+            fromCurrent: true,
+          },
+          duration: params.step.inDuration,
+        },
+        `start+=${params.step.inOffset}`
+      )
+      .from(
+        '.stepper__pagination .step-3 .number',
         {
           opacity: 0,
           duration: 0.5,
