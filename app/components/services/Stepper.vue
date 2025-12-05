@@ -98,6 +98,7 @@ onMounted(async () => {
     <div class="stepper__trigger_intro" />
     <div class="stepper__trigger_step-1" />
     <div class="stepper__trigger_step-2" />
+    <div class="stepper__trigger_step-3" />
   </div>
 </template>
 
@@ -123,7 +124,7 @@ onMounted(async () => {
     );
     mask-image: radial-gradient(circle at center, black 0%, transparent 0%);
     // TODO: remove zIndex
-    z-index: 5;
+    // z-index: 5;
   }
   &__videos {
     position: absolute;
@@ -236,6 +237,9 @@ onMounted(async () => {
       height: 150dvh;
     }
     &_step-2 {
+      height: 150dvh;
+    }
+    &_step-3 {
       height: 150dvh;
     }
   }
