@@ -1,61 +1,129 @@
 <script setup>
-import { stepperTitlesData } from '~/data/servicesData';
+import { stepperTextsData, stepperTitlesData } from '~/data/servicesData';
 import HeroCenterLine from './HeroCenterLine.vue';
 import StepperPagination from './StepperPagination.vue';
+import { stepperAnimation } from '~/utils/animations/services';
+import gsap from 'gsap';
+
+const containerRef = ref(null);
+let ctx = null;
+
+onMounted(async () => {
+  ctx = gsap.context(() => {});
+  await nextTick();
+  stepperAnimation(ctx, containerRef.value);
+});
 </script>
 
 <template>
-  <div id="stepper" class="stepper">
-    <div class="container">
-      <div class="stepper__scene">
-        <div class="stepper__start-video">
-          <video
-            class="hero-mobile__player_preview"
-            src="/video/preview_reel.mp4"
-            autoplay
-            loop
-            muted
-            playsinline
-          />
-        </div>
+  <div ref="containerRef" class="stepper">
+    <ClientOnly>
+      <Teleport to="#services-list-video-teleport">
+        <div id="stepper" class="stepper__fixed">
+          <!-- <div class="stepper__background" /> -->
 
-        <div class="stepper__step-text">
-          We start by defining your digital DNA. Strategy, identity, content and
-          messaging built for growth.
-        </div>
-        <HeroCenterLine />
-        <StepperPagination />
-        <ul class="stepper__titles">
-          <li
-            v-for="item in stepperTitlesData"
-            :key="item.number"
-            class="stepper__titles_title"
-          >
-            <div class="title-number">{{ item.number }}</div>
-            <h2 class="title-text">{{ item.title }}</h2>
-            <div class="title-right">
-              <ul class="title-services">
-                <li v-for="service in item.list" :key="service">
-                  {{ service }}
+          <div class="container">
+            <div class="stepper__scene">
+              <div class="stepper__videos">
+                <div class="stepper__videos_overlay" />
+                <video
+                  class="video step-1"
+                  src="/video/ps_service_01.mp4"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                />
+                <video
+                  class="video step-2"
+                  src="/video/ps_service_03.mp4"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                />
+                <video
+                  class="video step-3"
+                  src="/video/preview_reel.mp4"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                />
+                <video
+                  class="video step-4"
+                  src="/video/ps_service_05.mp4"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                />
+              </div>
+
+              <div class="stepper__step-texts">
+                <div
+                  v-for="item in stepperTextsData"
+                  :key="item.id"
+                  :class="`text ${item.id}`"
+                >
+                  {{ item.text }}
+                </div>
+              </div>
+              <HeroCenterLine />
+              <StepperPagination />
+              <ul class="stepper__titles">
+                <li
+                  v-for="item in stepperTitlesData"
+                  :key="item.number"
+                  class="stepper__titles_title"
+                >
+                  <div class="title-number">{{ item.number }}</div>
+                  <h2 class="title-text">{{ item.title }}</h2>
+                  <div class="title-right">
+                    <ul class="title-services">
+                      <li v-for="service in item.list" :key="service">
+                        {{ service }}
+                      </li>
+                    </ul>
+                    <div class="title-number">{{ item.number }}</div>
+                  </div>
                 </li>
               </ul>
-              <div class="title-number">{{ item.number }}</div>
             </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+          </div>
+        </div>
+      </Teleport>
+    </ClientOnly>
+
+    <div class="stepper__trigger_intro" />
   </div>
 </template>
 
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/variables' as *;
+
+.stepper__trigger_intro {
+  border-top: 2px dashed red;
+}
+
 .stepper {
-  @include flex-center;
-  min-height: 100dvh;
-  background-color: $color-foreground;
-  &__start-video {
+  &__fixed {
+    @include flex-center;
+    background-color: $color-foreground;
+    min-height: 100dvh;
+    position: fixed;
+    inset: 0;
+    -webkit-mask-image: radial-gradient(
+      circle at center,
+      black 0%,
+      transparent 0%
+    );
+    mask-image: radial-gradient(circle at center, black 0%, transparent 0%);
+    // TODO: remove zIndex
+    z-index: 5;
+  }
+  &__videos {
     position: absolute;
     z-index: 1;
     top: 50%;
@@ -63,12 +131,21 @@ import StepperPagination from './StepperPagination.vue';
     transform: translate(-50%, -50%) rotate(0deg);
     width: 57.5%;
     aspect-ratio: 1;
-    clip-path: circle(50% at 50% 50%);
     margin: auto;
-    video {
+    &_overlay {
+      position: absolute;
+      inset: 0;
+      background: url('/img/video-player-dots-overlay.svg') repeat center;
+      clip-path: circle(0% at 50% 50%);
+      z-index: 10;
+    }
+    .video {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      clip-path: circle(0% at 50% 50%);
+      position: absolute;
+      inset: 0;
     }
   }
 
@@ -83,7 +160,7 @@ import StepperPagination from './StepperPagination.vue';
     position: relative;
     border: 2px dashed rgb(29 0 40 / 25%);
   }
-  &__step-text {
+  &__step-texts {
     position: absolute;
     top: 0;
     left: 0;
@@ -93,6 +170,10 @@ import StepperPagination from './StepperPagination.vue';
     line-height: 1.25; /* 125% */
     width: 25%;
     color: $color-background;
+    .text {
+      position: absolute;
+      width: 100%;
+    }
   }
   &__titles {
     position: absolute;
@@ -141,6 +222,11 @@ import StepperPagination from './StepperPagination.vue';
           white-space: nowrap;
         }
       }
+    }
+  }
+  &__trigger {
+    &_intro {
+      height: 150dvh;
     }
   }
 }

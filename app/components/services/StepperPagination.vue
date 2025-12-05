@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination">
+  <div class="stepper__pagination">
     <!-- Start Section Step-1 -->
     <div class="step step-1">
       <svg
@@ -45,7 +45,8 @@
       </svg>
       <div class="dot dot-start" />
       <div class="dot dot-end" />
-      <div class="dot dot-active" />
+      <div class="dot dot-active-start" />
+      <div class="dot dot-active-end" />
       <div class="number">01</div>
     </div>
     <!-- /End Section Step-1 -->
@@ -96,7 +97,8 @@
       </svg>
       <div class="dot dot-start" />
       <div class="dot dot-end" />
-      <div class="dot dot-active" />
+      <div class="dot dot-active-start" />
+      <div class="dot dot-active-end" />
       <div class="number">02</div>
     </div>
     <!-- /End Section Step-2 -->
@@ -147,7 +149,8 @@
       </svg>
       <div class="dot dot-start" />
       <div class="dot dot-end" />
-      <div class="dot dot-active" />
+      <div class="dot dot-active-start" />
+      <div class="dot dot-active-end" />
       <div class="number">03</div>
     </div>
     <!-- /End Section Step-3 -->
@@ -197,7 +200,8 @@
       </svg>
       <div class="dot dot-start" />
       <div class="dot dot-end" />
-      <div class="dot dot-active" />
+      <div class="dot dot-active-start" />
+      <div class="dot dot-active-end" />
       <div class="number">04</div>
     </div>
     <!-- /End Section Step-4 -->
@@ -207,7 +211,7 @@
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
-.pagination {
+.stepper__pagination {
   position: absolute;
   width: 67%;
   aspect-ratio: 2;
@@ -227,9 +231,13 @@
         top: -2px;
         left: -3px;
       }
-      .dot-active {
+      .dot-active-start {
         bottom: -2px;
         right: -3px;
+      }
+      .dot-active-end {
+        top: -2px;
+        left: -3px;
       }
       .number {
         right: 0;
@@ -247,9 +255,13 @@
         top: -2px;
         right: -3px;
       }
-      .dot-active {
+      .dot-active-start {
         bottom: -2px;
         left: -3px;
+      }
+      .dot-active-end {
+        top: -2px;
+        right: -3px;
       }
       .number {
         right: 0;
@@ -267,9 +279,13 @@
         bottom: -2px;
         right: -3px;
       }
-      .dot-active {
+      .dot-active-start {
         top: -2px;
         left: -3px;
+      }
+      .dot-active-end {
+        bottom: -2px;
+        right: -3px;
       }
       .number {
         left: 0;
@@ -287,9 +303,13 @@
         bottom: -2px;
         left: -3px;
       }
-      .dot-active {
+      .dot-active-start {
         top: -2px;
         right: -3px;
+      }
+      .dot-active-end {
+        bottom: -2px;
+        left: -3px;
       }
       .number {
         left: 0;
@@ -304,7 +324,6 @@
     height: 100%;
     width: auto;
     &-active {
-      opacity: 0;
       z-index: 1;
     }
   }
