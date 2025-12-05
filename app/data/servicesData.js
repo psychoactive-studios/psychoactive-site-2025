@@ -90,8 +90,8 @@ export const stepperTextsData = [
     id: 'step-3',
     text: 'Engineered to perform, scale and adapt in an AI-driven world.',
   },
-  // {
-  //   id: 'step-4',
-  //   text: 'Partnership continues beyond launch, built for long-term growth and adaptability.',
-  // },
+  {
+    id: 'step-4',
+    text: 'Partnership continues beyond launch, built for long-term growth and adaptability.',
+  },
 ];

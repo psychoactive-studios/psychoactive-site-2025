@@ -498,7 +498,6 @@ export const stepperAnimation = (ctx) => {
     /* ==============================================
                       Step 1 Animation
        =============================================*/
-
     gsap
       .timeline({
         scrollTrigger: {
@@ -621,7 +620,6 @@ export const stepperAnimation = (ctx) => {
     /* ==============================================
                       Step 2 Animation
        =============================================*/
-
     gsap
       .timeline({
         scrollTrigger: {
@@ -636,7 +634,7 @@ export const stepperAnimation = (ctx) => {
       .to(
         '.stepper__titles',
         {
-          xPercent: -60,
+          xPercent: -53,
           duration: 10,
           ease: 'none',
         },
@@ -734,6 +732,128 @@ export const stepperAnimation = (ctx) => {
       )
       .from(
         '.stepper__pagination .step-3 .number',
+        {
+          opacity: 0,
+          duration: 0.5,
+        },
+        'start+=9.5'
+      );
+
+    /* ==============================================
+                      Step 3 Animation
+       =============================================*/
+    gsap
+      .timeline({
+        scrollTrigger: {
+          id: 'stepper-step-3-animation',
+          trigger: '.stepper__trigger_step-3',
+          start: 'top bottom',
+          end: 'bottom bottom',
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      })
+      .to(
+        '.stepper__titles',
+        {
+          xPercent: -72,
+          duration: 10,
+          ease: 'none',
+        },
+        'start'
+      )
+      .to(
+        '.stepper__videos .video.step-4',
+        {
+          clipPath: 'circle(50% at 50% 50%)',
+          duration: params.step.videoDuration,
+        },
+        `start+=${params.step.videoOffset}`
+      )
+      .to(
+        '.stepper__step-texts .text.step-3 .char-center',
+        {
+          opacity: 0,
+          duration: 0.01,
+          stagger: {
+            amount: params.step.outDuration,
+            from: 'random',
+          },
+          // immediateRender: false,
+        },
+        `start+=${params.step.outOffset}`
+      )
+      .fromTo(
+        '.stepper__step-texts .text.step-4 .char-center',
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.01,
+          stagger: {
+            amount: params.step.inDuration,
+          },
+        },
+        `start+=${params.step.inOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-3 .path-active path',
+        { drawSVG: '0% 0%', duration: params.step.outDuration },
+        `start+=${params.step.outOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-3 .dot-active-start',
+        {
+          motionPath: {
+            path: '.stepper__pagination .step-3 .path-grey path',
+            align: '.stepper__pagination .step-3 .path-grey path',
+            alignOrigin: [0.5, 0.5],
+            start: 1,
+            end: 0,
+            fromCurrent: true,
+          },
+          duration: params.step.outDuration,
+        },
+        `start+=${params.step.outOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-3 .number',
+        {
+          opacity: 0,
+          duration: 0.1,
+        },
+        `start+=${params.step.inOffset}`
+      )
+      .from(
+        '.stepper__pagination .step-4 .dot-active-start, .stepper__pagination .step-4 .dot-active-end',
+        {
+          opacity: 0,
+          duration: 0.1,
+        },
+        `start+=${params.step.inOffset}`
+      )
+      .fromTo(
+        '.stepper__pagination .step-4 .path-active path',
+        { drawSVG: '0% 0%' },
+        { drawSVG: '0% 100%', duration: params.step.inDuration },
+        `start+=${params.step.inOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-4 .dot-active-end',
+        {
+          motionPath: {
+            path: '.stepper__pagination .step-4 .path-grey path',
+            align: '.stepper__pagination .step-4 .path-grey path',
+            alignOrigin: [0.5, 0.5],
+            start: 0,
+            end: 1,
+            fromCurrent: true,
+          },
+          duration: params.step.inDuration,
+        },
+        `start+=${params.step.inOffset}`
+      )
+      .from(
+        '.stepper__pagination .step-4 .number',
         {
           opacity: 0,
           duration: 0.5,

@@ -7,16 +7,16 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { enableScroll } = useScrollSmoother();
 
-onMounted(() => {
-  setTimeout(() => {
-    enableScroll();
-  }, 100);
-});
+// onMounted(() => {
+//   setTimeout(() => {
+//     enableScroll();
+//   }, 100);
+// });
 </script>
 
 <template>
   <main class="services">
-    <!-- <Hero /> -->
+    <Hero />
     <div class="container">
       <section class="services__onscroll-text">
         <OnScrollFilledText>
