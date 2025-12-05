@@ -215,7 +215,6 @@
   position: absolute;
   width: 67%;
   aspect-ratio: 2;
-  border: 2px dashed rgb(29 0 40 / 25%);
   .step {
     position: absolute;
     height: 41%;
@@ -333,6 +332,7 @@
     border-radius: 50%;
     background-color: $color-background;
     position: absolute;
+    z-index: 2;
     &-start {
       opacity: 0.5;
     }

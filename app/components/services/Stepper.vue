@@ -96,6 +96,7 @@ onMounted(async () => {
     </ClientOnly>
 
     <div class="stepper__trigger_intro" />
+    <div class="stepper__trigger_step-1" />
   </div>
 </template>
 
@@ -104,7 +105,7 @@ onMounted(async () => {
 @use '~/assets/styles/variables' as *;
 
 .stepper__trigger_intro {
-  border-top: 2px dashed red;
+  border-top: 1px dashed red;
 }
 
 .stepper {
@@ -121,7 +122,7 @@ onMounted(async () => {
     );
     mask-image: radial-gradient(circle at center, black 0%, transparent 0%);
     // TODO: remove zIndex
-    z-index: 5;
+    // z-index: 5;
   }
   &__videos {
     position: absolute;
@@ -158,7 +159,6 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     position: relative;
-    border: 2px dashed rgb(29 0 40 / 25%);
   }
   &__step-texts {
     position: absolute;
@@ -226,6 +226,9 @@ onMounted(async () => {
   }
   &__trigger {
     &_intro {
+      height: 150dvh;
+    }
+    &_step-1 {
       height: 150dvh;
     }
   }

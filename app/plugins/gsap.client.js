@@ -2,6 +2,7 @@ import gsap from 'gsap';
 import DrawSVGPlugin from 'gsap/DrawSVGPlugin';
 import { RoughEase } from 'gsap/EasePack';
 import { Flip } from 'gsap/Flip';
+import { GSDevTools } from 'gsap/GSDevTools';
 import MotionPathPlugin from 'gsap/MotionPathPlugin';
 import ScrambleTextPlugin from 'gsap/ScrambleTextPlugin';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
@@ -20,7 +21,8 @@ export default defineNuxtPlugin(() => {
       SplitText,
       Flip,
       DrawSVGPlugin,
-      MotionPathPlugin
+      MotionPathPlugin,
+      GSDevTools
     );
   }
 });
