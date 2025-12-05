@@ -86,10 +86,10 @@ export const stepperTextsData = [
     id: 'step-2',
     text: 'Your vision comes to life with responsive, dynamic design, crafted to connect and convert.',
   },
-  // {
-  //   id: 'step-3',
-  //   text: 'Engineered to perform, scale and adapt in an AI-driven world.',
-  // },
+  {
+    id: 'step-3',
+    text: 'Engineered to perform, scale and adapt in an AI-driven world.',
+  },
   // {
   //   id: 'step-4',
   //   text: 'Partnership continues beyond launch, built for long-term growth and adaptability.',
