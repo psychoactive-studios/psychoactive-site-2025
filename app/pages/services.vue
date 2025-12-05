@@ -3,11 +3,20 @@ import Hero from '~/components/services/Hero.vue';
 import ServicesList from '~/components/services/ServicesList.vue';
 import Stepper from '~/components/services/Stepper.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
+import useScrollSmoother from '~/composables/useScrollSmoother';
+
+const { enableScroll } = useScrollSmoother();
+
+onMounted(() => {
+  setTimeout(() => {
+    enableScroll();
+  }, 100);
+});
 </script>
 
 <template>
   <main class="services">
-    <Hero />
+    <!-- <Hero /> -->
     <div class="container">
       <section class="services__onscroll-text">
         <OnScrollFilledText>

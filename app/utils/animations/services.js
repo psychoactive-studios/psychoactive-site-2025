@@ -249,8 +249,8 @@ export const servicesListAnimation = (ctx, root) => {
         .timeline({
           scrollTrigger: {
             trigger: item,
-            start: 'top 75%',
-            end: 'bottom 75%',
+            start: 'top 90%',
+            end: 'bottom 90%',
           },
         })
         .to(
@@ -300,5 +300,199 @@ export const servicesListAnimation = (ctx, root) => {
     //   end: 'bottom center',
     //   markers: true,
     // });
+  });
+};
+
+export const stepperAnimation = (ctx, root) => {
+  console.log('root', root);
+
+  SplitText.create('.stepper__step-texts .text', {
+    type: 'words,chars',
+    charsClass: 'char-center',
+  });
+
+  ctx.add(() => {
+    // gsap.to(document.querySelector('.stepper__fixed'), {
+    //   webkitMaskImage:
+    //     'radial-gradient(circle 150vmax at center, black 100%, transparent 100%)',
+    //   duration: 1,
+    //   scrollTrigger: {
+    //     id: 'stepper-background-animation',
+    //     trigger: root,
+    //     start: 'top center',
+    //     end: 'bottom center',
+    //     scrub: true,
+    //     markers: true,
+    //   },
+    // });
+
+    const introDuration = 7;
+    const paginatorDuration = 5;
+    const paginatorOffset = 3;
+    const stepOffset = 7;
+
+    gsap
+      .timeline({
+        scrollTrigger: {
+          id: 'stepper-intro-animation',
+          trigger: '.stepper__trigger_intro',
+          start: 'top center',
+          end: 'bottom bottom',
+          scrub: true,
+          markers: true,
+        },
+      })
+      /* ======== Mask background Animation ========= */
+      .to(
+        document.querySelector('.stepper__fixed'),
+        {
+          webkitMaskImage:
+            'radial-gradient(circle at center, black 100%, transparent 0%)',
+          duration: introDuration,
+        },
+        'start'
+      )
+      /* ======== Mask video Animation ========= */
+      .to(
+        '.stepper__videos_overlay, .stepper__videos .video.step-1',
+        {
+          clipPath: 'circle(50% at 50% 50%)',
+          duration: introDuration,
+        },
+        'start+=1.5'
+      )
+      /* ======== Pagination intro Animation ========= */
+      .fromTo(
+        '.stepper__pagination .step-1 .path-grey path, .stepper__pagination .step-3 .path-grey path',
+        { drawSVG: '100% 100%' },
+        { drawSVG: '100% 0%', duration: paginatorDuration },
+        `start+=${paginatorOffset}`
+      )
+      .fromTo(
+        '.stepper__pagination .step-2 .path-grey path, .stepper__pagination .step-4 .path-grey path',
+        { drawSVG: '0% 0%' },
+        { drawSVG: '0% 100%', duration: paginatorDuration },
+        `start+=${paginatorOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-1 .dot-end',
+        {
+          motionPath: {
+            path: '.stepper__pagination .step-1 .path-grey path',
+            align: '.stepper__pagination .step-1 .path-grey path',
+            alignOrigin: [0.5, 0.5],
+            start: 1,
+            end: 0,
+            fromCurrent: true,
+          },
+          duration: paginatorDuration,
+        },
+        `start+=${paginatorOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-2 .dot-end',
+        {
+          motionPath: {
+            path: '.stepper__pagination .step-2 .path-grey path',
+            align: '.stepper__pagination .step-2 .path-grey path',
+            alignOrigin: [0.5, 0.5],
+            start: 0,
+            end: 1,
+            fromCurrent: true,
+          },
+          duration: paginatorDuration,
+        },
+        `start+=${paginatorOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-3 .dot-end',
+        {
+          motionPath: {
+            path: '.stepper__pagination .step-3 .path-grey path',
+            align: '.stepper__pagination .step-3 .path-grey path',
+            alignOrigin: [0.5, 0.5],
+            start: 1,
+            end: 0,
+            fromCurrent: true,
+          },
+          duration: paginatorDuration,
+        },
+        `start+=${paginatorOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-4 .dot-end',
+        {
+          motionPath: {
+            path: '.stepper__pagination .step-4 .path-grey path',
+            align: '.stepper__pagination .step-4 .path-grey path',
+            alignOrigin: [0.5, 0.5],
+            start: 0,
+            end: 1,
+            fromCurrent: true,
+          },
+          duration: paginatorDuration,
+        },
+        `start+=${paginatorOffset}`
+      )
+      /* ======== Step Text Animation ========= */
+      .fromTo(
+        '.stepper__step-texts .text.step-1 .char-center',
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.01,
+          stagger: {
+            amount: 5,
+          },
+        },
+        `start+=${stepOffset}`
+      )
+      /* ======== Step Title Animation ========= */
+      .from(
+        '.stepper__titles',
+        {
+          xPercent: 20,
+          duration: 5,
+        },
+        `start+=${stepOffset}`
+      )
+      .from(
+        '.stepper__pagination .step-1 .dot-active-start, .stepper__pagination .step-1 .dot-active-end',
+        {
+          opacity: 0,
+          duration: 0.1,
+        },
+        `start+=${stepOffset}`
+      )
+      .fromTo(
+        '.stepper__pagination .step-1 .path-active path',
+        { drawSVG: '100% 100%' },
+        { drawSVG: '100% 0%', duration: paginatorDuration },
+        `start+=${stepOffset}`
+      )
+      .to(
+        '.stepper__pagination .step-1 .dot-active-end',
+        {
+          motionPath: {
+            path: '.stepper__pagination .step-1 .path-grey path',
+            align: '.stepper__pagination .step-1 .path-grey path',
+            alignOrigin: [0.5, 0.5],
+            start: 1,
+            end: 0,
+            fromCurrent: true,
+          },
+          duration: paginatorDuration,
+        },
+        `start+=${stepOffset}`
+      )
+      .from(
+        '.stepper__pagination .step-1 .number',
+        {
+          opacity: 0,
+          duration: 0.5,
+        },
+        'start+=9.5'
+      );
+    // services__stepper;
   });
 };

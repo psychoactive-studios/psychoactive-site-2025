@@ -57,7 +57,7 @@ onUnmounted(() => {
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
 .services-list {
-  padding: 50dvh 0;
+  padding: 50dvh 0 30dvh 0;
   &__video {
     width: calc((100% - 160px - 160px) * 0.4);
     aspect-ratio: 1;
