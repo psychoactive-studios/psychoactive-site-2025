@@ -13,6 +13,10 @@ onMounted(async () => {
   await nextTick();
   stepperAnimation(ctx, containerRef.value);
 });
+
+onUnmounted(() => {
+  if (ctx) ctx.revert();
+});
 </script>
 
 <template>
