@@ -92,6 +92,16 @@ onMounted(async () => {
             </div>
           </div>
         </div>
+        <div class="stepper__footer-video">
+          <video
+            class="video"
+            src="/video/preview_reel.mp4"
+            autoplay
+            loop
+            muted
+            playsinline
+          />
+        </div>
       </Teleport>
     </ClientOnly>
 
@@ -99,16 +109,13 @@ onMounted(async () => {
     <div class="stepper__trigger_step-1" />
     <div class="stepper__trigger_step-2" />
     <div class="stepper__trigger_step-3" />
+    <div class="stepper__trigger_step-4" />
   </div>
 </template>
 
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/variables' as *;
-
-.stepper__trigger_intro {
-  border-top: 1px dashed red;
-}
 
 .stepper {
   &__fixed {
@@ -241,6 +248,24 @@ onMounted(async () => {
     }
     &_step-3 {
       height: 150dvh;
+    }
+    &_step-4 {
+      height: 150dvh;
+    }
+  }
+  &__footer-video {
+    position: fixed;
+    inset: 0;
+    -webkit-mask-image: radial-gradient(
+      circle at center,
+      black 0%,
+      transparent 0%
+    );
+    mask-image: radial-gradient(circle at center, black 0%, transparent 0%);
+    .video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   }
 }

@@ -6,10 +6,17 @@ import WebflowLabel from '../ui/WebflowLabel.vue';
 import Brief from './Brief.vue';
 
 const { playInteractionSound } = useAudioManager();
+
+defineProps({
+  transparent: {
+    type: Boolean,
+    default: false,
+  },
+});
 </script>
 
 <template>
-  <footer class="footer">
+  <footer :class="['footer', { 'footer--transparent': transparent }]">
     <section class="navigation">
       <ul class="links">
         <template v-for="(link, index) in footerData.links" :key="link.title">
@@ -63,6 +70,9 @@ const { playInteractionSound } = useAudioManager();
   position: relative;
   z-index: 1;
   background-color: $color-background;
+  &--transparent {
+    background-color: transparent;
+  }
   @include respond(portrait) {
     padding-top: 160px;
   }
