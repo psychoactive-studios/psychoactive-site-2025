@@ -331,7 +331,7 @@ export const stepperAnimation = (ctx) => {
     /* ==============================================
                       Intro Animation
        =============================================*/
-    const scooterok = gsap
+    gsap
       .timeline({
         scrollTrigger: {
           id: 'stepper-intro-animation',
@@ -861,6 +861,37 @@ export const stepperAnimation = (ctx) => {
         'start+=9.5'
       );
 
-    GSDevTools.create({ animation: scooterok });
+    /* ==============================================
+                      Step 4 Animation
+       =============================================*/
+    gsap
+      .timeline({
+        scrollTrigger: {
+          id: 'stepper-step-4-animation',
+          trigger: '.stepper__trigger_step-4',
+          start: 'top bottom',
+          end: 'bottom bottom',
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      })
+      .to(
+        '.stepper__titles',
+        {
+          xPercent: -100,
+          duration: 10,
+          ease: 'none',
+        },
+        'start'
+      )
+      .to(
+        '.stepper__footer-video',
+        {
+          webkitMaskImage:
+            'radial-gradient(circle at center, black 100%, transparent 0%)',
+          duration: params.step.videoDuration,
+        },
+        `start+=${params.step.inOffset}`
+      );
   });
 };

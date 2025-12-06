@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Footer from '~/components/layout/Footer.vue';
 import Hero from '~/components/services/Hero.vue';
 import ServicesList from '~/components/services/ServicesList.vue';
 import Stepper from '~/components/services/Stepper.vue';
@@ -38,6 +39,7 @@ const { enableScroll } = useScrollSmoother();
     <section class="services__stepper">
       <Stepper />
     </section>
+    <Footer transparent />
   </main>
 </template>
 
