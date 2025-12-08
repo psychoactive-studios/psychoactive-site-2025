@@ -74,7 +74,7 @@ function init() {
   controls.dampingFactor = 0.05;
   */
 
-  const geometry = new THREE.SphereGeometry(1.8, 248, 248);
+  const geometry = new THREE.SphereGeometry(2, 200, 200);
   const positions = geometry.attributes.position.array;
   const originalPositions = new Float32Array(positions.length);
   velocities = new Float32Array(positions.length);
