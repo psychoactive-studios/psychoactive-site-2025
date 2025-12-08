@@ -381,6 +381,7 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
         border: 1px solid white(20);
         position: relative;
         overflow: hidden;
+        pointer-events: all;
         @include respond(mobile) {
           width: 70px;
           height: 36px;

@@ -26,7 +26,7 @@ import StepperPagination from '../services/StepperPagination.vue';
               <div class="stepper__videos_overlay" />
               <video
                 class="video step-1"
-                src="/video/ps_service_01.mp4"
+                src="/video/service_01.mp4"
                 autoplay
                 loop
                 muted
@@ -34,7 +34,7 @@ import StepperPagination from '../services/StepperPagination.vue';
               />
               <video
                 class="video step-2"
-                src="/video/ps_service_03.mp4"
+                src="/video/service_02.mp4"
                 autoplay
                 loop
                 muted
@@ -42,7 +42,7 @@ import StepperPagination from '../services/StepperPagination.vue';
               />
               <video
                 class="video step-3"
-                src="/video/preview_reel.mp4"
+                src="/video/service_03.mp4"
                 autoplay
                 loop
                 muted
@@ -50,7 +50,7 @@ import StepperPagination from '../services/StepperPagination.vue';
               />
               <video
                 class="video step-4"
-                src="/video/ps_service_05.mp4"
+                src="/video/service_04.mp4"
                 autoplay
                 loop
                 muted
