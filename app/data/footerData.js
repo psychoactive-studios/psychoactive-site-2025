@@ -8,7 +8,7 @@ export const footerData = {
   links: [
     { title: 'About', url: '/' },
     { title: 'Work', url: '/work' },
-    { title: 'Services', url: '/' },
+    { title: 'Services', url: '/services' },
     { title: 'Webflow', url: '/webflow' },
     { title: 'Content Hub', url: '/content-hub' },
     { title: 'let’s talk', url: '/' },

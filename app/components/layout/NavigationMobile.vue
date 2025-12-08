@@ -246,7 +246,7 @@ onClickOutside(navigationMobileRef, () => {
           </div>
         </li>
         <li class="navigation-mobile__item">
-          <LinkWithHover href="/" @click="onToggleNavigation">
+          <LinkWithHover href="/services" @click="onToggleNavigation">
             Services
           </LinkWithHover>
           <div class="navigation-mobile__item-line">
