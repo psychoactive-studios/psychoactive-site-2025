@@ -2,6 +2,7 @@
 import Circle from '../ui/Circle.vue';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
 import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
+import ServicesHero3DScene from '../ui/ServicesHero3DScene.vue';
 import gsap from 'gsap';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 import useLoader from '~/composables/useLoader';
@@ -102,6 +103,10 @@ const onScrollDownHandler = () => {
   <div ref="container" class="hero">
     <div class="hero__intro">
       <section class="hero__intro_wrapper">
+        <div class="homehero-3d-scene--wrapper">
+          <ServicesHero3DScene class="homehero-3d-scene" />
+          <!-- <HomeHero3DScene class="homehero-3d-scene" /> -->
+        </div>
         <div class="scene">
           <div class="circle--wrapper">
             <Circle class="circle" />
@@ -166,10 +171,6 @@ const onScrollDownHandler = () => {
             <PlusIcon class="dots-arrow__plus dots-arrow__plus--br" />
           </button>
 
-          <div class="homehero-3d-scene--wrapper">
-            <HomeHero3DScene class="homehero-3d-scene" />
-          </div>
-
           <VideoPreview
             class="video-player homehero-prepared"
             preview="/video/preview_reel.mp4"
@@ -216,6 +217,7 @@ const onScrollDownHandler = () => {
     // padding: 0 0 48px 0;
     &_wrapper {
       flex-grow: 1;
+      position: relative;
       @include flex-center;
       // padding-left: clamp(88px, 8vw, 160px);
       // padding-right: clamp(88px, 8vw, 160px);
@@ -231,11 +233,34 @@ const onScrollDownHandler = () => {
         padding-top: 27px;
         padding-bottom: 24px;
       }
+      .homehero-3d-scene--wrapper {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        @include respond(portrait) {
+          height: auto;
+          aspect-ratio: 1;
+        }
+        @include respond(mobile) {
+          display: none;
+        }
+        .homehero-3d-scene {
+          width: 100%;
+          height: 100%;
+          will-change: transform;
+        }
+      }
       .scene {
         aspect-ratio: 2;
         width: 100%;
         position: relative;
+        z-index: 1;
         will-change: transform;
+        pointer-events: none;
         @include respond(portrait) {
           aspect-ratio: auto;
           height: 100%;
@@ -570,27 +595,6 @@ const onScrollDownHandler = () => {
             top: 0 !important;
             left: 0;
             transform: none;
-          }
-        }
-        .homehero-3d-scene--wrapper {
-          position: absolute;
-          z-index: 1;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 100%;
-          height: 100%;
-          @include respond(portrait) {
-            height: auto;
-            aspect-ratio: 1;
-          }
-          @include respond(mobile) {
-            display: none;
-          }
-          .homehero-3d-scene {
-            width: 100%;
-            height: 100%;
-            will-change: transform;
           }
         }
       }

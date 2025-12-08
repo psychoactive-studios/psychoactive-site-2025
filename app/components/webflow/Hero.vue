@@ -31,7 +31,7 @@ onMounted(async () => {
     heroInitSplitText();
   }
 
-  const blob = await $fetch('/video/webflow_frog3.mp4', {
+  const blob = await $fetch('/video/service_03.mp4', {
     responseType: 'blob',
   });
   heroVideoResource.value = URL.createObjectURL(blob);

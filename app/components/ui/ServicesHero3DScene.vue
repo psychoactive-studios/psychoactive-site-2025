@@ -35,7 +35,7 @@ let velocities; // Array to store the velocity of each point
 
 // --- Physics constants ---
 const PUSH_STRENGTH = 0.1; // "Push" strength from the cursor
-const SPRING_CONSTANT = 0.0008; // Spring constant that returns points
+const SPRING_CONSTANT = 0.001; // Spring constant that returns points
 const DAMPING = 0.96; // Damping (resistance to motion)
 
 function init() {
@@ -74,7 +74,7 @@ function init() {
   controls.dampingFactor = 0.05;
   */
 
-  const geometry = new THREE.SphereGeometry(1.5, 256, 256);
+  const geometry = new THREE.SphereGeometry(2, 240, 240);
   const positions = geometry.attributes.position.array;
   const originalPositions = new Float32Array(positions.length);
   velocities = new Float32Array(positions.length);
@@ -100,6 +100,7 @@ function init() {
   });
 
   spherePoints = new THREE.Points(geometry, material);
+  spherePoints.scale.set(0.7, 0.7, 0.7);
   scene.add(spherePoints);
 
   raycaster.params.Points.threshold = 0.35;

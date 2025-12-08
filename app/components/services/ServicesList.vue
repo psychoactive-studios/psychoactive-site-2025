@@ -19,20 +19,6 @@ onUnmounted(() => {
 
 <template>
   <div ref="containerRef" class="services-list">
-    <ClientOnly>
-      <Teleport to="#services-list-video-teleport">
-        <div class="services-list__video">
-          <video
-            class="services-list__video_player"
-            src="/video/preview_reel.mp4"
-            autoplay
-            loop
-            muted
-            playsinline
-          />
-        </div>
-      </Teleport>
-    </ClientOnly>
     <div class="container">
       <ul class="services-list__items">
         <li

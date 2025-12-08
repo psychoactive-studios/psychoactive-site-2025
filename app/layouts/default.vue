@@ -2,7 +2,7 @@
 import gsap from 'gsap';
 import Header from '~/components/layout/Header.vue';
 import ScrollProvider from '~/components/layout/ScrollProvider.vue';
-import FixedTeleportsTarget from '~/components/services/FixedTeleportsTarget.vue';
+import FixedTarget from '~/components/layout/FixedTarget.vue';
 import ModalContainer from '~/components/ui/VideoPlayerModal.vue';
 import useAudioManager from '~/composables/useAudioManager';
 
@@ -42,7 +42,7 @@ watch(
   <div>
     <Header />
     <ModalContainer />
-    <FixedTeleportsTarget />
+    <FixedTarget />
     <ScrollProvider>
       <slot />
     </ScrollProvider>
