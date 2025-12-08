@@ -870,7 +870,7 @@ export const stepperAnimation = (ctx) => {
           id: 'stepper-step-4-animation',
           trigger: '.stepper__trigger_step-4',
           start: 'top bottom',
-          end: 'bottom bottom',
+          end: 'bottom top',
           scrub: true,
           invalidateOnRefresh: true,
         },
@@ -878,8 +878,8 @@ export const stepperAnimation = (ctx) => {
       .to(
         '.stepper__titles',
         {
-          xPercent: -101,
-          duration: 10,
+          xPercent: -102,
+          duration: 5,
           ease: 'none',
         },
         'start'
@@ -889,9 +889,13 @@ export const stepperAnimation = (ctx) => {
         {
           webkitMaskImage:
             'radial-gradient(circle at center, black 100%, transparent 0%)',
-          duration: params.step.videoDuration,
+          duration: 3,
         },
-        `start+=${params.step.inOffset}`
-      );
+        `start+=3.5`
+      )
+      .to('.stepper__footer-video .video', {
+        opacity: 0,
+        duration: 5,
+      });
   });
 };
