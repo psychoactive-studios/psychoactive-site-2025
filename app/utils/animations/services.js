@@ -1,8 +1,4 @@
 import gsap from 'gsap';
-<<<<<<< HEAD
-import { GSDevTools } from 'gsap/GSDevTools';
-=======
->>>>>>> services/template
 import { SplitText } from 'gsap/SplitText';
 
 export const heroInitAnimation = (ctx, scrollSmoother) => {
@@ -141,10 +137,7 @@ export const heroScrollAnimation = (ctx) => {
           id: 'services-hero-scrolltrigger',
           trigger: '.hero__wrapper',
           pin: true, // pin the trigger element while active
-<<<<<<< HEAD
-=======
           pinSpacing: false,
->>>>>>> services/template
           start: 'top top', // when the top of the trigger hits the top of the viewport
           end: '75% top', // end after scrolling 500px beyond the start
           scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
@@ -351,11 +344,7 @@ export const stepperAnimation = (ctx) => {
       })
       /* ======== Mask background Animation ========= */
       .to(
-<<<<<<< HEAD
-        document.querySelector('.stepper__fixed'),
-=======
         document.querySelector('.services-stepper'),
->>>>>>> services/template
         {
           webkitMaskImage:
             'radial-gradient(circle at center, black 100%, transparent 0%)',
@@ -881,11 +870,7 @@ export const stepperAnimation = (ctx) => {
           id: 'stepper-step-4-animation',
           trigger: '.stepper__trigger_step-4',
           start: 'top bottom',
-<<<<<<< HEAD
-          end: 'bottom bottom',
-=======
           end: 'bottom top',
->>>>>>> services/template
           scrub: true,
           invalidateOnRefresh: true,
         },
@@ -893,13 +878,8 @@ export const stepperAnimation = (ctx) => {
       .to(
         '.stepper__titles',
         {
-<<<<<<< HEAD
-          xPercent: -100,
-          duration: 10,
-=======
           xPercent: -102,
           duration: 5,
->>>>>>> services/template
           ease: 'none',
         },
         'start'
@@ -909,12 +889,6 @@ export const stepperAnimation = (ctx) => {
         {
           webkitMaskImage:
             'radial-gradient(circle at center, black 100%, transparent 0%)',
-<<<<<<< HEAD
-          duration: params.step.videoDuration,
-        },
-        `start+=${params.step.inOffset}`
-      );
-=======
           duration: 3,
         },
         `start+=3.5`
@@ -923,6 +897,5 @@ export const stepperAnimation = (ctx) => {
         opacity: 0,
         duration: 5,
       });
->>>>>>> services/template
   });
 };
