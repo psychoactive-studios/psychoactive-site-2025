@@ -1,5 +1,4 @@
 import gsap from 'gsap';
-import { GSDevTools } from 'gsap/GSDevTools';
 import { SplitText } from 'gsap/SplitText';
 
 export const heroInitAnimation = (ctx, scrollSmoother) => {
@@ -344,7 +343,7 @@ export const stepperAnimation = (ctx) => {
       })
       /* ======== Mask background Animation ========= */
       .to(
-        document.querySelector('.stepper__fixed'),
+        document.querySelector('.services-stepper'),
         {
           webkitMaskImage:
             'radial-gradient(circle at center, black 100%, transparent 0%)',

@@ -1,12 +1,70 @@
-<script setup lang="ts">
+<script setup>
 import Footer from '~/components/layout/Footer.vue';
 import Hero from '~/components/services/Hero.vue';
 import ServicesList from '~/components/services/ServicesList.vue';
 import Stepper from '~/components/services/Stepper.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
+import useLoader from '~/composables/useLoader';
+import useNavigation from '~/composables/useNavigation';
+import { leaveAnimation } from '~/utils/animations/transitions';
+import gsap from 'gsap';
 
-const { enableScroll } = useScrollSmoother();
+const { scrollSmoother } = useScrollSmoother();
+const { startLoading } = useLoader();
+const { transitionFromNavigation } = useNavigation();
+
+definePageMeta({
+  scrollToTop: true,
+  pageTransition: {
+    css: false,
+    mode: 'out-in',
+    onEnter: (_, done) => {
+      startLoading();
+      scrollSmoother.value.scrollTop(0, false);
+      gsap.set(
+        gsap.utils.toArray([
+          '.services-list__video_player, .services-stepper, .stepper__footer-video, .stepper__footer-video .video',
+        ]),
+        { clearProps: 'all' }
+      );
+      done();
+    },
+    onLeave: (el, done) => {
+      if (transitionFromNavigation.value) {
+        gsap
+          .timeline()
+          .set(el, { opacity: 0 })
+          .add(() => {
+            transitionFromNavigation.value = false;
+            done();
+          }, '+=1');
+        return;
+      }
+
+      gsap
+        .timeline()
+        .to(
+          gsap.utils.toArray([
+            '.services-list__video_player, .services-stepper, .stepper__footer-video .video',
+          ]),
+          {
+            opacity: 0,
+            duration: 0.8,
+            ease: 'power4.in',
+          },
+          '<'
+        )
+        .set(
+          gsap.utils.toArray([
+            '.services-list__video_player, .services-stepper, .stepper__footer-video',
+          ]),
+          { display: 'none' }
+        );
+      leaveAnimation(el, done);
+    },
+  },
+});
 
 // onMounted(() => {
 //   setTimeout(() => {
