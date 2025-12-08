@@ -41,14 +41,14 @@ watch(isLoading, (newVal) => {
 <template>
   <section ref="containerRef" class="hero">
     <div class="hero__wrapper">
+      <div class="services-3d-scene--wrapper">
+        <ServicesHero3DScene class="services-3d-scene" />
+      </div>
       <div class="container">
         <div class="scene">
           <h1 class="title">OUR SERVICES</h1>
           <div class="circle--wrapper">
             <Circle class="circle" />
-          </div>
-          <div class="services-3d-scene--wrapper">
-            <ServicesHero3DScene class="services-3d-scene" />
           </div>
           <HeroCenterLine />
           <div class="top-text">
@@ -85,12 +85,35 @@ watch(isLoading, (newVal) => {
     flex-direction: column;
     height: 100dvh;
   }
+  .services-3d-scene--wrapper {
+    position: absolute;
+    z-index: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100dvh;
+    @include respond(portrait) {
+      height: auto;
+      aspect-ratio: 1;
+    }
+    @include respond(mobile) {
+      display: none;
+    }
+    .services-3d-scene {
+      width: 100%;
+      height: 100%;
+      will-change: transform;
+    }
+  }
   .scene {
+    @include flex-center;
     width: 100%;
     aspect-ratio: 2;
     position: relative;
-    @include flex-center;
+    pointer-events: none;
     position: relative;
+    z-index: 1;
     @include respond(portrait) {
       aspect-ratio: auto;
       height: 100%;
@@ -133,27 +156,6 @@ watch(isLoading, (newVal) => {
             top: 50%;
           }
         }
-      }
-    }
-    .services-3d-scene--wrapper {
-      position: absolute;
-      z-index: 1;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 100%;
-      height: 100%;
-      @include respond(portrait) {
-        height: auto;
-        aspect-ratio: 1;
-      }
-      @include respond(mobile) {
-        display: none;
-      }
-      .services-3d-scene {
-        width: 100%;
-        height: 100%;
-        will-change: transform;
       }
     }
     .top-text {

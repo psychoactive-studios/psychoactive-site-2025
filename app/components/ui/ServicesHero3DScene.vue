@@ -74,7 +74,7 @@ function init() {
   controls.dampingFactor = 0.05;
   */
 
-  const geometry = new THREE.SphereGeometry(1.5, 256, 256);
+  const geometry = new THREE.SphereGeometry(1.8, 248, 248);
   const positions = geometry.attributes.position.array;
   const originalPositions = new Float32Array(positions.length);
   velocities = new Float32Array(positions.length);
@@ -100,6 +100,7 @@ function init() {
   });
 
   spherePoints = new THREE.Points(geometry, material);
+  spherePoints.scale.set(0.8, 0.8, 0.8);
   scene.add(spherePoints);
 
   raycaster.params.Points.threshold = 0.35;
