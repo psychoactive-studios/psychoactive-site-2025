@@ -137,6 +137,7 @@ export const heroScrollAnimation = (ctx) => {
           id: 'services-hero-scrolltrigger',
           trigger: '.hero__wrapper',
           pin: true, // pin the trigger element while active
+          pinSpacing: false,
           start: 'top top', // when the top of the trigger hits the top of the viewport
           end: '75% top', // end after scrolling 500px beyond the start
           scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
@@ -877,7 +878,7 @@ export const stepperAnimation = (ctx) => {
       .to(
         '.stepper__titles',
         {
-          xPercent: -100,
+          xPercent: -101,
           duration: 10,
           ease: 'none',
         },
