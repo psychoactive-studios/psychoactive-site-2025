@@ -20,10 +20,7 @@ let ctx;
 onMounted(() => {
   if (containerRef.value) {
     ctx = gsap.context(() => {}, containerRef.value);
-
     heroScrollAnimation(ctx, containerRef.value);
-
-    // heroInitAnimation(ctx, scrollSmoother);
   }
 });
 
@@ -54,10 +51,22 @@ watch(isLoading, (newVal) => {
           <div class="top-text">
             <p class="grey">for brands that</p>
             <p>dare to stand out</p>
+            <a
+              href="https://webflow.com/@Psychoactive-Studios"
+              target="_blank"
+              class="top-text__label"
+              @mouseenter="playInteractionSound"
+              @focus="playInteractionSound"
+            >
+              <WebflowLabel class="right-label__svg" />
+            </a>
           </div>
           <div class="bottom-text">
             <div class="bottom-text__shape">We shape</div>
             <div class="bottom-text__web">the Web</div>
+            <div class="bottom-text__web-svg">
+              <img src="/img/the-web.svg" alt="" />
+            </div>
           </div>
           <div class="right-label">
             <a
@@ -84,6 +93,14 @@ watch(isLoading, (newVal) => {
     @include flex-center;
     flex-direction: column;
     height: 100dvh;
+    @include respond(portrait) {
+      padding-top: 160px;
+      padding-bottom: 48px;
+    }
+    @include respond(mobile) {
+      padding-top: 24px;
+      padding-bottom: 74px;
+    }
   }
   .services-3d-scene--wrapper {
     position: absolute;
@@ -94,11 +111,13 @@ watch(isLoading, (newVal) => {
     width: 100%;
     height: 100dvh;
     @include respond(portrait) {
+      inset: 160px 48px 48px 48px;
+      transform: translate(0);
+      width: auto;
       height: auto;
-      aspect-ratio: 1;
     }
     @include respond(mobile) {
-      display: none;
+      inset: 0;
     }
     .services-3d-scene {
       width: 100%;
@@ -111,7 +130,7 @@ watch(isLoading, (newVal) => {
     width: 100%;
     aspect-ratio: 2;
     position: relative;
-    pointer-events: none;
+    // pointer-events: none;
     position: relative;
     z-index: 1;
     @include respond(portrait) {
@@ -130,6 +149,9 @@ watch(isLoading, (newVal) => {
       font-style: normal;
       line-height: 1;
       text-transform: uppercase;
+      @include respond(mobile) {
+        font-size: getRem(12);
+      }
     }
     .circle--wrapper {
       position: absolute;
@@ -168,6 +190,21 @@ watch(isLoading, (newVal) => {
       line-height: 88%; /* 80.96px */
       letter-spacing: -0.06em;
       text-align: right;
+      @include respond(mobile) {
+        font-size: 8.55vw;
+        line-height: 121%;
+      }
+      &__label {
+        display: none;
+        margin-top: 3.8vw;
+        @include respond(mobile) {
+          display: block;
+          text-align: right;
+          svg {
+            margin-left: auto;
+          }
+        }
+      }
       .grey {
         color: white(80);
       }
@@ -176,6 +213,9 @@ watch(isLoading, (newVal) => {
       position: absolute;
       bottom: 0;
       left: 0;
+      @include respond(mobile) {
+        width: 100%;
+      }
       &__shape {
         font-size: 2.5vw;
         font-style: normal;
@@ -183,6 +223,10 @@ watch(isLoading, (newVal) => {
         line-height: 120%;
         letter-spacing: -0.02em;
         color: #cfcfd0;
+        @include respond(mobile) {
+          font-size: 8.55vw;
+          line-height: 121%;
+        }
       }
       &__web {
         font-size: 14.585vw;
@@ -193,12 +237,29 @@ watch(isLoading, (newVal) => {
         mix-blend-mode: difference;
         color: $color-foreground;
         margin-bottom: -0.11em;
+        @include respond(mobile) {
+          display: none;
+        }
+        &-svg {
+          display: none;
+          width: 100%;
+          margin-top: 1vw;
+          img {
+            width: 100%;
+          }
+          @include respond(mobile) {
+            display: block;
+          }
+        }
       }
     }
     .right-label {
       position: absolute;
       right: 0;
       bottom: 0;
+      @include respond(mobile) {
+        display: none;
+      }
       &__svg {
         width: auto;
         height: clamp(36px, 2.5vw, 48px);
