@@ -72,7 +72,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         'secondPart'
       )
       .fromTo(
-        '.bottom-text__web',
+        '.bottom-text__web, .bottom-text__web-svg',
         { xPercent: -175, visibility: 'hidden' },
         {
           xPercent: 0,
@@ -95,7 +95,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         'secondPart'
       )
       .fromTo(
-        '.right-label',
+        '.right-label, .top-text__label',
         { xPercent: 175, visibility: 'hidden' },
         {
           xPercent: 0,
@@ -146,7 +146,7 @@ export const heroScrollAnimation = (ctx) => {
         },
       })
       .fromTo(
-        '.bottom-text__web',
+        '.bottom-text__web, .bottom-text__web-svg',
         { xPercent: 0 },
         { xPercent: -175, duration: outputTime, ease: 'power2.out' },
         'output-of-elements'
@@ -158,7 +158,7 @@ export const heroScrollAnimation = (ctx) => {
         'output-of-elements'
       )
       .fromTo(
-        '.right-label',
+        '.right-label, .top-text__label',
         { xPercent: 0 },
         { xPercent: 175, duration: outputTime, ease: 'power1.out' },
         'output-of-elements'
@@ -200,7 +200,7 @@ export const heroScrollAnimation = (ctx) => {
         'output-of-elements'
       )
       .to(
-        '.services-3d-scene--wrapper',
+        '.services-3d-scene',
         {
           scale: 0,
           opacity: 0,
