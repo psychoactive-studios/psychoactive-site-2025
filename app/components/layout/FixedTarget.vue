@@ -2,12 +2,15 @@
 import { stepperTextsData, stepperTitlesData } from '~/data/servicesData';
 import HeroCenterLine from '../services/HeroCenterLine.vue';
 import StepperPagination from '../services/StepperPagination.vue';
+import { useMediaQuery } from '@vueuse/core';
+
+const isMobile = useMediaQuery('(max-width: 768px)');
 </script>
 <template>
   <div>
     <!-- Fixed target for Services List animations -->
     <ClientOnly>
-      <div class="services-list__video">
+      <div v-if="!isMobile" class="services-list__video">
         <video
           class="services-list__video_player"
           src="/video/preview_reel.mp4"
@@ -19,7 +22,7 @@ import StepperPagination from '../services/StepperPagination.vue';
       </div>
 
       <!-- Fixed target for Stepper animations -->
-      <div id="stepper" class="services-stepper">
+      <div v-if="!isMobile" id="stepper" class="services-stepper">
         <div class="container">
           <div class="stepper__scene">
             <div class="stepper__videos">
@@ -90,7 +93,9 @@ import StepperPagination from '../services/StepperPagination.vue';
           </div>
         </div>
       </div>
-      <div class="stepper__footer-video">
+
+      <!-- Fixed footer video -->
+      <div v-if="!isMobile" class="stepper__footer-video">
         <video
           class="video"
           src="/video/preview_reel.mp4"

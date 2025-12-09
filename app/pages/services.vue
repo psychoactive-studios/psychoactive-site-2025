@@ -115,7 +115,13 @@ definePageMeta({
         content: '';
         display: inline-block;
         width: 10vw;
+        @include respond(mobile) {
+          width: 25vw;
+        }
       }
+    }
+    @include respond(mobile) {
+      max-width: 100%;
     }
   }
 }

@@ -1,7 +1,10 @@
 <script setup>
+import { useMediaQuery } from '@vueuse/core';
 import gsap from 'gsap';
 import { listData } from '~/data/servicesData';
 import { servicesListAnimation } from '~/utils/animations/services';
+
+const isMobile = useMediaQuery('(max-width: 768px)');
 
 const containerRef = ref(null);
 let ctx = null;
@@ -20,6 +23,16 @@ onUnmounted(() => {
 <template>
   <div ref="containerRef" class="services-list">
     <div class="container">
+      <div v-if="isMobile" class="services-list__video">
+        <video
+          class="services-list__video_player"
+          src="/video/preview_reel.mp4"
+          autoplay
+          loop
+          muted
+          playsinline
+        />
+      </div>
       <ul class="services-list__items">
         <li
           v-for="item in listData"
@@ -42,34 +55,40 @@ onUnmounted(() => {
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+@use '~/assets/styles/mixins' as *;
 .services-list {
   padding: 50dvh 0 30dvh 0;
+  @include respond(mobile) {
+    padding: 120px 0;
+  }
   &__video {
-    width: calc((100% - 160px - 160px) * 0.4);
     aspect-ratio: 1;
-    margin: auto;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin: 0 1rem;
     video {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      clip-path: circle(0% at 50% 50%);
+      clip-path: circle(50% at 50% 50%);
     }
   }
   &__items {
     display: flex;
     flex-direction: column;
     gap: 423px;
+    @include respond(mobile) {
+      margin-top: 64px;
+      gap: 64px;
+    }
   }
   &__item {
     display: flex;
     gap: getRem(24);
+    @include respond(mobile) {
+      flex-direction: column;
+    }
     &_title {
       font-family: 'RoobertMono';
-      font-size: 1rem;
+      font-size: clamp(getRem(12), 1.333vw, getRem(16));
       font-style: normal;
       font-weight: 500;
       line-height: 100%;
@@ -79,6 +98,9 @@ onUnmounted(() => {
     }
     &_divider {
       flex-grow: 1;
+      @include respond(mobile) {
+        display: none;
+      }
       .line {
         display: block;
         height: 1px;
@@ -107,12 +129,13 @@ onUnmounted(() => {
       }
     }
     &_description {
-      font-size: 24px;
+      font-size: clamp(getRem(20), 1.333vw, getRem(24));
       font-style: normal;
       font-weight: 400;
-      line-height: 30px; /* 125% */
+      line-height: 125%;
       color: white(80);
       width: 380px;
+      color: white(80);
     }
   }
 }
