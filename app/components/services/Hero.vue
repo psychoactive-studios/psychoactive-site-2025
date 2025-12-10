@@ -1,7 +1,6 @@
 <script setup>
 import gsap from 'gsap';
 import Circle from '../ui/Circle.vue';
-import ServicesHero3DScene from '../ui/ServicesHero3DScene.vue';
 import WebflowLabel from '../ui/WebflowLabel.vue';
 import HeroCenterLine from './HeroCenterLine.vue';
 import useLoader from '~/composables/useLoader';
@@ -10,9 +9,13 @@ import {
   heroInitAnimation,
   heroScrollAnimation,
 } from '~/utils/animations/services.js';
+import ServicesHero3DSceneMobile from '../ui/ServicesHero3DSceneMobile.vue';
+import { useMediaQuery } from '@vueuse/core';
+import ServicesHero3DScene from '../ui/ServicesHero3DScene.vue';
 
 const { isLoading } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
+const isMobile = useMediaQuery('(max-width: 768px)');
 
 const containerRef = ref(null);
 let ctx;
@@ -39,7 +42,8 @@ watch(isLoading, (newVal) => {
   <section ref="containerRef" class="hero">
     <div class="hero__wrapper">
       <div class="services-3d-scene--wrapper">
-        <ServicesHero3DScene class="services-3d-scene" />
+        <ServicesHero3DScene v-if="!isMobile" class="services-3d-scene" />
+        <ServicesHero3DSceneMobile v-if="isMobile" class="services-3d-scene" />
       </div>
       <div class="container">
         <div class="scene">
@@ -89,6 +93,10 @@ watch(isLoading, (newVal) => {
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
 .hero {
+  &__wrapper {
+    position: relative;
+    // height: 100dvh;
+  }
   .container {
     @include flex-center;
     flex-direction: column;
