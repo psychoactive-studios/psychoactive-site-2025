@@ -141,7 +141,6 @@ const isMobile = useMediaQuery('(max-width: 768px)');
   min-height: 100dvh;
   position: fixed;
   inset: 0;
-  z-index: 1;
   -webkit-mask-image: radial-gradient(
     circle at center,
     black 0%,
