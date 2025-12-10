@@ -726,6 +726,11 @@ export const stepperAnimation = (ctx) => {
               },
               `start+=${params.step.inOffset}`
             )
+            .set(
+              '.services-stepper',
+              { zIndex: 1 },
+              `start+=${params.step.inOffset}`
+            )
             .from(
               '.stepper__label',
               {
@@ -928,7 +933,8 @@ export const stepperAnimation = (ctx) => {
                 duration: 0.5,
               },
               'start+=9.5'
-            );
+            )
+            .set('.services-stepper', { zIndex: 0 });
 
           /* ==============================================
                       Step 4 Animation
