@@ -23,16 +23,18 @@ onUnmounted(() => {
 <template>
   <div ref="containerRef" class="services-list">
     <div class="container">
-      <div v-if="isMobile" class="services-list__video">
-        <video
-          class="services-list__video_player"
-          src="/video/preview_reel.mp4"
-          autoplay
-          loop
-          muted
-          playsinline
-        />
-      </div>
+      <ClientOnly>
+        <div v-if="isMobile" class="services-list__video">
+          <video
+            class="services-list__video_player"
+            src="/video/preview_reel.mp4"
+            autoplay
+            loop
+            muted
+            playsinline
+          />
+        </div>
+      </ClientOnly>
       <ul class="services-list__items">
         <li
           v-for="item in listData"

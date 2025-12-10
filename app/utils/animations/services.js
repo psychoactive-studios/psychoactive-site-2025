@@ -343,6 +343,8 @@ export const stepperAnimation = (ctx) => {
     charsClass: 'char-center',
   });
 
+  let matchMedia = gsap.matchMedia();
+
   ctx.add(() => {
     const params = {
       intro: {
@@ -361,574 +363,584 @@ export const stepperAnimation = (ctx) => {
       },
     };
 
-    /* ==============================================
+    matchMedia.add(
+      {
+        isDesktop: `(min-width: 768px)`,
+      },
+      (context) => {
+        let { isDesktop } = context.conditions;
+        if (isDesktop) {
+          /* ==============================================
                       Intro Animation
        =============================================*/
-    gsap
-      .timeline({
-        scrollTrigger: {
-          id: 'stepper-intro-animation',
-          trigger: '.stepper__trigger_intro',
-          start: 'top center',
-          end: 'bottom bottom',
-          scrub: true,
-          // invalidateOnRefresh: true,
-        },
-      })
-      /* ======== Mask background Animation ========= */
-      .to(
-        document.querySelector('.services-stepper'),
-        {
-          webkitMaskImage:
-            'radial-gradient(circle at center, black 100%, transparent 0%)',
-          duration: params.intro.introDuration,
-        },
-        'start'
-      )
-      /* ======== Mask video Animation ========= */
-      .to(
-        '.stepper__videos_overlay, .stepper__videos .video.step-1',
-        {
-          clipPath: 'circle(50% at 50% 50%)',
-          duration: params.intro.introDuration,
-        },
-        'start+=1.5'
-      )
-      /* ======== Pagination intro Animation ========= */
-      .fromTo(
-        '.stepper__pagination .step-1 .path-grey path, .stepper__pagination .step-3 .path-grey path',
-        { drawSVG: '100% 100%' },
-        { drawSVG: '100% 0%', duration: params.intro.paginatorDuration },
-        `start+=${params.intro.paginatorOffset}`
-      )
-      .fromTo(
-        '.stepper__pagination .step-2 .path-grey path, .stepper__pagination .step-4 .path-grey path',
-        { drawSVG: '0% 0%' },
-        { drawSVG: '0% 100%', duration: params.intro.paginatorDuration },
-        `start+=${params.intro.paginatorOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-1 .dot-end',
-        {
-          motionPath: {
-            path: '.stepper__pagination .step-1 .path-grey path',
-            align: '.stepper__pagination .step-1 .path-grey path',
-            alignOrigin: [0.5, 0.5],
-            start: 1,
-            end: 0,
-            fromCurrent: true,
-          },
-          duration: params.intro.paginatorDuration,
-        },
-        `start+=${params.intro.paginatorOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-2 .dot-end',
-        {
-          motionPath: {
-            path: '.stepper__pagination .step-2 .path-grey path',
-            align: '.stepper__pagination .step-2 .path-grey path',
-            alignOrigin: [0.5, 0.5],
-            start: 0,
-            end: 1,
-            fromCurrent: true,
-          },
-          duration: params.intro.paginatorDuration,
-        },
-        `start+=${params.intro.paginatorOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-3 .dot-end',
-        {
-          motionPath: {
-            path: '.stepper__pagination .step-3 .path-grey path',
-            align: '.stepper__pagination .step-3 .path-grey path',
-            alignOrigin: [0.5, 0.5],
-            start: 1,
-            end: 0,
-            fromCurrent: true,
-          },
-          duration: params.intro.paginatorDuration,
-        },
-        `start+=${params.intro.paginatorOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-4 .dot-end',
-        {
-          motionPath: {
-            path: '.stepper__pagination .step-4 .path-grey path',
-            align: '.stepper__pagination .step-4 .path-grey path',
-            alignOrigin: [0.5, 0.5],
-            start: 0,
-            end: 1,
-            fromCurrent: true,
-          },
-          duration: params.intro.paginatorDuration,
-        },
-        `start+=${params.intro.paginatorOffset}`
-      )
-      /* ======== Step Text Animation ========= */
-      .fromTo(
-        '.stepper__step-texts .text.step-1 .char-center',
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.01,
-          stagger: {
-            amount: 10,
-          },
-        },
-        `start+=${params.intro.stepOffset}`
-      )
-      /* ======== Step Title Animation ========= */
-      .from(
-        '.stepper__titles',
-        {
-          xPercent: 20,
-          duration: 10,
-          ease: 'none',
-        },
-        `start+=${params.intro.stepOffset}`
-      )
-      .from(
-        '.stepper__pagination .step-1 .dot-active-start, .stepper__pagination .step-1 .dot-active-end',
-        {
-          opacity: 0,
-          duration: 0.1,
-        },
-        `start+=${params.intro.stepOffset}`
-      )
-      .fromTo(
-        '.stepper__pagination .step-1 .path-active path',
-        { drawSVG: '100% 100%' },
-        { drawSVG: '100% 0%', duration: 10 },
-        `start+=${params.intro.stepOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-1 .dot-active-end',
-        {
-          motionPath: {
-            path: '.stepper__pagination .step-1 .path-grey path',
-            align: '.stepper__pagination .step-1 .path-grey path',
-            alignOrigin: [0.5, 0.5],
-            start: 1,
-            end: 0,
-            fromCurrent: true,
-          },
-          duration: 10,
-        },
-        `start+=${params.intro.stepOffset}`
-      )
-      .from(
-        '.stepper__pagination .step-1 .number',
-        {
-          opacity: 0,
-          duration: 2,
-        },
-        'start+=15'
-      );
+          gsap
+            .timeline({
+              scrollTrigger: {
+                id: 'stepper-intro-animation',
+                trigger: '.stepper__trigger_intro',
+                start: 'top center',
+                end: 'bottom bottom',
+                scrub: true,
+                // invalidateOnRefresh: true,
+              },
+            })
+            /* ======== Mask background Animation ========= */
+            .to(
+              document.querySelector('.services-stepper'),
+              {
+                webkitMaskImage:
+                  'radial-gradient(circle at center, black 100%, transparent 0%)',
+                duration: params.intro.introDuration,
+              },
+              'start'
+            )
+            /* ======== Mask video Animation ========= */
+            .to(
+              '.stepper__videos_overlay, .stepper__videos .video.step-1',
+              {
+                clipPath: 'circle(50% at 50% 50%)',
+                duration: params.intro.introDuration,
+              },
+              'start+=1.5'
+            )
+            /* ======== Pagination intro Animation ========= */
+            .fromTo(
+              '.stepper__pagination .step-1 .path-grey path, .stepper__pagination .step-3 .path-grey path',
+              { drawSVG: '100% 100%' },
+              { drawSVG: '100% 0%', duration: params.intro.paginatorDuration },
+              `start+=${params.intro.paginatorOffset}`
+            )
+            .fromTo(
+              '.stepper__pagination .step-2 .path-grey path, .stepper__pagination .step-4 .path-grey path',
+              { drawSVG: '0% 0%' },
+              { drawSVG: '0% 100%', duration: params.intro.paginatorDuration },
+              `start+=${params.intro.paginatorOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-1 .dot-end',
+              {
+                motionPath: {
+                  path: '.stepper__pagination .step-1 .path-grey path',
+                  align: '.stepper__pagination .step-1 .path-grey path',
+                  alignOrigin: [0.5, 0.5],
+                  start: 1,
+                  end: 0,
+                  fromCurrent: true,
+                },
+                duration: params.intro.paginatorDuration,
+              },
+              `start+=${params.intro.paginatorOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-2 .dot-end',
+              {
+                motionPath: {
+                  path: '.stepper__pagination .step-2 .path-grey path',
+                  align: '.stepper__pagination .step-2 .path-grey path',
+                  alignOrigin: [0.5, 0.5],
+                  start: 0,
+                  end: 1,
+                  fromCurrent: true,
+                },
+                duration: params.intro.paginatorDuration,
+              },
+              `start+=${params.intro.paginatorOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-3 .dot-end',
+              {
+                motionPath: {
+                  path: '.stepper__pagination .step-3 .path-grey path',
+                  align: '.stepper__pagination .step-3 .path-grey path',
+                  alignOrigin: [0.5, 0.5],
+                  start: 1,
+                  end: 0,
+                  fromCurrent: true,
+                },
+                duration: params.intro.paginatorDuration,
+              },
+              `start+=${params.intro.paginatorOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-4 .dot-end',
+              {
+                motionPath: {
+                  path: '.stepper__pagination .step-4 .path-grey path',
+                  align: '.stepper__pagination .step-4 .path-grey path',
+                  alignOrigin: [0.5, 0.5],
+                  start: 0,
+                  end: 1,
+                  fromCurrent: true,
+                },
+                duration: params.intro.paginatorDuration,
+              },
+              `start+=${params.intro.paginatorOffset}`
+            )
+            /* ======== Step Text Animation ========= */
+            .fromTo(
+              '.stepper__step-texts .text.step-1 .char-center',
+              { opacity: 0 },
+              {
+                opacity: 1,
+                duration: 0.01,
+                stagger: {
+                  amount: 10,
+                },
+              },
+              `start+=${params.intro.stepOffset}`
+            )
+            /* ======== Step Title Animation ========= */
+            .from(
+              '.stepper__titles',
+              {
+                xPercent: 20,
+                duration: 10,
+                ease: 'none',
+              },
+              `start+=${params.intro.stepOffset}`
+            )
+            .from(
+              '.stepper__pagination .step-1 .dot-active-start, .stepper__pagination .step-1 .dot-active-end',
+              {
+                opacity: 0,
+                duration: 0.1,
+              },
+              `start+=${params.intro.stepOffset}`
+            )
+            .fromTo(
+              '.stepper__pagination .step-1 .path-active path',
+              { drawSVG: '100% 100%' },
+              { drawSVG: '100% 0%', duration: 10 },
+              `start+=${params.intro.stepOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-1 .dot-active-end',
+              {
+                motionPath: {
+                  path: '.stepper__pagination .step-1 .path-grey path',
+                  align: '.stepper__pagination .step-1 .path-grey path',
+                  alignOrigin: [0.5, 0.5],
+                  start: 1,
+                  end: 0,
+                  fromCurrent: true,
+                },
+                duration: 10,
+              },
+              `start+=${params.intro.stepOffset}`
+            )
+            .from(
+              '.stepper__pagination .step-1 .number',
+              {
+                opacity: 0,
+                duration: 2,
+              },
+              'start+=15'
+            );
 
-    /* ==============================================
+          /* ==============================================
                       Step 1 Animation
        =============================================*/
-    gsap
-      .timeline({
-        scrollTrigger: {
-          id: 'stepper-step-1-animation',
-          trigger: '.stepper__trigger_step-1',
-          start: 'top bottom',
-          end: 'bottom bottom',
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      })
-      .to(
-        '.stepper__titles',
-        {
-          xPercent: -30,
-          duration: 10,
-          ease: 'none',
-        },
-        'start'
-      )
-      .to(
-        '.stepper__videos .video.step-2',
-        {
-          clipPath: 'circle(50% at 50% 50%)',
-          duration: params.step.videoDuration,
-        },
-        `start+=${params.step.videoOffset}`
-      )
-      .to(
-        '.stepper__step-texts .text.step-1 .char-center',
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: params.step.outDuration,
-            from: 'random',
-          },
-          // immediateRender: false,
-        },
-        `start+=${params.step.outOffset}`
-      )
-      .fromTo(
-        '.stepper__step-texts .text.step-2 .char-center',
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.01,
-          stagger: {
-            amount: params.step.inDuration,
-          },
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-1 .path-active path',
-        { drawSVG: '0% 0%', duration: params.step.outDuration },
-        `start+=${params.step.outOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-1 .dot-active-start',
-        {
-          motionPath: {
-            path: '.stepper__pagination .step-1 .path-grey path',
-            align: '.stepper__pagination .step-1 .path-grey path',
-            alignOrigin: [0.5, 0.5],
-            start: 1,
-            end: 0,
-            fromCurrent: true,
-          },
-          duration: params.step.outDuration,
-        },
-        `start+=${params.step.outOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-1 .number',
-        {
-          opacity: 0,
-          duration: 0.1,
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .from(
-        '.stepper__pagination .step-2 .dot-active-start, .stepper__pagination .step-2 .dot-active-end',
-        {
-          opacity: 0,
-          duration: 0.1,
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .fromTo(
-        '.stepper__pagination .step-2 .path-active path',
-        { drawSVG: '0% 0%' },
-        { drawSVG: '0% 100%', duration: params.step.inDuration },
-        `start+=${params.step.inOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-2 .dot-active-end',
-        {
-          motionPath: {
-            path: '.stepper__pagination .step-2 .path-grey path',
-            align: '.stepper__pagination .step-2 .path-grey path',
-            alignOrigin: [0.5, 0.5],
-            start: 0,
-            end: 1,
-            fromCurrent: true,
-          },
-          duration: params.step.inDuration,
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .from(
-        '.stepper__pagination .step-2 .number',
-        {
-          opacity: 0,
-          duration: 0.5,
-        },
-        'start+=9.5'
-      );
+          gsap
+            .timeline({
+              scrollTrigger: {
+                id: 'stepper-step-1-animation',
+                trigger: '.stepper__trigger_step-1',
+                start: 'top bottom',
+                end: 'bottom bottom',
+                scrub: true,
+                invalidateOnRefresh: true,
+              },
+            })
+            .to(
+              '.stepper__titles',
+              {
+                xPercent: -30,
+                duration: 10,
+                ease: 'none',
+              },
+              'start'
+            )
+            .to(
+              '.stepper__videos .video.step-2',
+              {
+                clipPath: 'circle(50% at 50% 50%)',
+                duration: params.step.videoDuration,
+              },
+              `start+=${params.step.videoOffset}`
+            )
+            .to(
+              '.stepper__step-texts .text.step-1 .char-center',
+              {
+                opacity: 0,
+                duration: 0.01,
+                stagger: {
+                  amount: params.step.outDuration,
+                  from: 'random',
+                },
+                // immediateRender: false,
+              },
+              `start+=${params.step.outOffset}`
+            )
+            .fromTo(
+              '.stepper__step-texts .text.step-2 .char-center',
+              { opacity: 0 },
+              {
+                opacity: 1,
+                duration: 0.01,
+                stagger: {
+                  amount: params.step.inDuration,
+                },
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-1 .path-active path',
+              { drawSVG: '0% 0%', duration: params.step.outDuration },
+              `start+=${params.step.outOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-1 .dot-active-start',
+              {
+                motionPath: {
+                  path: '.stepper__pagination .step-1 .path-grey path',
+                  align: '.stepper__pagination .step-1 .path-grey path',
+                  alignOrigin: [0.5, 0.5],
+                  start: 1,
+                  end: 0,
+                  fromCurrent: true,
+                },
+                duration: params.step.outDuration,
+              },
+              `start+=${params.step.outOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-1 .number',
+              {
+                opacity: 0,
+                duration: 0.1,
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .from(
+              '.stepper__pagination .step-2 .dot-active-start, .stepper__pagination .step-2 .dot-active-end',
+              {
+                opacity: 0,
+                duration: 0.1,
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .fromTo(
+              '.stepper__pagination .step-2 .path-active path',
+              { drawSVG: '0% 0%' },
+              { drawSVG: '0% 100%', duration: params.step.inDuration },
+              `start+=${params.step.inOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-2 .dot-active-end',
+              {
+                motionPath: {
+                  path: '.stepper__pagination .step-2 .path-grey path',
+                  align: '.stepper__pagination .step-2 .path-grey path',
+                  alignOrigin: [0.5, 0.5],
+                  start: 0,
+                  end: 1,
+                  fromCurrent: true,
+                },
+                duration: params.step.inDuration,
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .from(
+              '.stepper__pagination .step-2 .number',
+              {
+                opacity: 0,
+                duration: 0.5,
+              },
+              'start+=9.5'
+            );
 
-    /* ==============================================
+          /* ==============================================
                       Step 2 Animation
        =============================================*/
-    gsap
-      .timeline({
-        scrollTrigger: {
-          id: 'stepper-step-2-animation',
-          trigger: '.stepper__trigger_step-2',
-          start: 'top bottom',
-          end: 'bottom bottom',
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      })
-      .to(
-        '.stepper__titles',
-        {
-          xPercent: -53,
-          duration: 10,
-          ease: 'none',
-        },
-        'start'
-      )
-      .to(
-        '.stepper__videos .video.step-3',
-        {
-          clipPath: 'circle(50% at 50% 50%)',
-          duration: params.step.videoDuration,
-        },
-        `start+=${params.step.videoOffset}`
-      )
-      .to(
-        '.stepper__step-texts .text.step-2 .char-center',
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: params.step.outDuration,
-            from: 'random',
-          },
-          // immediateRender: false,
-        },
-        `start+=${params.step.outOffset}`
-      )
-      .fromTo(
-        '.stepper__step-texts .text.step-3 .char-center',
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.01,
-          stagger: {
-            amount: params.step.inDuration,
-          },
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-2 .path-active path',
-        { drawSVG: '100% 100%', duration: params.step.outDuration },
-        `start+=${params.step.outOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-2 .dot-active-start',
-        {
-          motionPath: {
-            path: '.stepper__pagination .step-2 .path-grey path',
-            align: '.stepper__pagination .step-2 .path-grey path',
-            alignOrigin: [0.5, 0.5],
-            start: 0,
-            end: 1,
-            fromCurrent: true,
-          },
-          duration: params.step.outDuration,
-        },
-        `start+=${params.step.outOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-2 .number',
-        {
-          opacity: 0,
-          duration: 0.1,
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .from(
-        '.stepper__pagination .step-3 .dot-active-start, .stepper__pagination .step-3 .dot-active-end',
-        {
-          opacity: 0,
-          duration: 0.1,
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .fromTo(
-        '.stepper__pagination .step-3 .path-active path',
-        { drawSVG: '0% 0%' },
-        { drawSVG: '100% 0%', duration: params.step.inDuration },
-        `start+=${params.step.inOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-3 .dot-active-end',
-        {
-          motionPath: {
-            path: '.stepper__pagination .step-3 .path-grey path',
-            align: '.stepper__pagination .step-3 .path-grey path',
-            alignOrigin: [0.5, 0.5],
-            start: 1,
-            end: 0,
-            fromCurrent: true,
-          },
-          duration: params.step.inDuration,
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .from(
-        '.stepper__pagination .step-3 .number',
-        {
-          opacity: 0,
-          duration: 0.5,
-        },
-        'start+=9.5'
-      );
+          gsap
+            .timeline({
+              scrollTrigger: {
+                id: 'stepper-step-2-animation',
+                trigger: '.stepper__trigger_step-2',
+                start: 'top bottom',
+                end: 'bottom bottom',
+                scrub: true,
+                invalidateOnRefresh: true,
+              },
+            })
+            .to(
+              '.stepper__titles',
+              {
+                xPercent: -53,
+                duration: 10,
+                ease: 'none',
+              },
+              'start'
+            )
+            .to(
+              '.stepper__videos .video.step-3',
+              {
+                clipPath: 'circle(50% at 50% 50%)',
+                duration: params.step.videoDuration,
+              },
+              `start+=${params.step.videoOffset}`
+            )
+            .to(
+              '.stepper__step-texts .text.step-2 .char-center',
+              {
+                opacity: 0,
+                duration: 0.01,
+                stagger: {
+                  amount: params.step.outDuration,
+                  from: 'random',
+                },
+                // immediateRender: false,
+              },
+              `start+=${params.step.outOffset}`
+            )
+            .fromTo(
+              '.stepper__step-texts .text.step-3 .char-center',
+              { opacity: 0 },
+              {
+                opacity: 1,
+                duration: 0.01,
+                stagger: {
+                  amount: params.step.inDuration,
+                },
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-2 .path-active path',
+              { drawSVG: '100% 100%', duration: params.step.outDuration },
+              `start+=${params.step.outOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-2 .dot-active-start',
+              {
+                motionPath: {
+                  path: '.stepper__pagination .step-2 .path-grey path',
+                  align: '.stepper__pagination .step-2 .path-grey path',
+                  alignOrigin: [0.5, 0.5],
+                  start: 0,
+                  end: 1,
+                  fromCurrent: true,
+                },
+                duration: params.step.outDuration,
+              },
+              `start+=${params.step.outOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-2 .number',
+              {
+                opacity: 0,
+                duration: 0.1,
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .from(
+              '.stepper__pagination .step-3 .dot-active-start, .stepper__pagination .step-3 .dot-active-end',
+              {
+                opacity: 0,
+                duration: 0.1,
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .fromTo(
+              '.stepper__pagination .step-3 .path-active path',
+              { drawSVG: '0% 0%' },
+              { drawSVG: '100% 0%', duration: params.step.inDuration },
+              `start+=${params.step.inOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-3 .dot-active-end',
+              {
+                motionPath: {
+                  path: '.stepper__pagination .step-3 .path-grey path',
+                  align: '.stepper__pagination .step-3 .path-grey path',
+                  alignOrigin: [0.5, 0.5],
+                  start: 1,
+                  end: 0,
+                  fromCurrent: true,
+                },
+                duration: params.step.inDuration,
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .from(
+              '.stepper__pagination .step-3 .number',
+              {
+                opacity: 0,
+                duration: 0.5,
+              },
+              'start+=9.5'
+            );
 
-    /* ==============================================
+          /* ==============================================
                       Step 3 Animation
        =============================================*/
-    gsap
-      .timeline({
-        scrollTrigger: {
-          id: 'stepper-step-3-animation',
-          trigger: '.stepper__trigger_step-3',
-          start: 'top bottom',
-          end: 'bottom bottom',
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      })
-      .to(
-        '.stepper__titles',
-        {
-          xPercent: -72,
-          duration: 10,
-          ease: 'none',
-        },
-        'start'
-      )
-      .to(
-        '.stepper__videos .video.step-4',
-        {
-          clipPath: 'circle(50% at 50% 50%)',
-          duration: params.step.videoDuration,
-        },
-        `start+=${params.step.videoOffset}`
-      )
-      .to(
-        '.stepper__step-texts .text.step-3 .char-center',
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: params.step.outDuration,
-            from: 'random',
-          },
-          // immediateRender: false,
-        },
-        `start+=${params.step.outOffset}`
-      )
-      .fromTo(
-        '.stepper__step-texts .text.step-4 .char-center',
-        { opacity: 0 },
-        {
-          opacity: 1,
-          duration: 0.01,
-          stagger: {
-            amount: params.step.inDuration,
-          },
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-3 .path-active path',
-        { drawSVG: '0% 0%', duration: params.step.outDuration },
-        `start+=${params.step.outOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-3 .dot-active-start',
-        {
-          motionPath: {
-            path: '.stepper__pagination .step-3 .path-grey path',
-            align: '.stepper__pagination .step-3 .path-grey path',
-            alignOrigin: [0.5, 0.5],
-            start: 1,
-            end: 0,
-            fromCurrent: true,
-          },
-          duration: params.step.outDuration,
-        },
-        `start+=${params.step.outOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-3 .number',
-        {
-          opacity: 0,
-          duration: 0.1,
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .from(
-        '.stepper__pagination .step-4 .dot-active-start, .stepper__pagination .step-4 .dot-active-end',
-        {
-          opacity: 0,
-          duration: 0.1,
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .fromTo(
-        '.stepper__pagination .step-4 .path-active path',
-        { drawSVG: '0% 0%' },
-        { drawSVG: '0% 100%', duration: params.step.inDuration },
-        `start+=${params.step.inOffset}`
-      )
-      .to(
-        '.stepper__pagination .step-4 .dot-active-end',
-        {
-          motionPath: {
-            path: '.stepper__pagination .step-4 .path-grey path',
-            align: '.stepper__pagination .step-4 .path-grey path',
-            alignOrigin: [0.5, 0.5],
-            start: 0,
-            end: 1,
-            fromCurrent: true,
-          },
-          duration: params.step.inDuration,
-        },
-        `start+=${params.step.inOffset}`
-      )
-      .from(
-        '.stepper__pagination .step-4 .number',
-        {
-          opacity: 0,
-          duration: 0.5,
-        },
-        'start+=9.5'
-      );
+          gsap
+            .timeline({
+              scrollTrigger: {
+                id: 'stepper-step-3-animation',
+                trigger: '.stepper__trigger_step-3',
+                start: 'top bottom',
+                end: 'bottom bottom',
+                scrub: true,
+                invalidateOnRefresh: true,
+              },
+            })
+            .to(
+              '.stepper__titles',
+              {
+                xPercent: -72,
+                duration: 10,
+                ease: 'none',
+              },
+              'start'
+            )
+            .to(
+              '.stepper__videos .video.step-4',
+              {
+                clipPath: 'circle(50% at 50% 50%)',
+                duration: params.step.videoDuration,
+              },
+              `start+=${params.step.videoOffset}`
+            )
+            .to(
+              '.stepper__step-texts .text.step-3 .char-center',
+              {
+                opacity: 0,
+                duration: 0.01,
+                stagger: {
+                  amount: params.step.outDuration,
+                  from: 'random',
+                },
+                // immediateRender: false,
+              },
+              `start+=${params.step.outOffset}`
+            )
+            .fromTo(
+              '.stepper__step-texts .text.step-4 .char-center',
+              { opacity: 0 },
+              {
+                opacity: 1,
+                duration: 0.01,
+                stagger: {
+                  amount: params.step.inDuration,
+                },
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-3 .path-active path',
+              { drawSVG: '0% 0%', duration: params.step.outDuration },
+              `start+=${params.step.outOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-3 .dot-active-start',
+              {
+                motionPath: {
+                  path: '.stepper__pagination .step-3 .path-grey path',
+                  align: '.stepper__pagination .step-3 .path-grey path',
+                  alignOrigin: [0.5, 0.5],
+                  start: 1,
+                  end: 0,
+                  fromCurrent: true,
+                },
+                duration: params.step.outDuration,
+              },
+              `start+=${params.step.outOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-3 .number',
+              {
+                opacity: 0,
+                duration: 0.1,
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .from(
+              '.stepper__pagination .step-4 .dot-active-start, .stepper__pagination .step-4 .dot-active-end',
+              {
+                opacity: 0,
+                duration: 0.1,
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .fromTo(
+              '.stepper__pagination .step-4 .path-active path',
+              { drawSVG: '0% 0%' },
+              { drawSVG: '0% 100%', duration: params.step.inDuration },
+              `start+=${params.step.inOffset}`
+            )
+            .to(
+              '.stepper__pagination .step-4 .dot-active-end',
+              {
+                motionPath: {
+                  path: '.stepper__pagination .step-4 .path-grey path',
+                  align: '.stepper__pagination .step-4 .path-grey path',
+                  alignOrigin: [0.5, 0.5],
+                  start: 0,
+                  end: 1,
+                  fromCurrent: true,
+                },
+                duration: params.step.inDuration,
+              },
+              `start+=${params.step.inOffset}`
+            )
+            .from(
+              '.stepper__pagination .step-4 .number',
+              {
+                opacity: 0,
+                duration: 0.5,
+              },
+              'start+=9.5'
+            );
 
-    /* ==============================================
+          /* ==============================================
                       Step 4 Animation
        =============================================*/
-    gsap
-      .timeline({
-        scrollTrigger: {
-          id: 'stepper-step-4-animation',
-          trigger: '.stepper__trigger_step-4',
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      })
-      .to(
-        '.stepper__titles',
-        {
-          xPercent: -102,
-          duration: 5,
-          ease: 'none',
-        },
-        'start'
-      )
-      .to(
-        '.stepper__footer-video',
-        {
-          webkitMaskImage:
-            'radial-gradient(circle at center, black 100%, transparent 0%)',
-          duration: 3,
-        },
-        `start+=3.5`
-      )
-      .to('.stepper__footer-video .video', {
-        opacity: 0,
-        duration: 5,
-      });
+          gsap
+            .timeline({
+              scrollTrigger: {
+                id: 'stepper-step-4-animation',
+                trigger: '.stepper__trigger_step-4',
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+                invalidateOnRefresh: true,
+              },
+            })
+            .to(
+              '.stepper__titles',
+              {
+                xPercent: -102,
+                duration: 5,
+                ease: 'none',
+              },
+              'start'
+            )
+            .to(
+              '.stepper__footer-video',
+              {
+                webkitMaskImage:
+                  'radial-gradient(circle at center, black 100%, transparent 0%)',
+                duration: 3,
+              },
+              `start+=3.5`
+            )
+            .to('.stepper__footer-video .video', {
+              opacity: 0,
+              duration: 5,
+            });
+        }
+      }
+    );
   });
 };
