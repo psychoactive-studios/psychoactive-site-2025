@@ -330,77 +330,77 @@ export const heroScrollAnimation = (ctx) => {
               'start'
             );
         }
-        if (isMobile) {
-          gsap
-            .timeline({
-              id: 'webflow-scroll-animation',
-              scrollTrigger: {
-                id: 'webflow-hero-scrolltrigger',
-                trigger: '.container',
-                pin: true, // pin the trigger element while active
-                start: 'top top', // when the top of the trigger hits the top of the viewport
-                end: 'bottom top', // end after scrolling 500px beyond the start
-                scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-                invalidateOnRefresh: true,
-                // markers: true,
-              },
-            })
-            .to(
-              videoCircle,
-              {
-                clipPath: 'circle(30% at 50% 50%)',
-                duration: inputTime,
-                ease: 'power3.in',
-              },
-              'start'
-            )
-            .to(
-              circle,
-              {
-                scale: 0.7,
-                opacity: 0,
-                duration: inputTime,
-                ease: 'power3.in',
-              },
-              'start'
-            )
-            .to(
-              dots,
-              {
-                scale: 1.7,
-                duration: inputTime,
-                ease: 'power3.in',
-              },
-              'start'
-            )
-            .to(
-              dotsWrapper,
-              {
-                scale: 0.55,
-                duration: inputTime,
-                ease: 'power1.in',
-              },
-              'start'
-            )
-            .to(
-              title,
-              {
-                scale: 1.55,
-                duration: inputTime,
-                ease: 'power3.in',
-              },
-              'start'
-            )
-            .to(
-              leftGreyText,
-              {
-                y: '-7vw',
-                duration: inputTime,
-                ease: 'power3.in',
-              },
-              'start'
-            );
-        }
+        // if (isMobile) {
+        //   gsap
+        //     .timeline({
+        //       id: 'webflow-scroll-animation',
+        //       scrollTrigger: {
+        //         id: 'webflow-hero-scrolltrigger',
+        //         trigger: '.container',
+        //         pin: true, // pin the trigger element while active
+        //         start: 'top top', // when the top of the trigger hits the top of the viewport
+        //         end: 'bottom top', // end after scrolling 500px beyond the start
+        //         scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+        //         invalidateOnRefresh: true,
+        //         // markers: true,
+        //       },
+        //     })
+        //     .to(
+        //       videoCircle,
+        //       {
+        //         clipPath: 'circle(30% at 50% 50%)',
+        //         duration: inputTime,
+        //         // ease: 'power3.in',
+        //       },
+        //       'start'
+        //     )
+        //     .to(
+        //       circle,
+        //       {
+        //         scale: 0.7,
+        //         opacity: 0,
+        //         duration: inputTime,
+        //         // ease: 'power3.in',
+        //       },
+        //       'start'
+        //     )
+        //     .to(
+        //       dots,
+        //       {
+        //         scale: 1.7,
+        //         duration: inputTime,
+        //         // ease: 'power3.in',
+        //       },
+        //       'start'
+        //     )
+        //     .to(
+        //       dotsWrapper,
+        //       {
+        //         scale: 0.55,
+        //         duration: inputTime,
+        //         // ease: 'power1.in',
+        //       },
+        //       'start'
+        //     )
+        //     .to(
+        //       title,
+        //       {
+        //         scale: 1.55,
+        //         duration: inputTime,
+        //         // ease: 'power3.in',
+        //       },
+        //       'start'
+        //     )
+        //     .to(
+        //       leftGreyText,
+        //       {
+        //         y: '-7vw',
+        //         duration: inputTime,
+        //         // ease: 'power3.in',
+        //       },
+        //       'start'
+        //     );
+        // }
       }
     );
   });

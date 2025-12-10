@@ -228,10 +228,10 @@ watch(isLoading, (newVal) => {
   bottom: 0;
   h1 {
     margin-top: getRem(4);
-    font-size: max(4.8vw, 32px);
+    font-size: max(11.2vw, 42px);
     font-style: normal;
     font-weight: 400;
-    line-height: 88%; /* 80.96px */
+    line-height: 88%;
     letter-spacing: -0.06em;
     transform-origin: left bottom;
     span {
