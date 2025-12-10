@@ -2,6 +2,7 @@
 import { stepperAnimation } from '~/utils/animations/services';
 import gsap from 'gsap';
 import { stepperTitlesData } from '~/data/servicesData';
+import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
 
 let ctx = null;
 
@@ -25,6 +26,13 @@ onUnmounted(() => {
           :key="step.number"
           class="stepper__mobile-step"
         >
+          <NuxtLink
+            v-if="step.number === '03'"
+            to="/webflow"
+            class="stepper__mobile-step_label"
+          >
+            <WebflowBlackLabel />
+          </NuxtLink>
           <div class="stepper__mobile-step_video">
             <video
               class="video"
@@ -81,6 +89,11 @@ onUnmounted(() => {
 
   .stepper__mobile-step {
     color: $color-background;
+    &_label {
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: flex-end;
+    }
     &_video {
       margin: 0 32px;
       aspect-ratio: 1;
