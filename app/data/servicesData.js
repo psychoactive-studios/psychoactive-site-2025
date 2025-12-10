@@ -34,6 +34,7 @@ export const stepperTitlesData = [
       'Website Wireframing',
       'Content Writing & Strategy',
     ],
+    src: '/video/service_01.mp4',
   },
   {
     number: '02',
@@ -47,6 +48,7 @@ export const stepperTitlesData = [
       'Motion Graphics Design',
       'Accessibility Design',
     ],
+    src: '/video/service_02.mp4',
   },
   {
     number: '03',
@@ -61,6 +63,7 @@ export const stepperTitlesData = [
       'Website Wireframing',
       'Content Writing & Strategy',
     ],
+    src: '/video/service_03.mp4',
   },
   {
     number: '04',
@@ -74,6 +77,7 @@ export const stepperTitlesData = [
       'Motion Graphics Design',
       'Accessibility Design',
     ],
+    src: '/video/service_04.mp4',
   },
 ];
 

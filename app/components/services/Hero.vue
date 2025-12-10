@@ -130,7 +130,7 @@ watch(isLoading, (newVal) => {
     width: 100%;
     aspect-ratio: 2;
     position: relative;
-    // pointer-events: none;
+    pointer-events: none;
     position: relative;
     z-index: 1;
     @include respond(portrait) {
