@@ -18,7 +18,7 @@ onUnmounted(() => {
 
 <template>
   <div class="stepper">
-    <div class="container">
+    <div class="container stepper__mobile">
       <div class="stepper__mobile-steps">
         <div
           v-for="step in stepperTitlesData"
@@ -67,6 +67,12 @@ onUnmounted(() => {
     padding-top: 64px;
     padding-bottom: 120px;
   }
+  &__mobile {
+    display: none;
+    @include respond(mobile) {
+      display: block;
+    }
+  }
   .stepper__mobile-steps {
     display: flex;
     flex-direction: column;
@@ -85,7 +91,7 @@ onUnmounted(() => {
         display: block;
         width: 100%;
         height: 100%;
-        background: url('/img/video-player-dots-overlay-mobile.png') no-repeat
+        background: url('/img/video-player-dots-overlay-mobile-2.png') repeat
           center center;
         position: absolute;
         inset: 0;

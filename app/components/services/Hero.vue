@@ -271,6 +271,7 @@ watch(isLoading, (newVal) => {
       &__svg {
         width: auto;
         height: clamp(36px, 2.5vw, 48px);
+        pointer-events: all;
       }
     }
   }

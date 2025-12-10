@@ -193,7 +193,7 @@ export const heroScrollAnimation = (ctx) => {
           .fromTo(
             '.right-label, .top-text__label',
             { xPercent: 0 },
-            { xPercent: 175, duration: outputTime, ease: 'power1.out' },
+            { xPercent: 275, duration: outputTime, ease: 'power1.out' },
             'output-of-elements'
           )
           .fromTo(
@@ -726,6 +726,14 @@ export const stepperAnimation = (ctx) => {
               },
               `start+=${params.step.inOffset}`
             )
+            .from(
+              '.stepper__label',
+              {
+                xPercent: 200,
+                duration: params.step.inDuration,
+              },
+              `start+=${params.step.inOffset}`
+            )
             .to(
               '.stepper__pagination .step-2 .path-active path',
               { drawSVG: '100% 100%', duration: params.step.outDuration },
@@ -822,6 +830,14 @@ export const stepperAnimation = (ctx) => {
                 duration: params.step.videoDuration,
               },
               `start+=${params.step.videoOffset}`
+            )
+            .to(
+              '.stepper__label',
+              {
+                xPercent: 200,
+                duration: params.step.inDuration,
+              },
+              `start+=${params.step.inOffset}`
             )
             .to(
               '.stepper__step-texts .text.step-3 .char-center',
