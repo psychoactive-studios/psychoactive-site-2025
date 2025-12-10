@@ -75,7 +75,9 @@ definePageMeta({
 
 <template>
   <main class="services">
-    <Hero />
+    <ClientOnly>
+      <Hero />
+    </ClientOnly>
     <div class="container">
       <section class="services__onscroll-text">
         <OnScrollFilledText>
