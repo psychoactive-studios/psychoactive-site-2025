@@ -90,9 +90,19 @@ definePageMeta({
       </div>
       <section class="webflow__partners">
         <div v-if="!isMobile" class="container">
+          <h2 class="webflow__partners_title--desktop">
+            Partner to the world’s leading innovation brands and events.
+          </h2>
           <PartnersDesktop />
         </div>
-        <PartnersMobile v-if="isMobile" />
+        <div v-if="isMobile">
+          <div class="container">
+            <h2 class="webflow__partners_title--mobile">
+              Partner to the world’s leading innovation brands and events.
+            </h2>
+          </div>
+          <PartnersMobile />
+        </div>
       </section>
       <div class="container">
         <section class="webflow__cases">
@@ -148,6 +158,23 @@ definePageMeta({
   &__partners {
     @include respond(mobile) {
       margin-top: 120px;
+    }
+    &_title {
+      &--desktop {
+        margin-bottom: 2.5vw;
+        text-align: center;
+        font-size: clamp(18px, 1.25vw, 24px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: 30px; /* 125% */
+      }
+      &--mobile {
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%; /* 22.4px */
+        margin-bottom: 24px;
+      }
     }
   }
   &__cases {

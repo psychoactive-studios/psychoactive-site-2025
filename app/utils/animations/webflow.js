@@ -270,7 +270,7 @@ export const heroScrollAnimation = (ctx) => {
                 end: '200% top', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
                 invalidateOnRefresh: true,
-                //markers: true,
+                // markers: true,
               },
             })
             .fromTo(
@@ -279,7 +279,7 @@ export const heroScrollAnimation = (ctx) => {
               {
                 clipPath: 'circle(0% at 50% 50%)',
                 duration: inputTime,
-                ease: 'power1.in',
+                // ease: 'power1.in',
               },
               'start'
             )
@@ -289,7 +289,7 @@ export const heroScrollAnimation = (ctx) => {
                 scale: 0,
                 opacity: 0,
                 duration: inputTime,
-                ease: 'power1.in',
+                // ease: 'power1.in',
               },
               'start'
             )
@@ -298,7 +298,7 @@ export const heroScrollAnimation = (ctx) => {
               {
                 scale: 1.7,
                 duration: inputTime,
-                ease: 'power2.in',
+                // ease: 'power2.in',
               },
               'start'
             )
@@ -307,7 +307,7 @@ export const heroScrollAnimation = (ctx) => {
               {
                 scale: 0,
                 duration: inputTime,
-                ease: 'power2.in',
+                // ease: 'power2.in',
               },
               'start'
             )
@@ -316,7 +316,7 @@ export const heroScrollAnimation = (ctx) => {
               {
                 scale: 2.3,
                 duration: inputTime,
-                ease: 'power1.in',
+                // ease: 'power1.in',
               },
               'start'
             )
@@ -325,7 +325,7 @@ export const heroScrollAnimation = (ctx) => {
               {
                 y: '-15.3vw',
                 duration: inputTime,
-                ease: 'power1.in',
+                // ease: 'power1.in',
               },
               'start'
             );
