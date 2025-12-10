@@ -3,6 +3,7 @@ import { stepperTextsData, stepperTitlesData } from '~/data/servicesData';
 import HeroCenterLine from '../services/HeroCenterLine.vue';
 import StepperPagination from '../services/StepperPagination.vue';
 import { useMediaQuery } from '@vueuse/core';
+import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 </script>
@@ -70,6 +71,9 @@ const isMobile = useMediaQuery('(max-width: 768px)');
                 {{ item.text }}
               </div>
             </div>
+            <NuxtLink to="/webflow" class="stepper__label">
+              <WebflowBlackLabel />
+            </NuxtLink>
             <HeroCenterLine />
             <StepperPagination />
             <ul class="stepper__titles">
@@ -137,6 +141,7 @@ const isMobile = useMediaQuery('(max-width: 768px)');
   min-height: 100dvh;
   position: fixed;
   inset: 0;
+  z-index: 1;
   -webkit-mask-image: radial-gradient(
     circle at center,
     black 0%,
@@ -146,6 +151,13 @@ const isMobile = useMediaQuery('(max-width: 768px)');
   pointer-events: none;
   // TODO: remove zIndex
   // z-index: 5;
+
+  &__label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    pointer-events: all;
+  }
 
   &__videos {
     position: absolute;
