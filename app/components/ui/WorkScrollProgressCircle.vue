@@ -1,5 +1,5 @@
 <template>
-  <div class="progress">
+  <div id="work-scroll-progress" class="progress">
     <div class="progress__bar" />
     <div class="progress__indicator" />
   </div>
@@ -17,6 +17,7 @@
   border-radius: 50%;
   transform-origin: right bottom;
   z-index: 1;
+  mix-blend-mode: exclusion;
   &::before {
     content: '';
     display: block;
