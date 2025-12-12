@@ -1,20 +1,94 @@
 <script setup>
+import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
+
 defineProps({
   title: {
     type: String,
     required: true,
   },
 });
+
+let ctx;
+
+const sectionRef = ref(null);
+const titleRef = ref(null);
+const textRef = ref(null);
+
+onMounted(async () => {
+  SplitText.create(titleRef.value, {
+    type: 'words,chars',
+    charsClass: 'char-center',
+  });
+
+  await nextTick();
+
+  ctx = gsap.context(() => {
+    const title = titleRef.value.querySelectorAll('.char-center');
+
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: sectionRef.value,
+          start: 'top bottom',
+          end: 'bottom bottom',
+        },
+      })
+      .to(
+        title,
+        {
+          duration: 2.3,
+          scrambleText: {
+            text: '{original}',
+            chars: 'uppercase',
+            tweenLength: false,
+          },
+        },
+        '<+=0.2'
+      )
+      .from(
+        title,
+        {
+          opacity: 0,
+          duration: 0.01,
+          stagger: {
+            amount: 0.9,
+            from: 'random',
+          },
+        },
+        '<'
+      )
+      .fromTo(
+        textRef.value,
+        {
+          backgroundPosition: '100% 0%',
+        },
+        {
+          backgroundPosition: '0% 0%',
+          duration: 2,
+          ease: 'power3.inOut',
+        },
+        '<+=0.5'
+      );
+  }, sectionRef.value);
+});
+
+onUnmounted(() => {
+  if (ctx) ctx.revert();
+});
 </script>
 <template>
-  <div class="section">
-    <h2 class="section__title">{{ title }}</h2>
+  <div ref="sectionRef" class="section">
+    <h2 ref="titleRef" class="section__title">{{ title }}</h2>
     <div class="section__description">
-      <slot />
+      <div ref="textRef" class="section__description_text">
+        <slot />
+      </div>
     </div>
   </div>
 </template>
 <style scoped lang="scss">
+@use '~/assets/styles/variables' as *;
 .section {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -36,10 +110,19 @@ defineProps({
     font-weight: 400;
     line-height: 112.5%;
     min-width: 0;
-    &::before {
-      content: '';
-      display: inline-block;
-      width: 4.8vw;
+    &_text {
+      background: linear-gradient(90deg, $color-background 50%, transparent 0%);
+      background-size: 200% 100%;
+      background-position: 100% 0%;
+      background-repeat: no-repeat;
+      background-clip: text;
+      color: transparent;
+      display: inline;
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 4.8vw;
+      }
     }
   }
 }

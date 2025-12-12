@@ -1,14 +1,17 @@
 <script setup>
 import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
 import Brief from '~/components/layout/Brief.vue';
 import LinkButton from '~/components/ui/LinkButton.vue';
 import WorkTextSection from '~/components/ui/WorkTextSection.vue';
+import WorkCTAButton from '~/components/work/WorkCTAButton.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { enableScroll } = useScrollSmoother();
 
 let ctx;
 const numbersRef = ref(null);
+const footerScrollTextRef = ref(null);
 
 const data = ref({
   attendees: 7000,
@@ -18,6 +21,8 @@ const data = ref({
   googleSearches: 230,
   mediaStories: 1200,
 });
+
+const router = useRouter();
 
 onMounted(async () => {
   ctx = gsap.context(() => {});
@@ -38,6 +43,7 @@ onMounted(async () => {
   }, 200);
   await nextTick();
   animationsInit();
+  footerTextAnimationInit();
 });
 
 onUnmounted(() => {
@@ -64,7 +70,6 @@ function animationsInit() {
           trigger: numbersRef.value,
           start: 'top 90%',
           end: 'bottom center',
-          markers: true,
         },
       })
       .from(
@@ -130,20 +135,49 @@ function animationsInit() {
         {
           clipPath: 'inset(0 0% 0 0)',
           duration: 1,
-          stagger: 0.3,
+          stagger: 0.1,
           ease: 'power2.in',
         },
-        'start+=1.0'
+        'start'
       )
       .fromTo(
         '.super-ai__numbers_title-line .line',
         { width: '0%' },
-        { width: '100%', duration: 1, stagger: 0.3, ease: 'power2.out' },
-        'start+=1.8'
+        { width: '100%', duration: 1, stagger: 0.1, ease: 'power2.out' },
+        'start+=0.8'
       );
     // .super-ai__numbers_title
   });
   // #work-scroll-progress
+}
+
+async function footerTextAnimationInit() {
+  SplitText.create(footerScrollTextRef.value, {
+    type: 'words,chars',
+    charsClass: 'char-center',
+  });
+
+  await nextTick();
+
+  ctx.add(() => {
+    gsap.to(footerScrollTextRef.value.querySelectorAll('.char-center'), {
+      scrollTrigger: {
+        trigger: footerScrollTextRef.value,
+        start: 'top bottom',
+        end: () =>
+          document.querySelector('.work__footer_scroll').getBoundingClientRect()
+            .top,
+        scrub: true,
+        invalidateOnRefresh: true,
+        onLeave: () => {
+          router.push('/work');
+        },
+      },
+      opacity: 1,
+      duration: 0.1,
+      stagger: 0.05,
+    });
+  });
 }
 </script>
 <template>
@@ -473,25 +507,10 @@ function animationsInit() {
     </section>
 
     <!-- CTA section -->
-    <section class="work__cta">
-      <div class="container">
-        <h2 class="work__cta_title">
-          The platform is built to evolve with each event cycle and scale
-          alongside SuperAI’s innovation.
-        </h2>
-        <div class="work__cta_navigation">
-          <div class="work__cta_line">
-            <span class="line" />
-          </div>
-          <LinkButton href="/contact" mode="dark" class="work__cta_button">
-            Launch Website
-          </LinkButton>
-          <div class="work__cta_line">
-            <span class="line" />
-          </div>
-        </div>
-      </div>
-    </section>
+    <WorkCTAButton>
+      The platform is built to evolve with each event cycle and scale alongside
+      SuperAI’s innovation.
+    </WorkCTAButton>
 
     <footer class="work__footer">
       <div class="work__footer_brief">
