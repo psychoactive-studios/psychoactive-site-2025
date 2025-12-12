@@ -2,13 +2,16 @@
 import gsap from 'gsap';
 import Brief from '~/components/layout/Brief.vue';
 import LinkButton from '~/components/ui/LinkButton.vue';
-import WorkScrollProgressCircle from '~/components/ui/WorkScrollProgressCircle.vue';
 import WorkTextSection from '~/components/ui/WorkTextSection.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { enableScroll } = useScrollSmoother();
 
-onMounted(() => {
+let ctx;
+
+onMounted(async () => {
+  ctx = gsap.context(() => {});
+
   setTimeout(() => {
     const layoutElements = gsap.utils.toArray([
       '#header-logo',
@@ -23,7 +26,29 @@ onMounted(() => {
     });
     enableScroll();
   }, 200);
+  await nextTick();
+  scrollProgressInit();
 });
+
+onUnmounted(() => {
+  ctx.revert();
+});
+
+function scrollProgressInit() {
+  ctx.add(() => {
+    gsap.to('#work-scroll-progress', {
+      '--work-scroll-progress': 100,
+      scrollTrigger: {
+        scrub: true,
+        start: 'top top',
+        end: 'bottom top',
+        markers: true,
+        invalidateOnRefresh: true,
+      },
+    });
+  });
+  // #work-scroll-progress
+}
 </script>
 <template>
   <main class="work super-ai">
