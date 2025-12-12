@@ -1,5 +1,9 @@
 <template>
-  <div id="work-scroll-progress" class="progress">
+  <div
+    id="work-scroll-progress"
+    class="progress"
+    style="--work-scroll-progress: 0"
+  >
     <div class="progress__bar" />
     <div class="progress__indicator" />
   </div>
@@ -47,11 +51,15 @@
     border-radius: 50%;
     position: absolute;
     inset: -1px;
-    mask: conic-gradient(black 0%, transparent 0);
+    mask: conic-gradient(
+      black calc(var(--work-scroll-progress) * 1%),
+      transparent 0
+    );
   }
   &__indicator {
     position: absolute;
     inset: 0;
+    rotate: calc(var(--work-scroll-progress) * 3.6deg);
     &::before {
       content: '';
       display: block;
