@@ -54,7 +54,7 @@ const talkButtonHoverHandler = () => {
 @use '~/assets/styles/variables' as *;
 .link-button {
   @include flex-center;
-  width: 222px;
+  display: inline-flex;
   position: relative;
   isolation: isolate;
   text-decoration: none;
