@@ -8,6 +8,16 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 const { enableScroll } = useScrollSmoother();
 
 let ctx;
+const numbersRef = ref(null);
+
+const data = ref({
+  attendees: 7000,
+  companies: 1000,
+  countries: 100,
+  websites: 826,
+  googleSearches: 230,
+  mediaStories: 1200,
+});
 
 onMounted(async () => {
   ctx = gsap.context(() => {});
@@ -27,25 +37,111 @@ onMounted(async () => {
     enableScroll();
   }, 200);
   await nextTick();
-  scrollProgressInit();
+  animationsInit();
 });
 
 onUnmounted(() => {
   ctx.revert();
 });
 
-function scrollProgressInit() {
+function animationsInit() {
   ctx.add(() => {
+    // Scroll progress circle animation
     gsap.to('#work-scroll-progress', {
       '--work-scroll-progress': 100,
       scrollTrigger: {
         scrub: true,
         start: 'top top',
         end: 'bottom top',
-        markers: true,
         invalidateOnRefresh: true,
       },
     });
+
+    // Numbers section animation
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: numbersRef.value,
+          start: 'top 90%',
+          end: 'bottom center',
+          markers: true,
+        },
+      })
+      .from(
+        '.super-ai__numbers_list > li',
+        {
+          opacity: 0,
+          duration: 1.5,
+          stagger: 0.3,
+        },
+        'start'
+      )
+      .from(
+        data.value,
+        {
+          attendees: 0,
+          duration: 1.5,
+        },
+        'start'
+      )
+      .from(
+        data.value,
+        {
+          companies: 0,
+          duration: 1.5,
+        },
+        'start+=0.2'
+      )
+      .from(
+        data.value,
+        {
+          countries: 0,
+          duration: 1.5,
+        },
+        'start+=0.2'
+      )
+      .from(
+        data.value,
+        {
+          websites: 0,
+          duration: 1.5,
+        },
+        'start+=0.2'
+      )
+      .from(
+        data.value,
+        {
+          googleSearches: 0,
+          duration: 1.5,
+        },
+        'start+=0.2'
+      )
+      .from(
+        data.value,
+        {
+          mediaStories: 0,
+          duration: 1.5,
+        },
+        'start+=0.2'
+      )
+      .fromTo(
+        '.super-ai__numbers_title-text',
+        { clipPath: 'inset(0 100% 0 0)' },
+        {
+          clipPath: 'inset(0 0% 0 0)',
+          duration: 1,
+          stagger: 0.3,
+          ease: 'power2.in',
+        },
+        'start+=1.0'
+      )
+      .fromTo(
+        '.super-ai__numbers_title-line .line',
+        { width: '0%' },
+        { width: '100%', duration: 1, stagger: 0.3, ease: 'power2.out' },
+        'start+=1.8'
+      );
+    // .super-ai__numbers_title
   });
   // #work-scroll-progress
 }
@@ -97,11 +193,13 @@ function scrollProgressInit() {
     </section>
 
     <!-- Numbers section -->
-    <section class="super-ai__numbers">
+    <section ref="numbersRef" class="super-ai__numbers">
       <div class="container">
         <ul class="super-ai__numbers_list">
           <li>
-            <div class="super-ai__numbers_number">7,000+</div>
+            <div class="super-ai__numbers_number">
+              {{ Math.floor(data.attendees).toLocaleString('en-US') }}+
+            </div>
             <div class="super-ai__numbers_title">
               <div class="super-ai__numbers_title-text">attendees</div>
               <div class="super-ai__numbers_title-line">
@@ -110,7 +208,9 @@ function scrollProgressInit() {
             </div>
           </li>
           <li>
-            <div class="super-ai__numbers_number">1,000+</div>
+            <div class="super-ai__numbers_number">
+              {{ Math.floor(data.companies).toLocaleString('en-US') }}+
+            </div>
             <div class="super-ai__numbers_title">
               <div class="super-ai__numbers_title-text">Companies</div>
               <div class="super-ai__numbers_title-line">
@@ -119,7 +219,9 @@ function scrollProgressInit() {
             </div>
           </li>
           <li>
-            <div class="super-ai__numbers_number">100+</div>
+            <div class="super-ai__numbers_number">
+              {{ Math.floor(data.countries).toLocaleString('en-US') }}+
+            </div>
             <div class="super-ai__numbers_title">
               <div class="super-ai__numbers_title-text">
                 countries represented
@@ -130,7 +232,9 @@ function scrollProgressInit() {
             </div>
           </li>
           <li>
-            <div class="super-ai__numbers_number">826k+</div>
+            <div class="super-ai__numbers_number">
+              {{ Math.floor(data.websites).toLocaleString('en-US') }}+
+            </div>
             <div class="super-ai__numbers_title">
               <div class="super-ai__numbers_title-text">
                 unique website views
@@ -141,7 +245,9 @@ function scrollProgressInit() {
             </div>
           </li>
           <li>
-            <div class="super-ai__numbers_number">230k+</div>
+            <div class="super-ai__numbers_number">
+              {{ Math.floor(data.googleSearches).toLocaleString('en-US') }}k+
+            </div>
             <div class="super-ai__numbers_title">
               <div class="super-ai__numbers_title-text">Google searches</div>
               <div class="super-ai__numbers_title-line">
@@ -150,7 +256,9 @@ function scrollProgressInit() {
             </div>
           </li>
           <li>
-            <div class="super-ai__numbers_number">1,200+</div>
+            <div class="super-ai__numbers_number">
+              {{ Math.floor(data.mediaStories).toLocaleString('en-US') }}+
+            </div>
             <div class="super-ai__numbers_title">
               <div class="super-ai__numbers_title-text">media stories</div>
               <div class="super-ai__numbers_title-line">
@@ -445,7 +553,6 @@ function scrollProgressInit() {
           display: block;
           height: 1px;
           background: rgba(0, 0, 0, 0.1);
-          margin-top: 0.5vw;
           position: relative;
           will-change: width;
           &::before,
