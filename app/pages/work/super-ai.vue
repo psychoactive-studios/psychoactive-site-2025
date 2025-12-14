@@ -54,8 +54,6 @@ onUnmounted(() => {
 
 function animationsInit() {
   ctx.add(() => {
-    console.log('isMobile', isMobile.value);
-
     // Scroll progress circle animation
     if (!isMobile.value) {
       gsap.to('#work-scroll-progress', {
@@ -562,7 +560,7 @@ async function footerTextAnimationInit() {
     </section>
 
     <!-- CTA section -->
-    <WorkCTAButton>
+    <WorkCTAButton href="https://superai.com">
       The platform is built to evolve with each event cycle and scale alongside
       SuperAI’s innovation.
     </WorkCTAButton>
