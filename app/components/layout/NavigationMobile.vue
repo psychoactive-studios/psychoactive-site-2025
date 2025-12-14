@@ -313,7 +313,7 @@ onClickOutside(navigationMobileRef, () => {
     pointer-events: all;
   }
   &__background {
-    background-color: $color-foreground;
+    background-color: #f1f1f1;
     border-radius: 1rem;
     position: absolute;
     width: 100%;
