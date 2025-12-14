@@ -11,6 +11,7 @@
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+@use '~/assets/styles/mixins' as *;
 .progress {
   position: fixed;
   right: 48px;
@@ -22,6 +23,9 @@
   transform-origin: right bottom;
   z-index: 1;
   mix-blend-mode: exclusion;
+  @include respond(mobile) {
+    display: none;
+  }
   &::before {
     content: '';
     display: block;
