@@ -5,6 +5,18 @@ import LinkButton from '../ui/LinkButton.vue';
 let ctx;
 const containerRef = ref(null);
 
+const props = defineProps({
+  href: {
+    type: String,
+    required: false,
+    default: '',
+  },
+});
+
+const { href } = props;
+
+console.log('href', href);
+
 onMounted(() => {
   ctx = gsap.context(() => {
     const letsButton = containerRef?.value?.querySelector('.work__cta_button');
@@ -77,11 +89,12 @@ onUnmounted(() => {
       <h2 class="work__cta_title">
         <slot />
       </h2>
-      <div class="work__cta_navigation">
+
+      <div v-if="href" class="work__cta_navigation">
         <div class="work__cta_line">
           <span class="line" />
         </div>
-        <LinkButton href="/contact" mode="dark" class="work__cta_button">
+        <LinkButton :href="href" mode="dark" class="work__cta_button">
           Launch Website
         </LinkButton>
         <div class="work__cta_line">
