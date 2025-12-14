@@ -92,8 +92,12 @@ onUnmounted(() => {
   </section>
 </template>
 <style scoped lang="scss">
+@use '~/assets/styles/mixins' as *;
 .work__cta {
   padding: 240px 0 160px 0;
+  @include respond(mobile) {
+    padding: 120px 0;
+  }
   &_title {
     width: 50%;
     margin: auto;
@@ -104,6 +108,15 @@ onUnmounted(() => {
     letter-spacing: -0.02em;
     text-align: center;
     margin-bottom: 74px;
+    @include respond(mobile) {
+      width: auto;
+      font-size: max(6.4vw, 24px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: 121%;
+      letter-spacing: -0.02em;
+      margin-bottom: 12.8vw;
+    }
   }
   &_button {
     width: 222px;
@@ -116,8 +129,15 @@ onUnmounted(() => {
     grid-row-start: 2;
     align-items: center;
     gap: 48px;
+    @include respond(mobile) {
+      display: block;
+      text-align: center;
+    }
   }
   &_line {
+    @include respond(mobile) {
+      display: none;
+    }
     &:first-child {
       .line {
         margin-left: auto;
