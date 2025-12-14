@@ -3,7 +3,7 @@ import { useMediaQuery } from '@vueuse/core';
 import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 import Brief from '~/components/layout/Brief.vue';
-import LinkButton from '~/components/ui/LinkButton.vue';
+
 import WorkTextSection from '~/components/ui/WorkTextSection.vue';
 import WorkCTAButton from '~/components/work/WorkCTAButton.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
@@ -12,17 +12,8 @@ const { enableScroll } = useScrollSmoother();
 const isMobile = useMediaQuery('(max-width: 768px)');
 
 let ctx;
-const numbersRef = ref(null);
-const footerScrollTextRef = ref(null);
 
-const data = ref({
-  attendees: 7000,
-  companies: 1000,
-  countries: 100,
-  websites: 826,
-  googleSearches: 230,
-  mediaStories: 1200,
-});
+const footerScrollTextRef = ref(null);
 
 const router = useRouter();
 
