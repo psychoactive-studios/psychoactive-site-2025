@@ -1,46 +1,83 @@
 <script setup>
 import { useMediaQuery } from '@vueuse/core';
 import gsap from 'gsap';
-import { SplitText } from 'gsap/SplitText';
 import Brief from '~/components/layout/Brief.vue';
-
 import WorkTextSection from '~/components/ui/WorkTextSection.vue';
 import WorkCTAButton from '~/components/work/WorkCTAButton.vue';
-import useScrollSmoother from '~/composables/useScrollSmoother';
 
-const { enableScroll } = useScrollSmoother();
+import useWorks from '~/composables/useWorks.js';
+import useLoader from '~/composables/useLoader';
+
 const isMobile = useMediaQuery('(max-width: 768px)');
+const { isLoading } = useLoader();
+const { workPageInit, footerTextAnimationInit } = useWorks();
 
 let ctx;
 
 const footerScrollTextRef = ref(null);
 
-const router = useRouter();
+watch(isLoading, (newVal) => {
+  if (!newVal) {
+    workPageInit();
+  }
+});
 
 onMounted(async () => {
   ctx = gsap.context(() => {});
-
-  setTimeout(() => {
-    const layoutElements = gsap.utils.toArray([
-      '#header-logo',
-      '#header-navigation-button',
-      '#header-sound-button',
-    ]);
-    gsap.to(layoutElements, {
-      scale: 1,
-      opacity: 1,
-      duration: 0.75,
-      ease: 'power3.out',
-    });
-    enableScroll();
-  }, 200);
   await nextTick();
   animationsInit();
-  footerTextAnimationInit();
+  footerTextAnimationInit(ctx, footerScrollTextRef.value);
 });
 
 onUnmounted(() => {
   ctx.revert();
+});
+
+definePageMeta({
+  scrollToTop: true,
+  pageTransition: {
+    css: false,
+    mode: 'out-in',
+    onEnter: (_, done) => {
+      const { workPageInit } = useWorks();
+      done();
+      workPageInit();
+    },
+    onLeave: (el, done) => {
+      const { transitionFromNavigation } = useNavigation();
+      if (transitionFromNavigation.value) {
+        gsap
+          .timeline()
+          .set(el, { opacity: 0 })
+          .add(() => {
+            transitionFromNavigation.value = false;
+            done();
+          }, '+=1');
+        return;
+      }
+      gsap
+        .timeline()
+        .to(el, {
+          opacity: 0,
+          duration: 0.8,
+          ease: 'power4.in',
+        })
+        .to(
+          '#work-scroll-progress',
+          {
+            scale: 0,
+            // opacity: 0,
+            duration: 0.8,
+            ease: 'power3.in',
+          },
+          '<'
+        )
+        .set('#work-scroll-progress', { display: 'none' })
+        .add(() => {
+          done();
+        }, '+=0.1');
+    },
+  },
 });
 
 function animationsInit() {
@@ -57,35 +94,6 @@ function animationsInit() {
         },
       });
     }
-  });
-}
-
-async function footerTextAnimationInit() {
-  SplitText.create(footerScrollTextRef.value, {
-    type: 'words,chars',
-    charsClass: 'char-center',
-  });
-
-  await nextTick();
-
-  ctx.add(() => {
-    gsap.to(footerScrollTextRef.value.querySelectorAll('.char-center'), {
-      scrollTrigger: {
-        trigger: footerScrollTextRef.value,
-        start: 'top bottom',
-        end: () =>
-          document.querySelector('.work__footer_scroll').getBoundingClientRect()
-            .top,
-        scrub: true,
-        invalidateOnRefresh: true,
-        onLeave: () => {
-          router.push('/work');
-        },
-      },
-      opacity: 1,
-      duration: 0.1,
-      stagger: 0.05,
-    });
   });
 }
 </script>

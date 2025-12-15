@@ -8,7 +8,7 @@ export default function () {
   // methods for managing loading state
   const initScrollSmoother = () => {
     scrollSmoother.value = ScrollSmoother.create({
-      smooth: 2,
+      smooth: 1,
       effects: true,
       normalizeScroll: true,
       ignoreMobileResize: true,

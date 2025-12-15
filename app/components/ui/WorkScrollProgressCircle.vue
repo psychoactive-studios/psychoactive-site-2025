@@ -20,12 +20,11 @@
   height: 48px;
   border: 1px solid white(20);
   border-radius: 50%;
-  transform-origin: right bottom;
+  // transform-origin: right bottom;
   z-index: 1;
   mix-blend-mode: exclusion;
-  @include respond(mobile) {
-    display: none;
-  }
+  display: none;
+
   &::before {
     content: '';
     display: block;

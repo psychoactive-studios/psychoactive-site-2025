@@ -15,8 +15,6 @@ const props = defineProps({
 
 const { href } = props;
 
-console.log('href', href);
-
 onMounted(() => {
   ctx = gsap.context(() => {
     const letsButton = containerRef?.value?.querySelector('.work__cta_button');
