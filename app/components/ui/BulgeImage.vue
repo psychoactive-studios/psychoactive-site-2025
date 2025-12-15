@@ -159,6 +159,18 @@ const handleMouseLeave = () => {
   });
 };
 
+const handleClick = () => {
+  console.log('handleClick!!!!!');
+  gsap.to(targetStrength, {
+    value: 0,
+    duration: settings.animationDuration,
+  });
+};
+
+defineExpose({
+  handleClick,
+});
+
 watch(isHovered, (newValue) => {
   gsap.to(targetStrength, {
     value: newValue ? settings.maxStrength : 0,
@@ -178,25 +190,53 @@ function initScene() {
   handleResize();
 
   const geometry = new THREE.PlaneGeometry(2, 2);
-  const textureLoader = new THREE.TextureLoader();
-  const texture = textureLoader.load(props.src, (tex) => {
-    tex.generateMipmaps = true;
-    tex.minFilter = THREE.LinearMipmapLinearFilter;
-    tex.magFilter = THREE.LinearFilter;
-    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    tex.needsUpdate = true;
 
+  const loader = new THREE.ImageBitmapLoader();
+  let texture;
+  loader.setOptions({ imageOrientation: 'flipY' });
+  loader.load(props.src, (imageBitmap) => {
+    texture = new THREE.CanvasTexture(imageBitmap);
+
+    // Далі ваші налаштування текстури залишаються тими ж
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    texture.needsUpdate = true;
+
+    // Оновлюємо матеріал
     if (material) {
+      material.uniforms.uTexture.value = texture;
       material.uniforms.uTextureResolution.value.set(
-        tex.image.width,
-        tex.image.height
+        imageBitmap.width,
+        imageBitmap.height
       );
     }
+
     // Initial render to avoid black screen
     if (renderer && scene && camera) {
       renderer.render(scene, camera);
     }
   });
+
+  // const textureLoader = new THREE.TextureLoader();
+  // const texture = textureLoader.load(props.src, (tex) => {
+  //   tex.generateMipmaps = true;
+  //   tex.minFilter = THREE.LinearMipmapLinearFilter;
+  //   tex.magFilter = THREE.LinearFilter;
+  //   tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  //   tex.needsUpdate = true;
+
+  //   if (material) {
+  //     material.uniforms.uTextureResolution.value.set(
+  //       tex.image.width,
+  //       tex.image.height
+  //     );
+  //   }
+  //   // Initial render to avoid black screen
+  //   if (renderer && scene && camera) {
+  //     renderer.render(scene, camera);
+  //   }
+  // });
 
   material = new THREE.ShaderMaterial({
     uniforms: {
