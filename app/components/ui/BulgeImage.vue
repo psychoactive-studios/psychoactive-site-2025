@@ -21,9 +21,15 @@ import fragmentShader from '@/utils/glsl/main.frag?raw';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useMediaQuery, usePointer } from '@vueuse/core';
+import { Flip } from 'gsap/Flip';
+import useWorks from '~/composables/useWorks.js';
+import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { pointerType, x: eventX, y: eventY } = usePointer();
 const isMobile = useMediaQuery('(max-width: 768px)');
+const { currentTransitionImage } = useWorks();
+const { scrollSmoother, disableScroll } = useScrollSmoother();
+const router = useRouter();
 
 const isHovered = ref(false);
 const cursorRef = ref(null);
@@ -160,11 +166,52 @@ const handleMouseLeave = () => {
 };
 
 const handleClick = () => {
-  console.log('handleClick!!!!!');
-  gsap.to(targetStrength, {
-    value: 0,
-    duration: settings.animationDuration,
-  });
+  disableScroll();
+  const target = document.querySelector('.work-transition');
+  const duration = 1.5;
+
+  gsap
+    .timeline()
+    .to(cursorRef.value, {
+      scale: 0,
+      duration: 0.5,
+      ease: 'power4.inOut',
+    })
+    .to(
+      targetStrength,
+      {
+        value: 0,
+        duration: duration,
+        ease: 'power4.inOut',
+      },
+      '<'
+    )
+    .to(
+      rootEl.value,
+      {
+        borderRadius: 0,
+        duration: duration,
+        ease: 'power4.inOut',
+      },
+      '<'
+    )
+    .add(() => {
+      Flip.fit(rootEl.value, target, {
+        absolute: true,
+        duration: duration,
+        ease: 'power4.inOut',
+        onUpdate: () => {
+          handleResize();
+        },
+      });
+    }, '<')
+    .add(() => {
+      currentTransitionImage.value = props.src;
+    })
+    .add(() => {
+      scrollSmoother.value.scrollTop(0, false);
+      router.push('/work/super-ai');
+    }, '+=0.2');
 };
 
 defineExpose({
@@ -267,7 +314,7 @@ function handleResize() {
   if (renderer && material) {
     const width = rootEl.value.clientWidth;
     const height = rootEl.value.clientHeight;
-    renderer.setSize(width, height);
+    renderer.setSize(width, height, false);
     material.uniforms.uResolution.value.set(width, height);
   }
 }
@@ -343,20 +390,21 @@ function cleanupScrollTrigger() {
 }
 
 function animate() {
-  // Interpolate mouse position in each frame
+  const isActive = isHovered.value || targetStrength.value > 0.001;
 
-  lerpedMouse.x = gsap.utils.interpolate(
-    lerpedMouse.x,
-    mouse.x,
-    settings.lerpFactor
-  );
-  lerpedMouse.y = gsap.utils.interpolate(
-    lerpedMouse.y,
-    mouse.y,
-    settings.lerpFactor
-  );
+  if (renderer && scene && camera && material && isActive) {
+    // Interpolate mouse position in each frame
+    lerpedMouse.x = gsap.utils.interpolate(
+      lerpedMouse.x,
+      mouse.x,
+      settings.lerpFactor
+    );
+    lerpedMouse.y = gsap.utils.interpolate(
+      lerpedMouse.y,
+      mouse.y,
+      settings.lerpFactor
+    );
 
-  if (renderer && scene && camera && material) {
     material.uniforms.uStrength.value = targetStrength.value;
     material.uniforms.uTime.value += 0.01;
     // The uMouse uniform is already linked to lerpedMouse, so no change needed here
@@ -383,9 +431,12 @@ function removeEventListeners() {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  z-index: 1;
+  border-radius: 10px;
   canvas {
     width: 100%;
     height: 100%;
+    border-radius: inherit;
   }
   .cursor {
     @include flex-center;

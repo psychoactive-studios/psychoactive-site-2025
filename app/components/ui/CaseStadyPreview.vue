@@ -5,6 +5,7 @@ import gsap from 'gsap';
 
 const { playInteractionSound } = useAudioManager();
 
+const containerRef = ref(null);
 const titleRef = ref(null);
 const imageRef = ref(null);
 
@@ -52,6 +53,7 @@ const handleMouseEnter = () => {
 
 const handleClick = () => {
   if (imageRef.value && imageRef.value.handleClick) {
+    gsap.set(containerRef.value, { zIndex: 1 });
     imageRef.value.handleClick();
   }
 };
@@ -59,11 +61,13 @@ const handleClick = () => {
 
 <template>
   <div
+    ref="containerRef"
     class="case-study-preview"
     @mouseenter="handleMouseEnter"
     @click="handleClick"
   >
     <div ref="mediaElement" class="case-study-preview__media">
+      <!-- <img :src="src" alt="" /> -->
       <BulgeImage ref="imageRef" :src="src" />
     </div>
     <div class="case-study-preview__content">

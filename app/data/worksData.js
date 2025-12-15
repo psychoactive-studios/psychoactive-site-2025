@@ -3,7 +3,7 @@ export const worksData = [
     id: 'superai',
     title: 'SuperAI',
     description: 'World’s largest AI event',
-    src: '/img/cases/case-super-ai.png',
+    src: '/img/work/hero-super-ai.jpg',
   },
   {
     id: 'burgerfuel',

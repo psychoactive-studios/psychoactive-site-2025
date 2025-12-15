@@ -21,13 +21,6 @@ onMounted(() => {
     type: 'words,chars',
     charsClass: 'char-center',
   });
-
-  // if (isFirstLoad.value) {
-  //   enterAnimation();
-  // }
-  // stopLoading();
-  // await nextTick();
-  // scrollSmoother.value.paused(false);
 });
 
 watch([isLoading, isFirstLoad], ([loading, firstLoad]) => {
@@ -101,7 +94,7 @@ function enterAnimation(el) {
       '.works .works__title p .char-center',
       {
         opacity: 0,
-        duration: 0.0001,        
+        duration: 0.0001,
         stagger: 0.015,
       },
       '<'

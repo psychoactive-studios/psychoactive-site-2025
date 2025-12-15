@@ -5,12 +5,15 @@ import StepperPagination from '../services/StepperPagination.vue';
 import { useMediaQuery } from '@vueuse/core';
 import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
 import WorkScrollProgressCircle from '../ui/WorkScrollProgressCircle.vue';
+import useWorks from '~/composables/useWorks.js';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
+const { currentTransitionImage } = useWorks();
 </script>
 <template>
   <div>
-    <section class="work">
+    <section class="work-transition">
+      <img v-if="currentTransitionImage" :src="currentTransitionImage" />
       <WorkScrollProgressCircle />
     </section>
 
@@ -123,6 +126,18 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
+
+section.work-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
 
 section.work {
 }
