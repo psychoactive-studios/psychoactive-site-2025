@@ -165,7 +165,12 @@ const handleMouseLeave = () => {
   });
 };
 
-const handleClick = () => {
+const handleClick = (href) => {
+  if (isMobile.value) {
+    router.push(href);
+    return;
+  }
+
   disableScroll();
   const target = document.querySelector('.work-transition');
   const duration = 1.5;
@@ -210,7 +215,7 @@ const handleClick = () => {
     })
     .add(() => {
       scrollSmoother.value.scrollTop(0, false);
-      router.push('/work/super-ai');
+      router.push(href);
     }, '+=0.2');
 };
 

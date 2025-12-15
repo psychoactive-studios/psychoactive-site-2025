@@ -80,14 +80,16 @@ definePageMeta({
         <section class="cases">
           <div class="container">
             <CaseStadyPreview
-              src="/img/cases/case-super-ai.jpg"
+              src="/img/work/hero-super-ai.jpg"
               title="SuperAI Conference"
               description="Worlds largest AI event"
+              href="/work/super-ai"
             />
             <CaseStadyPreview
-              src="/img/cases/case-burgerfuel.jpg"
-              title="Burgerfuel"
-              description="New Zealand’s favourite burger"
+              src="/img/work/hero-gravity.jpg"
+              title="Gravity"
+              description="Enterprise-Grade Product Development"
+              href="/work/gravity"
             />
             <CaseStadyPreview
               src="/img/cases/case-hellboy.jpg"
