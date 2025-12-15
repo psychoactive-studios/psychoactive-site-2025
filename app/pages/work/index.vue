@@ -145,6 +145,7 @@ function enterAnimation(el) {
             :src="work.src"
             :title="work.title"
             :description="work.description"
+            :href="work.href"
           />
         </template>
       </div>
@@ -193,6 +194,8 @@ function enterAnimation(el) {
     grid-template-columns: repeat(2, 1fr);
     column-gap: getRem(20);
     direction: rtl;
+    position: relative;
+    z-index: 2;
     @include respond('mobile') {
       grid-template-columns: 1fr;
       direction: ltr;

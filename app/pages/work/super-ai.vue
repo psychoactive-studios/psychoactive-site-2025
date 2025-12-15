@@ -199,7 +199,7 @@ function animationsInit() {
   <main class="work super-ai">
     <div class="work__header--desktop">
       <!-- Illustration section -->
-      <section class="work__illustration" style="background-color: red">
+      <section class="work__illustration">
         <img
           src="/img/work/hero-super-ai.jpg"
           alt="SuperAI Conference Illustration"

@@ -9,8 +9,12 @@ const containerRef = ref(null);
 const titleRef = ref(null);
 const imageRef = ref(null);
 
-defineProps({
+const props = defineProps({
   src: {
+    type: String,
+    required: true,
+  },
+  href: {
     type: String,
     required: true,
   },
@@ -24,6 +28,8 @@ defineProps({
     default: '',
   },
 });
+
+const { src, href, title, description } = props;
 
 const handleMouseEnter = () => {
   // Stop any ongoing animations on this element
@@ -53,8 +59,8 @@ const handleMouseEnter = () => {
 
 const handleClick = () => {
   if (imageRef.value && imageRef.value.handleClick) {
-    gsap.set(containerRef.value, { zIndex: 1 });
-    imageRef.value.handleClick();
+    gsap.set(containerRef.value, { zIndex: 2 });
+    imageRef.value.handleClick(href);
   }
 };
 </script>
