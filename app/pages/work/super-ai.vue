@@ -522,6 +522,7 @@ function animationsInit() {
 
     <section class="super-ai__stage">
       <NuxtImg
+        class="super-ai__stage-image-1"
         src="/img/work/super-ai-8-1.jpg"
         sizes="sm:768px md:1200px xl:100vw"
         quality="90"
@@ -686,9 +687,11 @@ function animationsInit() {
     .img-1 {
       position: absolute;
       inset: 0;
+      width: 100%;
     }
     .img-2 {
       position: relative;
+      width: 100%;
     }
   }
   &__text-section {
@@ -814,6 +817,9 @@ function animationsInit() {
     @include respond(mobile) {
       margin-top: 90px;
       margin-bottom: 60px;
+    }
+    &-image-1 {
+      width: 100%;
     }
     &-image-2 {
       position: absolute;
