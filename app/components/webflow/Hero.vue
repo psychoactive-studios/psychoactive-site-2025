@@ -228,7 +228,7 @@ watch(isLoading, (newVal) => {
   bottom: 0;
   h1 {
     margin-top: getRem(4);
-    font-size: max(11.2vw, 42px);
+    font-size: max(4.8vw, 32px);
     font-style: normal;
     font-weight: 400;
     line-height: 88%;
@@ -241,6 +241,7 @@ watch(isLoading, (newVal) => {
       }
     }
     @include respond(mobile) {
+      font-size: max(11.2vw, 42px);
       line-height: 121%;
       span {
         display: inline-block;
