@@ -14,8 +14,8 @@ const { currentTransitionImage } = useWorks();
   <div>
     <section class="work-transition">
       <img v-if="currentTransitionImage" :src="currentTransitionImage" />
-      <WorkScrollProgressCircle />
     </section>
+    <WorkScrollProgressCircle />
 
     <section class="services">
       <!-- Fixed target for Services List animations -->
