@@ -257,7 +257,7 @@ export const heroScrollAnimation = (ctx) => {
                 end: 'bottom top', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
                 invalidateOnRefresh: true,
-                markers: true,
+                // markers: true,
               },
             })
             .fromTo(
@@ -310,7 +310,7 @@ export const heroScrollAnimation = (ctx) => {
                 end: '150% top', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
                 invalidateOnRefresh: true,
-                markers: true,
+                // markers: true,
               },
             })
 
