@@ -62,8 +62,11 @@ const onClickHandler = async () => {
       <!-- Awards Title -->
       <div class="awards__title">
         <div class="awards__title_count">
-          <sup>Awards</sup>
-          <h2>48</h2>
+          <div class="awards__title_count-sub">
+            Recognition <br />
+            & Awards
+          </div>
+          <h2>{{ awardsData.length }}</h2>
         </div>
         <div class="awards__title_text">
           <OnScrollFilledTextLight>
@@ -141,21 +144,24 @@ const onClickHandler = async () => {
     }
     &_count {
       position: relative;
-      sup {
+      &-sub {
         font-size: getRem(20);
         font-style: normal;
         font-weight: 400;
-        line-height: 20px;
+        line-height: 120%;
         color: white(50);
-        position: absolute;
-        top: 0;
-        left: 0;
+        display: inline-block;
+        vertical-align: top;
+        // position: absolute;
+        // top: 0;
+        // left: 0;
       }
       h2 {
         font-size: clamp(270px, 21.88vw, 420px);
         line-height: 0.645;
         font-weight: 400;
         padding-bottom: 1.8vw;
+        display: inline-block;
       }
     }
     &_text {
