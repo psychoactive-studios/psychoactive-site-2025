@@ -3,9 +3,9 @@ import gsap from 'gsap';
 
 const containerRef = ref(null);
 const data = ref({
-  worldOfWearableArt: 7000,
-  summerGameFest: 1000,
-  superAI: 100,
+  worldOfWearableArt: 60000,
+  summerGameFest: 50,
+  superAI: 7000,
 });
 
 let ctx = null;
@@ -35,7 +35,7 @@ onMounted(() => {
           worldOfWearableArt: 0,
         },
         {
-          worldOfWearableArt: 7000,
+          worldOfWearableArt: data.value.worldOfWearableArt,
           duration: 1.5,
         },
         'start'
@@ -46,7 +46,7 @@ onMounted(() => {
           summerGameFest: 0,
         },
         {
-          summerGameFest: 1000,
+          summerGameFest: data.value.summerGameFest,
           duration: 1.5,
         },
         'start+=0.2'
@@ -57,7 +57,7 @@ onMounted(() => {
           superAI: 0,
         },
         {
-          superAI: 100,
+          superAI: data.value.superAI,
           duration: 1.5,
         },
         'start+=0.4'
@@ -81,19 +81,28 @@ onUnmounted(() => {
       <div class="grid__item_number">
         {{ Math.floor(data.worldOfWearableArt).toLocaleString('en-US') }}+
       </div>
-      <div class="grid__item_info">World of WearableArt</div>
+      <div class="grid__item_info">
+        <label>ATTENDEES EACH SEASON</label>
+        <span>World of WearableArt</span>
+      </div>
     </li>
     <li class="grid__item">
       <div class="grid__item_number">
-        {{ Math.floor(data.summerGameFest).toLocaleString('en-US') }}+
+        {{ Math.floor(data.summerGameFest).toLocaleString('en-US') }} million+
       </div>
-      <div class="grid__item_info">Summer Game Fest</div>
+      <div class="grid__item_info">
+        <label>LIVESTREAM VIEWS</label>
+        <span>Summer Game Fest</span>
+      </div>
     </li>
     <li class="grid__item">
       <div class="grid__item_number">
         {{ Math.floor(data.superAI).toLocaleString('en-US') }}+
       </div>
-      <div class="grid__item_info">SuperAI</div>
+      <div class="grid__item_info">
+        <label>SELL OUT EVENT</label>
+        <span>SuperAI</span>
+      </div>
     </li>
   </ul>
 </template>
@@ -131,8 +140,7 @@ onUnmounted(() => {
       gap: getRem(12);
       clip-path: inset(0 100% 0 0);
       position: relative;
-      &::before {
-        content: 'Sold out event';
+      label {
         border-radius: 50%;
         font-family: 'RoobertMono';
         font-size: clamp(12px, 0.833vw, 16px);
