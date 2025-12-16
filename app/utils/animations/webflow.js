@@ -232,6 +232,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
                   Hero Scroll animation
 =======================================================*/
 const inputTime = 1;
+const circleTime = 0.5;
 export const heroScrollAnimation = (ctx) => {
   let matchMedia = gsap.matchMedia();
   ctx.add(() => {
@@ -243,34 +244,20 @@ export const heroScrollAnimation = (ctx) => {
       },
       (context) => {
         // context.conditions has a boolean property for each condition defined above indicating if it's matched or not.
-        let { isDesktop, isMobile } = context.conditions;
+        let { isDesktop } = context.conditions;
         if (isDesktop) {
-          gsap.timeline({
-            id: 'webflow-scroll-animation',
-            scrollTrigger: {
-              id: 'webflow-hero-scrolltrigger',
-              trigger: '.container',
-              pin: true, // pin the trigger element while active
-              start: 'top top', // when the top of the trigger hits the top of the viewport
-              end: 'bottom top', // end after scrolling 500px beyond the start
-              //scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-              invalidateOnRefresh: true,
-              //markers: true,
-            },
-          });
-
           gsap
             .timeline({
               id: 'webflow-scroll-animation',
               scrollTrigger: {
                 id: 'webflow-hero-scrolltrigger',
-                trigger: '.hero__wrapper',
-                //pin: true, // pin the trigger element while active
+                trigger: '.container',
+                pin: true, // pin the trigger element while active
                 start: 'top top', // when the top of the trigger hits the top of the viewport
-                end: '200% top', // end after scrolling 500px beyond the start
+                end: 'bottom top', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
                 invalidateOnRefresh: true,
-                // markers: true,
+                markers: true,
               },
             })
             .fromTo(
@@ -278,7 +265,7 @@ export const heroScrollAnimation = (ctx) => {
               { clipPath: 'circle(50% at 50% 50%)' },
               {
                 clipPath: 'circle(0% at 50% 50%)',
-                duration: inputTime,
+                duration: circleTime,
                 // ease: 'power1.in',
               },
               'start'
@@ -288,7 +275,7 @@ export const heroScrollAnimation = (ctx) => {
               {
                 scale: 0,
                 opacity: 0,
-                duration: inputTime,
+                duration: circleTime,
                 // ease: 'power1.in',
               },
               'start'
@@ -297,7 +284,7 @@ export const heroScrollAnimation = (ctx) => {
               dots,
               {
                 scale: 1.7,
-                duration: inputTime,
+                duration: circleTime,
                 // ease: 'power2.in',
               },
               'start'
@@ -306,15 +293,31 @@ export const heroScrollAnimation = (ctx) => {
               dotsWrapper,
               {
                 scale: 0,
-                duration: inputTime,
+                duration: circleTime,
                 // ease: 'power2.in',
               },
               'start'
-            )
+            );
+
+          gsap
+            .timeline({
+              id: 'webflow-scroll-animation',
+              scrollTrigger: {
+                id: 'webflow-hero-scrolltrigger',
+                trigger: '.hero__wrapper',
+                //pin: true, // pin the trigger element while active
+                start: 'top top', // when the top of the trigger hits the top of the viewport
+                end: '150% top', // end after scrolling 500px beyond the start
+                scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+                invalidateOnRefresh: true,
+                markers: true,
+              },
+            })
+
             .to(
               title,
               {
-                scale: 2.3,
+                scale: 2.2,
                 duration: inputTime,
                 // ease: 'power1.in',
               },
