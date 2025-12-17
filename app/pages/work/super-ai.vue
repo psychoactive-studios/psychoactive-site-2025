@@ -61,6 +61,7 @@ definePageMeta({
         gsap
           .timeline()
           .set(el, { opacity: 0 })
+          .set('#work-scroll-progress', { display: 'none' })
           .add(() => {
             transitionFromNavigation.value = false;
             done();
