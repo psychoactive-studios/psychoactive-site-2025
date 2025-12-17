@@ -11,7 +11,7 @@ const { playInteractionSound } = useAudioManager();
 
 const letsTalkButtonRef = ref(null);
 
-defineProps({
+const props = defineProps({
   mode: {
     type: String,
     default: 'dark', // 'dark' or 'light'
@@ -28,15 +28,16 @@ gsap.registerPlugin(InertiaPlugin, ScrollTrigger);
 const { pointerType: _pointerType, x: eventX, y: eventY } = usePointer();
 const { scrollSmoother } = useScrollSmoother();
 
-const dotsContainerRef = ref(null);
+const canvasRef = ref(null);
+let ctx = null;
 
 let dots = [];
-let dotCenters = [];
 let lastTime = 0;
 let lastX = 0;
 let lastY = 0;
-const lastMousePosition = { x: 0, y: 0 }; // Last known global mouse position
+const lastMousePosition = { x: 0, y: 0 };
 let scrollTriggerInstance = null;
+let animationFrameId = null;
 
 const opacity = { base: 0.1, active: 1 };
 const threshold = 150;
@@ -45,29 +46,42 @@ const shockRadius = 250;
 const shockPower = 5;
 const maxSpeed = 5000;
 const centerHole = false;
+const dotSize = 8; // 0.5rem * 16 = 8px
+const dotGap = 16; // 2em gap
 
 function buildGrid() {
-  if (!dotsContainerRef.value) return;
+  if (!canvasRef.value) return;
 
-  const container = dotsContainerRef.value;
-  container.innerHTML = '';
+  const canvas = canvasRef.value;
+  const rect = canvas.getBoundingClientRect();
+
+  // Set canvas size with device pixel ratio for crisp rendering
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+
+  ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
   dots = [];
-  dotCenters = [];
 
-  const style = getComputedStyle(container);
-  const dotPx = parseFloat(style.fontSize);
-  const gapPx = dotPx * 2;
-  const contW = container.clientWidth;
-  const contH = container.clientHeight;
+  const contW = rect.width;
+  const contH = rect.height;
 
-  const cols = Math.floor((contW + gapPx) / (dotPx + gapPx));
-  const rows = Math.floor((contH + gapPx) / (dotPx + gapPx));
+  const cols = Math.floor((contW + dotGap) / (dotSize + dotGap));
+  const rows = Math.floor((contH + dotGap) / (dotSize + dotGap));
   const total = cols * rows;
 
   const holeCols = centerHole ? (cols % 2 === 0 ? 4 : 5) : 0;
   const holeRows = centerHole ? (rows % 2 === 0 ? 4 : 5) : 0;
   const startCol = (cols - holeCols) / 2;
   const startRow = (rows - holeRows) / 2;
+
+  // Calculate grid offset to center it
+  const totalGridWidth = cols * dotSize + (cols - 1) * dotGap;
+  const totalGridHeight = rows * dotSize + (rows - 1) * dotGap;
+  const offsetX = (contW - totalGridWidth) / 2;
+  const offsetY = (contH - totalGridHeight) / 2;
 
   for (let i = 0; i < total; i++) {
     const row = Math.floor(i / cols);
@@ -79,54 +93,50 @@ function buildGrid() {
       col >= startCol &&
       col < startCol + holeCols;
 
-    const d = document.createElement('div');
-    d.classList.add('dot');
+    if (!isHole) {
+      const baseX = offsetX + col * (dotSize + dotGap) + dotSize / 2;
+      const baseY = offsetY + row * (dotSize + dotGap) + dotSize / 2;
 
-    if (isHole) {
-      d.style.visibility = 'hidden';
-      d._isHole = true;
-    } else {
-      gsap.set(d, { x: 0, y: 0, opacity: opacity.base });
-      d._inertiaApplied = false;
+      const dot = {
+        baseX,
+        baseY,
+        x: 0,
+        y: 0,
+        opacity: opacity.base,
+        inertiaApplied: false,
+      };
+
+      dots.push(dot);
     }
-
-    container.appendChild(d);
-    dots.push(d);
   }
 
-  gsap.ticker.add(() => {
-    dotCenters = dots
-      .filter((d) => !d._isHole)
-      .map((d) => {
-        const r = d.getBoundingClientRect();
-        // Use current animated scroll position
-        const currentScrollY = scrollSmoother.value
-          ? scrollSmoother.value.scrollTop()
-          : window.scrollY;
-        const currentScrollX = window.scrollX;
-        return {
-          el: d,
-          x: r.left + currentScrollX + r.width / 2,
-          y: r.top + currentScrollY + r.height / 2,
-        };
-      });
-  }, true);
+  startRenderLoop();
 }
 
 function handleMouseMove() {
+  if (!canvasRef.value) return;
+
+  const canvas = canvasRef.value;
+  const rect = canvas.getBoundingClientRect();
+
   // Get current smooth scroll position
   const currentScrollY = scrollSmoother.value
     ? scrollSmoother.value.scrollTop()
     : window.scrollY;
-  const currentScrollX = window.scrollX; // Usually X doesn't animate
+  const currentScrollX = window.scrollX;
 
-  // Convert viewport coordinates to page coordinates using current animated scroll
+  // Convert viewport coordinates to page coordinates
   const pageX = eventX.value + currentScrollX;
   const pageY = eventY.value + currentScrollY;
 
-  // Store global mouse position
-  lastMousePosition.x = pageX;
-  lastMousePosition.y = pageY;
+  // Convert to canvas-relative coordinates
+  const canvasPageX = rect.left + currentScrollX;
+  const canvasPageY = rect.top + currentScrollY;
+  const localX = pageX - canvasPageX;
+  const localY = pageY - canvasPageY;
+
+  lastMousePosition.x = localX;
+  lastMousePosition.y = localY;
 
   const now = performance.now();
   const dt = now - lastTime || 16;
@@ -147,31 +157,34 @@ function handleMouseMove() {
   lastX = pageX;
   lastY = pageY;
 
-  dotCenters.forEach(({ el, x, y }) => {
-    const dist = Math.hypot(x - pageX, y - pageY);
+  dots.forEach((dot) => {
+    const dotX = dot.baseX + dot.x;
+    const dotY = dot.baseY + dot.y;
+    const dist = Math.hypot(dotX - localX, dotY - localY);
     const t = Math.max(0, 1 - dist / threshold);
     const opacityValue = gsap.utils.interpolate(
       opacity.base,
       opacity.active,
       t
     );
-    gsap.set(el, { opacity: opacityValue });
 
-    if (speed > speedThreshold && dist < threshold && !el._inertiaApplied) {
-      el._inertiaApplied = true;
-      const pushX = x - pageX + vx * 0.005;
-      const pushY = y - pageY + vy * 0.005;
+    dot.opacity = opacityValue;
 
-      gsap.to(el, {
+    if (speed > speedThreshold && dist < threshold && !dot.inertiaApplied) {
+      dot.inertiaApplied = true;
+      const pushX = dotX - localX + vx * 0.005;
+      const pushY = dotY - localY + vy * 0.005;
+
+      gsap.to(dot, {
         inertia: { x: pushX, y: pushY, resistance: 750 },
         onComplete() {
-          gsap.to(el, {
+          gsap.to(dot, {
             x: 0,
             y: 0,
             duration: 1.5,
             ease: 'elastic.out(1,0.75)',
           });
-          el._inertiaApplied = false;
+          dot.inertiaApplied = false;
         },
       });
     }
@@ -179,62 +192,131 @@ function handleMouseMove() {
 }
 
 function handleScroll() {
-  // Get current smooth scroll position (the animated position, not target)
+  if (!canvasRef.value) return;
+
+  const canvas = canvasRef.value;
+  const rect = canvas.getBoundingClientRect();
+
   const currentScrollY = scrollSmoother.value
     ? scrollSmoother.value.scrollTop()
     : window.scrollY;
   const currentScrollX = window.scrollX;
 
-  // Update lastMousePosition with current pointer position during scroll
   const pageX = eventX.value + currentScrollX;
   const pageY = eventY.value + currentScrollY;
 
-  lastMousePosition.x = pageX;
-  lastMousePosition.y = pageY;
+  const canvasPageX = rect.left + currentScrollX;
+  const canvasPageY = rect.top + currentScrollY;
+  const localX = pageX - canvasPageX;
+  const localY = pageY - canvasPageY;
 
-  // Update effect during scroll using current mouse position
-  dotCenters.forEach(({ el, x, y }) => {
-    const dist = Math.hypot(x - pageX, y - pageY);
+  lastMousePosition.x = localX;
+  lastMousePosition.y = localY;
+
+  dots.forEach((dot) => {
+    const dotX = dot.baseX + dot.x;
+    const dotY = dot.baseY + dot.y;
+    const dist = Math.hypot(dotX - localX, dotY - localY);
     const t = Math.max(0, 1 - dist / threshold);
     const opacityValue = gsap.utils.interpolate(
       opacity.base,
       opacity.active,
       t
     );
-    gsap.set(el, { opacity: opacityValue });
+    dot.opacity = opacityValue;
   });
 }
 
 function handleClick(e) {
-  dotCenters.forEach(({ el, x, y }) => {
-    const dist = Math.hypot(x - e.pageX, y - e.pageY);
-    if (dist < shockRadius && !el._inertiaApplied) {
-      el._inertiaApplied = true;
-      const falloff = Math.max(0, 1 - dist / shockRadius);
-      const pushX = (x - e.pageX) * shockPower * falloff;
-      const pushY = (y - e.pageY) * shockPower * falloff;
+  if (!canvasRef.value) return;
 
-      gsap.to(el, {
+  const canvas = canvasRef.value;
+  const rect = canvas.getBoundingClientRect();
+
+  const currentScrollY = scrollSmoother.value
+    ? scrollSmoother.value.scrollTop()
+    : window.scrollY;
+  const currentScrollX = window.scrollX;
+
+  const canvasPageX = rect.left + currentScrollX;
+  const canvasPageY = rect.top + currentScrollY;
+  const localX = e.pageX - canvasPageX;
+  const localY = e.pageY - canvasPageY;
+
+  dots.forEach((dot) => {
+    const dotX = dot.baseX + dot.x;
+    const dotY = dot.baseY + dot.y;
+    const dist = Math.hypot(dotX - localX, dotY - localY);
+
+    if (dist < shockRadius && !dot.inertiaApplied) {
+      dot.inertiaApplied = true;
+      const falloff = Math.max(0, 1 - dist / shockRadius);
+      const pushX = (dotX - localX) * shockPower * falloff;
+      const pushY = (dotY - localY) * shockPower * falloff;
+
+      gsap.to(dot, {
         inertia: { x: pushX, y: pushY, resistance: 750 },
         onComplete() {
-          gsap.to(el, {
+          gsap.to(dot, {
             x: 0,
             y: 0,
             duration: 1.5,
             ease: 'elastic.out(1,0.75)',
           });
-          el._inertiaApplied = false;
+          dot.inertiaApplied = false;
         },
       });
     }
   });
 }
 
+function drawCanvas() {
+  if (!ctx || !canvasRef.value) return;
+
+  const canvas = canvasRef.value;
+  const rect = canvas.getBoundingClientRect();
+
+  // Clear canvas
+  ctx.clearRect(0, 0, rect.width, rect.height);
+
+  // Get dot color based on mode
+  const dotColor = props.mode === 'light' ? '#000000' : '#ffffff';
+
+  // Draw dots
+  dots.forEach((dot) => {
+    const x = dot.baseX + dot.x;
+    const y = dot.baseY + dot.y;
+
+    ctx.globalAlpha = dot.opacity;
+    ctx.fillStyle = dotColor;
+    ctx.beginPath();
+    ctx.arc(x, y, dotSize / 2, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  ctx.globalAlpha = 1;
+}
+
+function startRenderLoop() {
+  const render = () => {
+    drawCanvas();
+    animationFrameId = requestAnimationFrame(render);
+  };
+  render();
+}
+
+function stopRenderLoop() {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
+}
+
 function initScrollTrigger() {
-  if (!dotsContainerRef.value) return;
+  if (!canvasRef.value) return;
 
   scrollTriggerInstance = ScrollTrigger.create({
-    trigger: dotsContainerRef.value,
+    trigger: canvasRef.value,
     start: 'top bottom',
     end: 'bottom top',
     onUpdate: () => {
@@ -251,26 +333,21 @@ function cleanupScrollTrigger() {
 }
 
 onMounted(() => {
-  // Initialize lastMousePosition with current pointer position
-  const currentScrollY = scrollSmoother.value
-    ? scrollSmoother.value.scrollTop()
-    : window.scrollY;
-  const currentScrollX = window.scrollX;
-  lastMousePosition.x = eventX.value + currentScrollX;
-  lastMousePosition.y = eventY.value + currentScrollY;
-
-  // Initialize ScrollTrigger after a small delay to ensure grid is built
   setTimeout(() => {
     buildGrid();
     initScrollTrigger();
   }, 100);
 
-  window.addEventListener('resize', buildGrid);
+  window.addEventListener('resize', () => {
+    stopRenderLoop();
+    buildGrid();
+  });
   window.addEventListener('mousemove', handleMouseMove);
   window.addEventListener('click', handleClick);
 });
 
 onUnmounted(() => {
+  stopRenderLoop();
   cleanupScrollTrigger();
   window.removeEventListener('resize', buildGrid);
   window.removeEventListener('mousemove', handleMouseMove);
@@ -300,7 +377,7 @@ const talkButtonHoverHandler = () => {
     ]"
   >
     <div class="dots-wrap">
-      <div ref="dotsContainerRef" class="dots-container" />
+      <canvas ref="canvasRef" class="dots-canvas" />
     </div>
     <a
       ref="letsTalkButtonRef"
@@ -318,12 +395,13 @@ const talkButtonHoverHandler = () => {
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/functions' as *;
+
 .lets-talk {
   justify-content: center;
   align-items: center;
-  // aspect-ratio: 1.85;
   display: flex;
   position: relative;
+
   &__link {
     width: 214px;
     color: currentColor;
@@ -338,8 +416,9 @@ const talkButtonHoverHandler = () => {
     font-size: 1rem;
     font-style: normal;
     font-weight: 500;
-    line-height: 1.68; /* 168.75% */
+    line-height: 1.68;
     text-transform: uppercase;
+
     &::before {
       content: '';
       position: absolute;
@@ -351,12 +430,14 @@ const talkButtonHoverHandler = () => {
       z-index: -1;
       transition: scale 0.3s cubic-bezier(0.33, 1, 0.68, 1);
     }
+
     &:hover {
       &::before {
         scale: 0.85;
       }
     }
   }
+
   &--dark {
     .lets-talk__link {
       color: $color-background;
@@ -364,10 +445,8 @@ const talkButtonHoverHandler = () => {
         background-color: $color-foreground;
       }
     }
-    :deep(.dot) {
-      background-color: #ffffff;
-    }
   }
+
   &--light {
     .lets-talk__link {
       color: $color-foreground;
@@ -375,43 +454,20 @@ const talkButtonHoverHandler = () => {
         background-color: $color-background;
       }
     }
-    :deep(.dot) {
-      background-color: $color-background;
-    }
   }
 }
 
 .dots-wrap {
   width: 100%;
   aspect-ratio: 1.85;
-  // height: 100%;
   position: relative;
 }
 
-.dots-container {
-  grid-column-gap: 2em;
-  grid-row-gap: 2em;
+.dots-canvas {
   pointer-events: none;
-  flex-flow: wrap;
-  grid-template-rows: auto;
-  grid-template-columns: 1fr;
-  grid-auto-columns: 1fr;
-  justify-content: center;
-  align-items: center;
-  display: flex;
   position: absolute;
-  inset: 0em;
-  font-size: 0.5rem;
-}
-
-:deep(.dot) {
-  will-change: transform, opacity;
-  transform-origin: center;
-  background-color: #ffffff;
-  border-radius: 50%;
-  width: 1em;
-  height: 1em;
-  position: relative;
-  transform: translate3d(0);
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>
