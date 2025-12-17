@@ -9,6 +9,8 @@ export default function useWorks() {
   const { enableScroll, scrollSmoother } = useScrollSmoother();
 
   const workPageInit = async () => {
+    console.log('workPageInit!!!');
+
     setTimeout(() => {
       const layoutElements = gsap.utils.toArray([
         '#header-logo',
@@ -21,15 +23,18 @@ export default function useWorks() {
         duration: 0.75,
         ease: 'power3.out',
       });
-      gsap
-        .timeline()
-        .set('#work-scroll-progress', { display: 'block' })
-        .from('#work-scroll-progress', {
+      gsap.timeline().set('#work-scroll-progress', { display: 'block' }).fromTo(
+        '#work-scroll-progress',
+        {
           scale: 0,
+        },
+        {
+          scale: 1,
           // opacity: 0,
           duration: 0.75,
           ease: 'power3.out',
-        });
+        }
+      );
       scrollSmoother.value.scrollTop(0, false);
       currentTransitionImage.value = null;
       enableScroll();
