@@ -34,18 +34,14 @@ onMounted(async () => {
           end: 'bottom bottom',
         },
       })
-      .to(
-        title,
-        {
-          duration: 2.3,
-          scrambleText: {
-            text: '{original}',
-            chars: 'uppercase',
-            tweenLength: false,
-          },
+      .to(title, {
+        duration: 2.3,
+        scrambleText: {
+          text: '{original}',
+          chars: 'uppercase',
+          tweenLength: false,
         },
-        '<+=0.2'
-      )
+      })
       .from(
         title,
         {
@@ -68,7 +64,7 @@ onMounted(async () => {
           duration: 2,
           ease: 'power3.inOut',
         },
-        '<+=0.5'
+        '<'
       );
   }, sectionRef.value);
 });

@@ -615,11 +615,6 @@ function animationsInit() {
         display: flex;
         flex-direction: column;
         gap: 16px;
-        &:nth-child(4),
-        &:nth-child(5),
-        &:nth-child(6) {
-          display: none;
-        }
       }
     }
     &_number {
@@ -825,14 +820,14 @@ function animationsInit() {
     &-image-2 {
       position: absolute;
       top: 1%;
-      left: 20%;
-      width: 20%;
+      left: 17%;
+      width: 25%;
     }
     &-image-3 {
       position: absolute;
-      top: 34%;
-      right: 20%;
-      width: 20%;
+      top: 25%;
+      right: 17%;
+      width: 25%;
     }
   }
 }
