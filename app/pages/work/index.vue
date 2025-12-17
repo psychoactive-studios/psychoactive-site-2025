@@ -10,21 +10,36 @@ import { leaveAnimation } from '~/utils/animations/transitions';
 import Footer from '~/components/layout/Footer.vue';
 import useNavigation from '~/composables/useNavigation';
 
-const { isFirstLoad, isLoading } = useLoader();
+const { isLoading } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
 const { transitionFromNavigation } = useNavigation();
 
 const titleRef = ref(null);
+const displayedCount = ref(4);
+const displayedWorks = computed(() => worksData.slice(0, displayedCount.value));
+let loadInterval;
 
 onMounted(() => {
   SplitText.create(titleRef.value.querySelector('p'), {
     type: 'words,chars',
     charsClass: 'char-center',
   });
+
+  loadInterval = setInterval(() => {
+    if (displayedCount.value < worksData.length) {
+      displayedCount.value += 1;
+    } else {
+      clearInterval(loadInterval);
+    }
+  }, 500);
 });
 
-watch([isLoading, isFirstLoad], ([loading, firstLoad]) => {
-  if (!loading && firstLoad) {
+onUnmounted(() => {
+  if (loadInterval) clearInterval(loadInterval);
+});
+
+watch(isLoading, (newVal) => {
+  if (!newVal) {
     enterAnimation();
   }
 });
@@ -138,7 +153,7 @@ function enterAnimation(el) {
         </p>
       </div>
       <div class="works__grid">
-        <template v-for="work in worksData" :key="work.id">
+        <template v-for="work in displayedWorks" :key="work.id">
           <LetsTalkDots v-if="work.id === 'letstalk'" />
           <CaseStadyPreview
             v-else
