@@ -55,22 +55,15 @@ definePageMeta({
           },
           '<'
         )
-        .set(
-          gsap.utils.toArray([
-            '.services-list__video_player, .services-stepper, .stepper__footer-video',
-          ]),
-          { display: 'none' }
-        );
+        .set('#services-fixed-section', { display: 'none' });
       leaveAnimation(el, done);
     },
   },
 });
 
-// onMounted(() => {
-//   setTimeout(() => {
-//     enableScroll();
-//   }, 100);
-// });
+onMounted(() => {
+  gsap.set('#services-fixed-section', { display: 'block' });
+});
 </script>
 
 <template>
