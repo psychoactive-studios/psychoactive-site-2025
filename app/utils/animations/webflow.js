@@ -451,8 +451,8 @@ export const videoReelsScrollAnimation = (ctx) => {
                 id: 'webflow-video-reel-scrolltrigger',
                 trigger: '.video-reel__inner',
                 //pin: true, // pin the trigger element while active
-                start: '30% bottom', // when the top of the trigger hits the top of the viewport
-                end: 'center center', // end after scrolling 500px beyond the start
+                start: 'top bottom', // when the top of the trigger hits the top of the viewport
+                end: 'bottom center', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
                 invalidateOnRefresh: true,
                 // markers: true,
