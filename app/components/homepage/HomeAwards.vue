@@ -10,6 +10,7 @@ const { scrollSmoother } = useScrollSmoother();
 
 // Number of awards to show initially and on each "Show More" click
 const showCount = 6;
+const showOffset = computed(() => awardsData.length / 3);
 
 const showMoreRef = ref(null);
 const offSetRef = ref(showCount);
@@ -50,7 +51,7 @@ const onFocusHandler = () => {
 };
 
 const onClickHandler = async () => {
-  offSetRef.value += showCount;
+  offSetRef.value += showOffset.value;
   await nextTick();
   scrollSmoother.value.refresh();
 };
