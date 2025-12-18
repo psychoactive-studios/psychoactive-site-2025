@@ -17,13 +17,13 @@ const { currentTransitionImage } = useWorks();
     </section>
     <WorkScrollProgressCircle />
 
-    <section class="services">
+    <section id="services-fixed-section" class="services">
       <!-- Fixed target for Services List animations -->
       <ClientOnly>
         <div v-if="!isMobile" class="services-list__video">
           <video
             class="services-list__video_player"
-            src="/video/preview_reel.mp4"
+            src="/video/services_grid.mp4"
             autoplay
             loop
             muted
