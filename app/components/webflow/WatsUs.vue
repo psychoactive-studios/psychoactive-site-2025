@@ -13,7 +13,27 @@ const list = [
   {
     title: 'Custom Code & Integrations',
     content:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui maxime necessitatibus nulla eos earum, accusamus dicta error pariatur adipisci explicabo molestiae, est possimus labore tenetur amet laboriosam beatae natus asperiores alias voluptates. Atque provident fugit placeat animi repellendus quo ducimus perspiciatis natus cupiditate modi maiores, voluptates odit deleniti distinctio, cumque dignissimos? Natus ipsam autem quisquam atque eaque rem sunt dolorem, nulla, veritatis commodi alias unde saepe maiores dicta provident deserunt explicabo magni numquam fuga repellat praesentium ratione. Dolorum, minima ullam.',
+  },
+  {
+    title: 'Enterprise Solutions & Scalability',
+    content:
       'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
+  },
+  {
+    title: 'SEO & AI Optimisation',
+    content:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
+  },
+  {
+    title: 'Webflow Design & Development',
+    content:
+      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
+  },
+  {
+    title: 'Custom Code & Integrations',
+    content:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui maxime necessitatibus nulla eos earum, accusamus dicta error pariatur adipisci explicabo molestiae, est possimus labore tenetur amet laboriosam beatae natus asperiores alias voluptates. Atque provident fugit placeat animi repellendus quo ducimus perspiciatis natus cupiditate modi maiores, voluptates odit deleniti distinctio, cumque dignissimos? Natus ipsam autem quisquam atque eaque rem sunt dolorem, nulla, veritatis commodi alias unde saepe maiores dicta provident deserunt explicabo magni numquam fuga repellat praesentium ratione. Dolorum, minima ullam.',
   },
   {
     title: 'Enterprise Solutions & Scalability',
@@ -207,6 +227,7 @@ const onFocusHandler = () => {
     <div class="container">
       <div class="what-sets-us__wrapper">
         <h2>What sets us apart</h2>
+
         <SetsUpAccordion :list="list" :multiple="true" />
         <div class="what-sets-us__show-more">
           <button @mouseenter="onMouseEnterHandler" @focus="onFocusHandler">

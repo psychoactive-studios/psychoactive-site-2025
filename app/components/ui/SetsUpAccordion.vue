@@ -83,6 +83,23 @@ const leave = (el, done) => {
     >
       <button class="accordion__header" @click="toggle(index)">
         <span class="accordion__title">{{ item.title }}</span>
+        <Transition
+          :css="false"
+          @before-enter="beforeEnter"
+          @enter="enter"
+          @leave="leave"
+        >
+          <div
+            v-if="activeIndices.includes(index)"
+            class="accordion__content-wrapper"
+          >
+            <div class="accordion__content">
+              <div class="accordion__content_inner">
+                {{ item.content }}
+              </div>
+            </div>
+          </div>
+        </Transition>
         <span class="accordion__header_icon">
           <svg
             width="48"
@@ -122,24 +139,6 @@ const leave = (el, done) => {
           <div class="accordion__header_overlay" />
         </div>
       </button>
-
-      <Transition
-        :css="false"
-        @before-enter="beforeEnter"
-        @enter="enter"
-        @leave="leave"
-      >
-        <div
-          v-if="activeIndices.includes(index)"
-          class="accordion__content-wrapper"
-        >
-          <div class="accordion__content">
-            <div class="accordion__content_inner">
-              {{ item.content }}
-            </div>
-          </div>
-        </div>
-      </Transition>
     </div>
   </div>
 </template>
@@ -153,7 +152,7 @@ const leave = (el, done) => {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: getRem(32);
+  gap: max(0.833333vw, 16px);
   @include respond(mobile) {
     gap: getRem(14);
   }
@@ -173,21 +172,24 @@ const leave = (el, done) => {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: clamp(20px, 2.1vw, 40px);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 112.5%;
-    color: white(50);
     transition: color 0.5s ease-in-out;
     color: $color-background;
     display: flex;
-    justify-content: space-between;
+    align-items: flex-start;
     width: 100%;
-    padding-bottom: clamp(14px, 2.19vw, 42px);
-    padding-right: clamp(0px, 1.67vw, 32px);
+    padding-bottom: max(0.833333vw, 16px);
     position: relative;
+    @include respond(laptop) {
+      flex-direction: column;
+    }
     &_icon {
+      width: 48px;
+      height: 48px;
+      flex-shrink: 0;
       transition: transform 0.5s ease-in-out;
+      position: absolute;
+      right: max(0.833333vw, 16px);
+      top: 0;
     }
     &_overlay {
       position: absolute;
@@ -249,29 +251,41 @@ const leave = (el, done) => {
   }
 
   &__title {
+    font-family: 'RoobertMono';
+    font-size: max(0.833333vw, 16px);
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%; /* 16px */
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-grow: 1;
     margin-right: 1rem;
+    padding: max(0.78vw, 16px) 0;
   }
 
   &__content-wrapper {
     overflow: hidden;
+    width: 50%;
+    margin-left: auto;
+    margin-right: calc(4.1vw + 48px);
+    @include respond(laptop) {
+      width: auto;
+    }
   }
 
   &__content {
-    font-size: clamp(16px, 1.25vw, 24px);
+    font-size: max(1.042vw, 20px);
     font-style: normal;
     font-weight: 400;
-    line-height: 125%;
-    padding-top: getRem(48);
-    padding-bottom: getRem(64);
+    line-height: 130%;
     &_inner {
-      max-width: 60%;
-      margin: auto;
-      @include respond(tablet) {
-        max-width: 80%;
+      padding-top: 0.95vw;
+      @include respond(laptop) {
+        padding-top: 40px;
       }
       @include respond(mobile) {
-        max-width: 100%;
-        padding: 0 getRem(16);
+        // max-width: 100%;
+        // padding: 0 getRem(16);
       }
     }
   }
