@@ -21,7 +21,11 @@ definePageMeta({
     mode: 'out-in',
     onEnter: (_, done) => {
       startLoading();
-      scrollSmoother.value.scrollTop(0, false);
+      scrollSmoother.value.scrollTo(0, {
+        immediate: true,
+        lock: true,
+        force: true,
+      });
       gsap.set(
         gsap.utils.toArray([
           '.services-list__video_player, .services-stepper, .stepper__footer-video, .stepper__footer-video .video',

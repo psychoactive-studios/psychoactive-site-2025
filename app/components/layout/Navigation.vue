@@ -6,10 +6,12 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import gsap from 'gsap';
 import { navigationData } from '~/data/navigationData';
+import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { navigationRef, initNavigation, transitionFromNavigation } =
   useNavigation();
 const { playInteractionSound } = useAudioManager();
+const { scrollSmoother } = useScrollSmoother();
 
 let talkButtonHoverTween;
 
@@ -36,9 +38,10 @@ const talkButtonHoverHandler = () => {
   talkButtonHoverTween.restart();
 };
 
-const clickOnLinkHandler = () => {
+const clickOnLinkHandler = async () => {
   transitionFromNavigation.value = true;
   document.querySelector('#header-navigation-button').click();
+  // scrollSmoother.value.stop();
 };
 </script>
 

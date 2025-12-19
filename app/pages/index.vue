@@ -29,7 +29,11 @@ definePageMeta({
     mode: 'out-in',
     onEnter: (_, done) => {
       startLoading();
-      scrollSmoother.value.scrollTop(0, false);
+      scrollSmoother.value.scrollTo(0, {
+        immediate: true,
+        lock: true,
+        force: true,
+      });
       done();
     },
     onLeave: (el, done) => {

@@ -214,7 +214,11 @@ const handleClick = (href) => {
       currentTransitionImage.value = props.src;
     })
     .add(() => {
-      scrollSmoother.value.scrollTop(0, false);
+      scrollSmoother.value.scrollTo(0, {
+        immediate: true,
+        lock: true,
+        force: true,
+      });
       router.push(href);
     }, '+=0.2');
 };

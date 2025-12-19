@@ -63,7 +63,11 @@ const onPlayVideoHandler = (playerContainerRef) => {
       onPlayerOpen(playerContainerRef);
     })
     .add(() => {
-      scrollSmoother.value.scrollTop(y);
+      scrollSmoother.value.scrollTo(y, {
+        immediate: true,
+        lock: true,
+        force: true,
+      });
     }, '+=2');
 
   //

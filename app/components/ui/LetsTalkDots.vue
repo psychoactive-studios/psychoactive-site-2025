@@ -121,7 +121,7 @@ function handleMouseMove() {
 
   // Get current smooth scroll position
   const currentScrollY = scrollSmoother.value
-    ? scrollSmoother.value.scrollTop()
+    ? scrollSmoother.value.scroll
     : window.scrollY;
   const currentScrollX = window.scrollX;
 
@@ -198,7 +198,7 @@ function handleScroll() {
   const rect = canvas.getBoundingClientRect();
 
   const currentScrollY = scrollSmoother.value
-    ? scrollSmoother.value.scrollTop()
+    ? scrollSmoother.value.scroll
     : window.scrollY;
   const currentScrollX = window.scrollX;
 
@@ -234,7 +234,7 @@ function handleClick(e) {
   const rect = canvas.getBoundingClientRect();
 
   const currentScrollY = scrollSmoother.value
-    ? scrollSmoother.value.scrollTop()
+    ? scrollSmoother.value.scroll
     : window.scrollY;
   const currentScrollX = window.scrollX;
 

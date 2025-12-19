@@ -8,10 +8,47 @@
 
 // Other global styles, variables, mixins, etc.
 
+// html {
+//   scrollbar-gutter: stable;
+// }
+
+// html,
+// body {
+//   overflow: hidden;
+// }
+
 body {
   background-color: $color-background;
   color: $color-foreground;
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    // box-shadow: inset 0 0 6px red;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: white(20);
+    border-radius: 6px;
+    transition: background-color 0.5s ease;
+  }
 }
+
+// .lenis,
+// .lenis body {
+//   overflow-x: hidden;
+//   overflow-y: auto;
+//   &::-webkit-scrollbar-thumb {
+//     background-color: white(20);
+//   }
+// }
+// .lenis-stopped {
+//   overflow: hidden;
+//   body::-webkit-scrollbar-thumb {
+//     background-color: transparent;
+//   }
+// }
 
 .container {
   // padding: 0 clamp(88px, 8vw, 160px);
@@ -26,30 +63,6 @@ body {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-}
-
-// Styles for ScrollSmoother
-#smooth-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-// Respect user preference for reduced motion
-@media (prefers-reduced-motion: reduce) {
-  #smooth-wrapper {
-    position: static;
-    height: auto;
-    overflow: visible;
-  }
-}
-
-#smooth-content {
-  overflow: visible;
-  width: 100%;
 }
 
 .work {

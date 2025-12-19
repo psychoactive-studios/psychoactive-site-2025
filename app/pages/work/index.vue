@@ -54,9 +54,12 @@ definePageMeta({
       gsap.set(el, { visibility: 'hidden' });
 
       setTimeout(() => {
-        scrollSmoother.value.scrollTop(0, false);
+        scrollSmoother.value.scrollTo(0, {
+          immediate: true,
+          lock: true,
+          force: true,
+        });
         enterAnimation(el);
-        // scrollSmoother.value.scrollTop(0, false);
       }, 50);
     },
     onLeave: (el, done) => {
@@ -129,7 +132,7 @@ function enterAnimation(el) {
       { scale: 1, opacity: 1, duration: 0.75, ease: 'power3.out' },
       '<+=1'
     )
-    .add(() => scrollSmoother.value.paused(false), '<');
+    .add(() => scrollSmoother.value.start(), '<');
   // if (isFirstLoad.value) {
   //   tl.from(
   //     layoutElements,
@@ -139,7 +142,7 @@ function enterAnimation(el) {
   //     isFirstLoad.value = false;
   //   });
 
-  // tl.add(() => scrollSmoother.value.paused(false), '<');
+  // tl.add(() => scrollSmoother.value.start(), '<');
 }
 </script>
 <template>

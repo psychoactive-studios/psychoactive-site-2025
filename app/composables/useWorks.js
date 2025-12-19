@@ -35,7 +35,11 @@ export default function useWorks() {
           ease: 'power3.out',
         }
       );
-      scrollSmoother.value.scrollTop(0, false);
+      scrollSmoother.value.scrollTo(0, {
+        immediate: true,
+        lock: true,
+        force: true,
+      });
       currentTransitionImage.value = null;
       enableScroll();
     }, 100);
