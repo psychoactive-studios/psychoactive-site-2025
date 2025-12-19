@@ -11,9 +11,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="smooth-wrapper">
-    <div id="smooth-content">
-      <slot />
-    </div>
-  </div>
+  <slot />
 </template>

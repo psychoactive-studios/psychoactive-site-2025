@@ -221,7 +221,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
             );
         }
         timeline.add(() => {
-          scrollSmoother.value.paused(false);
+          scrollSmoother.value.start();
         }, '-=0.5');
       }
     );
@@ -455,7 +455,7 @@ export const videoReelsScrollAnimation = (ctx) => {
                 end: 'bottom center', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
                 invalidateOnRefresh: true,
-                // markers: true,
+                markers: true,
               },
             })
             /* ======= Player part ========= */
