@@ -34,26 +34,24 @@ const handleHoverEffect = () => {
 };
 </script>
 <template>
-  <section class="metamorphosis">
-    <div class="container">
-      <div class="metamorphosis__button">
-        <div class="metamorphosis__button_line">
-          <span class="line" />
-        </div>
-        <button class="button" @mouseenter="handleHoverEffect">
-          <span ref="letsTalkButtonRef">METAMORPHOSIS DEFINITION</span>
-          <span class="button__dots">
-            <i />
-            <i />
-            <i />
-          </span>
-        </button>
-        <div class="metamorphosis__button_line">
-          <span class="line" />
-        </div>
+  <div class="metamorphosis">
+    <div class="metamorphosis__button">
+      <div class="metamorphosis__button_line">
+        <span class="line" />
+      </div>
+      <button class="button" @mouseenter="handleHoverEffect">
+        <span ref="letsTalkButtonRef">METAMORPHOSIS DEFINITION</span>
+        <span class="button__dots">
+          <i />
+          <i />
+          <i />
+        </span>
+      </button>
+      <div class="metamorphosis__button_line">
+        <span class="line" />
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <style scoped lang="scss">
