@@ -1,11 +1,10 @@
 import gsap from 'gsap';
 import useScrollSmoother from '~/composables/useScrollSmoother';
-const { scrollSmoother } = useScrollSmoother();
 
 export const leaveAnimation = (el, done) => {
-  scrollSmoother.value.paused(true);
-  const originCenter =
-    scrollSmoother.value.scrollTop() + window.innerHeight / 2;
+  const { scrollSmoother } = useScrollSmoother();
+  scrollSmoother.value.stop();
+  const originCenter = scrollSmoother.value.scroll + window.innerHeight / 2;
 
   gsap
     .timeline()
@@ -25,6 +24,7 @@ export const leaveAnimation = (el, done) => {
       '<'
     )
     .add(() => {
+      scrollSmoother.value.stop();
       done();
     }, '<+=0.9');
 };

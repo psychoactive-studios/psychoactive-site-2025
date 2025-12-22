@@ -29,6 +29,7 @@ onMounted(async () => {
   if (containerRef.value) {
     ctx = gsap.context(() => {}, containerRef.value);
     heroInitSplitText();
+    heroScrollAnimation(ctx);
   }
 
   const blob = await $fetch('/video/service_03.mp4', {
@@ -37,7 +38,7 @@ onMounted(async () => {
   heroVideoResource.value = URL.createObjectURL(blob);
   resourceLoaded();
 
-  setTimeout(() => heroScrollAnimation(ctx), 200);
+  // setTimeout(() => heroScrollAnimation(ctx), 200);
 });
 
 onUnmounted(() => {

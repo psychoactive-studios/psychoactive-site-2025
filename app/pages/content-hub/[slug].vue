@@ -79,7 +79,11 @@ definePageMeta({
     mode: 'out-in',
     onEnter: (el, done) => {
       done();
-      scrollSmoother.value.scrollTop(0, false);
+      scrollSmoother.value.scrollTo(0, {
+        immediate: true,
+        lock: true,
+        force: true,
+      });
       gsap.set(el, { visibility: 'hidden' });
       setTimeout(() => {
         enterAnimation(el);
@@ -154,7 +158,7 @@ function enterAnimation(el) {
       },
       '<'
     )
-    .add(() => scrollSmoother.value.paused(false), '<');
+    .add(() => scrollSmoother.value.start(), '<');
 }
 
 function footerTextAnimationInit() {

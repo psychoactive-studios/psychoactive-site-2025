@@ -221,7 +221,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
             );
         }
         timeline.add(() => {
-          scrollSmoother.value.paused(false);
+          scrollSmoother.value.start();
         }, '-=0.5');
       }
     );
