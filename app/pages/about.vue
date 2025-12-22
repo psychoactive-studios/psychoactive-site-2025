@@ -2,6 +2,7 @@
 import gsap from 'gsap';
 import Hero from '~/components/about/Hero.vue';
 import Metamorphosis from '~/components/about/Metamorphosis.vue';
+import OurStory from '~/components/about/OurStory.vue';
 import Team from '~/components/about/Team.vue';
 import TextWithTitle from '~/components/about/TextWithTitle.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
@@ -67,6 +68,12 @@ onMounted(() => {
     <section class="about__team">
       <div class="container">
         <Team />
+      </div>
+    </section>
+
+    <section class="about__story">
+      <div class="container">
+        <OurStory />
       </div>
     </section>
   </main>
@@ -145,6 +152,9 @@ onMounted(() => {
   }
   &__team {
     margin-top: 160px;
+  }
+  &__story {
+    margin-top: 240px;
   }
 }
 </style>
