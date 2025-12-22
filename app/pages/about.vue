@@ -1,6 +1,7 @@
 <script setup>
 import gsap from 'gsap';
 import Hero from '~/components/about/Hero.vue';
+import Metamorphosis from '~/components/about/Metamorphosis.vue';
 import TextWithTitle from '~/components/about/TextWithTitle.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 const { enableScroll } = useScrollSmoother();
@@ -38,5 +39,6 @@ onMounted(() => {
         ways to stimulate the Metamorphosis of projects & brands.
       </p>
     </TextWithTitle>
+    <Metamorphosis />
   </main>
 </template>
