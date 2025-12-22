@@ -12,7 +12,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="hero">
+  <section class="hero">
     <div class="hero__wrapper">
       <video
         ref="videoRef"
@@ -31,7 +31,7 @@ onMounted(() => {
         </h1>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
