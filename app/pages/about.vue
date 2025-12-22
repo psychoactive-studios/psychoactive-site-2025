@@ -2,6 +2,7 @@
 import gsap from 'gsap';
 import Hero from '~/components/about/Hero.vue';
 import Metamorphosis from '~/components/about/Metamorphosis.vue';
+import Team from '~/components/about/Team.vue';
 import TextWithTitle from '~/components/about/TextWithTitle.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 const { enableScroll } = useScrollSmoother();
@@ -41,12 +42,23 @@ onMounted(() => {
         </p>
       </TextWithTitle>
     </section>
-    <Metamorphosis />
+    <section class="about__metamorphosis">
+      <div class="container">
+        <Metamorphosis />
+      </div>
+    </section>
+
     <section class="about__collaboration">
       <TextWithTitle title="THRIVE THROUGH COLLABORATION">
         A global network of designers, developers, creative thinkers, and
         strange creatures.
       </TextWithTitle>
+    </section>
+
+    <section class="about__team">
+      <div class="container">
+        <Team />
+      </div>
     </section>
   </main>
 </template>
@@ -57,6 +69,8 @@ onMounted(() => {
   &__amphibious {
     @include flex-center;
     min-height: 100vh;
+  }
+  &__metamorphosis {
   }
   &__collaboration {
     margin-top: 240px;
@@ -76,6 +90,9 @@ onMounted(() => {
         letter-spacing: -0.056em;
       }
     }
+  }
+  &__team {
+    margin-top: 160px;
   }
 }
 </style>
