@@ -1,10 +1,12 @@
 <script setup>
 import gsap from 'gsap';
+import Ethos from '~/components/about/Ethos.vue';
 import Hero from '~/components/about/Hero.vue';
 import Metamorphosis from '~/components/about/Metamorphosis.vue';
 import OurStory from '~/components/about/OurStory.vue';
 import Team from '~/components/about/Team.vue';
 import TextWithTitle from '~/components/about/TextWithTitle.vue';
+import Footer from '~/components/layout/Footer.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 const { enableScroll } = useScrollSmoother();
@@ -76,6 +78,11 @@ onMounted(() => {
         <OurStory />
       </div>
     </section>
+
+    <section class="about__ethos">
+      <Ethos />
+    </section>
+    <Footer />
   </main>
 </template>
 <style scoped lang="scss">
@@ -155,6 +162,9 @@ onMounted(() => {
   }
   &__story {
     margin-top: 240px;
+  }
+  &__ethos {
+    padding-bottom: 240px;
   }
 }
 </style>
