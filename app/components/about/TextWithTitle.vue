@@ -24,8 +24,6 @@ defineProps({
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/mixins' as *;
 .text-section {
-  @include flex-center;
-  min-height: 100dvh;
   .container {
     display: flex;
     justify-content: space-between;

@@ -26,19 +26,56 @@ onMounted(() => {
 <template>
   <main class="about">
     <Hero />
-    <TextWithTitle title="BORN AMPHIBIOUS">
-      <p>
-        Psychoactive is a global design agency shaping digital experiences for
-        ambitious brands. We create immersive, scalable websites that push the
-        boundaries of design and technology. Our remote-first team spans time
-        zones, with our primary studio based in Wellington, New Zealand.
-      </p>
-      <p>
-        Just as frogs breathe both water & air, we breathe design and
-        innovation. We’re constantly hatching fresh and beautifully intuitive
-        ways to stimulate the Metamorphosis of projects & brands.
-      </p>
-    </TextWithTitle>
+    <section class="about__amphibious">
+      <TextWithTitle title="BORN AMPHIBIOUS">
+        <p>
+          Psychoactive is a global design agency shaping digital experiences for
+          ambitious brands. We create immersive, scalable websites that push the
+          boundaries of design and technology. Our remote-first team spans time
+          zones, with our primary studio based in Wellington, New Zealand.
+        </p>
+        <p>
+          Just as frogs breathe both water & air, we breathe design and
+          innovation. We’re constantly hatching fresh and beautifully intuitive
+          ways to stimulate the Metamorphosis of projects & brands.
+        </p>
+      </TextWithTitle>
+    </section>
     <Metamorphosis />
+    <section class="about__collaboration">
+      <TextWithTitle title="THRIVE THROUGH COLLABORATION">
+        A global network of designers, developers, creative thinkers, and
+        strange creatures.
+      </TextWithTitle>
+    </section>
   </main>
 </template>
+<style scoped lang="scss">
+@use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
+.about {
+  &__amphibious {
+    @include flex-center;
+    min-height: 100vh;
+  }
+  &__collaboration {
+    margin-top: 240px;
+    :deep(.text-section) {
+      .container {
+        flex-direction: column;
+        gap: getRem(24);
+      }
+      .text-section__content {
+        width: 90%;
+      }
+      .text-block {
+        font-size: 5vw;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%;
+        letter-spacing: -0.056em;
+      }
+    }
+  }
+}
+</style>
