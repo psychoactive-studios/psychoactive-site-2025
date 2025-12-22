@@ -4,6 +4,7 @@ import Hero from '~/components/about/Hero.vue';
 import Metamorphosis from '~/components/about/Metamorphosis.vue';
 import Team from '~/components/about/Team.vue';
 import TextWithTitle from '~/components/about/TextWithTitle.vue';
+import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 const { enableScroll } = useScrollSmoother();
 
@@ -49,10 +50,18 @@ onMounted(() => {
     </section>
 
     <section class="about__collaboration">
-      <TextWithTitle title="THRIVE THROUGH COLLABORATION">
-        A global network of designers, developers, creative thinkers, and
-        strange creatures.
-      </TextWithTitle>
+      <div class="container">
+        <div class="about__collaboration_title">
+          <h2>THRIVE THROUGH COLLABORATION</h2>
+          <div class="title-line">
+            <span class="line" />
+          </div>
+        </div>
+        <div class="about__collaboration_text">
+          A global network of designers, developers, creative thinkers, and
+          strange creatures.
+        </div>
+      </div>
     </section>
 
     <section class="about__team">
@@ -74,21 +83,64 @@ onMounted(() => {
   }
   &__collaboration {
     margin-top: 240px;
-    :deep(.text-section) {
-      .container {
-        flex-direction: column;
-        gap: getRem(24);
-      }
-      .text-section__content {
-        width: 90%;
-      }
-      .text-block {
-        font-size: 5vw;
+    &_title {
+      margin-bottom: getRem(24);
+      display: flex;
+      align-items: center;
+      gap: getRem(48);
+      h2 {
+        font-family: 'RoobertMono';
+        font-size: clamp(0.75rem, 1.333vw, 1rem);
         font-style: normal;
-        font-weight: 400;
+        font-weight: 500;
         line-height: 100%;
-        letter-spacing: -0.056em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        color: white(50);
       }
+      .title-line {
+        flex-grow: 1;
+        .line {
+          display: block;
+          width: 100%;
+          height: 1px;
+          background: white(10);
+          position: relative;
+          will-change: width;
+          &::before,
+          &::after {
+            content: '';
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            background-color: white(50);
+            border-radius: 50%;
+          }
+          &::before {
+            top: -3px;
+            left: -3px;
+          }
+          &::after {
+            top: -3px;
+            right: -4px;
+          }
+        }
+      }
+    }
+
+    &_text {
+      display: inline;
+      font-size: 5vw;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 100%;
+      letter-spacing: -0.056em;
+      background: linear-gradient(to right, white 50%, transparent 50%);
+      background-size: 200% 100%;
+      background-position-x: 50%;
+      background-position-y: center;
+      color: transparent;
+      background-clip: text;
     }
   }
   &__team {
