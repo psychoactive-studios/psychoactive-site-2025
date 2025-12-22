@@ -1,3 +1,9 @@
+<script setup>
+const data = ref({
+  founded: 2018,
+  recognitions: 50,
+});
+</script>
 <template>
   <div class="our-story">
     <div class="our-story__title">
@@ -45,7 +51,7 @@
       <div class="our-story__stats">
         <ul class="our-story__stats_list">
           <li class="our-story__stats_item">
-            <div class="item-title">2018</div>
+            <div class="item-title">{{ data.founded }}</div>
             <div class="item-text">
               <span>Founded, based in</span>
               <br />
@@ -53,7 +59,7 @@
             </div>
           </li>
           <li class="our-story__stats_item">
-            <div class="item-title">50+</div>
+            <div class="item-title">{{ data.recognitions }}+</div>
             <div class="item-text">
               <span>Recognition & Awards</span>
               <br />
