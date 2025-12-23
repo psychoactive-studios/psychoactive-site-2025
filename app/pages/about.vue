@@ -7,8 +7,16 @@ import OurStory from '~/components/about/OurStory.vue';
 import Team from '~/components/about/Team.vue';
 import TextWithTitle from '~/components/about/TextWithTitle.vue';
 import Footer from '~/components/layout/Footer.vue';
+import useLoader from '~/composables/useLoader';
+import useNavigation from '~/composables/useNavigation';
+import useScrollSmoother from '~/composables/useScrollSmoother';
 
 import { aboutPageInitAnimation } from '~/utils/animations/about';
+import { leaveAnimation } from '~/utils/animations/transitions';
+
+const { scrollSmoother } = useScrollSmoother();
+const { startLoading } = useLoader();
+const { transitionFromNavigation } = useNavigation();
 
 const containerRef = ref(null);
 let ctx = null;
@@ -20,6 +28,38 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (ctx) ctx.revert();
+});
+
+definePageMeta({
+  scrollToTop: true,
+  pageTransition: {
+    css: false,
+    mode: 'out-in',
+    onEnter: (_, done) => {
+      startLoading();
+      setTimeout(() => {
+        scrollSmoother.value.scrollTo(0, {
+          immediate: true,
+          lock: true,
+          force: true,
+        });
+        done();
+      }, 50);
+    },
+    onLeave: (el, done) => {
+      if (transitionFromNavigation.value) {
+        gsap
+          .timeline()
+          .set(el, { opacity: 0 })
+          .add(() => {
+            transitionFromNavigation.value = false;
+            done();
+          }, '+=1');
+        return;
+      }
+      leaveAnimation(el, done);
+    },
+  },
 });
 </script>
 
