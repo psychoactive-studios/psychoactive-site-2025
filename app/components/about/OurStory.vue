@@ -1,13 +1,104 @@
 <script setup>
+import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
+
+let ctx;
+
+const containerRef = ref(null);
+
 const data = ref({
   founded: 2018,
   recognitions: 50,
 });
+
+onMounted(async () => {
+  SplitText.create(
+    gsap.utils.toArray([
+      containerRef.value.querySelector('.our-story__title h2'),
+    ]),
+    {
+      type: 'words,chars',
+      charsClass: 'char-center',
+    }
+  );
+
+  await nextTick();
+
+  ctx = gsap.context(() => {
+    const title = gsap.utils.toArray(
+      containerRef.value.querySelectorAll('.our-story__title h2 .char-center')
+    );
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: containerRef.value,
+          start: 'top bottom',
+        },
+      })
+      .to(
+        title,
+        {
+          duration: 2.3,
+          scrambleText: {
+            text: '{original}',
+            chars: 'uppercase',
+            tweenLength: false,
+          },
+        },
+        '<+=0.2'
+      )
+      .from(
+        title,
+        {
+          opacity: 0,
+          duration: 0.01,
+          stagger: {
+            amount: 0.9,
+            from: 'random',
+          },
+        },
+        '<'
+      )
+      .from(
+        '.our-story__title .title-line .line',
+        { opacity: 0, duration: 0.5 },
+        '<+=0.5'
+      )
+      .fromTo(
+        '.our-story__title .title-line .line',
+        { width: '0%' },
+        { width: '100%', duration: 1.2, ease: 'power4.inOut' },
+        '<+=0.2'
+      )
+      .from('.item-title div', { opacity: 0, duration: 1 }, '<+=0.5')
+      .from(
+        data.value,
+        {
+          founded: 0,
+          duration: 1.5,
+        },
+        '<'
+      )
+      .from(
+        data.value,
+        {
+          recognitions: 0,
+          duration: 1.5,
+        },
+        '<'
+      );
+  }, containerRef.value);
+});
+
+onUnmounted(() => {
+  if (ctx) ctx.revert();
+});
 </script>
+
 <template>
-  <div class="our-story">
+  <div ref="containerRef" class="our-story">
     <div class="our-story__title">
-      <h2>THRIVE THROUGH COLLABORATION</h2>
+      <h2>Our story</h2>
       <div class="title-line">
         <span class="line" />
       </div>
@@ -51,7 +142,9 @@ const data = ref({
       <div class="our-story__stats">
         <ul class="our-story__stats_list">
           <li class="our-story__stats_item">
-            <div class="item-title">{{ data.founded }}</div>
+            <div class="item-title">
+              <div>{{ Math.floor(data.founded).toLocaleString('en-US') }}</div>
+            </div>
             <div class="item-text">
               <span>Founded, based in</span>
               <br />
@@ -59,7 +152,11 @@ const data = ref({
             </div>
           </li>
           <li class="our-story__stats_item">
-            <div class="item-title">{{ data.recognitions }}+</div>
+            <div class="item-title">
+              <div>
+                {{ Math.floor(data.recognitions).toLocaleString('en-US') }}+
+              </div>
+            </div>
             <div class="item-text">
               <span>Recognition & Awards</span>
               <br />
@@ -154,6 +251,7 @@ const data = ref({
       flex-direction: column;
       gap: getRem(60);
       margin: 0 auto;
+      width: 17vw;
     }
     &_item {
       .item-title {
