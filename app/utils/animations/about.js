@@ -1,4 +1,5 @@
 import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
 
 export const heroInitAnimation = (ctx, scrollSmoother) => {
   const layoutElements = gsap.utils.toArray([
@@ -58,7 +59,6 @@ export const heroScrollAnimation = (ctx, root) => {
           end: 'bottom top',
           pin: true,
           scrub: 0.5,
-          markers: true,
           pinSpacing: false,
         },
       })
@@ -82,5 +82,76 @@ export const heroScrollAnimation = (ctx, root) => {
         '<'
       )
       .to('.hero__video', { opacity: 0, duration: 1 }, '<');
+  });
+};
+
+export const aboutPageInitAnimation = (ctx, root) => {
+  SplitText.create(
+    gsap.utils.toArray([root.querySelector('.about__collaboration_title h2')]),
+    {
+      type: 'words,chars',
+      charsClass: 'char-center',
+    }
+  );
+
+  ctx.add(() => {
+    // About collaboration animation init;
+    const title = gsap.utils.toArray(
+      root.querySelectorAll('.about__collaboration_title h2 .char-center')
+    );
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: root.querySelector('.about__collaboration'),
+          start: 'top bottom',
+        },
+      })
+      .to(
+        title,
+        {
+          duration: 2.3,
+          scrambleText: {
+            text: '{original}',
+            chars: 'uppercase',
+            tweenLength: false,
+          },
+        },
+        '<+=0.2'
+      )
+      .from(
+        title,
+        {
+          opacity: 0,
+          duration: 0.01,
+          stagger: {
+            amount: 0.9,
+            from: 'random',
+          },
+        },
+        '<'
+      )
+      .from(
+        '.about__collaboration_title .title-line .line',
+        { opacity: 0, duration: 0.5 },
+        '<+=0.5'
+      )
+      .fromTo(
+        '.about__collaboration_title .title-line .line',
+        { width: '0%' },
+        { width: '100%', duration: 1.2, ease: 'power4.inOut' },
+        '<+=0.2'
+      )
+      .fromTo(
+        '.about__collaboration_text',
+        {
+          backgroundPosition: '100% 0%',
+        },
+        {
+          backgroundPosition: '0% 0%',
+          duration: 2,
+          ease: 'power3.inOut',
+        },
+        '<'
+      );
   });
 };

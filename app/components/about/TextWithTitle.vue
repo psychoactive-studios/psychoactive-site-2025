@@ -35,7 +35,6 @@ onMounted(async () => {
         scrollTrigger: {
           trigger: containerRef.value,
           start: 'top bottom',
-          markers: true,
         },
       })
       .to(

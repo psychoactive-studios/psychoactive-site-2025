@@ -7,29 +7,24 @@ import OurStory from '~/components/about/OurStory.vue';
 import Team from '~/components/about/Team.vue';
 import TextWithTitle from '~/components/about/TextWithTitle.vue';
 import Footer from '~/components/layout/Footer.vue';
-import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
-import useScrollSmoother from '~/composables/useScrollSmoother';
-const { enableScroll } = useScrollSmoother();
+
+import { aboutPageInitAnimation } from '~/utils/animations/about';
+
+const containerRef = ref(null);
+let ctx = null;
 
 onMounted(() => {
-  const layoutElements = gsap.utils.toArray([
-    '#header-logo',
-    '#header-navigation-button',
-    '#header-sound-button',
-  ]);
-  setTimeout(() => {
-    // gsap.to(
-    //   layoutElements,
-    //   { scale: 1, opacity: 1, duration: 0.75, ease: 'power3.out' },
-    //   '<+=1'
-    // );
-    // enableScroll();
-  }, 100);
+  ctx = gsap.context(() => {}, containerRef.value);
+  aboutPageInitAnimation(ctx, containerRef.value);
+});
+
+onUnmounted(() => {
+  if (ctx) ctx.revert();
 });
 </script>
 
 <template>
-  <main class="about">
+  <main ref="containerRef" class="about">
     <Hero />
     <section class="about__amphibious">
       <TextWithTitle title="BORN AMPHIBIOUS">
