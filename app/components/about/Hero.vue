@@ -1,25 +1,47 @@
 <script setup>
+import gsap from 'gsap';
 import HeroCenterLine from './HeroCenterLine.vue';
+import useLoader from '~/composables/useLoader';
+import { heroInitAnimation } from '~/utils/animations/about';
 
-const videoRef = ref(null);
+// console.log('heroInitAnimation', heroInitAnimation);
 
-onMounted(() => {
-  setTimeout(() => {
-    videoRef.value.play();
-    console.log('Hero init', videoRef.value);
-  }, 3000);
+const containerRef = ref(null);
+const heroVideoResource = ref(null);
+const heroVideoplayerRef = ref(null);
+let ctx = null;
+
+const { isLoading, addResourceToLoad, resourceLoaded } = useLoader();
+const { scrollSmoother } = useScrollSmoother();
+
+// Indicate that this component has a resource to load
+addResourceToLoad(1);
+
+onMounted(async () => {
+  ctx = gsap.context(() => {}, containerRef.value);
+  const blob = await $fetch('/video/ps_service_05.mp4', {
+    responseType: 'blob',
+  });
+  heroVideoResource.value = URL.createObjectURL(blob);
+  resourceLoaded();
+});
+
+watch(isLoading, (newVal) => {
+  if (!newVal) {
+    heroVideoplayerRef.value.play();
+    heroInitAnimation(ctx, scrollSmoother);
+  }
 });
 </script>
 
 <template>
-  <section class="hero">
+  <section ref="containerRef" class="hero">
     <div class="hero__wrapper">
       <video
-        ref="videoRef"
+        ref="heroVideoplayerRef"
         class="hero__video"
-        src="/video/ps_service_05.mp4"
-        autoplay
-        :loop="false"
+        :src="heroVideoResource"
+        loop
         muted
         playsinline
       />
@@ -27,7 +49,7 @@ onMounted(() => {
       <div class="container">
         <h1 class="hero__title">
           <span class="grey">Digital</span>
-          <span>Amphibians</span>
+          <span class="white">Amphibians</span>
         </h1>
       </div>
     </div>
