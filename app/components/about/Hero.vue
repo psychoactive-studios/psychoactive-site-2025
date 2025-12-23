@@ -2,7 +2,10 @@
 import gsap from 'gsap';
 import HeroCenterLine from './HeroCenterLine.vue';
 import useLoader from '~/composables/useLoader';
-import { heroInitAnimation } from '~/utils/animations/about';
+import {
+  heroInitAnimation,
+  heroScrollAnimation,
+} from '~/utils/animations/about';
 
 // console.log('heroInitAnimation', heroInitAnimation);
 
@@ -19,6 +22,7 @@ addResourceToLoad(1);
 
 onMounted(async () => {
   ctx = gsap.context(() => {}, containerRef.value);
+  heroScrollAnimation(ctx, containerRef.value);
   const blob = await $fetch('/video/ps_service_05.mp4', {
     responseType: 'blob',
   });

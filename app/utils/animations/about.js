@@ -12,8 +12,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
       .fromTo(
         '.hero__center-line',
         { scaleX: 0 },
-        { scaleX: 1, duration: 1, ease: 'power3.out' },
-        'firstPart+=0.8'
+        { scaleX: 1, duration: 1, ease: 'power3.out' }
       )
       .fromTo(
         '.hero__title .grey',
@@ -46,5 +45,42 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         },
         'secondPart+=0.2'
       );
+  });
+};
+
+export const heroScrollAnimation = (ctx, root) => {
+  ctx.add(() => {
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: root,
+          start: 'top top',
+          end: 'bottom top',
+          pin: true,
+          scrub: 0.5,
+          markers: true,
+          pinSpacing: false,
+        },
+      })
+      .to('.hero__center-line', { scaleX: 1, opacity: 0, duration: 1 })
+      .fromTo(
+        '.hero__title .grey',
+        { xPercent: 0 },
+        {
+          xPercent: -175,
+          duration: 1,
+        },
+        '<'
+      )
+      .fromTo(
+        '.hero__title .white',
+        { xPercent: 0 },
+        {
+          xPercent: 175,
+          duration: 1,
+        },
+        '<'
+      )
+      .to('.hero__video', { opacity: 0, duration: 1 }, '<');
   });
 };
