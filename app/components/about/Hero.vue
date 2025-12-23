@@ -30,6 +30,10 @@ onMounted(async () => {
   resourceLoaded();
 });
 
+onUnmounted(() => {
+  ctx.revert();
+});
+
 watch(isLoading, (newVal) => {
   if (!newVal) {
     heroVideoplayerRef.value.play();
