@@ -29,39 +29,42 @@ onMounted(async () => {
     '.text-section__title .char-center'
   );
 
-  ctx = gsap.context(() => {
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: containerRef.value,
-          start: 'top bottom',
-        },
-      })
-      .to(
-        title,
-        {
-          duration: 2.3,
-          scrambleText: {
-            text: '{original}',
-            chars: 'uppercase',
-            tweenLength: false,
+  setTimeout(() => {
+    ctx = gsap.context(() => {
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: containerRef.value,
+            start: 'top bottom',
+            end: 'bottom top',
           },
-        },
-        '<+=0.2'
-      )
-      .from(
-        title,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 0.9,
-            from: 'random',
+        })
+        .to(
+          title,
+          {
+            duration: 2.3,
+            scrambleText: {
+              text: '{original}',
+              chars: 'uppercase',
+              tweenLength: false,
+            },
           },
-        },
-        '<'
-      );
-  }, containerRef.value);
+          '<+=0.2'
+        )
+        .from(
+          title,
+          {
+            opacity: 0,
+            duration: 0.01,
+            stagger: {
+              amount: 0.9,
+              from: 'random',
+            },
+          },
+          '<'
+        );
+    }, containerRef.value);
+  }, 100);
 });
 
 onUnmounted(() => {

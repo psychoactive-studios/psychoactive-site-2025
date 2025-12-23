@@ -24,70 +24,72 @@ onMounted(async () => {
 
   await nextTick();
 
-  ctx = gsap.context(() => {
-    const title = gsap.utils.toArray(
-      containerRef.value.querySelectorAll('.our-story__title h2 .char-center')
-    );
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: containerRef.value,
-          start: 'top bottom',
-        },
-      })
-      .to(
-        title,
-        {
-          duration: 2.3,
-          scrambleText: {
-            text: '{original}',
-            chars: 'uppercase',
-            tweenLength: false,
-          },
-        },
-        '<+=0.2'
-      )
-      .from(
-        title,
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 0.9,
-            from: 'random',
-          },
-        },
-        '<'
-      )
-      .from(
-        '.our-story__title .title-line .line',
-        { opacity: 0, duration: 0.5 },
-        '<+=0.5'
-      )
-      .fromTo(
-        '.our-story__title .title-line .line',
-        { width: '0%' },
-        { width: '100%', duration: 1.2, ease: 'power4.inOut' },
-        '<+=0.2'
-      )
-      .from('.item-title div', { opacity: 0, duration: 1 }, '<+=0.5')
-      .from(
-        data.value,
-        {
-          founded: 0,
-          duration: 1.5,
-        },
-        '<'
-      )
-      .from(
-        data.value,
-        {
-          recognitions: 0,
-          duration: 1.5,
-        },
-        '<'
+  setTimeout(() => {
+    ctx = gsap.context(() => {
+      const title = gsap.utils.toArray(
+        containerRef.value.querySelectorAll('.our-story__title h2 .char-center')
       );
-  }, containerRef.value);
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: containerRef.value,
+            start: 'top bottom',
+          },
+        })
+        .to(
+          title,
+          {
+            duration: 2.3,
+            scrambleText: {
+              text: '{original}',
+              chars: 'uppercase',
+              tweenLength: false,
+            },
+          },
+          '<+=0.2'
+        )
+        .from(
+          title,
+          {
+            opacity: 0,
+            duration: 0.01,
+            stagger: {
+              amount: 0.9,
+              from: 'random',
+            },
+          },
+          '<'
+        )
+        .from(
+          '.our-story__title .title-line .line',
+          { opacity: 0, duration: 0.5 },
+          '<+=0.5'
+        )
+        .fromTo(
+          '.our-story__title .title-line .line',
+          { width: '0%' },
+          { width: '100%', duration: 1.2, ease: 'power4.inOut' },
+          '<+=0.2'
+        )
+        .from('.item-title div', { opacity: 0, duration: 1 }, '<+=0.5')
+        .from(
+          data.value,
+          {
+            founded: 0,
+            duration: 1.5,
+          },
+          '<'
+        )
+        .from(
+          data.value,
+          {
+            recognitions: 0,
+            duration: 1.5,
+          },
+          '<'
+        );
+    }, containerRef.value);
+  }, 100);
 });
 
 onUnmounted(() => {
@@ -185,11 +187,11 @@ onUnmounted(() => {
 .our-story {
   &__title {
     margin-bottom: getRem(160);
-    display: block;
+    display: flex;
     align-items: center;
     gap: getRem(48);
     @include respond(mobile) {
-      flex-direction: column;
+      display: block;
       margin-bottom: getRem(24);
     }
     h2 {

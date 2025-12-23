@@ -23,7 +23,7 @@ let ctx = null;
 
 onMounted(() => {
   ctx = gsap.context(() => {}, containerRef.value);
-  aboutPageInitAnimation(ctx, containerRef.value);
+  setTimeout(() => aboutPageInitAnimation(ctx, containerRef.value), 100);
 });
 
 onUnmounted(() => {
