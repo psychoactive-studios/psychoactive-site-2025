@@ -74,9 +74,10 @@ watch(isLoading, (newVal) => {
     position: relative;
     @include respond(portrait) {
       padding-top: 160px;
-      padding-bottom: 48px;
+      padding-bottom: 160px;
     }
     @include respond(mobile) {
+      display: block;
       padding-top: 24px;
       padding-bottom: 74px;
     }

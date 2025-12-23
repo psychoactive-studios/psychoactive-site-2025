@@ -7,51 +7,76 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
     '#header-navigation-button',
     '#header-sound-button',
   ]);
+  let matchMedia = gsap.matchMedia();
   ctx.add(() => {
-    gsap
-      .timeline()
-      .fromTo(
-        '.hero__video',
-        { opacity: 0 },
-        { opacity: 1, duration: 0.7, ease: 'power2.in' }
-      )
-      .fromTo(
-        '.hero__center-line',
-        { scaleX: 0 },
-        { scaleX: 1, duration: 1, ease: 'power3.out' },
-        '<'
-      )
-      .fromTo(
-        '.hero__title .grey',
-        { xPercent: -175 },
-        {
-          xPercent: 0,
-          duration: 1,
-          ease: 'power3.out',
-        },
-        '<'
-      )
-      .fromTo(
-        '.hero__title .white',
-        { xPercent: 175 },
-        {
-          xPercent: 0,
-          duration: 1,
-          ease: 'power3.out',
-        },
-        '<'
-      )
-      .add(() => scrollSmoother.value.start())
-      .to(
-        layoutElements,
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.75,
-          ease: 'power3.out',
-        },
-        'secondPart+=0.2'
-      );
+    matchMedia.add(
+      {
+        isDesktop: `(min-width: 768px)`,
+        isMobile: `(max-width: 767px)`,
+      },
+      (context) => {
+        let { isDesktop, isMobile } = context.conditions;
+        const tl = gsap
+          .timeline()
+          .fromTo(
+            '.hero__video',
+            { opacity: 0 },
+            { opacity: 1, duration: 0.7, ease: 'power2.in' }
+          )
+          .fromTo(
+            '.hero__center-line',
+            { scaleX: 0 },
+            { scaleX: 1, duration: 1, ease: 'power3.out' },
+            '<'
+          )
+          .fromTo(
+            '.hero__title .grey',
+            { xPercent: -175 },
+            {
+              xPercent: 0,
+              duration: 1,
+              ease: 'power3.out',
+            },
+            '<'
+          )
+          .fromTo(
+            '.hero__title .white',
+            { xPercent: 175 },
+            {
+              xPercent: 0,
+              duration: 1,
+              ease: 'power3.out',
+            },
+            '<'
+          )
+          .add(() => scrollSmoother.value.start());
+        if (isDesktop) {
+          tl.to(
+            layoutElements,
+            {
+              scale: 1,
+              opacity: 1,
+              duration: 0.75,
+              ease: 'power3.out',
+            },
+            '<+=0.2'
+          );
+        }
+        if (isMobile) {
+          /* ======= Layout elements part mobile ========= */
+          tl.fromTo(
+            document.querySelector('.navigation-mobile'),
+            { yPercent: 200 },
+            {
+              yPercent: 0,
+              duration: 1,
+              ease: 'power3.out',
+            },
+            '<-=0.5'
+          );
+        }
+      }
+    );
   });
 };
 

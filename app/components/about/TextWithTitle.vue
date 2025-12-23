@@ -90,6 +90,10 @@ onUnmounted(() => {
     display: flex;
     justify-content: space-between;
     gap: getRem(48);
+    @include respond(mobile) {
+      flex-direction: column;
+      gap: getRem(24);
+    }
   }
   &__title {
     font-family: 'RoobertMono';
@@ -104,6 +108,9 @@ onUnmounted(() => {
   }
   &__content {
     width: 72.5%;
+    @include respond(mobile) {
+      width: auto;
+    }
     :deep(p) {
       &::before {
         content: '';

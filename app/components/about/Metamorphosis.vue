@@ -57,13 +57,21 @@ const handleHoverEffect = () => {
 <style scoped lang="scss">
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 .metamorphosis {
   padding-bottom: 160px;
+  @include respond(portrait) {
+    padding-top: 60px;
+    padding-bottom: 0;
+  }
   &__button {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: 36px;
+    @include respond(mobile) {
+      display: block;
+    }
     .button {
       font-family: 'RoobertMono';
       font-size: 1rem;
@@ -74,10 +82,18 @@ const handleHoverEffect = () => {
       padding: 12px 24px 12px 80px;
       border: 1px solid white(20);
       border-radius: 48px;
+      @include respond(mobile) {
+        width: 100%;
+        max-width: 360px;
+        padding: 12px 24px 12px 24px;
+      }
       &__dots {
         display: inline-flex;
         gap: 2px;
         margin-left: 60px;
+        @include respond(mobile) {
+          margin-left: auto;
+        }
         i {
           width: 6px;
           height: 6px;
@@ -103,6 +119,9 @@ const handleHoverEffect = () => {
       }
     }
     &_line {
+      @include respond(mobile) {
+        display: none;
+      }
       .line {
         display: block;
         width: 100%;

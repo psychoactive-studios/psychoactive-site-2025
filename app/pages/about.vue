@@ -29,15 +29,29 @@ onUnmounted(() => {
     <section class="about__amphibious">
       <TextWithTitle title="BORN AMPHIBIOUS">
         <p>
-          Psychoactive is a global design agency shaping digital experiences for
-          ambitious brands. We create immersive, scalable websites that push the
-          boundaries of design and technology. Our remote-first team spans time
-          zones, with our primary studio based in Wellington, New Zealand.
+          <span class="dark">Psychoactive is a</span> global design agency
+          <span class="dark">shaping</span> digital experiences
+          <span class="dark">for</span> ambitious brands.
+          <span class="dark"
+            >We create immersive, scalable websites that push the boundaries
+            of</span
+          >
+          design <span class="dark">and</span> technology.
+          <span class="dark">Our</span> remote-first
+          <span class="dark"
+            >team spans time zones, with our primary studio based in Wellington,
+            New Zealand.</span
+          >
         </p>
         <p>
-          Just as frogs breathe both water & air, we breathe design and
-          innovation. We’re constantly hatching fresh and beautifully intuitive
-          ways to stimulate the Metamorphosis of projects & brands.
+          <span class="dark"
+            >Just as frogs breathe both water & air, we breathe design and</span
+          >
+          innovation.
+          <span class="dark"
+            >We’re constantly hatching fresh and beautifully intuitive ways to
+            stimulate the </span
+          >Metamorphosis of <span class="dark">projects & brands.</span>
         </p>
       </TextWithTitle>
     </section>
@@ -87,11 +101,17 @@ onUnmounted(() => {
   &__amphibious {
     @include flex-center;
     min-height: 100vh;
+    @include respond(mobile) {
+      min-height: initial;
+    }
   }
   &__metamorphosis {
   }
   &__collaboration {
     margin-top: 240px;
+    @include respond(mobile) {
+      margin-top: 120px;
+    }
     &_title {
       margin-bottom: getRem(24);
       display: flex;
@@ -109,6 +129,9 @@ onUnmounted(() => {
       }
       .title-line {
         flex-grow: 1;
+        @include respond(mobile) {
+          display: none;
+        }
         .line {
           display: block;
           width: 100%;
@@ -154,12 +177,22 @@ onUnmounted(() => {
   }
   &__team {
     margin-top: 160px;
+    @include respond(mobile) {
+      margin-top: 60px;
+    }
   }
   &__story {
     margin-top: 240px;
+    @include respond(mobile) {
+      margin-top: 60px;
+    }
   }
   &__ethos {
     padding-bottom: 240px;
+    @include respond(mobile) {
+      margin-top: 120px;
+      padding-bottom: 120px;
+    }
   }
 }
 </style>

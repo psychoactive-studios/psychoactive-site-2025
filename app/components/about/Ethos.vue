@@ -65,11 +65,16 @@
 
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
+
 .our-ethos {
   &__title {
     height: 100dvh;
     display: flex;
     flex-direction: column;
+    @include respond(mobile) {
+      height: auto;
+    }
     .container {
       margin-top: auto;
     }
@@ -89,6 +94,9 @@
     counter-reset: list;
     list-style: none;
 
+    @include respond(mobile) {
+      margin-top: 48px;
+    }
     &_item {
       counter-increment: list;
 
@@ -96,7 +104,7 @@
         display: flex;
         align-items: flex-start;
         gap: getRem(24);
-
+        position: relative;
         &::before {
           content: counter(list, decimal-leading-zero);
           font-family: 'RoobertMono';
@@ -107,12 +115,21 @@
           text-transform: uppercase;
           color: white(50);
           margin-top: getRem(12);
+          @include respond(mobile) {
+            margin-top: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+          }
         }
       }
     }
 
     &_item {
       .item-line {
+        @include respond(mobile) {
+          display: none;
+        }
         flex-grow: 1;
         .line {
           display: block;
@@ -145,22 +162,34 @@
         display: flex;
         justify-content: space-between;
         gap: getRem(48);
+        @include respond(mobile) {
+          flex-direction: column;
+          gap: getRem(12);
+        }
       }
       .item-title {
-        font-size: 2.5vw;
+        font-size: max(2.5vw, 24px);
         font-style: normal;
         font-weight: 400;
         line-height: 120%; /* 57.6px */
         letter-spacing: -0.02em;
+        @include respond(mobile) {
+          padding-left: 24px;
+        }
       }
       .item-text {
         max-width: 33.3%;
         margin-right: 7%;
-        font-size: 1.042vw;
+        font-size: max(1.042vw, 16px);
         font-style: normal;
         font-weight: 400;
         line-height: 130%; /* 26px */
         color: white(80);
+        @include respond(mobile) {
+          max-width: initial;
+          line-height: 140%;
+          padding-left: 24px;
+        }
       }
     }
   }
