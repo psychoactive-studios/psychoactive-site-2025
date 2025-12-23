@@ -18,12 +18,12 @@ onMounted(() => {
     '#header-sound-button',
   ]);
   setTimeout(() => {
-    gsap.to(
-      layoutElements,
-      { scale: 1, opacity: 1, duration: 0.75, ease: 'power3.out' },
-      '<+=1'
-    );
-    enableScroll();
+    // gsap.to(
+    //   layoutElements,
+    //   { scale: 1, opacity: 1, duration: 0.75, ease: 'power3.out' },
+    //   '<+=1'
+    // );
+    // enableScroll();
   }, 100);
 });
 </script>
