@@ -181,12 +181,17 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 .our-story {
   &__title {
     margin-bottom: getRem(160);
-    display: flex;
+    display: block;
     align-items: center;
     gap: getRem(48);
+    @include respond(mobile) {
+      flex-direction: column;
+      margin-bottom: getRem(24);
+    }
     h2 {
       font-family: 'RoobertMono';
       font-size: clamp(0.75rem, 1.333vw, 1rem);
@@ -199,6 +204,9 @@ onUnmounted(() => {
     }
     .title-line {
       flex-grow: 1;
+      @include respond(mobile) {
+        display: none;
+      }
       .line {
         display: block;
         width: 100%;
@@ -230,6 +238,10 @@ onUnmounted(() => {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: getRem(48);
+    @include respond(mobile) {
+      grid-template-columns: 1fr;
+      gap: getRem(60);
+    }
   }
   &__text {
     font-size: max(1.25vw, 18px);
@@ -237,6 +249,10 @@ onUnmounted(() => {
     font-weight: 400;
     line-height: 125%;
     color: white(80);
+    @include respond(mobile) {
+      font-size: min(4.26667vw, 18px);
+      line-height: 140%;
+    }
     p {
       margin-bottom: 1em;
     }
@@ -246,32 +262,53 @@ onUnmounted(() => {
   }
   &__stats {
     display: flex;
+    @include respond(mobile) {
+      display: block;
+    }
     &_list {
       display: flex;
       flex-direction: column;
       gap: getRem(60);
       margin: 0 auto;
       width: 17vw;
+      @include respond(tablet) {
+        width: 60%;
+      }
+      @include respond(mobile) {
+        width: 100%;
+      }
     }
     &_item {
       .item-title {
         font-size: 8.33333vw;
         font-style: normal;
         font-weight: 400;
-        line-height: 67%;
+        line-height: 78%;
         letter-spacing: -0.07em;
         margin-bottom: 24px;
+        @include respond(mobile) {
+          font-size: min(32vw, 160px);
+          font-style: normal;
+          font-weight: 400;
+          line-height: 100%; /* 120px */
+        }
         img {
-          width: 186px;
+          width: 9.7vw;
           height: auto;
+          @include respond(mobile) {
+            width: 32vw;
+          }
           // margin-bottom: 24px;
         }
       }
       .item-text {
-        font-size: max(1.042vw, 20px);
+        font-size: max(1.042vw, 18px);
         font-style: normal;
         font-weight: 400;
         line-height: 130%;
+        @include respond(mobile) {
+          font-size: min(4.26666vw, 18px);
+        }
         span {
           color: white(50);
         }
