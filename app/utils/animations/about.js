@@ -11,9 +11,15 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
     gsap
       .timeline()
       .fromTo(
+        '.hero__video',
+        { opacity: 0 },
+        { opacity: 1, duration: 0.7, ease: 'power2.in' }
+      )
+      .fromTo(
         '.hero__center-line',
         { scaleX: 0 },
-        { scaleX: 1, duration: 1, ease: 'power3.out' }
+        { scaleX: 1, duration: 1, ease: 'power3.out' },
+        '<'
       )
       .fromTo(
         '.hero__title .grey',
@@ -21,7 +27,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         {
           xPercent: 0,
           duration: 1,
-          ease: 'power2.out',
+          ease: 'power3.out',
         },
         '<'
       )
@@ -31,7 +37,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         {
           xPercent: 0,
           duration: 1,
-          ease: 'power2.out',
+          ease: 'power3.out',
         },
         '<'
       )
@@ -62,7 +68,7 @@ export const heroScrollAnimation = (ctx, root) => {
           pinSpacing: false,
         },
       })
-      .to('.hero__center-line', { scaleX: 1, opacity: 0, duration: 1 })
+      .to('.hero__center-line', { scaleY: 0, opacity: 0, duration: 1 })
       .fromTo(
         '.hero__title .grey',
         { xPercent: 0 },
