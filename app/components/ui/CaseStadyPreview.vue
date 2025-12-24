@@ -10,26 +10,13 @@ const titleRef = ref(null);
 const imageRef = ref(null);
 
 const props = defineProps({
-  src: {
-    type: String,
+  data: {
+    type: Object,
     required: true,
-  },
-  href: {
-    type: String,
-    required: true,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: false,
-    default: '',
   },
 });
 
-const { src, href, title, description } = props;
+const { mainImage, href, mainTitle, hero } = props.data;
 
 const handleMouseEnter = () => {
   // Stop any ongoing animations on this element
@@ -73,16 +60,16 @@ const handleClick = () => {
     @click="handleClick"
   >
     <div ref="mediaElement" class="case-study-preview__media">
-      <!-- <img :src="src" alt="" /> -->
-      <BulgeImage ref="imageRef" :src="src" />
+      <!-- <img :src="mainImage?.url" alt="" /> -->
+      <BulgeImage ref="imageRef" :src="mainImage?.url" />
     </div>
     <div class="case-study-preview__content">
       <div class="case-study-preview__title">
         <div class="case-study-preview__title-wapper">
-          <div class="case-study-preview__title-text">{{ title }}</div>
-          <h3 ref="titleRef">{{ title }}</h3>
+          <div class="case-study-preview__title-text">{{ mainTitle }}</div>
+          <h3 ref="titleRef">{{ mainTitle }}</h3>
         </div>
-        <p>{{ description }}</p>
+        <p>{{ hero?.subTitle }}</p>
       </div>
       <div class="case-study-preview__dots">
         <span />
