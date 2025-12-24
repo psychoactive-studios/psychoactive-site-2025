@@ -1,14 +1,68 @@
 <script setup>
 import gsap from 'gsap';
+import qs from 'qs';
 import CaseStadyPreview from '~/components/ui/CaseStadyPreview.vue';
 import LetsTalkDots from '~/components/ui/LetsTalkDots.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
-import { worksData } from '~/data/worksData';
+// import { worksData } from '~/data/worksData';
 import useLoader from '~/composables/useLoader';
 import { SplitText } from 'gsap/SplitText';
 import { leaveAnimation } from '~/utils/animations/transitions';
 import Footer from '~/components/layout/Footer.vue';
 import useNavigation from '~/composables/useNavigation';
+
+// Config Strapi variables
+const config = useRuntimeConfig();
+
+// Build query params for Strapi API
+// Strapi recommends using the 'qs' library to parse and stringify nested
+// objects for complex query URLs instead of creating them manually.
+const params = qs.stringify({
+  populate: {
+    hero: {
+      fields: ['subTitle'],
+    },
+    mainImage: {
+      fields: [
+        'name',
+        'alternativeText',
+        'caption',
+        'width',
+        'height',
+        'hash',
+        'ext',
+        'mime',
+        'size',
+        'url',
+        'previewUrl',
+        'provider',
+        'provider_metadata',
+        'createdAt',
+        'updatedAt',
+      ],
+    },
+  },
+});
+
+const { data: worksData, error } = await useFetch(`/api/works?${params}`, {
+  baseURL: config.public.strapiBaseUrl,
+  headers: {
+    Authorization: `Bearer ${config.public.strapiApiKey}`,
+  },
+  key: `works-list`,
+  // Get cached data to prevent refetching
+  getCachedData(key) {
+    const nuxtApp = useNuxtApp();
+    const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+    if (data) {
+      return data;
+    }
+  },
+});
+
+if (error.value) {
+  console.error('Error fetching article data:', error.value);
+}
 
 const { isLoading } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
@@ -16,7 +70,22 @@ const { transitionFromNavigation } = useNavigation();
 
 const titleRef = ref(null);
 const displayedCount = ref(4);
-const displayedWorks = computed(() => worksData.slice(0, displayedCount.value));
+const allWorks = computed(() => {
+  const works = worksData?.value?.data ? [...worksData.value.data] : [];
+  const letstalkItem = { id: 'letstalk' };
+
+  if (works.length < 3) {
+    works.push(letstalkItem);
+  } else {
+    const middleIndex = Math.floor(works.length / 2);
+    works.splice(middleIndex, 0, letstalkItem);
+  }
+  return works;
+});
+
+const displayedWorks = computed(() => {
+  return allWorks.value.slice(0, displayedCount.value);
+});
 let loadInterval;
 
 onMounted(() => {
@@ -26,12 +95,12 @@ onMounted(() => {
   });
 
   loadInterval = setInterval(() => {
-    if (displayedCount.value < worksData.length) {
+    if (displayedCount.value < allWorks.value.length) {
       displayedCount.value += 1;
     } else {
       clearInterval(loadInterval);
     }
-  }, 500);
+  }, 200);
 });
 
 onUnmounted(() => {
@@ -158,13 +227,7 @@ function enterAnimation(el) {
       <div class="works__grid">
         <template v-for="work in displayedWorks" :key="work.id">
           <LetsTalkDots v-if="work.id === 'letstalk'" />
-          <CaseStadyPreview
-            v-else
-            :src="work.src"
-            :title="work.title"
-            :description="work.description"
-            :href="work.href"
-          />
+          <CaseStadyPreview v-else :data="work" />
         </template>
       </div>
     </div>

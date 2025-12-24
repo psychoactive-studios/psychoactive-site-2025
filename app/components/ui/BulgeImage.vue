@@ -16,12 +16,13 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch, computed, nextTick } from 'vue';
 import * as THREE from 'three';
+import { Flip } from 'gsap/Flip';
 import vertexShader from '@/utils/glsl/main.vert?raw';
 import fragmentShader from '@/utils/glsl/main.frag?raw';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useMediaQuery, usePointer } from '@vueuse/core';
-import { Flip } from 'gsap/Flip';
+
 import useWorks from '~/composables/useWorks.js';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
@@ -44,6 +45,8 @@ const props = defineProps({
     default: false,
   },
 });
+
+console.log('props!!!!!', props.src);
 
 const rootEl = ref(null);
 const canvasEl = ref(null);
@@ -248,9 +251,10 @@ function initScene() {
   const geometry = new THREE.PlaneGeometry(2, 2);
 
   const loader = new THREE.ImageBitmapLoader();
+  loader.setCrossOrigin('anonymous');
   let texture;
   loader.setOptions({ imageOrientation: 'flipY' });
-  loader.load(props.src, (imageBitmap) => {
+  loader.load(`${props.src}?${Date.now()}`, (imageBitmap) => {
     texture = new THREE.CanvasTexture(imageBitmap);
 
     // Далі ваші налаштування текстури залишаються тими ж
