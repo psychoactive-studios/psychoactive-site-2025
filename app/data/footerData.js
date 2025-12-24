@@ -6,7 +6,7 @@ import awwwardsLogo from '/img/Awwwards-logo.png';
 
 export const footerData = {
   links: [
-    { title: 'About', url: '/' },
+    { title: 'About', url: '/about' },
     { title: 'Work', url: '/work' },
     { title: 'Services', url: '/services' },
     { title: 'Webflow', url: '/webflow' },
