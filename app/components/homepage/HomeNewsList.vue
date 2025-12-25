@@ -1,7 +1,25 @@
 <script setup>
-import { newsData } from '~/data/newsData';
 import HomeNewsCard from './HomeNewsCard.vue';
 import LinkWithHover from '../ui/LinkWithHover.vue';
+
+const props = defineProps({
+  data: {
+    type: Array,
+    required: true,
+  },
+});
+
+const getHref = (news) => {
+  if (news.externalLink) {
+    return news.externalLink;
+  }
+  if (news.work && news.work.slug) {
+    return `/work/${news.work.slug}`;
+  }
+  return `/content-hub/${news.slug}`;
+};
+
+console.log('Articles', props.data);
 </script>
 
 <template>
@@ -9,13 +27,13 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
     <div class="container">
       <div class="news-list__grid">
         <HomeNewsCard
-          v-for="news in newsData"
+          v-for="news in data"
           :key="news.id"
           :title="news.title"
-          :category="news.category"
-          :date="news.date"
-          :src="news.src"
-          :href="news.href"
+          :category="news.category.name"
+          :date="news.updatedAt"
+          :src="news.preview?.formats?.medium?.url || news.preview?.url"
+          :href="getHref(news)"
         />
       </div>
       <div class="news-list__more">

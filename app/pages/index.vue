@@ -22,6 +22,9 @@ const params = qs.stringify({
     works: {
       populate: ['mainImage'],
     },
+    articles: {
+      populate: ['category', 'preview', 'work'],
+    },
   },
 });
 
@@ -51,7 +54,9 @@ if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
 
-const { works } = homePageData.value?.data || {};
+const { works, articles } = homePageData.value?.data || {};
+
+console.log('articles', articles);
 
 const { scrollSmoother } = useScrollSmoother();
 
@@ -75,14 +80,12 @@ definePageMeta({
     mode: 'out-in',
     onEnter: (_, done) => {
       startLoading();
-      setTimeout(() => {
-        scrollSmoother.value.scrollTo(0, {
-          immediate: true,
-          lock: true,
-          force: true,
-        });
-        done();
-      }, 200);
+      scrollSmoother.value.scrollTo(0, {
+        immediate: true,
+        lock: true,
+        force: true,
+      });
+      done();
     },
     onLeave: (el, done) => {
       if (transitionFromNavigation.value) {
@@ -268,7 +271,7 @@ definePageMeta({
         </section>
 
         <!-- News Section -->
-        <HomeNewsList />
+        <HomeNewsList :data="articles" />
 
         <!-- Awards Section -->
         <HomeAwards />

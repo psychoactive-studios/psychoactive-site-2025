@@ -27,6 +27,9 @@ const href = computed(() => {
   if (data.externalLink) {
     return data.externalLink;
   }
+  if (data.work && data.work.slug) {
+    return `/work/${data.work.slug}`;
+  }
   return `/content-hub/${data.slug}`;
 });
 
