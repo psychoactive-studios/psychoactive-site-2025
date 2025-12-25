@@ -105,9 +105,9 @@ onUnmounted(() => {
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
 .work__cta {
-  padding: 240px 0 160px 0;
+  padding: 120px 0 160px 0;
   @include respond(mobile) {
-    padding: 120px 0;
+    padding: 60px 0;
   }
   &_title {
     width: 50%;

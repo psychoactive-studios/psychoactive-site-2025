@@ -40,7 +40,7 @@ if (error.value) {
   console.error('Error fetching work data:', error.value);
 }
 
-const { mainTitle, mainImage, hero, article } = workData.value.data;
+const { mainTitle, mainImage, hero, article } = workData?.value?.data || {};
 
 watch(isLoading, (newVal) => {
   if (!newVal) {
@@ -125,6 +125,8 @@ function animationsInit() {
     }
   });
 }
+
+console.log('workData?.data', workData?.data);
 </script>
 <template>
   <main v-if="workData?.data" class="work">
