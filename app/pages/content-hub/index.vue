@@ -18,7 +18,7 @@ const { isLoading } = useLoader();
 const { data: articlesData, error } = await useFetch(`/api/articles`, {
   baseURL: config.public.strapiBaseUrl,
   query: {
-    populate: ['category', 'preview'],
+    populate: ['category', 'preview', 'work'],
   },
   headers: {
     Authorization: `Bearer ${config.public.strapiApiKey}`,

@@ -1,12 +1,12 @@
 <script setup>
-import { usePointer } from '@vueuse/core';
+import { useDateFormat, usePointer } from '@vueuse/core';
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 
 const { playInteractionSound } = useAudioManager();
 const { pointerType } = usePointer();
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true,
@@ -28,6 +28,14 @@ defineProps({
     required: true,
   },
 });
+
+const formatter = shallowRef('MMM YY');
+const lang = shallowRef('en-US');
+const publishedAt = useDateFormat(props.date, formatter, {
+  locales: lang,
+});
+
+console.log('publishedAt', publishedAt);
 
 const titleRef = ref(null);
 
@@ -77,7 +85,7 @@ const onFocusHandler = (e) => {
     <div class="news-card__description">
       <div class="news-card__description_info">
         <div class="news-card__description_info--category">{{ category }}</div>
-        <div class="news-card__description_info--date">{{ date }}</div>
+        <div class="news-card__description_info--date">{{ publishedAt }}</div>
       </div>
       <h3 ref="titleRef" class="news-card__description_title">
         {{ title }}
