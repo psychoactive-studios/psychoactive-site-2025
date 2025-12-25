@@ -24,11 +24,6 @@ onMounted(async () => {
     heroInitAnimationMobile(ctx, scrollSmoother);
     initializeElements(containerRef.value);
   }
-  nextTick(() => {
-    if (scrollSmoother.value) {
-      scrollSmoother.value.effects('[data-speed]', {});
-    }
-  });
 
   // Initialize Video.js with Mux
   if (import.meta.client && mainVideoRef.value) {

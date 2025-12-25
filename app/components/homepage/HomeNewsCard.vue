@@ -35,8 +35,6 @@ const publishedAt = useDateFormat(props.date, formatter, {
   locales: lang,
 });
 
-console.log('publishedAt', publishedAt);
-
 const titleRef = ref(null);
 
 const handleHoverEffect = () => {

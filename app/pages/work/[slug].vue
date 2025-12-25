@@ -125,8 +125,6 @@ function animationsInit() {
     }
   });
 }
-
-console.log('workData?.data', workData?.data);
 </script>
 <template>
   <main v-if="workData?.data" class="work">
