@@ -135,6 +135,9 @@ onUnmounted(() => {
         content: '';
         display: inline-block;
         width: 4.8vw;
+        @include respond(mobile) {
+          width: 12.8vw;
+        }
       }
     }
   }
