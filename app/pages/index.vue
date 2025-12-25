@@ -56,8 +56,6 @@ if (error.value) {
 
 const { works, articles } = homePageData.value?.data || {};
 
-console.log('articles', articles);
-
 const { scrollSmoother } = useScrollSmoother();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
@@ -65,11 +63,15 @@ const { startLoading } = useLoader();
 const { transitionFromNavigation } = useNavigation();
 
 const worksList = computed(() => {
-  const result = works ? [...works] : [];
   const letstalkItem = { id: 'filled-text' };
-
-  result.splice(3, 0, letstalkItem);
-
+  const mobileScale = { id: 'mobile-scale' };
+  const result = works ? [...works] : [];
+  if (isMobile.value) {
+    result.splice(3, 0, mobileScale);
+    result.splice(6, 0, letstalkItem);
+  } else {
+    result.splice(3, 0, letstalkItem);
+  }
   return result;
 });
 
@@ -131,14 +133,11 @@ definePageMeta({
           </div>
         </section>
 
-        <section class="cases">
+        <section v-if="!isMobile" class="cases">
           <div class="container">
             <template v-for="work in worksList" :key="work.id">
               <!-- Filled Text Section -->
-              <section
-                v-if="work.id === 'filled-text' && !isMobile"
-                class="filled-text"
-              >
+              <section v-if="work.id === 'filled-text'" class="filled-text">
                 <HomeOnScrollFilledText>
                   What sets us apart is our
                   <img src="/img/text-icon-1.svg" alt="icon1" />
@@ -155,6 +154,50 @@ definePageMeta({
                   <span class="dark">experiences</span> that linger in the mind.
                 </HomeOnScrollFilledText>
               </section>
+              <CaseStadyPreview v-else :data="work" />
+            </template>
+          </div>
+        </section>
+
+        <section v-if="isMobile" class="cases">
+          <div class="container">
+            <template v-for="work in worksList" :key="work.id">
+              <!-- Filled Text Section -->
+              <section v-if="work.id === 'filled-text'" class="filled-text">
+                <HomeOnScrollFilledText>
+                  What sets us apart is our
+                  <img src="/img/text-icon-1.svg" alt="icon1" />
+                  <span class="dark">obsession</span> with the moment your
+                  audience first encounters your brand online. That split second
+                  where
+                  <img src="/img/text-icon-2.svg" alt="icon2" />
+                  <span class="dark">curiosity</span>
+                  transforms into
+                  <img src="/img/text-icon-3.svg" alt="icon3" />
+                  <span class="dark">connection</span>. We don't just build
+                  websites; we architect
+                  <img src="/img/text-icon-4.svg" alt="icon4" />
+                  <span class="dark">experiences</span> that linger in the mind.
+                </HomeOnScrollFilledText>
+              </section>
+
+              <!-- Mobile Scale Text Section -->
+              <section
+                v-else-if="work.id === 'mobile-scale'"
+                class="mobile-scale"
+              >
+                <div class="container">
+                  <div class="mobile-scale__imagine">Imagine</div>
+                  <div class="mobile-scale__scale">
+                    <ScaleMobileText />
+                    <div class="mobile-scale__scale-arrows">
+                      <span>&larr;</span><span>&rarr;</span>
+                    </div>
+                  </div>
+                  <div class="mobile-scale__innovate">Innovate</div>
+                </div>
+              </section>
+
               <CaseStadyPreview v-else :data="work" />
             </template>
           </div>
@@ -183,20 +226,6 @@ definePageMeta({
           </div>
         </section> -->
 
-        <!-- Mobile Scale Text Section -->
-        <section v-if="isMobile" class="mobile-scale">
-          <div class="container">
-            <div class="mobile-scale__imagine">Imagine</div>
-            <div class="mobile-scale__scale">
-              <ScaleMobileText />
-              <div class="mobile-scale__scale-arrows">
-                <span>&larr;</span><span>&rarr;</span>
-              </div>
-            </div>
-            <div class="mobile-scale__innovate">Innovate</div>
-          </div>
-        </section>
-
         <!-- Cases Section Second Part Desktop -->
         <!-- <section v-if="!isMobile" class="cases">
           <div class="container">
@@ -223,7 +252,7 @@ definePageMeta({
           </div>
         </section> -->
 
-        <section v-if="isMobile" class="mobile-cases-second-part">
+        <!-- <section v-if="isMobile" class="mobile-cases-second-part">
           <div class="container">
             <CaseStadyPreview
               src="/img/cases/case-world-of-wearableArt.jpg"
@@ -268,7 +297,7 @@ definePageMeta({
               description="Global access to accredited higher education"
             />
           </div>
-        </section>
+        </section> -->
 
         <!-- News Section -->
         <HomeNewsList :data="articles" />
@@ -327,8 +356,8 @@ definePageMeta({
 }
 
 .mobile-scale {
-  margin-top: 120px;
-  margin-bottom: 110px;
+  margin-top: 60px;
+  margin-bottom: 60px;
   &__imagine,
   &__innovate {
     font-size: max(36px, 9.6vw);
@@ -365,7 +394,7 @@ definePageMeta({
   @include respond(mobile) {
     margin-top: 60px;
   }
-  .container {
+  & > .container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     column-gap: 24px;

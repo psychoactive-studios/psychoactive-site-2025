@@ -2,7 +2,7 @@
 import HomeNewsCard from './HomeNewsCard.vue';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 
-const props = defineProps({
+defineProps({
   data: {
     type: Array,
     required: true,
@@ -18,13 +18,12 @@ const getHref = (news) => {
   }
   return `/content-hub/${news.slug}`;
 };
-
-console.log('Articles', props.data);
 </script>
 
 <template>
   <section class="news-list">
     <div class="container">
+      <h2 class="news-list__title">From the feed</h2>
       <div class="news-list__grid">
         <HomeNewsCard
           v-for="news in data"
@@ -52,6 +51,21 @@ console.log('Articles', props.data);
 @use '~/assets/styles/mixins' as *;
 .news-list {
   margin-top: 160px;
+  @include respond('mobile') {
+    margin-top: 0;
+  }
+  &__title {
+    display: none;
+    @include respond('mobile') {
+      display: block;
+      font-size: 9.6vw;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 88%;
+      letter-spacing: -0.06em;
+      margin-bottom: 9.6vw;
+    }
+  }
   &__grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
