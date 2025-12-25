@@ -99,7 +99,7 @@ function animationsInit() {
 }
 </script>
 <template>
-  <main class="work gravity">
+  <main class="work">
     <div class="work__header--desktop">
       <!-- Illustration section -->
       <section class="work__illustration">

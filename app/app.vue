@@ -6,7 +6,6 @@ const { isLoading } = useLoader();
 onMounted(() => {
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
-    console.log('scrollRestoration!!!!!', history.scrollRestoration);
   }
 });
 </script>

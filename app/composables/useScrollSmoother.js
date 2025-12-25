@@ -51,8 +51,6 @@ export default function () {
     // Initial state
     lenis.scrollTo(0, { immediate: true });
     lenis.stop();
-
-    console.log('lenis', lenis);
   };
 
   // Disable and enable scrolling

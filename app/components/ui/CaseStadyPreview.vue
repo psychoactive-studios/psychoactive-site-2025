@@ -16,7 +16,7 @@ const props = defineProps({
   },
 });
 
-const { mainImage, href, mainTitle, hero } = props.data;
+const { mainImage, slug, mainTitle, hero } = props.data;
 
 const handleMouseEnter = () => {
   // Stop any ongoing animations on this element
@@ -47,7 +47,7 @@ const handleMouseEnter = () => {
 const handleClick = () => {
   if (imageRef.value && imageRef.value.handleClick) {
     gsap.set(containerRef.value, { zIndex: 2 });
-    imageRef.value.handleClick(href);
+    imageRef.value.handleClick(`/work/${slug}`);
   }
 };
 </script>
