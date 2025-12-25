@@ -9,8 +9,6 @@ export default function useWorks() {
   const { enableScroll, scrollSmoother } = useScrollSmoother();
 
   const workPageInit = async () => {
-    console.log('workPageInit!!!');
-
     setTimeout(() => {
       const layoutElements = gsap.utils.toArray([
         '#header-logo',

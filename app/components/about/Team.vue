@@ -3,8 +3,6 @@ import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 import { useMediaQuery } from '@vueuse/core';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
-
-console.log();
 </script>
 <template>
   <section class="team">

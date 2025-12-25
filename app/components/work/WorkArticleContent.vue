@@ -1,0 +1,270 @@
+<script setup>
+import WorkTextSection from '../ui/WorkTextSection.vue';
+import WorkCTAButton from './WorkCTAButton.vue';
+import WorkNumbers from './WorkNumbers.vue';
+
+defineProps({
+  data: {
+    type: Object,
+    required: true,
+  },
+  websiteLink: {
+    type: String,
+    required: false,
+    default: '',
+  },
+});
+
+const getSrcSet = (image) => {
+  if (!image?.formats) return '';
+
+  const { small, medium, large } = image.formats;
+  const srcSet = [];
+
+  if (small) srcSet.push(`${small.url} ${small.width}w`);
+  if (medium) srcSet.push(`${medium.url} ${medium.width}w`);
+  if (large) srcSet.push(`${large.url} ${large.width}w`);
+
+  if (image.url && image.width) {
+    srcSet.push(`${image.url} ${image.width}w`);
+  }
+
+  return srcSet.join(', ');
+};
+</script>
+
+<template>
+  <article>
+    <template v-for="(block, index) in data" :key="index">
+      <!-- Numbers section -->
+      <WorkNumbers v-if="block.__component === 'work.numbers'" :data="block" />
+
+      <!-- Fullwidth Image section -->
+      <section
+        v-if="block.__component === 'work.fullwidth-image'"
+        class="work__full-image"
+      >
+        <img
+          :src="block.image.url"
+          :srcset="getSrcSet(block.image)"
+          sizes="100vw"
+          alt="Image"
+        />
+      </section>
+
+      <!-- Text section -->
+      <section
+        v-if="block.__component === 'work.text-section'"
+        class="work__text-section"
+      >
+        <div class="container">
+          <WorkTextSection :title="block.title">
+            {{ block.description }}
+          </WorkTextSection>
+        </div>
+      </section>
+
+      <!-- Container Image section -->
+      <section
+        v-if="block.__component === 'work.container-image'"
+        class="work__full-image"
+      >
+        <div class="container">
+          <img
+            :src="block.image.url"
+            :srcset="getSrcSet(block.image)"
+            sizes="100vw"
+            alt="Image"
+          />
+        </div>
+      </section>
+
+      <!-- Feedback section -->
+      <div v-if="block.__component === 'work.feedback'" class="container">
+        <section class="work__feedback">
+          <div class="work__feedback_photo">
+            <img :src="block.image.url" :alt="block.image.name" />
+          </div>
+          <div class="work__feedback_content">
+            <blockquote>
+              {{ block.quote }}
+            </blockquote>
+            <div class="work__feedback_author">
+              <span class="work__feedback_author-name">{{ block.name }}</span>
+              <span class="work__feedback_author-company">
+                {{ block.company }}
+              </span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Mobile Section -->
+      <section
+        v-if="block.__component === 'work.mobile-section'"
+        class="work__mobile-section"
+      >
+        <img
+          :src="block.mainImage.url"
+          alt="Image-1"
+          class="work__mobile-section-image-1"
+        />
+        <img
+          :src="block.image1.url"
+          alt="Image-2"
+          class="work__mobile-section-image-2"
+        />
+        <img
+          :src="block.image2.url"
+          alt="Image-2"
+          class="work__mobile-section-image-3"
+        />
+      </section>
+
+      <!-- CTA section -->
+      <WorkCTAButton
+        v-if="block.__component === 'work.launch-website'"
+        :href="block.showButton && websiteLink ? websiteLink : false"
+      >
+        {{ block.text }}
+      </WorkCTAButton>
+    </template>
+  </article>
+</template>
+
+<style scoped lang="scss">
+@use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
+.work {
+  &__full-image {
+    padding: 120px 0;
+    @include respond(mobile) {
+      padding: 60px 0;
+    }
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
+  }
+  &__text-section {
+    padding: 120px 0;
+    @include respond(mobile) {
+      padding: 60px 0;
+    }
+  }
+  &__feedback {
+    padding: 40px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 120px;
+    @include respond(mobile) {
+      padding: 20px 0;
+      display: block;
+    }
+    &_photo {
+      width: 32.5%;
+      flex-shrink: 0;
+      img {
+        border-radius: 1rem;
+      }
+      @include respond(mobile) {
+        width: auto;
+        aspect-ratio: 1;
+        margin-bottom: 24px;
+        img {
+          border-radius: getRem(8);
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+    &_content {
+      width: 50%;
+      @include respond(mobile) {
+        width: auto;
+      }
+      blockquote {
+        font-size: 2.085vw;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 110%; /* 110% */
+        letter-spacing: -0.05em;
+        @include respond(mobile) {
+          font-size: 4.27vw;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 140%;
+        }
+      }
+    }
+    &_author {
+      margin-top: 90px;
+      @include respond(mobile) {
+        margin-top: 60px;
+      }
+      &-name {
+        font-size: clamp(18px, 1.05vw, 24px);
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%;
+        display: block;
+        margin-bottom: 0.63vw;
+        @include respond(mobile) {
+          font-size: 4.27vw;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 140%;
+        }
+      }
+      &-company {
+        font-family: 'RoobertMono';
+        font-size: clamp(12px, 0.73vw, 16px);
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%;
+        text-transform: uppercase;
+        display: block;
+        @include respond(mobile) {
+          font-size: max(3.2vw, 12px);
+        }
+      }
+    }
+  }
+
+  &__mobile-section {
+    margin-top: 120px;
+    padding-bottom: 120px;
+    position: relative;
+    // aspect-ratio: 1.77;
+    display: flex;
+    justify-content: center;
+    gap: 20%;
+    @include respond(mobile) {
+      margin-top: 90px;
+      margin-bottom: 60px;
+    }
+    &-image-1 {
+      position: absolute;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    &-image-2 {
+      position: relative;
+      // top: 1%;
+      // left: 17%;
+      width: 25%;
+    }
+    &-image-3 {
+      position: relative;
+      top: 120px;
+      // right: 17%;
+      width: 25%;
+    }
+  }
+}
+</style>

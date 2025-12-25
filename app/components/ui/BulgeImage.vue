@@ -46,8 +46,6 @@ const props = defineProps({
   },
 });
 
-console.log('props!!!!!', props.src);
-
 const rootEl = ref(null);
 const canvasEl = ref(null);
 let renderer;
