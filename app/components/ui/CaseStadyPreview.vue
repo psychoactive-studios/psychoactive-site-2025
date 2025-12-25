@@ -16,7 +16,7 @@ const props = defineProps({
   },
 });
 
-const { mainImage, slug, mainTitle, hero } = props.data;
+const { mainImage, slug, mainTitle, hero } = props?.data || {};
 
 const handleMouseEnter = () => {
   // Stop any ongoing animations on this element

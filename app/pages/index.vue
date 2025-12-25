@@ -1,4 +1,5 @@
 <script setup>
+import qs from 'qs';
 import { useMediaQuery } from '@vueuse/core';
 import Hero from '~/components/homepage/Hero.vue';
 import HeroMobile from '~/components/homepage/HeroMobile.vue';
@@ -16,11 +17,56 @@ import useNavigation from '~/composables/useNavigation';
 import gsap from 'gsap';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
 
+const params = qs.stringify({
+  populate: {
+    works: {
+      populate: ['mainImage'],
+    },
+  },
+});
+
+// Config Strapi variables
+const config = useRuntimeConfig();
+
+const { data: homePageData, error } = await useFetch(
+  `/api/homepage?${params}`,
+  {
+    baseURL: config.public.strapiBaseUrl,
+    headers: {
+      Authorization: `Bearer ${config.public.strapiApiKey}`,
+    },
+    key: `work-${params.slug}`,
+    // Get cached data to prevent refetching
+    getCachedData(key) {
+      const nuxtApp = useNuxtApp();
+      const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+      if (data) {
+        return data;
+      }
+    },
+  }
+);
+
+if (error.value) {
+  console.error('Error fetching article data:', error.value);
+}
+
+const { works } = homePageData.value?.data || {};
+
 const { scrollSmoother } = useScrollSmoother();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 const { startLoading } = useLoader();
 const { transitionFromNavigation } = useNavigation();
+
+const worksList = computed(() => {
+  const result = works ? [...works] : [];
+  const letstalkItem = { id: 'filled-text' };
+
+  result.splice(3, 0, letstalkItem);
+
+  return result;
+});
 
 definePageMeta({
   scrollToTop: true,
@@ -82,8 +128,37 @@ definePageMeta({
           </div>
         </section>
 
-        <!-- Cases Section First Part -->
         <section class="cases">
+          <div class="container">
+            <template v-for="work in worksList" :key="work.id">
+              <!-- Filled Text Section -->
+              <section
+                v-if="work.id === 'filled-text' && !isMobile"
+                class="filled-text"
+              >
+                <HomeOnScrollFilledText>
+                  What sets us apart is our
+                  <img src="/img/text-icon-1.svg" alt="icon1" />
+                  <span class="dark">obsession</span> with the moment your
+                  audience first encounters your brand online. That split second
+                  where
+                  <img src="/img/text-icon-2.svg" alt="icon2" />
+                  <span class="dark">curiosity</span>
+                  transforms into
+                  <img src="/img/text-icon-3.svg" alt="icon3" />
+                  <span class="dark">connection</span>. We don't just build
+                  websites; we architect
+                  <img src="/img/text-icon-4.svg" alt="icon4" />
+                  <span class="dark">experiences</span> that linger in the mind.
+                </HomeOnScrollFilledText>
+              </section>
+              <CaseStadyPreview v-else :data="work" />
+            </template>
+          </div>
+        </section>
+
+        <!-- Cases Section First Part -->
+        <!-- <section class="cases">
           <div class="container">
             <CaseStadyPreview
               src="/img/work/hero-super-ai.jpg"
@@ -103,27 +178,7 @@ definePageMeta({
               description="beat 'em up roguelike Video game"
             />
           </div>
-        </section>
-
-        <!-- Filled Text Section -->
-        <section v-if="!isMobile" class="filled-text">
-          <div class="container">
-            <HomeOnScrollFilledText>
-              What sets us apart is our
-              <img src="/img/text-icon-1.svg" alt="icon1" />
-              <span class="dark">obsession</span> with the moment your audience
-              first encounters your brand online. That split second where
-              <img src="/img/text-icon-2.svg" alt="icon2" />
-              <span class="dark">curiosity</span>
-              transforms into
-              <img src="/img/text-icon-3.svg" alt="icon3" />
-              <span class="dark">connection</span>. We don't just build
-              websites; we architect
-              <img src="/img/text-icon-4.svg" alt="icon4" />
-              <span class="dark">experiences</span> that linger in the mind.
-            </HomeOnScrollFilledText>
-          </div>
-        </section>
+        </section> -->
 
         <!-- Mobile Scale Text Section -->
         <section v-if="isMobile" class="mobile-scale">
@@ -140,7 +195,7 @@ definePageMeta({
         </section>
 
         <!-- Cases Section Second Part Desktop -->
-        <section v-if="!isMobile" class="cases">
+        <!-- <section v-if="!isMobile" class="cases">
           <div class="container">
             <CaseStadyPreview
               src="/img/cases/case-world-of-wearableArt.jpg"
@@ -163,7 +218,7 @@ definePageMeta({
               description="Global access to accredited higher education"
             />
           </div>
-        </section>
+        </section> -->
 
         <section v-if="isMobile" class="mobile-cases-second-part">
           <div class="container">
@@ -313,6 +368,9 @@ definePageMeta({
     column-gap: 24px;
     row-gap: 80px;
     & > *:nth-child(3n + 1) {
+      grid-column: 1 / 3;
+    }
+    .filled-text {
       grid-column: 1 / 3;
     }
     @include respond(mobile) {
