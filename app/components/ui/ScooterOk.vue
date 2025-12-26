@@ -5,11 +5,6 @@ import { InertiaPlugin } from 'gsap/InertiaPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePointer } from '@vueuse/core';
 import useScrollSmoother from '@/composables/useScrollSmoother';
-import useAudioManager from '~/composables/useAudioManager';
-
-const { playInteractionSound } = useAudioManager();
-
-const letsTalkButtonRef = ref(null);
 
 const props = defineProps({
   mode: {
