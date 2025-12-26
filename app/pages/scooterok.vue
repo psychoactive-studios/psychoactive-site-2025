@@ -11,7 +11,14 @@ import ScooterOk3D from '~/components/ui/ScooterOk3D.vue';
       :morph-interval="5000"
     /> -->
     <ClientOnly>
-      <ScooterOk3D model-path="/models/BarramundiFish.glb" />
+      <ScooterOk3D
+        :model-paths="[
+          '/models/froggg2.glb',
+          '/models/BarramundiFish.glb',
+          '/models/frogg.glb',
+          '/models/CesiumMan.glb',
+        ]"
+      />
     </ClientOnly>
   </main>
 </template>
@@ -21,8 +28,8 @@ import ScooterOk3D from '~/components/ui/ScooterOk3D.vue';
 .scooterok {
   @include flex-center;
   height: 100vh;
-  & > * {
-    width: 50%;
-  }
+  // & > * {
+  //   width: 50%;
+  // }
 }
 </style>
