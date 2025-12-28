@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import ScooterOk from '~/components/ui/ScooterOk.vue';
-import ScooterOk3D from '~/components/ui/ScooterOk3D.vue';
+import LetsTalkScene from '~/components/ui/LetsTalkScene.vue';
+import LetsTalk3DScene from '~/components/ui/LetsTalk3DScene.vue';
 </script>
 
 <template>
   <main class="scooterok">
-    <ScooterOk
+    <LetsTalkScene
       shape="svg"
       :svg-urls="[
         '/img/frog_steps/frog01.svg',
@@ -17,7 +17,7 @@ import ScooterOk3D from '~/components/ui/ScooterOk3D.vue';
       :morph-interval="5000"
     />
     <!-- <ClientOnly>
-      <ScooterOk3D
+      <LetsTalk3DScene
         :model-paths="[
           '/models/scalefrog.glb',
           '/models/BarramundiFish.glb',

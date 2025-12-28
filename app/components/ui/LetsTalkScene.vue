@@ -84,11 +84,27 @@ async function loadSvgs() {
         viewBox = [0, 0, width, height];
       }
 
-      const pathElement = doc.querySelector('path');
-      if (pathElement) {
-        const d = pathElement.getAttribute('d');
+      const pathElements = Array.from(doc.querySelectorAll('path'));
+      const paths = pathElements
+        .map((el) => {
+          const d = el.getAttribute('d');
+          if (!d) return null;
+
+          const rawFillRule = (
+            el.getAttribute('fill-rule') || ''
+          ).toLowerCase();
+          const fillRule = rawFillRule === 'evenodd' ? 'evenodd' : 'nonzero';
+
+          return {
+            path: new Path2D(d),
+            fillRule,
+          };
+        })
+        .filter(Boolean);
+
+      if (paths.length > 0) {
         svgsData.value.push({
-          path: new Path2D(d),
+          paths,
           viewBox,
         });
       }
@@ -142,7 +158,7 @@ function updateShapeVisibility(animate = true) {
   const radius = Math.min(contW, contH) / 2.5;
 
   // SVG Setup
-  let path2D = null;
+  let paths = null;
   let svgScale = 1;
   let svgStartX = 0;
   let svgStartY = 0;
@@ -152,7 +168,7 @@ function updateShapeVisibility(animate = true) {
   if (props.shape === 'svg' && svgsData.value.length > 0) {
     const data = svgsData.value[currentSvgIndex.value];
     if (data) {
-      path2D = data.path;
+      paths = data.paths;
       [vbX, vbY] = data.viewBox;
       const vbW = data.viewBox[2];
       const vbH = data.viewBox[3];
@@ -194,13 +210,14 @@ function updateShapeVisibility(animate = true) {
       if (isHole) {
         isVisible = false;
       }
-    } else if (props.shape === 'svg' && path2D) {
+    } else if (props.shape === 'svg' && paths && paths.length > 0) {
       const localX = (dot.baseX - svgStartX) / svgScale + vbX;
       const localY = (dot.baseY - svgStartY) / svgScale + vbY;
 
-      if (!ctx.isPointInPath(path2D, localX, localY)) {
-        isVisible = false;
-      }
+      const insideAny = paths.some((p) =>
+        ctx.isPointInPath(p.path, localX, localY, p.fillRule)
+      );
+      if (!insideAny) isVisible = false;
     }
 
     const target = isVisible ? 1 : 0;
@@ -428,7 +445,7 @@ function handleClick(e) {
   const canvas = canvasRef.value;
   const rect = canvas.getBoundingClientRect();
 
-  const currentScrollY = scrollSmoother.valueі
+  const currentScrollY = scrollSmoother.value
     ? scrollSmoother.value.scroll
     : window.scrollY;
   const currentScrollX = window.scrollX;
