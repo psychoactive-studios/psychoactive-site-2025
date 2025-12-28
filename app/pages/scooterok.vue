@@ -5,21 +5,27 @@ import ScooterOk3D from '~/components/ui/ScooterOk3D.vue';
 
 <template>
   <main class="scooterok">
-    <!-- <ScooterOk
+    <ScooterOk
       shape="svg"
-      :svg-urls="['/img/webflow-logo.svg', '/img/logo_sky.svg']"
+      :svg-urls="[
+        '/img/frog_steps/frog01.svg',
+        '/img/frog_steps/frog02.svg',
+        '/img/frog_steps/frog03.svg',
+        '/img/frog_steps/frog04.svg',
+        '/img/frog_steps/frog05.svg',
+      ]"
       :morph-interval="5000"
-    /> -->
-    <ClientOnly>
+    />
+    <!-- <ClientOnly>
       <ScooterOk3D
         :model-paths="[
-          '/models/froggg2.glb',
+          '/models/scalefrog.glb',
           '/models/BarramundiFish.glb',
           '/models/frogg.glb',
           '/models/CesiumMan.glb',
         ]"
       />
-    </ClientOnly>
+    </ClientOnly> -->
   </main>
 </template>
 
@@ -28,8 +34,8 @@ import ScooterOk3D from '~/components/ui/ScooterOk3D.vue';
 .scooterok {
   @include flex-center;
   height: 100vh;
-  // & > * {
-  //   width: 50%;
-  // }
+  & > * {
+    width: 75%;
+  }
 }
 </style>

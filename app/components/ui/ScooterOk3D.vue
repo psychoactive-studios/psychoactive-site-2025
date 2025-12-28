@@ -16,13 +16,23 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  normalizeScale: {
+    type: Boolean,
+    default: true,
+  },
+  normalizedMaxDim: {
+    // If > 0, all models will be uniformly scaled so their max bbox dimension equals this value.
+    // If 0, the first loaded model's max dimension is used as the reference.
+    type: Number,
+    default: 0,
+  },
   pointSize: {
     type: Number,
-    default: 0.0001,
+    default: 0.0035,
   },
   pointColor: {
     type: String,
-    default: '#ffffff',
+    default: '#cccccc',
   },
 });
 
@@ -39,6 +49,36 @@ let transitionPoints;
 let transitionState;
 
 const modelsCache = new Map();
+let referenceMaxDim;
+
+const applyPointsStyle = (root) => {
+  if (!root) return;
+  root.traverse((obj) => {
+    if (!obj?.isPoints) return;
+    const material = obj.material;
+    if (!material) return;
+
+    const updateOne = (m) => {
+      if (!m) return;
+      if (typeof m.size === 'number') m.size = props.pointSize;
+      if (m.color && typeof m.color.set === 'function')
+        m.color.set(props.pointColor);
+      m.needsUpdate = true;
+    };
+
+    if (Array.isArray(material)) material.forEach(updateOne);
+    else updateOne(material);
+  });
+};
+
+watch(
+  () => [props.pointSize, props.pointColor],
+  () => {
+    // Update active + cached models and any active transition points
+    modelsCache.forEach((record) => applyPointsStyle(record?.model));
+    if (transitionPoints) applyPointsStyle(transitionPoints);
+  }
+);
 
 const getModelPaths = () => {
   const list = Array.isArray(props.modelPaths)
@@ -58,6 +98,41 @@ const seeded01 = (seed) => {
 };
 
 const lerp = (a, b, t) => a + (b - a) * t;
+
+const buildBezierControls = (
+  fromPositions,
+  toPositions,
+  amplitude,
+  seedBase = 1
+) => {
+  const len = Math.min(fromPositions.length, toPositions.length);
+  const c1 = new Float32Array(len);
+  const c2 = new Float32Array(len);
+
+  for (let i = 0; i < len; i += 3) {
+    const rx1 = seeded01(seedBase + i * 0.11 + 1) * 2 - 1;
+    const ry1 = seeded01(seedBase + i * 0.11 + 2) * 2 - 1;
+    const rz1 = seeded01(seedBase + i * 0.11 + 3) * 2 - 1;
+
+    const rx2 = seeded01(seedBase + i * 0.17 + 4) * 2 - 1;
+    const ry2 = seeded01(seedBase + i * 0.17 + 5) * 2 - 1;
+    const rz2 = seeded01(seedBase + i * 0.17 + 6) * 2 - 1;
+
+    const ax = amplitude;
+
+    // Control point near start
+    c1[i + 0] = fromPositions[i + 0] + rx1 * ax;
+    c1[i + 1] = fromPositions[i + 1] + ry1 * ax;
+    c1[i + 2] = fromPositions[i + 2] + rz1 * ax;
+
+    // Control point near end
+    c2[i + 0] = toPositions[i + 0] + rx2 * ax;
+    c2[i + 1] = toPositions[i + 1] + ry2 * ax;
+    c2[i + 2] = toPositions[i + 2] + rz2 * ax;
+  }
+
+  return { c1, c2 };
+};
 
 const computeCameraParamsFromSize = (size) => {
   const maxDim = Math.max(size?.x || 0, size?.y || 0, size?.z || 0);
@@ -311,6 +386,32 @@ const ensureLoadedModel = async (path) => {
   const model = gltf.scene;
   convertModelMeshesToPoints(model);
 
+  // Normalize scale across models (fixes wildly different GLB unit scales)
+  if (props.normalizeScale) {
+    const tmpBox = new THREE.Box3().setFromObject(model);
+    const tmpSize = tmpBox.getSize(new THREE.Vector3());
+    const maxDim = Math.max(tmpSize.x, tmpSize.y, tmpSize.z);
+
+    if (maxDim > 0) {
+      const desired =
+        props.normalizedMaxDim > 0
+          ? props.normalizedMaxDim
+          : referenceMaxDim ?? maxDim;
+
+      // Lock reference on first load (unless explicit normalizedMaxDim is provided)
+      if (referenceMaxDim === undefined) {
+        referenceMaxDim = props.normalizedMaxDim > 0 ? desired : maxDim;
+      }
+
+      const scaleFactor = desired / maxDim;
+      if (Number.isFinite(scaleFactor) && scaleFactor > 0) {
+        model.scale.multiplyScalar(scaleFactor);
+        model.updateMatrixWorld(true);
+      }
+    }
+  }
+
+  // Center model after scaling
   const box = new THREE.Box3().setFromObject(model);
   const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
@@ -414,6 +515,21 @@ const startTransitionToIndex = async (nextIndex) => {
     999 + nextIndex
   );
 
+  // Curved / chaotic trajectories via cubic Bézier control points
+  const bezierAmp = spread * 0.55;
+  const explodeControls = buildBezierControls(
+    fromPositions,
+    exploded,
+    bezierAmp,
+    2000 + nextIndex
+  );
+  const gatherControls = buildBezierControls(
+    exploded,
+    toPositions,
+    bezierAmp,
+    4000 + nextIndex
+  );
+
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute(
     'position',
@@ -440,6 +556,10 @@ const startTransitionToIndex = async (nextIndex) => {
     nextIndex,
     camFrom,
     camTo,
+    explodeC1: explodeControls.c1,
+    explodeC2: explodeControls.c2,
+    gatherC1: gatherControls.c1,
+    gatherC2: gatherControls.c2,
   };
 };
 
@@ -537,18 +657,46 @@ const animate = () => {
     const now = performance.now();
     const elapsed = now - transitionState.startMs;
     const t = Math.min(1, Math.max(0, elapsed / transitionState.durationMs));
+    const te = easeInOutQuad(t);
     const posAttr = transitionPoints.geometry.getAttribute('position');
     const arr = posAttr.array;
 
-    if (t < 0.5) {
-      const u = easeInOutQuad(t / 0.5);
+    if (te < 0.5) {
+      // Linear u inside each phase to avoid "pause" at the apex.
+      const u = te / 0.5;
+      const iu = 1 - u;
+      const iu2 = iu * iu;
+      const u2 = u * u;
+      const b0 = iu2 * iu;
+      const b1 = 3 * iu2 * u;
+      const b2 = 3 * iu * u2;
+      const b3 = u2 * u;
+
+      const p0 = transitionState.from;
+      const p3 = transitionState.exploded;
+      const c1 = transitionState.explodeC1;
+      const c2 = transitionState.explodeC2;
+
       for (let i = 0; i < arr.length; i++) {
-        arr[i] = lerp(transitionState.from[i], transitionState.exploded[i], u);
+        arr[i] = b0 * p0[i] + b1 * c1[i] + b2 * c2[i] + b3 * p3[i];
       }
     } else {
-      const u = easeInOutQuad((t - 0.5) / 0.5);
+      const u = (te - 0.5) / 0.5;
+      const iu = 1 - u;
+      const iu2 = iu * iu;
+      const u2 = u * u;
+      const b0 = iu2 * iu;
+      const b1 = 3 * iu2 * u;
+      const b2 = 3 * iu * u2;
+      const b3 = u2 * u;
+
+      const p0 = transitionState.exploded;
+      const p3 = transitionState.to;
+      const c1 = transitionState.gatherC1;
+      const c2 = transitionState.gatherC2;
+
       for (let i = 0; i < arr.length; i++) {
-        arr[i] = lerp(transitionState.exploded[i], transitionState.to[i], u);
+        arr[i] = b0 * p0[i] + b1 * c1[i] + b2 * c2[i] + b3 * p3[i];
       }
     }
 
