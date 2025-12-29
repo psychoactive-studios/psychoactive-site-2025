@@ -18,12 +18,13 @@ const { scrollSmoother } = useScrollSmoother();
 const isMobile = useMediaQuery('(max-width: 768px)');
 
 const containerRef = ref(null);
+const isPlaying = ref(true);
 let ctx;
 
 onMounted(() => {
   if (containerRef.value) {
     ctx = gsap.context(() => {}, containerRef.value);
-    heroScrollAnimation(ctx, containerRef.value);
+    heroScrollAnimation(ctx, isPlaying);
   }
 });
 
@@ -42,7 +43,11 @@ watch(isLoading, (newVal) => {
   <section ref="containerRef" class="hero">
     <div class="hero__wrapper">
       <div class="services-3d-scene--wrapper">
-        <ServicesHero3DScene v-if="!isMobile" class="services-3d-scene" />
+        <ServicesHero3DScene
+          v-if="!isMobile"
+          :is-playing="isPlaying"
+          class="services-3d-scene"
+        />
         <ServicesHero3DSceneMobile v-if="isMobile" class="services-3d-scene" />
       </div>
       <div class="container">
@@ -130,7 +135,7 @@ watch(isLoading, (newVal) => {
     .services-3d-scene {
       width: 100%;
       height: 100%;
-      will-change: transform;
+      will-change: transform, opacity;
     }
   }
   .scene {
