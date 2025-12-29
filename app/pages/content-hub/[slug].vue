@@ -15,7 +15,7 @@ import { leaveAnimation } from '~/utils/animations/transitions';
 const config = useRuntimeConfig();
 
 const { scrollSmoother } = useScrollSmoother();
-const { transitionFromNavigation } = useNavigation();
+
 const { isLoading } = useLoader();
 const router = useRouter();
 
@@ -90,6 +90,7 @@ definePageMeta({
       }, 50);
     },
     onLeave: (el, done) => {
+      const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
         gsap
           .timeline()

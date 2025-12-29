@@ -16,7 +16,6 @@ import { leaveAnimation } from '~/utils/animations/transitions';
 
 const { scrollSmoother } = useScrollSmoother();
 const { startLoading } = useLoader();
-const { transitionFromNavigation } = useNavigation();
 
 const containerRef = ref(null);
 let ctx = null;
@@ -47,7 +46,9 @@ definePageMeta({
       }, 50);
     },
     onLeave: (el, done) => {
+      const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
+        console.log('EL', el);
         gsap
           .timeline()
           .set(el, { opacity: 0 })

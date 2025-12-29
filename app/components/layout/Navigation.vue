@@ -7,7 +7,8 @@ import useAudioManager from '~/composables/useAudioManager';
 import gsap from 'gsap';
 import { navigationData } from '~/data/navigationData';
 
-const { initNavigation, transitionFromNavigation } = useNavigation();
+const { navigationRef, initNavigation, transitionFromNavigation } =
+  useNavigation();
 const { playInteractionSound } = useAudioManager();
 
 let talkButtonHoverTween;
@@ -36,7 +37,6 @@ const talkButtonHoverHandler = () => {
 };
 
 const clickOnLinkHandler = (e) => {
-  console.log('e', e.target);
   const isAnimating = gsap.getById('open-timeline-main')?.isActive();
   if (isAnimating) {
     e.preventDefault();
