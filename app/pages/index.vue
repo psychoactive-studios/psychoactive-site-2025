@@ -60,7 +60,6 @@ const { scrollSmoother } = useScrollSmoother();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 const { startLoading } = useLoader();
-const { transitionFromNavigation } = useNavigation();
 
 const worksList = computed(() => {
   const letstalkItem = { id: 'filled-text' };
@@ -90,6 +89,7 @@ definePageMeta({
       done();
     },
     onLeave: (el, done) => {
+      const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
         gsap
           .timeline()

@@ -9,6 +9,7 @@ import useHomeVideoPlayerMobile from '~/composables/useHomeVideoPlayerMobile';
 import MainAnimatedLogo from '../ui/MainAnimatedLogo.vue';
 import NavigationMobile from './NavigationMobile.vue';
 import { useMediaQuery } from '@vueuse/core';
+import gsap from 'gsap';
 
 const mainLogoRef = ref(null);
 const { isOpen, transitionFromNavigation } = useNavigation();
@@ -21,7 +22,12 @@ const onSoundChangeHandler = () => {
   isMuted.value = !isMuted.value;
 };
 
-const onLogoClickHandler = () => {
+const onLogoClickHandler = (e) => {
+  const isAnimating = gsap.getById('open-timeline-main')?.isActive();
+  if (isAnimating) {
+    e.preventDefault();
+    return;
+  }
   if (isOpen.value) {
     transitionFromNavigation.value = true;
     document.querySelector('#header-navigation-button').click();
@@ -48,7 +54,7 @@ const onLogoHoverHandler = (e) => {
       aria-describedby="main-logo"
       @mouseenter="playInteractionSound"
       @focus="playInteractionSound"
-      @click="onLogoClickHandler"
+      @click.capture="onLogoClickHandler"
     >
       <MainAnimatedLogo
         id="header-logo"

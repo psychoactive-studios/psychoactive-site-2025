@@ -11,7 +11,6 @@ import { leaveAnimation } from '~/utils/animations/transitions';
 // Config Strapi variables
 const config = useRuntimeConfig();
 
-const { transitionFromNavigation } = useNavigation();
 const { scrollSmoother } = useScrollSmoother();
 const { isLoading } = useLoader();
 
@@ -62,6 +61,7 @@ definePageMeta({
       }, 50);
     },
     onLeave: (el, done) => {
+      const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
         gsap
           .timeline()

@@ -21,7 +21,6 @@ import PartnersMobile from '~/components/ui/PartnersMobile.vue';
 
 const { scrollSmoother } = useScrollSmoother();
 const { startLoading } = useLoader();
-const { transitionFromNavigation } = useNavigation();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -42,6 +41,7 @@ definePageMeta({
       }, 50);
     },
     onLeave: (el, done) => {
+      const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
         gsap
           .timeline()

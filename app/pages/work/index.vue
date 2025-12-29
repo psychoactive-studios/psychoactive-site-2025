@@ -66,7 +66,6 @@ if (error.value) {
 
 const { isLoading } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
-const { transitionFromNavigation } = useNavigation();
 
 const titleRef = ref(null);
 const displayedCount = ref(4);
@@ -132,6 +131,7 @@ definePageMeta({
       }, 50);
     },
     onLeave: (el, done) => {
+      const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
         gsap
           .timeline()

@@ -12,7 +12,6 @@ import gsap from 'gsap';
 
 const { scrollSmoother } = useScrollSmoother();
 const { startLoading } = useLoader();
-const { transitionFromNavigation } = useNavigation();
 
 definePageMeta({
   scrollToTop: true,
@@ -35,6 +34,7 @@ definePageMeta({
       done();
     },
     onLeave: (el, done) => {
+      const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
         gsap
           .timeline()
