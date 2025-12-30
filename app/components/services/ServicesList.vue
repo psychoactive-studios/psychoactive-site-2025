@@ -27,7 +27,7 @@ onUnmounted(() => {
         <div v-if="isMobile" class="services-list__video">
           <video
             class="services-list__video_player"
-            src="/video/preview_reel.mp4"
+            src="/video/services_grid.mp4"
             autoplay
             loop
             muted

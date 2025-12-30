@@ -48,7 +48,6 @@ definePageMeta({
     onLeave: (el, done) => {
       const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
-        console.log('EL', el);
         gsap
           .timeline()
           .set(el, { opacity: 0 })
