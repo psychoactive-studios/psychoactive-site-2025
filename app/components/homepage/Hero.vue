@@ -1,7 +1,6 @@
 <script setup>
 import Circle from '../ui/Circle.vue';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
-import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
 import ServicesHero3DScene from '../ui/ServicesHero3DScene.vue';
 import gsap from 'gsap';
 import useVideoPlayer from '~/composables/useVideoPlayer';
