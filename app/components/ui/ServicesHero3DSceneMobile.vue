@@ -6,7 +6,7 @@ import { useDebounceFn, useEventListener } from '@vueuse/core';
 
 const canvasElement = ref(null);
 
-// --- Scene, camera, and renderer initialization ---
+// --- Scene globals ---
 let scene, camera, renderer;
 let spherePoints;
 const clock = new THREE.Clock();
@@ -16,24 +16,24 @@ let removeResizeListener;
 let observer;
 let isLooping = false;
 
-// --- Gradient color palette ---
-const colorPalette = [
+// --- Optimization: Pre-calculate palette colors as raw numbers ---
+// Це дозволяє уникнути виклику методів .copy() та .lerp() 30 тис. разів за кадр
+const sourcePalette = [
   new THREE.Color('#CC4F8C'),
   new THREE.Color('#E4393C'),
   new THREE.Color('#23CF48'),
   new THREE.Color('#17FFFF'),
   new THREE.Color('#0646FF'),
 ];
-
-// Reusable objects to avoid GC
-const tempColor = new THREE.Color();
+const paletteR = new Float32Array(sourcePalette.map((c) => c.r));
+const paletteG = new Float32Array(sourcePalette.map((c) => c.g));
+const paletteB = new Float32Array(sourcePalette.map((c) => c.b));
+const paletteMaxIndex = sourcePalette.length - 1;
 
 function init() {
   if (!canvasElement.value) return;
 
   scene = new THREE.Scene();
-
-  // --- FOG ADDED ---
   scene.fog = new THREE.FogExp2(0x000000, 0.57);
 
   camera = new THREE.PerspectiveCamera(
@@ -49,25 +49,25 @@ function init() {
     antialias: true,
     alpha: true,
   });
-  renderer.setClearColor(0x000000, 0); // Set transparent background
+  renderer.setClearColor(0x000000, 0);
+
+  // Оптимізація DPI: на мобільних телефонах (DPI 3) це сильно їсть батарею,
+  // тому обмежуємо до 1.5 або 2 максимум.
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   renderer.setSize(
     canvasElement.value.clientWidth,
     canvasElement.value.clientHeight,
     false
   );
-  // Limit pixel ratio for performance on high-DPI mobile screens
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-  // Reduced geometry segments slightly for mobile performance while maintaining look
-  const geometry = new THREE.SphereGeometry(2, 180, 180);
+  const geometry = new THREE.SphereGeometry(2, 120, 120);
   const positions = geometry.attributes.position.array;
-  const originalPositions = new Float32Array(positions.length);
+
+  // Використовуємо Float32Array для кращої типізації
+  const originalPositions = new Float32Array(positions);
   const colors = new Float32Array(positions.length);
 
-  for (let i = 0; i < positions.length; i++) {
-    originalPositions[i] = positions[i];
-  }
   geometry.setAttribute(
     'originalPosition',
     new THREE.BufferAttribute(originalPositions, 3)
@@ -76,7 +76,7 @@ function init() {
 
   const material = new THREE.PointsMaterial({
     vertexColors: true,
-    size: 0.008,
+    size: 0.012,
     blending: THREE.AdditiveBlending,
     transparent: true,
     opacity: 0.9,
@@ -87,12 +87,11 @@ function init() {
   spherePoints.scale.set(0.7, 0.7, 0.7);
   scene.add(spherePoints);
 
-  // Save the unsubscribe function for resize event
   removeResizeListener = useEventListener(window, 'resize', onWindowResize);
 }
 
 const onWindowResize = useDebounceFn(() => {
-  if (!canvasElement.value) return;
+  if (!canvasElement.value || !camera || !renderer) return;
   camera.aspect =
     canvasElement.value.clientWidth / canvasElement.value.clientHeight;
   camera.updateProjectionMatrix();
@@ -103,76 +102,83 @@ const onWindowResize = useDebounceFn(() => {
   );
 }, 200);
 
+// Змінні для циклу винесені назовні, щоб уникнути GC
+let i, ox, oy, oz, noise, scaleFactor;
+let colorNoise, normalizedColorNoise, colorIndex, index1, index2, blendFactor;
+
 function animate() {
   animationFrameId = requestAnimationFrame(animate);
 
+  // Якщо сфера ще не ініціалізована - пропускаємо кадр
+  if (!spherePoints) return;
+
   const elapsedTime = clock.getElapsedTime();
 
-  // --- Slow camera rotation ---
+  // Camera rotation
   const rotationSpeed = 0.06;
   camera.position.x = Math.sin(elapsedTime * rotationSpeed) * 4;
   camera.position.z = Math.cos(elapsedTime * rotationSpeed) * 4;
   camera.lookAt(scene.position);
 
+  // Отримуємо прямий доступ до типізованих масивів
   const positions = spherePoints.geometry.attributes.position.array;
   const originalPositions =
     spherePoints.geometry.attributes.originalPosition.array;
   const colors = spherePoints.geometry.attributes.color.array;
+  const count = positions.length;
 
   const frequency = 1.5;
-  const amplitude = 0.5;
+  // const amplitude = 0.5;
   const timeFactor = 0.08;
   const colorFrequency = 0.4;
   const colorTimeFactor = 0.08;
 
-  // Optimized loop: removed vector allocations and physics simulation
-  for (let i = 0; i < positions.length; i += 3) {
-    const ox = originalPositions[i];
-    const oy = originalPositions[i + 1];
-    const oz = originalPositions[i + 2];
+  // Кешуємо значення часу для циклу
+  const timePos = elapsedTime * timeFactor;
+  const timeCol = elapsedTime * colorTimeFactor;
 
-    // 1. Position Noise
-    const noise = simplex(
-      ox * frequency,
-      oy * frequency,
-      oz * frequency + elapsedTime * timeFactor
-    );
+  // Оптимізований цикл
+  for (i = 0; i < count; i += 3) {
+    ox = originalPositions[i];
+    oy = originalPositions[i + 1];
+    oz = originalPositions[i + 2];
 
-    // Direct displacement:
-    // The sphere radius is 2. The normal vector is (ox/2, oy/2, oz/2).
-    // Displacement = normal * noise * amplitude.
-    // New Pos = Original + Displacement
-    //         = Original + (Original / 2) * noise * amplitude
-    //         = Original * (1 + noise * amplitude / 2)
+    // --- Position Calculation ---
+    noise = simplex(ox * frequency, oy * frequency, oz * frequency + timePos);
 
-    const scaleFactor = 1 + (noise * amplitude) / 2;
+    // Math optimization: (1 + noise * amplitude / 2) -> (1 + noise * 0.25)
+    scaleFactor = 1 + noise * 0.25;
 
     positions[i] = ox * scaleFactor;
     positions[i + 1] = oy * scaleFactor;
     positions[i + 2] = oz * scaleFactor;
 
-    // 2. Color Noise
-    const colorNoise = simplex(
+    // --- Color Calculation (Manual Lerp) ---
+    colorNoise = simplex(
       ox * colorFrequency,
       oy * colorFrequency,
-      oz * colorFrequency + elapsedTime * colorTimeFactor
+      oz * colorFrequency + timeCol
     );
-    const normalizedColorNoise = (colorNoise + 1) / 2;
 
-    const colorIndex = normalizedColorNoise * (colorPalette.length - 1);
-    const index1 = Math.floor(colorIndex);
-    const index2 = Math.min(index1 + 1, colorPalette.length - 1);
-    const blendFactor = colorIndex - index1;
+    // Normalization (-1..1 -> 0..1)
+    normalizedColorNoise = (colorNoise + 1) * 0.5;
 
-    const color1 = colorPalette[index1];
-    const color2 = colorPalette[index2];
+    colorIndex = normalizedColorNoise * paletteMaxIndex;
+    index1 = Math.floor(colorIndex);
+    // Використовуємо побітове "або" з 0 для швидкого floor, але Math.floor надійніше для від'ємних (тут їх нема)
+    // index2 не може вийти за межі, бо index1 макс = length-1
+    index2 = index1 < paletteMaxIndex ? index1 + 1 : paletteMaxIndex;
 
-    // Use reusable tempColor to avoid creating new objects
-    tempColor.copy(color1).lerp(color2, blendFactor);
+    blendFactor = colorIndex - index1;
 
-    colors[i] = tempColor.r;
-    colors[i + 1] = tempColor.g;
-    colors[i + 2] = tempColor.b;
+    // Manual Lerp: A + (B - A) * t
+    // Це набагато швидше ніж tempColor.copy().lerp()
+    colors[i] =
+      paletteR[index1] + (paletteR[index2] - paletteR[index1]) * blendFactor;
+    colors[i + 1] =
+      paletteG[index1] + (paletteG[index2] - paletteG[index1]) * blendFactor;
+    colors[i + 2] =
+      paletteB[index1] + (paletteB[index2] - paletteB[index1]) * blendFactor;
   }
 
   spherePoints.geometry.attributes.position.needsUpdate = true;
@@ -182,12 +188,31 @@ function animate() {
   renderer.render(scene, camera);
 }
 
+// Функція обробки видимості вкладки
+const handleVisibilityChange = () => {
+  if (document.hidden) {
+    if (isLooping) {
+      cancelAnimationFrame(animationFrameId);
+      isLooping = false;
+    }
+  } else {
+    // Перевіряємо, чи ми все ще у в'юпорті перед відновленням
+    if (!isLooping && canvasElement.value) {
+      // Тут можна просто відновити, observer сам розбереться,
+      // але для надійності краще залишити логіку на observer
+    }
+  }
+};
+
 onMounted(() => {
   init();
 
+  // Додаткова оптимізація: зупинка при перемиканні вкладок
+  document.addEventListener('visibilitychange', handleVisibilityChange);
+
   observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
+      if (entry.isIntersecting && !document.hidden) {
         if (!isLooping) {
           isLooping = true;
           animate();
@@ -205,28 +230,23 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  document.removeEventListener('visibilitychange', handleVisibilityChange);
   if (observer) observer.disconnect();
   cancelAnimationFrame(animationFrameId);
+  if (removeResizeListener) removeResizeListener();
 
-  // Remove resize event listeners
-  if (removeResizeListener) {
-    removeResizeListener();
+  // Ретельне очищення Three.js
+  if (spherePoints) {
+    scene.remove(spherePoints);
+    spherePoints.geometry.dispose();
+    spherePoints.material.dispose();
+    spherePoints = null; // прибираємо посилання
   }
 
-  if (scene) {
-    scene.traverse((object) => {
-      if (object.geometry) object.geometry.dispose();
-      if (object.material) {
-        if (Array.isArray(object.material)) {
-          object.material.forEach((material) => material.dispose());
-        } else {
-          object.material.dispose();
-        }
-      }
-    });
-  }
   if (renderer) {
     renderer.dispose();
+    // renderer.forceContextLoss(); // Іноді корисно, але зазвичай dispose достатньо
+    renderer = null;
   }
 });
 </script>
@@ -238,7 +258,7 @@ onUnmounted(() => {
 </template>
 
 <style lang="scss" scoped>
-@use '~/assets/styles/variables' as *;
+// Стилі без змін
 .scene-container {
   width: 100%;
   height: 100%;

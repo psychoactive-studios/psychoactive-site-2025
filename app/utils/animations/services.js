@@ -185,99 +185,101 @@ export const heroScrollAnimation = (ctx, isPlaying) => {
         isMobile: `(max-width: 768px)`,
       },
       (context) => {
-        let { isMobile } = context.conditions;
-        gsap
-          .timeline({
-            id: 'services-scroll-animation',
-            scrollTrigger: {
-              id: 'services-hero-scrolltrigger',
-              trigger: '.hero__wrapper',
-              pin: true, // pin the trigger element while active
-              pinSpacing: false,
-              start: isMobile ? 'top+=1px top' : 'top top', // when the top of the trigger hits the top of the viewport
-              end: '75% top', // end after scrolling 500px beyond the start
-              scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
-              invalidateOnRefresh: true,
-              onUpdate: (self) => {
-                if (self.progress > 0.5 && isPlaying.value) {
-                  isPlaying.value = false;
-                }
-                if (self.progress < 0.5 && !isPlaying.value) {
-                  isPlaying.value = true;
-                }
+        let { isDesktop } = context.conditions;
+        if (isDesktop) {
+          gsap
+            .timeline({
+              id: 'services-scroll-animation',
+              scrollTrigger: {
+                id: 'services-hero-scrolltrigger',
+                trigger: '.hero__wrapper',
+                pin: true, // pin the trigger element while active
+                pinSpacing: false,
+                start: 'top top', // when the top of the trigger hits the top of the viewport
+                end: '75% top', // end after scrolling 500px beyond the start
+                scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
+                invalidateOnRefresh: true,
+                onUpdate: (self) => {
+                  if (self.progress > 0.5 && isPlaying.value) {
+                    isPlaying.value = false;
+                  }
+                  if (self.progress < 0.5 && !isPlaying.value) {
+                    isPlaying.value = true;
+                  }
+                },
+                // markers: true,
               },
-              // markers: true,
-            },
-          })
-          .fromTo(
-            '.bottom-text__web, .bottom-text__web-svg',
-            { xPercent: 0 },
-            { xPercent: -175, duration: outputTime, ease: 'power2.out' },
-            'output-of-elements'
-          )
-          .fromTo(
-            '.bottom-text__shape',
-            { xPercent: 0 },
-            { xPercent: -125, duration: outputTime },
-            'output-of-elements'
-          )
-          .fromTo(
-            '.right-label, .top-text__label',
-            { xPercent: 0 },
-            { xPercent: 275, duration: outputTime, ease: 'power1.out' },
-            'output-of-elements'
-          )
-          .fromTo(
-            '.top-text .char-center',
-            { opacity: 1 },
-            {
-              opacity: 0,
-              duration: 0.01,
-              stagger: {
-                amount: 0.4,
-                from: 'random',
+            })
+            .fromTo(
+              '.bottom-text__web, .bottom-text__web-svg',
+              { xPercent: 0 },
+              { xPercent: -175, duration: outputTime, ease: 'power2.out' },
+              'output-of-elements'
+            )
+            .fromTo(
+              '.bottom-text__shape',
+              { xPercent: 0 },
+              { xPercent: -125, duration: outputTime },
+              'output-of-elements'
+            )
+            .fromTo(
+              '.right-label, .top-text__label',
+              { xPercent: 0 },
+              { xPercent: 275, duration: outputTime, ease: 'power1.out' },
+              'output-of-elements'
+            )
+            .fromTo(
+              '.top-text .char-center',
+              { opacity: 1 },
+              {
+                opacity: 0,
+                duration: 0.01,
+                stagger: {
+                  amount: 0.4,
+                  from: 'random',
+                },
               },
-            },
-            'output-of-elements'
-          )
-          .fromTo(
-            'h1.title .char-center',
-            { opacity: 1 },
-            {
-              opacity: 0,
-              duration: 0.01,
-              stagger: {
-                amount: 0.4,
-                from: 'random',
+              'output-of-elements'
+            )
+            .fromTo(
+              'h1.title .char-center',
+              { opacity: 1 },
+              {
+                opacity: 0,
+                duration: 0.01,
+                stagger: {
+                  amount: 0.4,
+                  from: 'random',
+                },
               },
-            },
-            'output-of-elements'
-          )
-          .to(
-            '.circle--wrapper .circle',
-            {
-              rotate: -90,
-              opacity: 0,
-              duration: outputTime,
-              ease: 'power1.out',
-            },
-            'output-of-elements'
-          )
-          .to(
-            '.services-3d-scene',
-            {
-              scale: 0,
-              opacity: 0,
-              duration: outputTime,
-              ease: 'power1.out',
-            },
-            'output-of-elements'
-          )
-          .to(
-            '.center',
-            { scaleX: 0, ease: 'power1.out', duration: outputTime },
-            'output-of-elements'
-          );
+              'output-of-elements'
+            )
+            .to(
+              '.circle--wrapper .circle',
+              {
+                rotate: -90,
+                opacity: 0,
+                duration: outputTime,
+                ease: 'power1.out',
+              },
+              'output-of-elements'
+            )
+            .to(
+              '.services-3d-scene',
+              {
+                scale: 0,
+                opacity: 0,
+                duration: outputTime,
+                ease: 'power1.out',
+              },
+              'output-of-elements'
+            )
+            .to(
+              '.center',
+              { scaleX: 0, ease: 'power1.out', duration: outputTime },
+              'output-of-elements'
+            );
+        }
       }
     );
   });
