@@ -31,7 +31,7 @@ export const heroInitSplitText = () => {
                   Initial animation
 =======================================================*/
 export const heroInitAnimation = (ctx, scrollSmoother) => {
-  let matchMedia = gsap.matchMedia();
+  const matchMedia = gsap.matchMedia();
   ctx.add(() => {
     matchMedia.add(
       {
@@ -225,6 +225,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         }, '-=0.5');
       }
     );
+    return () => matchMedia.revert();
   });
 };
 
@@ -234,7 +235,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 const inputTime = 1;
 const circleTime = 0.5;
 export const heroScrollAnimation = (ctx) => {
-  let matchMedia = gsap.matchMedia();
+  const matchMedia = gsap.matchMedia();
   ctx.add(() => {
     matchMedia.add(
       {
@@ -406,6 +407,7 @@ export const heroScrollAnimation = (ctx) => {
         // }
       }
     );
+    return () => matchMedia.revert();
   });
 };
 
@@ -431,7 +433,7 @@ const getDotsPercent = () => {
 const outputTime = 1;
 
 export const videoReelsScrollAnimation = (ctx) => {
-  let matchMedia = gsap.matchMedia();
+  const matchMedia = gsap.matchMedia();
   ctx.add(() => {
     matchMedia.add(
       {
@@ -585,6 +587,7 @@ export const videoReelsScrollAnimation = (ctx) => {
         }
       }
     );
+    return () => matchMedia.revert();
   });
 };
 

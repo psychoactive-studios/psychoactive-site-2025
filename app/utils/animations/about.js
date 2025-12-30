@@ -7,7 +7,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
     '#header-navigation-button',
     '#header-sound-button',
   ]);
-  let matchMedia = gsap.matchMedia();
+  const matchMedia = gsap.matchMedia();
   ctx.add(() => {
     matchMedia.add(
       {
@@ -77,6 +77,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         }
       }
     );
+    return () => matchMedia.revert();
   });
 };
 

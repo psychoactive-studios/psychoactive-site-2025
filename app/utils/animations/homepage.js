@@ -532,7 +532,7 @@ const getDotsPercent = () => {
 
 const outputTime = 1.3;
 export const heroScrollAnimation = (ctx) => {
-  let matchMedia = gsap.matchMedia();
+  const matchMedia = gsap.matchMedia();
   ctx.add(() => {
     matchMedia.add(
       {
@@ -802,5 +802,6 @@ export const heroScrollAnimation = (ctx) => {
         }
       }
     );
+    return () => matchMedia.revert();
   });
 };
