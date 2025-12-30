@@ -130,7 +130,8 @@ watch(isLoading, (newVal) => {
       height: auto;
     }
     @include respond(mobile) {
-      inset: 0;
+      inset: 0 0 auto 0;
+      height: 100vh;
     }
     .services-3d-scene {
       width: 100%;
