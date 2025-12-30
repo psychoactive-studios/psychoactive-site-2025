@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import { createNoise3D } from 'simplex-noise';
 import { useDebounceFn, useEventListener } from '@vueuse/core';
 
-// 1. Проп для керування паузою ззовні
+// 1. Prop to control pause externally
 const props = defineProps({
   isPlaying: {
     type: Boolean,
@@ -17,15 +17,15 @@ const canvasElement = ref(null);
 // --- Scene globals ---
 let scene, camera, renderer;
 let spherePoints;
-const clock = new THREE.Clock(); // Годинник Three.js
+const clock = new THREE.Clock(); // Three.js Clock
 const simplex = createNoise3D();
 let animationFrameId;
 let removeResizeListener;
 let isLooping = false;
-let totalTime = 0; // Змінна для накопичення часу (щоб працювала пауза)
+let totalTime = 0; // Variable to accumulate time (so pause works)
 
 // --- Reusable Objects (POOLING) ---
-// Створюємо об'єкти один раз, щоб не засмічувати пам'ять в циклі
+// Create objects once to avoid memory clutter in the loop
 const _tempNormal = new THREE.Vector3();
 const _targetPos = new THREE.Vector3();
 const _currentPos = new THREE.Vector3();
@@ -70,7 +70,7 @@ function init() {
 
   renderer = new THREE.WebGLRenderer({
     canvas: canvasElement.value,
-    antialias: true, // Можна вимкнути, якщо будуть лаги на слабких ПК
+    antialias: true, // Can be disabled if there are lags on weak PCs
     alpha: true,
   });
   renderer.setClearColor(0x000000, 0);
@@ -81,7 +81,7 @@ function init() {
   );
   renderer.setPixelRatio(window.devicePixelRatio);
 
-  // Оптимізована геометрія (180x180 замість 240x240) - візуально майже те саме, але на 40% легше
+  // Optimized geometry (180x180 instead of 240x240) - visually almost the same, but 40% lighter
   const geometry = new THREE.SphereGeometry(2, 190, 190);
   const positions = geometry.attributes.position.array;
 
@@ -148,7 +148,7 @@ function onDocumentMouseMove(event) {
 const startAnimation = () => {
   if (isLooping) return;
   isLooping = true;
-  // Скидаємо дельту, щоб уникнути стрибка часу після довгої паузи
+  // Reset delta to avoid time jump after long pause
   clock.getDelta();
   animate();
 };
@@ -159,7 +159,7 @@ const stopAnimation = () => {
     cancelAnimationFrame(animationFrameId);
     animationFrameId = null;
   }
-  // totalTime не скидаємо, тому анімація ставиться на "паузу"
+  // totalTime is not reset, so the animation is put on "pause"
 };
 
 function animate() {
@@ -167,7 +167,7 @@ function animate() {
 
   animationFrameId = requestAnimationFrame(animate);
 
-  // Рахуємо час вручну для підтримки паузи
+  // Calculate time manually to support pause
   const delta = clock.getDelta();
   totalTime += delta;
   const elapsedTime = totalTime;
