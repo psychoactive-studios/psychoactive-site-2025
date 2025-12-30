@@ -82,7 +82,7 @@ function init() {
   renderer.setPixelRatio(window.devicePixelRatio);
 
   // Оптимізована геометрія (180x180 замість 240x240) - візуально майже те саме, але на 40% легше
-  const geometry = new THREE.SphereGeometry(2, 180, 180);
+  const geometry = new THREE.SphereGeometry(2, 190, 190);
   const positions = geometry.attributes.position.array;
 
   const originalPositions = new Float32Array(positions.length);
@@ -102,7 +102,7 @@ function init() {
 
   const material = new THREE.PointsMaterial({
     vertexColors: true,
-    size: 0.009,
+    size: 0.011,
     blending: THREE.AdditiveBlending,
     transparent: true,
     opacity: 0.9,

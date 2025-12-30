@@ -22,9 +22,9 @@ const { currentTransitionImage } = useWorks();
       <ClientOnly>
         <div v-if="!isMobile" class="services-list__video">
           <video
+            id="services-list-video"
             class="services-list__video_player"
             src="/video/services_grid.mp4"
-            autoplay
             loop
             muted
             playsinline
@@ -38,33 +38,33 @@ const { currentTransitionImage } = useWorks();
               <div class="stepper__videos">
                 <div class="stepper__videos_overlay" />
                 <video
+                  id="services-stepper-video-1"
                   class="video step-1"
                   src="/video/service_01.mp4"
-                  autoplay
                   loop
                   muted
                   playsinline
                 />
                 <video
+                  id="services-stepper-video-2"
                   class="video step-2"
                   src="/video/service_02.mp4"
-                  autoplay
                   loop
                   muted
                   playsinline
                 />
                 <video
+                  id="services-stepper-video-3"
                   class="video step-3"
                   src="/video/service_03.mp4"
-                  autoplay
                   loop
                   muted
                   playsinline
                 />
                 <video
+                  id="services-stepper-video-4"
                   class="video step-4"
                   src="/video/service_04.mp4"
-                  autoplay
                   loop
                   muted
                   playsinline
@@ -110,9 +110,9 @@ const { currentTransitionImage } = useWorks();
         <!-- Fixed footer video -->
         <div v-if="!isMobile" class="stepper__footer-video">
           <video
+            id="services-footer-video"
             class="video"
             src="/video/preview_reel.mp4"
-            autoplay
             loop
             muted
             playsinline
@@ -154,6 +154,7 @@ section.services {
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
+    display: none;
     video {
       width: 100%;
       height: 100%;
@@ -165,6 +166,7 @@ section.services {
   .services-stepper,
   .stepper {
     @include flex-center;
+    display: none;
     transform-origin: center;
     background-color: $color-foreground;
     min-height: 100dvh;
@@ -291,6 +293,7 @@ section.services {
       }
     }
     &__footer-video {
+      display: none;
       position: fixed;
       inset: 0;
       -webkit-mask-image: radial-gradient(

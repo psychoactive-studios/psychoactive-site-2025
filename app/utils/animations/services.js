@@ -1,7 +1,30 @@
 import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 
+// Services fixed  section elements
+let servicesListFixedSection,
+  servicesListPlayer,
+  servicesStepperFixedSection,
+  servicesStepperVideo1,
+  servicesStepperVideo2,
+  servicesStepperVideo3,
+  servicesStepperVideo4,
+  stepperFooterFixedSection,
+  stepperFooterPlayer;
+
 export const heroInitAnimation = (ctx, scrollSmoother) => {
+  servicesListFixedSection = document.querySelector('.services-list__video');
+  servicesListPlayer = document.querySelector('#services-list-video');
+
+  servicesStepperFixedSection = document.querySelector('.services-stepper');
+  servicesStepperVideo1 = document.querySelector('#services-stepper-video-1');
+  servicesStepperVideo2 = document.querySelector('#services-stepper-video-2');
+  servicesStepperVideo3 = document.querySelector('#services-stepper-video-3');
+  servicesStepperVideo4 = document.querySelector('#services-stepper-video-4');
+
+  stepperFooterFixedSection = document.querySelector('.stepper__footer-video');
+  stepperFooterPlayer = document.querySelector('#services-footer-video');
+
   /* ======== Layout elements Animation ========= */
   const layoutElements = gsap.utils.toArray([
     '#header-logo',
@@ -145,7 +168,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
   });
 };
 
-export const heroScrollAnimation = (ctx) => {
+export const heroScrollAnimation = (ctx, isPlaying) => {
   const outputTime = 1.3;
 
   SplitText.create('h1.title, .bottom-text__shape, .top-text p', {
@@ -175,6 +198,14 @@ export const heroScrollAnimation = (ctx) => {
               end: '75% top', // end after scrolling 500px beyond the start
               scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
               invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                if (self.progress > 0.5 && isPlaying.value) {
+                  isPlaying.value = false;
+                }
+                if (self.progress < 0.5 && !isPlaying.value) {
+                  isPlaying.value = true;
+                }
+              },
               // markers: true,
             },
           })
@@ -270,6 +301,7 @@ export const servicesListAnimation = (ctx, root) => {
       },
       (context) => {
         let { isDesktop } = context.conditions;
+
         if (isDesktop) {
           gsap.to(document.querySelector('.services-list__video_player'), {
             clipPath: 'circle(50% at 50% 50%)',
@@ -279,6 +311,14 @@ export const servicesListAnimation = (ctx, root) => {
               start: 'top center',
               end: () => `${window.innerHeight * 0.5} center`,
               scrub: true,
+              onEnter: () => {
+                gsap.set(servicesListFixedSection, { display: 'flex' });
+                servicesListPlayer.play();
+              },
+              onLeaveBack: () => {
+                gsap.set(servicesListFixedSection, { display: 'none' });
+                servicesListPlayer.pause();
+              },
             },
           });
 
@@ -392,6 +432,29 @@ export const stepperAnimation = (ctx) => {
                 start: 'top center',
                 end: 'bottom bottom',
                 scrub: true,
+                onEnter: () => {
+                  gsap.set(servicesStepperFixedSection, { display: 'flex' });
+                  servicesStepperVideo1.play();
+                  servicesStepperVideo2.play();
+                  servicesStepperVideo3.play();
+                  servicesStepperVideo4.play();
+                },
+                onLeaveBack: () => {
+                  gsap.set(servicesStepperFixedSection, { display: 'none' });
+                  servicesStepperVideo1.pause();
+                  servicesStepperVideo2.pause();
+                  servicesStepperVideo3.pause();
+                  servicesStepperVideo4.pause();
+                },
+                onUpdate: (self) => {
+                  if (self.progress > 0.1) {
+                    gsap.set(servicesListFixedSection, { display: 'none' });
+                    servicesListPlayer.pause();
+                  } else {
+                    gsap.set(servicesListFixedSection, { display: 'flex' });
+                    servicesListPlayer.play();
+                  }
+                },
                 // invalidateOnRefresh: true,
               },
             })
@@ -948,6 +1011,14 @@ export const stepperAnimation = (ctx) => {
                 end: 'bottom top',
                 scrub: true,
                 invalidateOnRefresh: true,
+                onEnter: () => {
+                  gsap.set(stepperFooterFixedSection, { display: 'flex' });
+                  stepperFooterPlayer.play();
+                },
+                onLeaveBack: () => {
+                  gsap.set(stepperFooterFixedSection, { display: 'none' });
+                  stepperFooterPlayer.pause();
+                },
               },
             })
             .to(
