@@ -531,7 +531,7 @@ const getDotsPercent = () => {
 };
 
 const outputTime = 1.3;
-export const heroScrollAnimation = (ctx) => {
+export const heroScrollAnimation = (ctx, isPlaying) => {
   const matchMedia = gsap.matchMedia();
   ctx.add(() => {
     matchMedia.add(
@@ -551,10 +551,18 @@ export const heroScrollAnimation = (ctx) => {
                 id: 'homepage-hero-scrolltrigger',
                 trigger: '.hero__intro',
                 pin: true, // pin the trigger element while active
-                start: 'top top', // when the top of the trigger hits the top of the viewport
+                start: 'top 1px', // when the top of the trigger hits the top of the viewport
                 end: 'bottom top', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
                 invalidateOnRefresh: true,
+                onUpdate: (self) => {
+                  console.log('Update isPlaying', self.progress);
+                  if (self.progress > 0.45) {
+                    isPlaying.value = false;
+                  } else {
+                    isPlaying.value = true;
+                  }
+                },
                 // markers: true,
               },
             })

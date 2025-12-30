@@ -24,6 +24,7 @@ const { playInteractionSound } = useAudioManager();
 const { isLoading } = useLoader();
 
 const container = ref(null);
+const isPlaying = ref(true);
 let ctx;
 
 onMounted(() => {
@@ -31,7 +32,7 @@ onMounted(() => {
     ctx = gsap.context(() => {}, container.value);
 
     heroInitSplitText();
-    heroScrollAnimation(ctx);
+    heroScrollAnimation(ctx, isPlaying);
 
     // heroInitAnimation(ctx, scrollSmoother);
   }
@@ -108,7 +109,10 @@ const onScrollDownHandler = () => {
     <div class="hero__intro">
       <section class="hero__intro_wrapper">
         <div class="homehero-3d-scene--wrapper">
-          <ServicesHero3DScene class="homehero-3d-scene" />
+          <ServicesHero3DScene
+            :is-playing="isPlaying"
+            class="homehero-3d-scene"
+          />
           <!-- <HomeHero3DScene class="homehero-3d-scene" /> -->
         </div>
         <div class="scene">
