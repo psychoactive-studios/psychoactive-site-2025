@@ -34,6 +34,10 @@ onMounted(() => {
   ctx = gsap.context(() => {}, containerRef.value);
   timelineScrollAnimation(ctx, currentYear);
 });
+
+onUnmounted(() => {
+  if (ctx) ctx.revert();
+});
 </script>
 
 <template>

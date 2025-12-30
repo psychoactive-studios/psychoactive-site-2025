@@ -36,7 +36,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
   const duration1 = 2;
   const easeCircle = 'power3.inOut';
 
-  let matchMedia = gsap.matchMedia();
+  const matchMedia = gsap.matchMedia();
   ctx.add(() => {
     matchMedia.add(
       {
@@ -165,6 +165,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
         }, '-=1');
       }
     );
+    return () => matchMedia.revert();
   });
 };
 
@@ -176,7 +177,7 @@ export const heroScrollAnimation = (ctx, isPlaying) => {
     charsClass: 'char-center',
   });
 
-  let matchMedia = gsap.matchMedia();
+  const matchMedia = gsap.matchMedia();
 
   ctx.add(() => {
     matchMedia.add(
@@ -282,6 +283,7 @@ export const heroScrollAnimation = (ctx, isPlaying) => {
         }
       }
     );
+    return () => matchMedia.revert();
   });
 };
 
@@ -294,7 +296,7 @@ export const servicesListAnimation = (ctx, root) => {
     }
   );
 
-  let matchMedia = gsap.matchMedia();
+  const matchMedia = gsap.matchMedia();
 
   ctx.add(() => {
     matchMedia.add(
@@ -387,6 +389,7 @@ export const servicesListAnimation = (ctx, root) => {
         }
       }
     );
+    return () => matchMedia.revert();
   });
 };
 
@@ -396,7 +399,7 @@ export const stepperAnimation = (ctx) => {
     charsClass: 'char-center',
   });
 
-  let matchMedia = gsap.matchMedia();
+  const matchMedia = gsap.matchMedia();
 
   ctx.add(() => {
     const params = {
