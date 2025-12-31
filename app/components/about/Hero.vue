@@ -67,6 +67,7 @@ watch(isLoading, (newVal) => {
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/functions' as *;
 .hero {
+  pointer-events: none;
   &__wrapper {
     @include flex-center;
     flex-direction: column;
@@ -75,9 +76,10 @@ watch(isLoading, (newVal) => {
     @include respond(portrait) {
       padding-top: 160px;
       padding-bottom: 160px;
+      justify-content: flex-start;
     }
     @include respond(mobile) {
-      display: block;
+      // display: block;
       padding-top: 24px;
       padding-bottom: 74px;
     }
