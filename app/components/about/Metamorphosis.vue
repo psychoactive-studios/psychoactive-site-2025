@@ -38,7 +38,7 @@ const handleClick = (e) => {
   const button = e.currentTarget;
   const el = letsTalkButtonRef.value;
 
-  if (gsap.isTweening(el)) return;
+  // if (gsap.isTweening(el)) return;
 
   gsap.to(button, {
     width: isOpen.value ? 390 : 240,
@@ -55,9 +55,9 @@ const handleClick = (e) => {
       tweenLength: false,
     },
     overwrite: true,
-    // onComplete: () => {
-    //   gsap.set(el, { clearProps: 'all' });
-    // },
+    onComplete: () => {
+      gsap.set(el, { clearProps: 'all' });
+    },
   });
   isOpen.value = !isOpen.value;
 };
@@ -66,45 +66,47 @@ const handleClick = (e) => {
   <div class="metamorphosis">
     <div :class="['metamorphosis__wrapper', { open: isOpen }]">
       <div class="metamorphosis__content">
-        <div class="metamorphosis__title">
-          <div class="metamorphosis__title_media">
-            <video
-              src="/video/service_03.mp4"
-              autoplay
-              muted
-              loop
-              playsinline
-            />
-            <button class="metamorphosis__title_button">
-              <svg
-                width="29"
-                height="21"
-                viewBox="0 0 29 21"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M5.17157 14.6756H2C0.895431 14.6756 0 13.7802 0 12.6756V8.17558C0 7.07101 0.89543 6.17558 2 6.17558H5.17157C5.70201 6.17558 6.21071 5.96487 6.58579 5.5898L11.5858 0.589796C12.8457 -0.670134 15 0.222199 15 2.00401V18.8472C15 20.629 12.8457 21.5213 11.5858 20.2614L6.58579 15.2614C6.21071 14.8863 5.70201 14.6756 5.17157 14.6756Z"
-                  fill="white"
-                />
-                <path
-                  d="M23.2405 17.3996C27.2696 13.1701 27.2111 6.68034 23.2423 2.89957C22.8424 2.51864 22.8271 1.88566 23.208 1.48577C23.5889 1.08589 24.2219 1.07053 24.6218 1.45146C29.4504 6.05125 29.4211 13.8112 24.6886 18.7791C24.3077 19.1789 23.6747 19.1943 23.2748 18.8134C22.875 18.4324 22.8596 17.7995 23.2405 17.3996Z"
-                  fill="white"
-                  class="path-1"
-                />
-                <path
-                  d="M18.6948 12.5337C20.0512 11.0005 19.9274 8.95108 18.767 7.92447C18.3533 7.55853 18.3147 6.92654 18.6806 6.51289C19.0465 6.09925 19.6785 6.06057 20.0922 6.42651C22.2409 8.32743 22.1299 11.6692 20.1928 13.8589C19.8269 14.2725 19.1949 14.3112 18.7812 13.9452C18.3676 13.5793 18.3289 12.9473 18.6948 12.5337Z"
-                  fill="white"
-                  class="path-2"
-                />
-              </svg>
-            </button>
-            <div class="dots-top" />
-            <div class="dots-bottom" />
-          </div>
-          <div class="metamorphosis__title_text">
-            <h2>Metamorphosis</h2>
-            <p class="text-lg">/ˌmɛtəˈmɔːfəsɪs,ˌmɛtəmɔːˈfəʊsɪs/</p>
+        <div class="container">
+          <div class="metamorphosis__title">
+            <div class="metamorphosis__title_media">
+              <video
+                src="/video/service_03.mp4"
+                autoplay
+                muted
+                loop
+                playsinline
+              />
+              <button class="metamorphosis__title_button">
+                <svg
+                  width="29"
+                  height="21"
+                  viewBox="0 0 29 21"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M5.17157 14.6756H2C0.895431 14.6756 0 13.7802 0 12.6756V8.17558C0 7.07101 0.89543 6.17558 2 6.17558H5.17157C5.70201 6.17558 6.21071 5.96487 6.58579 5.5898L11.5858 0.589796C12.8457 -0.670134 15 0.222199 15 2.00401V18.8472C15 20.629 12.8457 21.5213 11.5858 20.2614L6.58579 15.2614C6.21071 14.8863 5.70201 14.6756 5.17157 14.6756Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M23.2405 17.3996C27.2696 13.1701 27.2111 6.68034 23.2423 2.89957C22.8424 2.51864 22.8271 1.88566 23.208 1.48577C23.5889 1.08589 24.2219 1.07053 24.6218 1.45146C29.4504 6.05125 29.4211 13.8112 24.6886 18.7791C24.3077 19.1789 23.6747 19.1943 23.2748 18.8134C22.875 18.4324 22.8596 17.7995 23.2405 17.3996Z"
+                    fill="currentColor"
+                    class="path-1"
+                  />
+                  <path
+                    d="M18.6948 12.5337C20.0512 11.0005 19.9274 8.95108 18.767 7.92447C18.3533 7.55853 18.3147 6.92654 18.6806 6.51289C19.0465 6.09925 19.6785 6.06057 20.0922 6.42651C22.2409 8.32743 22.1299 11.6692 20.1928 13.8589C19.8269 14.2725 19.1949 14.3112 18.7812 13.9452C18.3676 13.5793 18.3289 12.9473 18.6948 12.5337Z"
+                    fill="currentColor"
+                    class="path-2"
+                  />
+                </svg>
+              </button>
+              <div class="dots-top" />
+              <div class="dots-bottom" />
+            </div>
+            <div class="metamorphosis__title_text">
+              <h2>Metamorphosis</h2>
+              <p class="text-lg">/ˌmɛtəˈmɔːfəsɪs,ˌmɛtəmɔːˈfəʊsɪs/</p>
+            </div>
           </div>
         </div>
 
@@ -137,7 +139,7 @@ const handleClick = (e) => {
               <li class="tag">growth</li>
             </ul>
           </div>
-          <div class="metamorphosis__definition_section">
+          <div class="metamorphosis__definition_section origin">
             <h3>Origin:</h3>
             <ul class="origin-list">
               <li>
@@ -172,7 +174,7 @@ const handleClick = (e) => {
               </li>
             </ul>
           </div>
-          <div class="text-lg">
+          <div class="metamorphosis__definition_section text-lg">
             NEW ZEALAND (2018) — redefined by Psychoactive Studios to describe
             the digital evolution of brands through strategy, design, and
             technology.
@@ -180,34 +182,36 @@ const handleClick = (e) => {
         </div>
       </div>
     </div>
-    <div class="metamorphosis__button">
-      <div class="metamorphosis__button_line">
-        <span class="line" />
+    <div class="container">
+      <div class="metamorphosis__button">
+        <div class="metamorphosis__button_line">
+          <span class="line" />
+        </div>
+        <button
+          class="button"
+          @mouseenter="handleHoverEffect"
+          @click="handleClick"
+        >
+          <span ref="letsTalkButtonRef">METAMORPHOSIS DEFINITION</span>
+          <span class="button__dots">
+            <i />
+            <i />
+            <i />
+          </span>
+        </button>
+        <div class="metamorphosis__button_line">
+          <span class="line" />
+        </div>
       </div>
-      <button
-        class="button"
-        @mouseenter="handleHoverEffect"
-        @click="handleClick"
-      >
-        <span ref="letsTalkButtonRef">METAMORPHOSIS DEFINITION</span>
-        <span class="button__dots">
-          <i />
-          <i />
-          <i />
-        </span>
-      </button>
-      <div class="metamorphosis__button_line">
-        <span class="line" />
+      <div class="metamorphosis__video">
+        <video
+          src="/video/metamorphosis-bg.mp4"
+          autoplay
+          muted
+          loop
+          playsinline
+        />
       </div>
-    </div>
-    <div class="metamorphosis__video">
-      <video
-        src="/video/metamorphosis-bg.mp4"
-        autoplay
-        muted
-        loop
-        playsinline
-      />
     </div>
   </div>
 </template>
@@ -236,14 +240,14 @@ const handleClick = (e) => {
     padding-bottom: 0;
   }
   .text-lg {
-    font-size: 24px;
+    font-size: clamp(16px, 2vw, 24px);
     font-style: normal;
     font-weight: 400;
     line-height: 125%;
   }
   .tag {
     font-family: 'RoobertMono';
-    font-size: 1rem;
+    font-size: clamp(12px, 0.833333vw, 16px);
     font-style: normal;
     font-weight: 500;
     line-height: 100%;
@@ -264,6 +268,7 @@ const handleClick = (e) => {
   }
   &__content {
     min-height: 0;
+    min-width: 0;
   }
   &__title {
     // display: flex;
@@ -273,6 +278,10 @@ const handleClick = (e) => {
     gap: 32px;
     position: relative;
     cursor: pointer;
+    @include respond(mobile) {
+      gap: 16px;
+      align-items: center;
+    }
     &::before,
     &::after {
       content: '';
@@ -293,10 +302,16 @@ const handleClick = (e) => {
       @include flex-center;
       position: relative;
       aspect-ratio: 1;
+      @include respond(mobile) {
+        width: 72px;
+      }
       video {
         position: absolute;
         inset: 0;
         clip-path: circle(50% at 50% 50%);
+        @include respond(mobile) {
+          display: none;
+        }
       }
       .dots-top,
       .dots-bottom {
@@ -338,6 +353,13 @@ const handleClick = (e) => {
       background-color: $color-background;
       z-index: 1;
       border-radius: 50%;
+      color: $color-foreground;
+      @include respond(mobile) {
+        width: 48px;
+        height: 48px;
+        background-color: $color-foreground;
+        color: $color-background;
+      }
       svg {
         width: 40%;
       }
@@ -356,10 +378,22 @@ const handleClick = (e) => {
         color: transparent;
         background-clip: text;
         transition: background-position-x 0.5s ease-in-out;
+        @include respond(mobile) {
+          font-size: 6.4vw;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 121%;
+          letter-spacing: -0.02em;
+          color: $color-foreground;
+        }
       }
       .text-lg {
         opacity: 0.5;
         margin-top: 16px;
+        @include respond(mobile) {
+          opacity: 0.8;
+          margin-top: 2px;
+        }
       }
     }
     &:hover {
@@ -379,19 +413,39 @@ const handleClick = (e) => {
     }
   }
   &__definition {
-    max-width: 44%;
+    max-width: 37%;
     margin: 80px auto 0 auto;
     display: flex;
     flex-direction: column;
     gap: 48px;
     color: white(80);
     padding-bottom: 80px;
+    @include respond(laptop) {
+      max-width: 60%;
+    }
+    @include respond(mobile) {
+      max-width: 100%;
+      margin-top: 48px;
+      padding-bottom: 48px;
+    }
+
     &_section {
+      @include respond(mobile) {
+        &:not(.origin) {
+          @include container;
+        }
+        &.origin {
+          h3 {
+            @include container;
+            margin-bottom: 1em;
+          }
+        }
+      }
       & > p {
         margin-bottom: 1.2em;
       }
       & > h3 {
-        font-size: 24px;
+        font-size: clamp(16px, 2vw, 24px);
         font-style: normal;
         font-weight: 400;
         line-height: 125%;
@@ -407,8 +461,20 @@ const handleClick = (e) => {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 12px;
+        @include respond(mobile) {
+          display: flex;
+          overflow: auto;
+          padding: 0 1rem;
+          // margin-left: -1rem;
+          // margin-right: -1rem;
+        }
         & > li {
           min-width: 0;
+          @include respond(mobile) {
+            flex-grow: 1;
+            min-width: 160px;
+            flex-shrink: 0;
+          }
           &:last-child {
             .origin-title {
               .line {
@@ -439,6 +505,9 @@ const handleClick = (e) => {
           }
           .origin-definition {
             margin-top: 8px;
+            @include respond(mobile) {
+              font-size: 12px;
+            }
           }
         }
       }
@@ -451,6 +520,7 @@ const handleClick = (e) => {
     gap: 36px;
     @include respond(mobile) {
       display: block;
+      text-align: center;
     }
     .button {
       font-family: 'RoobertMono';
@@ -538,10 +608,16 @@ const handleClick = (e) => {
     margin-top: 120px;
     border-radius: 12px;
     overflow: hidden;
+    @include respond(mobile) {
+      margin-top: 60px;
+    }
     video {
       width: 100%;
       height: auto;
       object-fit: cover;
+      @include respond(mobile) {
+        aspect-ratio: 1;
+      }
     }
   }
 }

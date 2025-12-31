@@ -96,9 +96,7 @@ definePageMeta({
       </TextWithTitle>
     </section>
     <section class="about__metamorphosis">
-      <div class="container">
-        <Metamorphosis />
-      </div>
+      <Metamorphosis />
     </section>
 
     <section class="about__collaboration">
