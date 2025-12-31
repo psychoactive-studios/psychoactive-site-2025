@@ -556,7 +556,6 @@ export const heroScrollAnimation = (ctx, isPlaying) => {
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
                 invalidateOnRefresh: true,
                 onUpdate: (self) => {
-                  console.log('Update isPlaying', self.progress);
                   if (self.progress > 0.45) {
                     isPlaying.value = false;
                   } else {
