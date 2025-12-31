@@ -538,6 +538,11 @@ const handleClick = (e) => {
     margin-top: 120px;
     border-radius: 12px;
     overflow: hidden;
+    video {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
   }
 }
 </style>

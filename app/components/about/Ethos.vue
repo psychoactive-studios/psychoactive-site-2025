@@ -1,6 +1,14 @@
 <template>
   <div class="our-ethos">
     <div class="our-ethos__title">
+      <video
+        class="our-ethos__title_bg"
+        src="/video/eye-loop-bg.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+      />
       <div class="container">
         <h2>Our Ethos</h2>
       </div>
@@ -68,12 +76,32 @@
 @use '~/assets/styles/mixins' as *;
 
 .our-ethos {
+  margin-top: -15vh;
+  @include respond(mobile) {
+    margin-top: 0;
+  }
   &__title {
     height: 100dvh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    padding-bottom: 160px;
     @include respond(mobile) {
       height: auto;
+      padding-bottom: 0;
+    }
+    &_bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      mix-blend-mode: lighten;
+      @include respond(mobile) {
+        position: static;
+      }
     }
     .container {
       margin-top: auto;
@@ -87,7 +115,6 @@
     }
   }
   &__list {
-    margin-top: 160px;
     display: flex;
     flex-direction: column;
     gap: getRem(48);
