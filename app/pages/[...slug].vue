@@ -22,9 +22,6 @@ onMounted(async () => {
   <div class="container">
     <main class="not-found">
       <article class="not-found__article">
-        <!-- <LinkButton href="/" class="work__cta_button">
-          Back to home
-        </LinkButton> -->
         <ClientOnly>
           <NotFoundDots class="not-found__article_button" />
         </ClientOnly>
@@ -34,7 +31,7 @@ onMounted(async () => {
           <div class="not-found__cta_line">
             <span class="line" />
           </div>
-          <LinkButton href="/" class="not-found__cta_button">
+          <LinkButton href="/" target="_self" class="not-found__cta_button">
             Launch Website
           </LinkButton>
           <div class="not-found__cta_line">

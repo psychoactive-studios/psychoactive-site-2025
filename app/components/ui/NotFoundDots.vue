@@ -492,7 +492,9 @@ onUnmounted(() => {
     <div class="dots-wrap">
       <canvas ref="canvasRef" class="dots-canvas" />
     </div>
-    <LinkButton class="lets-talk__link" href="/">Back to home</LinkButton>
+    <LinkButton class="lets-talk__link" target="_self" href="/"
+      >Back to home</LinkButton
+    >
   </section>
 </template>
 
