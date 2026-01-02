@@ -94,6 +94,13 @@ const onScrollDownHandler = () => {
   // Check if scrollSmoother and trigger exist
   const y = trigger?.end;
 
+  scrollSmoother.value.scrollTo(y, {
+    duration: 1.5,
+    force: true,
+    easing: (x) =>
+      x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2,
+  });
+  return;
   // Smoothly scroll to the target position
   gsap.to(scrollSmoother.value, {
     scrollTop: y,
@@ -514,6 +521,7 @@ const onScrollDownHandler = () => {
           height: 62px;
           @include flex-center;
           visibility: hidden;
+          pointer-events: all;
           @include respond(mobile) {
             display: none;
           }
