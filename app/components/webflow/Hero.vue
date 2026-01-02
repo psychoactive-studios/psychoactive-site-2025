@@ -50,6 +50,21 @@ watch(isLoading, (newVal) => {
     heroInitAnimation(ctx, scrollSmoother);
   }
 });
+
+const onClickHandler = () => {
+  const targetElement = document.querySelector('.webflow__video-reels');
+  const elementY = targetElement.getBoundingClientRect().top;
+  const elementHeight = targetElement.getBoundingClientRect().height;
+  const windowHeight = window.innerHeight;
+  const y = elementY - (windowHeight - elementHeight) / 2;
+
+  scrollSmoother.value.scrollTo(y, {
+    duration: 1.5,
+    force: true,
+    easing: (x) =>
+      x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2,
+  });
+};
 </script>
 
 <template>
@@ -97,7 +112,7 @@ watch(isLoading, (newVal) => {
               <WebflowLabel class="right-text__label" />
             </a>
           </div>
-          <ButtonDotsArrow class="bottom-down" />
+          <ButtonDotsArrow class="bottom-down" @click="onClickHandler" />
         </div>
       </div>
     </div>
