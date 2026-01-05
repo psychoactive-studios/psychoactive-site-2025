@@ -54,7 +54,7 @@ const shockPower = 5;
 const maxSpeed = 5000;
 const centerHole = false;
 const dotSize = 8; // 0.5rem * 16 = 8px
-const dotGap = 16; // 2em gap
+const dotGap = 8; // 2em gap
 
 const svgsData = ref([]);
 const currentSvgIndex = ref(0);
