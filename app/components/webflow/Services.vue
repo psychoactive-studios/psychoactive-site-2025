@@ -93,11 +93,7 @@ onUnmounted(() => {
       <ServicesAccordion ref="accordionRef" :list="list" />
     </div>
     <div class="our-services__media">
-      <NuxtImg
-        src="/img/test-webflow-our-services.jpg"
-        sizes="100vw md:50vw"
-        alt="Our Services Image"
-      />
+      <img src="/img/test-webflow-our-services.jpg" alt="Our Services Image" />
     </div>
   </div>
 </template>

@@ -1,8 +1,34 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
+/**
+ * Nuxt configuration for the Psychoactive Studios website.
+ * 
+ * This configuration defines the application's behavior, including:
+ * - **Compatibility**: Set to '2025-07-15' for feature stability.
+ * - **SSR**: Enabled for Server-Side Rendering.
+ * - **Nitro**: Configured for static site generation (SSG) with link crawling enabled and error tolerance during builds.
+ * - **Runtime Config**: Exposes public environment variables for Strapi API integration.
+ * - **DevTools**: Enabled with timeline features for debugging.
+ * - **Vue**: Configured to recognize `mux-player` as a custom element.
+ * - **Modules**: Includes ESLint, Nuxt Image, Nuxt Scripts, and SVGO for enhanced development and performance.
+ * - **CSS**: Loads global normalization and custom SCSS styles.
+ * - **App Head**: Defines SEO metadata (title, description), favicons, and preloads custom fonts (Roobert TRIAL) for optimized LCP.
+ * 
+ * @see {@link https://nuxt.com/docs/api/configuration/nuxt-config}
+ */
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   ssr: true,
+  nitro: {
+    prerender: {
+      // Automatically crawls all <a> links on pages and generates them
+      crawlLinks: true,
+      // Manually specify routes that must be generated
+      // routes: ['/'],
+      // If an error occurs on a page, the build won't fail
+      // failOnError: false,
+    }
+  },
   // routeRules: {
   //   '/content-hub': { isr: 60 },
   //   '/content-hub/**': { isr: 60 },
@@ -28,6 +54,10 @@ export default defineNuxtConfig({
   },
   modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo',],
   css: ['modern-normalize/modern-normalize.css', '~/assets/styles/main.scss'],
+  image: {
+    // Specify the provider that supports static generation
+    provider: 'ipx',
+  },
   app: {
     head: {
       title: 'Psychoactive Studios | Web Design Agency | Webflow Partner',

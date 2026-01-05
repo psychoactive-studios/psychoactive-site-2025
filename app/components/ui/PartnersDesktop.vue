@@ -4,7 +4,7 @@ import { partnersData } from '~/data/partnersData';
 
 <template>
   <div class="partners-desktop">
-    <NuxtImg
+    <img
       v-for="partner in partnersData"
       :key="partner.id"
       :src="partner.logo"

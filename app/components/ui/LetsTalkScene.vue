@@ -61,6 +61,8 @@ const currentSvgIndex = ref(0);
 let morphIntervalId = null;
 
 async function loadSvgs() {
+  if (typeof window === 'undefined') return;
+
   const urls = props.svgUrls;
 
   svgsData.value = [];
@@ -137,7 +139,7 @@ function nextShape() {
 watch(() => props.svgUrls, loadSvgs, { deep: true });
 
 function updateShapeVisibility(animate = true) {
-  if (!canvasRef.value) return;
+  if (!canvasRef.value || !ctx) return;
 
   const canvas = canvasRef.value;
   const rect = canvas.getBoundingClientRect();
@@ -548,11 +550,11 @@ function cleanupScrollTrigger() {
     scrollTriggerInstance = null;
   }
 }
-if (props.svgUrls.length > 0 || props.svgUrl) {
-  loadSvgs();
-}
-
 onMounted(() => {
+  if (props.svgUrls.length > 0) {
+    loadSvgs();
+  }
+
   setTimeout(() => {
     buildGrid();
     initScrollTrigger();
