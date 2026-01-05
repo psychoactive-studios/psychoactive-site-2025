@@ -92,7 +92,7 @@ async function loadSvg() {
 }
 
 function updateShapeVisibility(animate = true) {
-  if (!canvasRef.value) return;
+  if (!canvasRef.value || !ctx) return;
 
   const canvas = canvasRef.value;
   const rect = canvas.getBoundingClientRect();

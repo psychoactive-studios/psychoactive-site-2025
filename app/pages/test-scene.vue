@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import LetsTalkScene from '~/components/ui/LetsTalkScene.vue';
-import LetsTalk3DScene from '~/components/ui/LetsTalk3DScene.vue';
 </script>
 
 <template>
