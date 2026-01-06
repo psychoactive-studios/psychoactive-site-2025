@@ -66,11 +66,6 @@ if (error.value) {
 const { works, feedbacks, services, whatSetsUsApart } =
   webflowPageData.value?.data || {};
 
-console.log('works', works);
-console.log('feedbacks', feedbacks);
-console.log('services', services);
-console.log('whatSetsUsApart', whatSetsUsApart);
-
 const { scrollSmoother } = useScrollSmoother();
 const { startLoading } = useLoader();
 
