@@ -85,13 +85,14 @@ onMounted(async () => {
     width: 10%;
     font-family: 'RoobertMono';
     font-style: normal;
-    font-size: 1rem;
+    font-size: clamp(12px, 1.3vw, 16px);
     font-weight: 500;
     line-height: 1;
     text-transform: uppercase;
     color: white(50);
     vertical-align: top;
     margin-top: 0.85rem;
+    white-space: nowrap;
     @include respond(mobile) {
       visibility: hidden;
     }
