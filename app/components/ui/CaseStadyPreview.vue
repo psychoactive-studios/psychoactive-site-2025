@@ -67,7 +67,11 @@ const handleClick = () => {
       <div class="case-study-preview__title">
         <div class="case-study-preview__title-wapper">
           <div class="case-study-preview__title-text">{{ mainTitle }}</div>
-          <h3 ref="titleRef">{{ mainTitle }}</h3>
+          <h3 ref="titleRef">
+            <NuxtLink :to="`/work/${slug}`" @click.prevent.stop="handleClick">{{
+              mainTitle
+            }}</NuxtLink>
+          </h3>
         </div>
         <p>{{ hero?.subTitle }}</p>
       </div>
