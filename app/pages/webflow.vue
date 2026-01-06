@@ -47,7 +47,7 @@ const { data: webflowPageData, error } = await useFetch(
     headers: {
       Authorization: `Bearer ${config.public.strapiApiKey}`,
     },
-    key: `work-${params.slug}`,
+    key: `webflow-page-data`,
     // Get cached data to prevent refetching
     getCachedData(key) {
       const nuxtApp = useNuxtApp();

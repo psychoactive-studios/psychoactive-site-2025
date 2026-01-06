@@ -38,7 +38,7 @@ const { data: homePageData, error } = await useFetch(
     headers: {
       Authorization: `Bearer ${config.public.strapiApiKey}`,
     },
-    key: `work-${params.slug}`,
+    key: `homepage-data`,
     // Get cached data to prevent refetching
     getCachedData(key) {
       const nuxtApp = useNuxtApp();
