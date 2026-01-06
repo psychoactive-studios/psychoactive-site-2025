@@ -15,7 +15,7 @@ import VideoPreview from '../ui/VideoPreview.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useAudioManager from '~/composables/useAudioManager';
-import WebflowLabel from '../ui/WebflowLabel.vue';
+import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen } = useVideoPlayer();
@@ -100,13 +100,6 @@ const onScrollDownHandler = () => {
     easing: (x) =>
       x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2,
   });
-  return;
-  // Smoothly scroll to the target position
-  gsap.to(scrollSmoother.value, {
-    scrollTop: y,
-    duration: 1.25,
-    ease: 'power3.inOut',
-  });
 };
 </script>
 
@@ -135,21 +128,17 @@ const onScrollDownHandler = () => {
             </div>
           </div>
           <div class="top-text">
+            <div class="top-text__agency">Digital-First design agency</div>
+            <div class="top-text__innovation grey-text">innovate</div>
             <a
               href="https://webflow.com/@Psychoactive-Studios"
               target="_blank"
               @mouseenter="playInteractionSound"
               @focus="playInteractionSound"
             >
-              <WebflowLabel class="top-text__label" />
-              <!-- <img
-                class="top-text__label"
-                src="/img/Webflow_label.svg"
-                alt=""
-              /> -->
+              <!-- <WebflowLabel class="top-text__label" /> -->
+              <WebflowBlackLabel class="top-text__label" />
             </a>
-            <div class="top-text__agency">Digital First design agency</div>
-            <div class="top-text__innovation grey-text">Innovate</div>
           </div>
           <div class="center">
             <div class="center__line" />
@@ -374,26 +363,27 @@ const onScrollDownHandler = () => {
           @include respond(mobile) {
             position: static;
           }
-          &__label {
-            width: auto;
-            height: clamp(36px, 2.5vw, 48px);
-            margin-left: auto;
-          }
           &__agency {
-            font-family: 'RoobertMono', sans-serif;
-            color: white(80);
-            font-size: clamp(14px, 0.938vw, 18px);
+            font-family: 'RoobertMono';
+            font-size: 16px;
             font-style: normal;
-            line-height: 1;
+            font-weight: 500;
+            line-height: 100%; /* 16px */
             text-transform: uppercase;
-            margin: 1.25vw 0 1.667vw 0;
+            opacity: 0.5;
             @include respond(mobile) {
               font-size: 14px;
               margin: 20px 0 16px 0;
             }
           }
           &__innovation {
-            line-height: 65%;
+            margin-bottom: 24px;
+          }
+          &__label {
+            width: auto;
+            height: clamp(36px, 2.5vw, 48px);
+            margin-left: auto;
+            pointer-events: all;
           }
         }
         .bottom-text {
