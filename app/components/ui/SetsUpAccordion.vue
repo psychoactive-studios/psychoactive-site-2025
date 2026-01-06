@@ -95,7 +95,20 @@ const leave = (el, done) => {
           >
             <div class="accordion__content">
               <div class="accordion__content_inner">
-                {{ item.content }}
+                <!-- Paragraphs -->
+                <template
+                  v-for="(block, blockIndex) in item.description"
+                  :key="blockIndex"
+                >
+                  <p>
+                    <template
+                      v-for="(child, childIndex) in block.children"
+                      :key="childIndex"
+                    >
+                      {{ child.text }}
+                    </template>
+                  </p>
+                </template>
               </div>
             </div>
           </div>
@@ -286,6 +299,9 @@ const leave = (el, done) => {
       @include respond(mobile) {
         // max-width: 100%;
         // padding: 0 getRem(16);
+      }
+      p {
+        margin-bottom: 1em;
       }
     }
   }

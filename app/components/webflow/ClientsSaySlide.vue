@@ -1,27 +1,37 @@
 <script setup>
-defineProps({
-  client: {
+const props = defineProps({
+  feedback: {
     type: Object,
     required: true,
   },
 });
+
+const { feedback } = props;
+
+console.log('feedback', feedback);
 </script>
 
 <template>
   <div class="slide">
     <div class="slide__photo">
-      <img :src="client.src" alt="" />
+      <img
+        v-if="feedback?.client?.photo?.url"
+        :src="feedback?.client?.photo?.url"
+        alt=""
+      />
     </div>
     <div class="slide__body">
       <h3>CLIENT SAY</h3>
       <div class="slide__body-text">
-        {{ client.feedback }}
+        {{ feedback.feedback }}
       </div>
       <div class="slide__body-author">
         <div class="slide__body-author-name">
-          {{ client.name }}
+          {{ feedback.client.name }}
         </div>
-        <div class="slide__body-author-position">{{ client.position }}</div>
+        <div class="slide__body-author-position">
+          {{ feedback.client.position }}
+        </div>
       </div>
     </div>
   </div>

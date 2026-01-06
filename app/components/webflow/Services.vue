@@ -3,46 +3,23 @@ import gsap from 'gsap';
 import ServicesAccordion from '../ui/ServicesAccordion.vue';
 import { SplitText } from 'gsap/SplitText';
 
-const list = [
-  {
-    title: 'Webflow Design & Development',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
+defineProps({
+  data: {
+    type: Array,
+    required: true,
   },
-  {
-    title: 'Custom Code & Integrations',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
-  },
-  {
-    title: 'Enterprise Solutions & Scalability',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
-  },
-  {
-    title: 'SEO & AI Optimisation',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
-  },
-  {
-    title: 'Maintenance & Partnership',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
-  },
-];
+});
 
 const containerRef = ref(null);
 const accordionRef = ref(null);
 let ctx = null;
 
 onMounted(async () => {
-  SplitText.create(containerRef.value.querySelector('h2'), {
+  const { chars } = SplitText.create(containerRef.value.querySelector('h2'), {
     type: 'words,chars',
     charsClass: 'char-center',
   });
-
   await nextTick();
-
   ctx = gsap.context(() => {
     gsap
       .timeline({
@@ -65,10 +42,10 @@ onMounted(async () => {
         },
         'firstPart'
       )
-      .from(
-        'h2 .char-center',
+      .to(
+        chars,
         {
-          opacity: 0,
+          opacity: 1,
           duration: 0.01,
           stagger: {
             amount: 1,
@@ -90,7 +67,7 @@ onUnmounted(() => {
   <div ref="containerRef" class="our-services">
     <div class="our-services__accordion">
       <h2>OUR SERVICES</h2>
-      <ServicesAccordion ref="accordionRef" :list="list" />
+      <ServicesAccordion ref="accordionRef" :list="data" />
     </div>
     <div class="our-services__media">
       <img src="/img/test-webflow-our-services.jpg" alt="Our Services Image" />
@@ -127,6 +104,9 @@ onUnmounted(() => {
       text-transform: uppercase;
       color: white(50);
       margin-bottom: 1rem;
+      :deep(.char-center) {
+        opacity: 0;
+      }
     }
   }
   &__media {

@@ -102,7 +102,7 @@ const leave = (el, done) => {
         >
           <div class="accordion__content">
             <div class="accordion__content_inner">
-              {{ item.content }}
+              {{ item.description }}
             </div>
           </div>
         </div>
