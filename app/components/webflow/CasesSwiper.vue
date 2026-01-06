@@ -4,6 +4,13 @@ import ButtonDotsArrow from '../ui/ButtonDotsArrow.vue';
 import CaseStadyPreview from '../ui/CaseStadyPreview.vue';
 import { useMediaQuery } from '@vueuse/core';
 
+defineProps({
+  data: {
+    type: Array,
+    required: true,
+  },
+});
+
 const wrapperRef = ref(null);
 const containerRef = ref(null);
 
@@ -36,32 +43,9 @@ onBeforeUnmount(() => {
       aria-label="Case studies showcase"
     >
       <SplideTrack>
-        <SplideSlide>
-          <CaseStadyPreview
-            src="/img/cases/case-super-ai.jpg"
-            title="SuperAI Conference"
-            description="Worlds largest AI event"
-          />
+        <SplideSlide v-for="(work, index) in data" :key="index">
+          <CaseStadyPreview :data="work" />
         </SplideSlide>
-        <SplideSlide>
-          <CaseStadyPreview
-            src="/img/cases/case-burgerfuel.jpg"
-            title="Burgerfuel"
-            description="New Zealand’s favourite burger"
-          />
-        </SplideSlide>
-        <SplideSlide
-          ><CaseStadyPreview
-            src="/img/cases/case-hellboy.jpg"
-            title="Hellboy Web of Wyrd"
-            description="beat 'em up roguelike Video game"
-        /></SplideSlide>
-        <SplideSlide
-          ><CaseStadyPreview
-            src="/img/cases/case-world-of-wearableArt.jpg"
-            title="World of WearableArt"
-            description="New Zealand's Largest theatrical Spectacle"
-        /></SplideSlide>
       </SplideTrack>
       <div class="splide__arrows">
         <ButtonDotsArrow

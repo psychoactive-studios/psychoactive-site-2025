@@ -1,60 +1,19 @@
 <script setup>
 import gsap from 'gsap';
 import SetsUpAccordion from '../ui/SetsUpAccordion.vue';
-import useAudioManager from '~/composables/useAudioManager';
+// import useAudioManager from '~/composables/useAudioManager';
 import { SplitText } from 'gsap/SplitText';
 
-const list = [
-  {
-    title: 'Webflow Design & Development',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
+defineProps({
+  data: {
+    type: Array,
+    required: true,
   },
-  {
-    title: 'Custom Code & Integrations',
-    content:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui maxime necessitatibus nulla eos earum, accusamus dicta error pariatur adipisci explicabo molestiae, est possimus labore tenetur amet laboriosam beatae natus asperiores alias voluptates. Atque provident fugit placeat animi repellendus quo ducimus perspiciatis natus cupiditate modi maiores, voluptates odit deleniti distinctio, cumque dignissimos? Natus ipsam autem quisquam atque eaque rem sunt dolorem, nulla, veritatis commodi alias unde saepe maiores dicta provident deserunt explicabo magni numquam fuga repellat praesentium ratione. Dolorum, minima ullam.',
-  },
-  {
-    title: 'Enterprise Solutions & Scalability',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
-  },
-  {
-    title: 'SEO & AI Optimisation',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
-  },
-  {
-    title: 'Webflow Design & Development',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
-  },
-  {
-    title: 'Custom Code & Integrations',
-    content:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui maxime necessitatibus nulla eos earum, accusamus dicta error pariatur adipisci explicabo molestiae, est possimus labore tenetur amet laboriosam beatae natus asperiores alias voluptates. Atque provident fugit placeat animi repellendus quo ducimus perspiciatis natus cupiditate modi maiores, voluptates odit deleniti distinctio, cumque dignissimos? Natus ipsam autem quisquam atque eaque rem sunt dolorem, nulla, veritatis commodi alias unde saepe maiores dicta provident deserunt explicabo magni numquam fuga repellat praesentium ratione. Dolorum, minima ullam.',
-  },
-  {
-    title: 'Enterprise Solutions & Scalability',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
-  },
-  {
-    title: 'SEO & AI Optimisation',
-    content:
-      'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
-  },
-  // {
-  //   title: 'Maintenance & Partnership',
-  //   content:
-  //     'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Animi natus facilis quasi, eligendi autem beatae nemo consequatur magnam hic odit enim odio sed architecto maxime id.',
-  // },
-];
+});
 
-const { playInteractionSound } = useAudioManager();
+// const { playInteractionSound } = useAudioManager();
 const containerRef = ref(null);
-const showMoreRef = ref(null);
+// const showMoreRef = ref(null);
 
 let ctx = null;
 
@@ -186,40 +145,40 @@ onUnmounted(() => {
   if (ctx) ctx.revert();
 });
 
-const handleHoverEffect = () => {
-  const el = showMoreRef.value;
-  // Stop any ongoing animations on this element
-  if (gsap.isTweening(el)) return;
+// const handleHoverEffect = () => {
+//   const el = showMoreRef.value;
+//   // Stop any ongoing animations on this element
+//   if (gsap.isTweening(el)) return;
 
-  // Set the width to prevent layout shift
-  const width = el.offsetWidth;
-  gsap.set(el, { width });
+//   // Set the width to prevent layout shift
+//   const width = el.offsetWidth;
+//   gsap.set(el, { width });
 
-  playInteractionSound();
+//   playInteractionSound();
 
-  // Store the original text
-  gsap.to(el, {
-    duration: 0.7,
-    ease: 'none',
-    scrambleText: {
-      text: '{original}',
-      chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
-      tweenLength: false,
-    },
-    overwrite: true,
-    onComplete: () => {
-      gsap.set(el, { clearProps: 'all' });
-    },
-  });
-};
+//   // Store the original text
+//   gsap.to(el, {
+//     duration: 0.7,
+//     ease: 'none',
+//     scrambleText: {
+//       text: '{original}',
+//       chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+//       tweenLength: false,
+//     },
+//     overwrite: true,
+//     onComplete: () => {
+//       gsap.set(el, { clearProps: 'all' });
+//     },
+//   });
+// };
 
-const onMouseEnterHandler = () => {
-  handleHoverEffect();
-};
+// const onMouseEnterHandler = () => {
+//   handleHoverEffect();
+// };
 
-const onFocusHandler = () => {
-  handleHoverEffect();
-};
+// const onFocusHandler = () => {
+//   handleHoverEffect();
+// };
 </script>
 
 <template>
@@ -227,9 +186,8 @@ const onFocusHandler = () => {
     <div class="container">
       <div class="what-sets-us__wrapper">
         <h2>What sets us apart</h2>
-
-        <SetsUpAccordion :list="list" :multiple="true" />
-        <div class="what-sets-us__show-more">
+        <SetsUpAccordion :list="data" :multiple="true" />
+        <!-- <div class="what-sets-us__show-more">
           <button @mouseenter="onMouseEnterHandler" @focus="onFocusHandler">
             <span ref="showMoreRef">Show More</span>
             <div class="what-sets-us__show-more_dots">
@@ -238,7 +196,7 @@ const onFocusHandler = () => {
               <span />
             </div>
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>

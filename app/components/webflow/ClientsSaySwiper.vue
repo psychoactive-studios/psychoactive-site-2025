@@ -2,9 +2,15 @@
 import { Splide, SplideSlide } from '@splidejs/vue-splide';
 import { AutoScroll } from '@splidejs/splide-extension-auto-scroll';
 import ClientsSaySlide from './ClientsSaySlide.vue';
-import { clientsData } from '~/data/clientsData';
 
 const containerRef = ref(null);
+
+defineProps({
+  data: {
+    type: Array,
+    required: true,
+  },
+});
 
 onBeforeUnmount(() => {
   const originalSlider = containerRef.value.root;
@@ -43,8 +49,8 @@ onBeforeUnmount(() => {
     aria-label="Clients testimonials"
     class="clients-swiper"
   >
-    <SplideSlide v-for="client in clientsData" :key="client.id">
-      <ClientsSaySlide :client="client" />
+    <SplideSlide v-for="feedback in data" :key="feedback.id">
+      <ClientsSaySlide :feedback="feedback" />
     </SplideSlide>
   </Splide>
 </template>

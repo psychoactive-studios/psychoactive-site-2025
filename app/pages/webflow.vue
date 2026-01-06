@@ -1,5 +1,6 @@
 <script setup>
 import gsap from 'gsap';
+import qs from 'qs';
 import Footer from '~/components/layout/Footer.vue';
 import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
@@ -18,6 +19,57 @@ import { leaveAnimation } from '~/utils/animations/transitions';
 import { useMediaQuery } from '@vueuse/core';
 import VideoReelMobile from '~/components/webflow/VideoReelMobile.vue';
 import PartnersMobile from '~/components/ui/PartnersMobile.vue';
+
+const params = qs.stringify({
+  populate: {
+    works: {
+      populate: ['mainImage'],
+    },
+    feedbacks: {
+      populate: {
+        client: {
+          populate: ['photo'],
+        },
+      },
+    },
+    services: '*',
+    whatSetsUsApart: '*',
+  },
+});
+
+// Config Strapi variables
+const config = useRuntimeConfig();
+
+const { data: webflowPageData, error } = await useFetch(
+  `/api/webflow?${params}`,
+  {
+    baseURL: config.public.strapiBaseUrl,
+    headers: {
+      Authorization: `Bearer ${config.public.strapiApiKey}`,
+    },
+    key: `work-${params.slug}`,
+    // Get cached data to prevent refetching
+    getCachedData(key) {
+      const nuxtApp = useNuxtApp();
+      const data = nuxtApp.payload.data[key] || nuxtApp.static.data[key];
+      if (data) {
+        return data;
+      }
+    },
+  }
+);
+
+if (error.value) {
+  console.error('Error fetching article data:', error.value);
+}
+
+const { works, feedbacks, services, whatSetsUsApart } =
+  webflowPageData.value?.data || {};
+
+console.log('works', works);
+console.log('feedbacks', feedbacks);
+console.log('services', services);
+console.log('whatSetsUsApart', whatSetsUsApart);
 
 const { scrollSmoother } = useScrollSmoother();
 const { startLoading } = useLoader();
@@ -88,8 +140,8 @@ definePageMeta({
         <section v-if="!isMobile" class="webflow__timeline">
           <Timeline />
         </section>
-        <section class="webflow__services">
-          <Services />
+        <section v-if="services" class="webflow__services">
+          <Services :data="services" />
         </section>
       </div>
       <section class="webflow__partners">
@@ -109,8 +161,8 @@ definePageMeta({
         </div>
       </section>
       <div class="container">
-        <section class="webflow__cases">
-          <CasesSwiper />
+        <section v-if="works" class="webflow__cases">
+          <CasesSwiper :data="works" />
         </section>
 
         <section class="webflow__statistics">
@@ -118,12 +170,12 @@ definePageMeta({
         </section>
 
         <section class="webflow__clients-say">
-          <ClientsSaySwiper />
+          <ClientsSaySwiper v-if="feedbacks" :data="feedbacks" />
         </section>
       </div>
 
       <section class="webflow__sets-us">
-        <WatsUs />
+        <WatsUs v-if="whatSetsUsApart" :data="whatSetsUsApart" />
       </section>
     </ClientOnly>
     <Footer />
@@ -132,6 +184,7 @@ definePageMeta({
 
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
+@use '~/assets/styles/functions' as *;
 .webflow {
   &__onscroll-text {
     display: flex;
@@ -166,17 +219,25 @@ definePageMeta({
     &_title {
       &--desktop {
         margin-bottom: 2.5vw;
-        text-align: center;
-        font-size: clamp(18px, 1.25vw, 24px);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 30px; /* 125% */
-      }
-      &--mobile {
+        font-family: 'RoobertMono';
         font-size: 16px;
         font-style: normal;
-        font-weight: 400;
-        line-height: 140%; /* 22.4px */
+        font-weight: 500;
+        line-height: 100%; /* 16px */
+        text-transform: uppercase;
+        text-align: center;
+        color: white(50);
+      }
+      &--mobile {
+        display: none;
+        font-family: 'RoobertMono';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 100%; /* 16px */
+        text-transform: uppercase;
+        text-align: center;
+        color: white(50);
         margin-bottom: 24px;
       }
     }
