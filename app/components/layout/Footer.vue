@@ -4,6 +4,7 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import WebflowLabel from '../ui/WebflowLabel.vue';
 import Brief from './Brief.vue';
+import AnalogClock from '../ui/AnalogClock.vue';
 
 const { playInteractionSound } = useAudioManager();
 
@@ -42,6 +43,12 @@ defineProps({
           </a>
         </li>
       </ul>
+      <div class="awards__clocks">
+        <AnalogClock city="WLG" />
+        <AnalogClock city="MELB" />
+        <AnalogClock city="SING" />
+        <AnalogClock city="CALI" />
+      </div>
       <div class="awards__label">
         <a
           href="https://webflow.com/@Psychoactive-Studios"
@@ -161,6 +168,11 @@ defineProps({
       align-items: center;
       gap: getRem(32);
     }
+    @include respond(desktop) {
+      flex-direction: column;
+      align-items: center;
+      gap: getRem(32);
+    }
     @include respond(mobile) {
       padding: 0 getRem(24);
     }
@@ -168,7 +180,7 @@ defineProps({
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: getRem(106);
+      gap: 2.5vw;
       @include respond(mobile) {
         width: 280px;
         justify-content: space-around;
@@ -190,10 +202,17 @@ defineProps({
         }
       }
     }
+    &__clocks {
+      display: flex;
+      gap: 2.5vw;
+      @include respond(mobile) {
+        display: none;
+      }
+    }
     &__label {
       img,
       svg {
-        height: 48px;
+        height: clamp(36px, 2.5vw, 48px);
         width: auto;
         @include respond(mobile) {
           height: 36px;
