@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import LetsTalkScene from '~/components/ui/LetsTalkScene.vue';
+import LetsTalkSceneTest from '~/components/ui/LetsTalkSceneTest.vue';
 </script>
 
 <template>
   <main class="scooterok">
-    <LetsTalkScene
+    <LetsTalkSceneTest
       shape="svg"
       :svg-urls="[
         '/img/frog_steps/frog01.svg',

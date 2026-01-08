@@ -8,8 +8,8 @@ const letsTalkButtonRef = ref(null);
 
 defineProps({
   href: {
-    type: String,
-    required: true,
+    type: [String, Boolean],
+    default: false,
   },
   target: {
     type: String,
@@ -19,12 +19,23 @@ defineProps({
     type: String,
     default: 'light',
   },
+  size: {
+    type: String,
+    default: 'medium',
+  },
 });
 
 const talkButtonHoverHandler = () => {
   playInteractionSound();
-  if (gsap.isTweening(letsTalkButtonRef.value)) return;
-  gsap.to(letsTalkButtonRef.value, {
+  const el = letsTalkButtonRef.value?.querySelector(
+    '.link-button__visible-text'
+  );
+  if (!el || gsap.isTweening(el)) return;
+  // Set the width to prevent layout shift
+  // const width = el.offsetWidth;
+  // gsap.set(el, { width });
+
+  gsap.to(el, {
     duration: 0.5,
     ease: 'none',
     scrambleText: {
@@ -32,21 +43,45 @@ const talkButtonHoverHandler = () => {
       chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
       tweenLength: false,
     },
+    // onComplete: () => {
+    //   gsap.set(el, { clearProps: 'all' });
+    // },
   });
 };
 </script>
 <template>
-  <a
+  <NuxtLink
+    v-if="href"
     ref="letsTalkButtonRef"
-    :href="href"
+    :to="href"
     :target="target"
     rel="noopener noreferrer"
-    :class="['link-button', mode]"
+    :class="['link-button', mode, size]"
     @mouseenter="talkButtonHoverHandler"
     @focus="talkButtonHoverHandler"
   >
-    <slot />
-  </a>
+    <span class="link-button__hidden-text">
+      <slot />
+    </span>
+    <span class="link-button__visible-text">
+      <slot />
+    </span>
+  </NuxtLink>
+  <button
+    v-else
+    ref="letsTalkButtonRef"
+    type="button"
+    :class="['link-button', mode, size]"
+    @mouseenter="talkButtonHoverHandler"
+    @focus="talkButtonHoverHandler"
+  >
+    <span class="link-button__hidden-text">
+      <slot />
+    </span>
+    <span class="link-button__visible-text">
+      <slot />
+    </span>
+  </button>
 </template>
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
@@ -58,8 +93,6 @@ const talkButtonHoverHandler = () => {
   position: relative;
   isolation: isolate;
   text-decoration: none;
-  height: 64px;
-  padding: 0 getRem(48);
   border-radius: 32px;
   font-family: 'RoobertMono';
   font-size: 1rem;
@@ -68,6 +101,13 @@ const talkButtonHoverHandler = () => {
   line-height: 1.68; /* 168.75% */
   text-transform: uppercase;
   white-space: nowrap;
+  &__hidden-text {
+    visibility: hidden;
+  }
+  &__visible-text {
+    position: absolute;
+    z-index: 1;
+  }
   &::before {
     content: '';
     position: absolute;
@@ -95,6 +135,14 @@ const talkButtonHoverHandler = () => {
     &::before {
       background-color: $color-background;
     }
+  }
+  &.medium {
+    height: 64px;
+    padding: 0 getRem(48);
+  }
+  &.small {
+    height: 48px;
+    padding: 0 getRem(32);
   }
 }
 </style>
