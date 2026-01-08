@@ -11,6 +11,14 @@ const props = defineProps({
     type: String,
     default: 'dark', // 'dark' or 'light'
   },
+  text: {
+    type: String,
+    default: "let's talk",
+  },
+  shape: {
+    type: String,
+    default: 'circle', // 'rectangle', 'circle', 'svg'
+  },
   svgUrls: {
     type: Array,
     default: () => [],
@@ -18,10 +26,6 @@ const props = defineProps({
   morphInterval: {
     type: Number,
     default: 5000,
-  },
-  autoPlay: {
-    type: Boolean,
-    default: true,
   },
 });
 
@@ -42,28 +46,19 @@ const lastMousePosition = { x: 0, y: 0 };
 let scrollTriggerInstance = null;
 let animationFrameId = null;
 
-const opacity = { base: 0.1, active: 0.5 };
-const threshold = 100;
+const opacity = { base: 0.1, active: 1 };
+const threshold = 150;
 const speedThreshold = 150;
 const shockRadius = 250;
 const shockPower = 5;
 const maxSpeed = 5000;
-const dotSize = 7; // 0.5rem * 16 = 8px
-const dotGap = 7; // 2em gap
+const centerHole = false;
+const dotSize = 8; // 0.5rem * 16 = 8px
+const dotGap = 8; // 2em gap
 
 const svgsData = ref([]);
 const currentSvgIndex = ref(0);
-const isStarted = ref(props.autoPlay);
-
-function play() {
-  isStarted.value = true;
-  updateShapeVisibility(true);
-}
-
-defineExpose({
-  play,
-  nextShape,
-});
+let morphIntervalId = null;
 
 async function loadSvgs() {
   if (typeof window === 'undefined') return;
@@ -120,19 +115,24 @@ async function loadSvgs() {
     }
   }
 
-  if (svgsData.value.length > 0 && isStarted.value) {
+  if (svgsData.value.length > 0) {
     updateShapeVisibility(false);
+    if (svgsData.value.length > 1) {
+      startMorphInterval();
+    }
   }
 }
 
-function nextShape(index) {
-  if (svgsData.value.length <= 1) return;
+function startMorphInterval() {
+  if (morphIntervalId) clearInterval(morphIntervalId);
+  morphIntervalId = setInterval(() => {
+    nextShape();
+  }, props.morphInterval);
+}
 
-  if (typeof index === 'number') {
-    currentSvgIndex.value = index % svgsData.value.length;
-  } else {
-    currentSvgIndex.value = (currentSvgIndex.value + 1) % svgsData.value.length;
-  }
+function nextShape() {
+  if (svgsData.value.length <= 1) return;
+  currentSvgIndex.value = (currentSvgIndex.value + 1) % svgsData.value.length;
   updateShapeVisibility(true);
 }
 
@@ -146,15 +146,28 @@ function updateShapeVisibility(animate = true) {
   const contW = rect.width;
   const contH = rect.height;
 
+  // Grid params for hole calculation
+  const cols = Math.floor((contW + dotGap) / (dotSize + dotGap));
+  const rows = Math.floor((contH + dotGap) / (dotSize + dotGap));
+  const holeCols = centerHole ? (cols % 2 === 0 ? 4 : 5) : 0;
+  const holeRows = centerHole ? (rows % 2 === 0 ? 4 : 5) : 0;
+  const startCol = (cols - holeCols) / 2;
+  const startRow = (rows - holeRows) / 2;
+
+  // Circle parameters
+  const centerX = contW / 2;
+  const centerY = contH / 2;
+  const radius = Math.min(contW, contH) / 2.5;
+
   // SVG Setup
-  let paths = [];
+  let paths = null;
   let svgScale = 1;
   let svgStartX = 0;
   let svgStartY = 0;
   let vbX = 0,
     vbY = 0;
 
-  if (svgsData.value.length > 0) {
+  if (props.shape === 'svg' && svgsData.value.length > 0) {
     const data = svgsData.value[currentSvgIndex.value];
     if (data) {
       paths = data.paths;
@@ -175,7 +188,7 @@ function updateShapeVisibility(animate = true) {
   }
 
   // Temporarily reset transform for isPointInPath checks if using SVG
-  if (svgsData.value.length > 0) {
+  if (props.shape === 'svg') {
     ctx.save();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
@@ -183,13 +196,31 @@ function updateShapeVisibility(animate = true) {
   dots.forEach((dot) => {
     let isVisible = true;
 
-    const localX = (dot.baseX - svgStartX) / svgScale + vbX;
-    const localY = (dot.baseY - svgStartY) / svgScale + vbY;
+    if (props.shape === 'circle') {
+      const dist = Math.hypot(dot.baseX - centerX, dot.baseY - centerY);
+      if (dist > radius) {
+        isVisible = false;
+      }
+    } else if (props.shape === 'rectangle') {
+      const isHole =
+        centerHole &&
+        dot.row >= startRow &&
+        dot.row < startRow + holeRows &&
+        dot.col >= startCol &&
+        dot.col < startCol + holeCols;
 
-    const insideAny = paths.some((p) =>
-      ctx.isPointInPath(p.path, localX, localY, p.fillRule)
-    );
-    if (!insideAny) isVisible = false;
+      if (isHole) {
+        isVisible = false;
+      }
+    } else if (props.shape === 'svg' && paths && paths.length > 0) {
+      const localX = (dot.baseX - svgStartX) / svgScale + vbX;
+      const localY = (dot.baseY - svgStartY) / svgScale + vbY;
+
+      const insideAny = paths.some((p) =>
+        ctx.isPointInPath(p.path, localX, localY, p.fillRule)
+      );
+      if (!insideAny) isVisible = false;
+    }
 
     const target = isVisible ? 1 : 0;
 
@@ -234,7 +265,10 @@ function updateShapeVisibility(animate = true) {
       dot.shapeVisibility = target;
     }
   });
-  ctx.restore();
+
+  if (props.shape === 'svg') {
+    ctx.restore();
+  }
 }
 
 function buildGrid() {
@@ -288,9 +322,7 @@ function buildGrid() {
     dots.push(dot);
   }
 
-  if (isStarted.value) {
-    updateShapeVisibility(false);
-  }
+  updateShapeVisibility(false);
 
   startRenderLoop();
 }
@@ -538,6 +570,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   stopRenderLoop();
+  if (morphIntervalId) clearInterval(morphIntervalId);
   cleanupScrollTrigger();
   window.removeEventListener('resize', buildGrid);
   window.removeEventListener('mousemove', handleMouseMove);
@@ -568,8 +601,6 @@ onUnmounted(() => {
   align-items: center;
   display: flex;
   position: relative;
-  width: 100%;
-  height: 100%;
 
   &__link {
     width: 214px;
@@ -628,7 +659,7 @@ onUnmounted(() => {
 
 .dots-wrap {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 1.85;
   position: relative;
 }
 

@@ -1,0 +1,82 @@
+<script setup>
+defineProps({
+  type: {
+    type: String,
+    default: 'text',
+  },
+  placeholder: {
+    type: String,
+    default: '',
+  },
+  name: {
+    type: String,
+    default: '',
+  },
+});
+</script>
+<template>
+  <label class="text-field">
+    <input
+      class="text-field__input"
+      :type="type"
+      :placeholder="placeholder"
+      :name="name"
+    />
+    <div class="text-field__border" />
+  </label>
+</template>
+<style scoped lang="scss">
+@use '~/assets/styles/functions' as *;
+@use '~/assets/styles/variables' as *;
+.text-field {
+  display: inline-block;
+  &__input {
+    background: none;
+    outline: none;
+    border: none;
+    height: auto;
+    padding: 16px 0;
+    font-family: 'RoobertMono';
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 1;
+    text-transform: uppercase;
+    color: white;
+    &::placeholder {
+      color: white;
+      opacity: 0.4;
+      transition: opacity 0.5s ease;
+    }
+    &:focus::placeholder {
+      opacity: 0.8;
+    }
+    &:not(:placeholder-shown) + .text-field__border::before {
+      transform: scaleX(1);
+    }
+  }
+  &__border {
+    width: 100%;
+    height: 1px;
+    background-color: white(20);
+    position: relative;
+    &::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      inset: 0;
+      background-color: $color-foreground;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+    }
+  }
+  .text-field__input:focus + .text-field__border {
+    &::before {
+      transform: scaleX(1);
+    }
+  }
+}
+</style>
