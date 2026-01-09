@@ -64,6 +64,7 @@ function enterAnimation() {
 
   gsap
     .timeline()
+    // First message
     .to(stepSectionTextRef.value, {
       backgroundPositionX: '-100%',
       duration: 1,
@@ -73,13 +74,14 @@ function enterAnimation() {
       opacity: 1,
       duration: 0.5,
     })
+    // First message transition
     .to(
       stepSectionRef.value,
       {
-        transform: 'translateY(calc(-100% - 24px - 0.65em))',
+        transform: 'translateY(calc(-100% - 48px - 0.65em))',
         duration: 0.8,
         opacity: 0.2,
-        ease: 'power3.out',
+        ease: 'power4.out',
       },
       '+=1'
     )
@@ -91,6 +93,8 @@ function enterAnimation() {
         clearProps: 'all',
       });
     })
+
+    // Second message transition
     .to(stepSectionTextRef.value, {
       backgroundPositionX: '-100%',
       duration: 1,
@@ -311,7 +315,7 @@ function enterAnimation() {
     }
   }
   &__content {
-    margin-top: 24px;
+    margin-top: 48px;
     font-size: 40px;
     font-style: normal;
     font-weight: 400;
@@ -335,7 +339,7 @@ function enterAnimation() {
 
   &__previous {
     position: absolute;
-    transform: translateY(calc(-100% - 24px - 0.65em));
+    transform: translateY(calc(-100% - 48px - 0.65em));
     opacity: 0.2;
     width: 100%;
   }
