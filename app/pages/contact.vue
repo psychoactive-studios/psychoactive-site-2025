@@ -8,13 +8,15 @@ import useContact from '~/composables/useContact';
 import LinkWithHover from '~/components/ui/LinkWithHover.vue';
 import Circle from '~/components/ui/Circle.vue';
 
-const { enableScroll } = useScrollSmoother();
+const { enableScroll, scrollSmoother } = useScrollSmoother();
 
 const { sceneRef } = useContact();
 
 onMounted(async () => {
   await nextTick();
-  enableScroll();
+  setTimeout(() => {
+    enableScroll();
+  }, 100);
 });
 </script>
 
@@ -59,10 +61,10 @@ onMounted(async () => {
 .contact {
   position: relative;
   .container {
-    height: 100dvh;
     display: flex;
     flex-direction: column;
     padding-left: 0;
+    min-height: 100dvh;
   }
   &__grid {
     display: grid;
@@ -70,6 +72,7 @@ onMounted(async () => {
     align-items: center;
     flex-grow: 1;
     padding-top: 96px;
+    padding-bottom: 96px;
     & > * {
       min-width: 0;
       min-height: 0;
@@ -82,6 +85,7 @@ onMounted(async () => {
       position: absolute;
       width: 100%;
       overflow: hidden;
+      max-width: 80vh;
       .circle {
         animation: rotate 90s linear infinite;
       }
@@ -90,6 +94,7 @@ onMounted(async () => {
       aspect-ratio: 1;
       padding: min(5.89vw, 120px);
       overflow: hidden;
+      max-width: 80vh;
     }
   }
   &__conversation {
@@ -97,9 +102,11 @@ onMounted(async () => {
     padding-top: calc(45dvh - 96px - 48px);
   }
   &__footer {
-    padding-bottom: 48px;
     display: flex;
     justify-content: center;
+    position: absolute;
+    width: 100%;
+    bottom: 48px;
     &_email {
       font-size: 1.5rem;
       line-height: 1.16;
