@@ -48,8 +48,8 @@ const speedThreshold = 150;
 const shockRadius = 250;
 const shockPower = 5;
 const maxSpeed = 5000;
-const dotSize = 7; // 0.5rem * 16 = 8px
-const dotGap = 7; // 2em gap
+const dotSize = 6; // 0.5rem * 16 = 8px
+const dotGap = 6; // 2em gap
 
 const svgsData = ref([]);
 const currentSvgIndex = ref(0);

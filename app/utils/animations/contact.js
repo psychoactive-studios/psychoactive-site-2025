@@ -16,7 +16,7 @@ export const testClickAnimation = (e, refs) => {
         opacity: 0,
         scale: 0.8,
         duration: 0.8,
-        ease: 'power3.out',
+        ease: 'power4.out',
       },
       'start'
     )
@@ -26,7 +26,7 @@ export const testClickAnimation = (e, refs) => {
         opacity: 0,
         scale: 0.8,
         duration: 0.8,
-        ease: 'power3.out',
+        ease: 'power4.out',
         stagger: {
           each: 0.25,
           from: 'random',
@@ -50,7 +50,7 @@ export const testClickAnimation = (e, refs) => {
     .to(
       refs.stepSectionRef.value,
       {
-        transform: 'translateY(calc(-100% - 24px - 0.65em))',
+        transform: 'translateY(calc(-100% - 48px - 0.65em))',
         duration: 0.8,
         opacity: 0.2,
         ease: 'power3.out',
@@ -90,10 +90,10 @@ export const testClickAnimation = (e, refs) => {
     .to(
       refs.stepSectionRef.value,
       {
-        transform: 'translateY(calc(-100% - 24px - 0.65em))',
+        transform: 'translateY(calc(-100% - 48px - 0.65em))',
         duration: 0.8,
         opacity: 0.2,
-        ease: 'power3.out',
+        ease: 'power4.out',
       },
       '<'
     )
