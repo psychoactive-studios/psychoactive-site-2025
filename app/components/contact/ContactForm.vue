@@ -6,6 +6,7 @@ import useContact from '~/composables/useContact';
 
 import ContactNameForm from './ContactNameForm.vue';
 import LinkButton from '../ui/LinkButton.vue';
+import ButtonOutline from '../ui/ButtonOutline.vue';
 
 let dotsTimeline;
 const dotsRef = ref(null);
@@ -133,6 +134,8 @@ function enterAnimation() {
       <span class="dot-right" />
     </div>
 
+    <ButtonOutline class="contact-back-button">Back</ButtonOutline>
+
     <div class="contact-form__content">
       <div ref="previousSectionRef" class="contact-form__previous">
         {{ previousMessage }}
@@ -186,6 +189,12 @@ function enterAnimation() {
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/mixins' as *;
 .contact-form {
+  .contact-back-button {
+    position: absolute;
+    top: 46px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
   &__dots {
     position: relative;
     width: 15%;
