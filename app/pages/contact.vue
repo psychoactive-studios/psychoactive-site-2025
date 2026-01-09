@@ -56,6 +56,7 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .contact {
+  position: relative;
   &__grid {
     height: 100dvh;
     display: grid;
