@@ -15,18 +15,6 @@ const { sceneRef } = useContact();
 onMounted(async () => {
   await nextTick();
   enableScroll();
-  const layoutElements = gsap.utils.toArray([
-    '#header-logo',
-    '#header-navigation-button',
-    '#header-sound-button',
-  ]);
-
-  gsap.to(layoutElements, {
-    scale: 1,
-    opacity: 1,
-    duration: 0.75,
-    ease: 'power3.out',
-  });
 });
 </script>
 
@@ -93,6 +81,7 @@ onMounted(async () => {
     &_circle-wrapper {
       position: absolute;
       width: 100%;
+      overflow: hidden;
       .circle {
         animation: rotate 90s linear infinite;
       }
@@ -100,6 +89,7 @@ onMounted(async () => {
     &_scene {
       aspect-ratio: 1;
       padding: min(5.89vw, 120px);
+      overflow: hidden;
     }
   }
   &__conversation {

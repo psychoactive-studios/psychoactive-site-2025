@@ -45,11 +45,11 @@ let animationFrameId = null;
 const opacity = { base: 0.1, active: 0.5 };
 const threshold = 100;
 const speedThreshold = 150;
-const shockRadius = 250;
+const shockRadius = 150;
 const shockPower = 5;
 const maxSpeed = 5000;
-const dotSize = 6; // 0.5rem * 16 = 8px
-const dotGap = 6; // 2em gap
+let dotSize = 6;
+let dotGap = 6;
 
 const svgsData = ref([]);
 const currentSvgIndex = ref(0);
@@ -240,6 +240,19 @@ function updateShapeVisibility(animate = true) {
 function buildGrid() {
   if (!canvasRef.value) return;
 
+  // Responsive breakpoints logic
+  const width = window.innerWidth;
+  if (width < 768) {
+    dotSize = 3;
+    dotGap = 3;
+  } else if (width < 1600) {
+    dotSize = 4;
+    dotGap = 4;
+  } else {
+    dotSize = 6;
+    dotGap = 6;
+  }
+
   const canvas = canvasRef.value;
   const rect = canvas.getBoundingClientRect();
 
@@ -354,6 +367,8 @@ function handleMouseMove() {
 
     if (speed > speedThreshold && dist < threshold && !dot.inertiaApplied) {
       dot.inertiaApplied = true;
+
+      // Force increases with distance from center (Osmo behavior)
       const pushX = dotX - localX + vx * 0.005;
       const pushY = dotY - localY + vy * 0.005;
 
