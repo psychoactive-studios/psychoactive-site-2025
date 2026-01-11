@@ -119,7 +119,7 @@ const onScrollDownHandler = () => {
             <Circle class="circle" />
           </div>
           <div class="psychoactive">
-            <div class="psychoactive__text">psychoactive®</div>
+            <div class="psychoactive__text subheader">psychoactive®</div>
             <div class="psychoactive__horizontal">
               <PlusIcon class="psychoactive__icon" />
             </div>
@@ -128,8 +128,12 @@ const onScrollDownHandler = () => {
             </div>
           </div>
           <div class="top-text">
-            <div class="top-text__agency">Digital-First design agency</div>
-            <div class="top-text__innovation grey-text">innovate</div>
+            <div class="top-text__agency subheader">
+              Digital-First design agency
+            </div>
+            <div class="top-text__innovation display-large grey-text">
+              innovate
+            </div>
             <a
               href="https://webflow.com/@Psychoactive-Studios"
               target="_blank"
@@ -144,14 +148,18 @@ const onScrollDownHandler = () => {
             <div class="center__line" />
             <div class="center__part center__part--left">
               <div class="center__part_dot" />
-              <div class="center__text">-41.2925°</div>
+              <div class="center__text subheader-small">-41.2925°</div>
             </div>
             <div class="center__part center__part--right">
               <div class="center__part_dot" />
-              <div class="center__text">174.7783°</div>
+              <div class="center__text subheader-small">174.7783°</div>
             </div>
-            <div class="center__text center__text--play">PLAY REEL</div>
-            <div class="center__text center__text--time">01:16 SEC</div>
+            <div class="center__text center__text--play subheader-small">
+              PLAY REEL
+            </div>
+            <div class="center__text center__text--time subheader-small">
+              01:16 SEC
+            </div>
           </div>
           <button
             class="dots-arrow"
@@ -183,8 +191,10 @@ const onScrollDownHandler = () => {
             aspect-ratio="2.22"
           />
           <div class="bottom-text">
-            <div class="bottom-text__imagine grey-text">Imagine</div>
-            <div class="bottom-text__scale">
+            <div class="bottom-text__imagine display-large grey-text">
+              Imagine
+            </div>
+            <div class="bottom-text__scale display-3xl">
               scale
               <div class="bottom-text__scale-arrows">
                 <span>&larr;</span><span>&rarr;</span>
@@ -279,12 +289,7 @@ const onScrollDownHandler = () => {
           z-index: 2;
           top: 0;
           left: 0;
-          font-family: 'RoobertMono', sans-serif;
           color: white(50);
-          font-size: clamp(16px, 0.938vw, 18px);
-          font-style: normal;
-          line-height: 1;
-          text-transform: uppercase;
           padding: 0 48px 48px 0;
           @include respond(mobile) {
             right: 0;
@@ -328,11 +333,6 @@ const onScrollDownHandler = () => {
         }
         .grey-text {
           color: $color-grey;
-          font-size: clamp(48px, 4.79vw, 92px);
-          font-style: normal;
-          font-weight: 400;
-          line-height: 88%;
-          letter-spacing: -0.2874vw;
           will-change: transform;
           @include respond(mobile) {
             font-size: clamp(36px, 9.6vw, 48px);
@@ -364,11 +364,6 @@ const onScrollDownHandler = () => {
             position: static;
           }
           &__agency {
-            font-family: 'RoobertMono';
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 500;
-            line-height: 100%; /* 16px */
             text-transform: uppercase;
             opacity: 0.5;
             @include respond(mobile) {
@@ -400,11 +395,7 @@ const onScrollDownHandler = () => {
           }
           &__scale {
             color: $color-foreground;
-            font-size: clamp(128px, 12.6vw, 242px);
-            font-style: normal;
-            font-weight: 400;
             line-height: 77%;
-            letter-spacing: -0.756vw;
             @include respond(mobile) {
               font-size: clamp(84px, 22vw, 112px);
             }
@@ -477,11 +468,7 @@ const onScrollDownHandler = () => {
 
           &__text {
             color: white(80);
-            font-family: 'RoobertMono', sans-serif;
-            font-size: 12px;
-            font-style: normal;
             line-height: 1;
-            text-transform: uppercase;
             opacity: 0.5;
             position: absolute;
             @include respond(portrait) {
