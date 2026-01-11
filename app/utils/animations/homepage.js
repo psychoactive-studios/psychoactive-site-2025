@@ -558,7 +558,6 @@ export const heroScrollAnimation = (ctx, isPlaying) => {
                 end: 'bottom top', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
                 invalidateOnRefresh: true,
-                markers: true,
                 onUpdate: (self) => {
                   if (self.progress > 0.45) {
                     isPlaying.value = false;
