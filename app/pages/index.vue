@@ -126,7 +126,7 @@ definePageMeta({
         <!-- Mobile Digital Text Section -->
         <section v-if="isMobile" class="mobile-digital">
           <div class="container">
-            <h2>Digital First design agency</h2>
+            <h2 class="subheader--mobile">Digital First design agency</h2>
             <a href="https://webflow.com/@Psychoactive-Studios" target="_blank">
               <WebflowLabel />
             </a>
@@ -187,14 +187,18 @@ definePageMeta({
                 class="mobile-scale"
               >
                 <div class="container">
-                  <div class="mobile-scale__imagine">Imagine</div>
+                  <div class="mobile-scale__imagine display-large--mobile">
+                    Imagine
+                  </div>
                   <div class="mobile-scale__scale">
                     <ScaleMobileText />
                     <div class="mobile-scale__scale-arrows">
                       <span>&larr;</span><span>&rarr;</span>
                     </div>
                   </div>
-                  <div class="mobile-scale__innovate">Innovate</div>
+                  <div class="mobile-scale__innovate display-large--mobile">
+                    Innovate
+                  </div>
                 </div>
               </section>
 
@@ -341,12 +345,7 @@ definePageMeta({
   padding-top: getRem(42);
   text-align: center;
   h2 {
-    font-family: 'RoobertMono';
-    font-size: getRem(14);
-    font-style: normal;
-    font-weight: 500;
     line-height: 146%;
-    text-transform: uppercase;
     color: white(80);
     margin-bottom: getRem(22);
   }
@@ -360,11 +359,6 @@ definePageMeta({
   margin-bottom: 60px;
   &__imagine,
   &__innovate {
-    font-size: max(36px, 9.6vw);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 88%;
-    letter-spacing: min(-2.16px, -0.575vw);
     color: $color-grey;
   }
   &__innovate {

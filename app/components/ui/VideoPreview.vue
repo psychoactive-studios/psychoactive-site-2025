@@ -107,7 +107,7 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
           <div class="player__preview_controls">
             <PlusIcon class="plus" />
             <PlusIcon class="plus" />
-            <div class="play-reel-text">PLAY REEL</div>
+            <div class="play-reel-text subheader--mobile">PLAY REEL</div>
             <button
               :class="[
                 'play-button',
@@ -120,7 +120,7 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
             >
               <PlayIcon />
             </button>
-            <div class="play-time-text">00:47 sec</div>
+            <div class="play-time-text subheader--mobile">00:47 sec</div>
             <PlusIcon class="plus" />
             <PlusIcon class="plus" />
           </div>
@@ -363,8 +363,8 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
       position: absolute;
       inset: 50% 0 auto 0;
       transform: translateY(-50%);
-      font-family: 'RoobertMono', sans-serif;
-      text-transform: uppercase;
+      // font-family: 'RoobertMono', sans-serif;
+      // text-transform: uppercase;
       .play-reel-text,
       .play-time-text {
         color: white(80);

@@ -58,7 +58,7 @@ body {
 }
 
 .display-3xl {
-  font-size: 12.604vw;
+  font-size: clamp(128px, 12.6vw, 242px);
   font-style: normal;
   font-weight: 400;
   line-height: 100%;
@@ -113,7 +113,7 @@ body {
 }
 
 .display-large {
-  font-size: 4.7916vw;
+  font-size: clamp(48px, 4.79vw, 92px);
   font-style: normal;
   font-weight: 400;
   line-height: 88%;
@@ -121,8 +121,8 @@ body {
   &--mobile {
     @extend .display-large;
     @include respond(mobile) {
-      font-size: 36px;
-      letter-spacing: -2.16px;
+      font-size: max(36px, 9.6vw);
+      letter-spacing: min(-2.16px, -0.575vw);
     }
   }
 }
@@ -279,7 +279,7 @@ body {
 
 .subheader {
   font-family: 'RoobertMono';
-  font-size: 1rem;
+  font-size: clamp(16px, 0.938vw, 18px);
   font-style: normal;
   font-weight: 500;
   line-height: 100%;
@@ -287,7 +287,7 @@ body {
   &--mobile {
     @extend .subheader;
     @include respond(mobile) {
-      font-size: 12px;
+      font-size: 0.875rem;
     }
   }
 }
