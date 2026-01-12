@@ -119,6 +119,9 @@ definePageMeta({
         <!-- Partners Section -->
         <section class="partners">
           <div class="container">
+            <h2 class="partners__title subheader">
+              Partner to the world’s leading innovation brands and events
+            </h2>
             <PartnersDesktop />
           </div>
         </section>
@@ -331,6 +334,11 @@ definePageMeta({
   position: relative;
   z-index: 1;
   background-color: $color-background;
+  &__title {
+    text-align: center;
+    opacity: 0.5;
+    margin-bottom: getRem(62);
+  }
   @include respond(mobile) {
     display: none;
   }

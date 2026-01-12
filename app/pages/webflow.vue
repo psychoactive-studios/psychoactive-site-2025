@@ -142,14 +142,14 @@ definePageMeta({
       <section class="webflow__partners">
         <div v-if="!isMobile" class="container">
           <h2 class="webflow__partners_title--desktop">
-            Partner to the world’s leading innovation brands and events.
+            Partner to the world’s leading innovation brands and events
           </h2>
           <PartnersDesktop />
         </div>
         <div v-if="isMobile">
           <div class="container">
             <h2 class="webflow__partners_title--mobile">
-              Partner to the world’s leading innovation brands and events.
+              Partner to the world’s leading innovation brands and events
             </h2>
           </div>
           <PartnersMobile />
