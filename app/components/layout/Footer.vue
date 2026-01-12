@@ -21,7 +21,7 @@ defineProps({
     <section class="navigation">
       <ul class="links">
         <template v-for="(link, index) in footerData.links" :key="link.title">
-          <li class="link">
+          <li class="link body-button">
             <LinkWithHover :href="link.url">{{ link.title }}</LinkWithHover>
           </li>
           <li v-if="index < footerData.links.length - 1" class="separator" />
@@ -121,8 +121,6 @@ defineProps({
       }
 
       .link {
-        font-family: 'RoobertMono', sans-serif;
-        text-transform: uppercase;
         @include respond(mobile) {
           font-size: getRem(14);
         }
