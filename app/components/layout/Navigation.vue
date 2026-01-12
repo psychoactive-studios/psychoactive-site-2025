@@ -73,7 +73,7 @@ const clickOnLinkHandler = (e) => {
             <li
               v-for="item in navigationData"
               :key="item.id"
-              class="navigation__item"
+              class="navigation__item heading-h2"
             >
               <LinkWithHover
                 :href="item.url"
@@ -91,7 +91,7 @@ const clickOnLinkHandler = (e) => {
             <span />
           </div>
           <button
-            class="navigation__talk_button"
+            class="navigation__talk_button body-button"
             @mouseenter="talkButtonHoverHandler"
             @focus="talkButtonHoverHandler"
           >
@@ -213,13 +213,13 @@ const clickOnLinkHandler = (e) => {
     }
   }
   &__item {
-    font-size: clamp(48px, 3.646vw, 70px);
+    // font-size: clamp(48px, 3.646vw, 70px);
     line-height: 74%;
     display: flex;
     gap: 1.5vw;
     align-items: center;
     @include respond(mobile) {
-      font-size: getRem(36);
+      // font-size: getRem(36);
       line-height: 1;
       gap: getRem(12);
       margin-right: 8px;
@@ -315,8 +315,6 @@ const clickOnLinkHandler = (e) => {
 
     &_button {
       pointer-events: all;
-      font-family: 'RoobertMono', sans-serif;
-      font-size: 1rem;
       color: $color-foreground;
       cursor: pointer;
       padding: 0 24px;
