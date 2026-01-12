@@ -82,10 +82,14 @@ const onFocusHandler = (e) => {
   >
     <div class="news-card__description">
       <div class="news-card__description_info">
-        <div class="news-card__description_info--category">{{ category }}</div>
-        <div class="news-card__description_info--date">{{ publishedAt }}</div>
+        <div class="news-card__description_info--category subheader-small">
+          {{ category }}
+        </div>
+        <div class="news-card__description_info--date subheader-small">
+          {{ publishedAt }}
+        </div>
       </div>
-      <h3 ref="titleRef" class="news-card__description_title">
+      <h3 ref="titleRef" class="news-card__description_title body--mobile">
         {{ title }}
       </h3>
     </div>
@@ -99,6 +103,7 @@ const onFocusHandler = (e) => {
 
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 .news-card {
   border-radius: 8px;
   background: #1b1b1b;
@@ -117,13 +122,7 @@ const onFocusHandler = (e) => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-family: 'RoobertMono';
-      font-size: clamp(0.625rem, 0.64vw, 0.75rem);
-      font-style: normal;
-      font-weight: 500;
-      line-height: 1;
-      text-transform: uppercase;
-      color: white(70);
+      color: white(50);
       padding-left: 14px;
       position: relative;
       white-space: nowrap;
@@ -144,22 +143,25 @@ const onFocusHandler = (e) => {
       }
     }
     &_title {
-      font-size: min(1rem, 0.833vw);
-      font-style: normal;
-      font-weight: 400;
-      line-height: 131%;
+      // font-size: min(1rem, 0.833vw);
+      // font-style: normal;
+      // font-weight: 400;
+      // line-height: 131%;
       margin-top: auto;
       overflow: hidden;
       @media screen and (max-width: 1400px) {
-        font-size: 1rem;
+        // font-size: 1rem;
       }
     }
   }
   &__image {
-    width: 30%;
+    width: 33.515%;
     flex-shrink: 0;
     @media screen and (max-width: 1400px) {
-      width: 115px;
+      width: 120px;
+    }
+    @include respond(mobile) {
+      width: 33%;
     }
     &_wrapper {
       overflow: hidden;

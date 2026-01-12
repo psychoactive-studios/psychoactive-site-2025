@@ -63,10 +63,12 @@ const onClickHandler = async () => {
       <!-- Awards Title -->
       <div class="awards__title">
         <div class="awards__title_count">
-          <h2>50+</h2>
-          <div class="awards__title_count-sub">Recognition & Awards</div>
+          <h2 class="display-4xl">50+</h2>
+          <div class="awards__title_count-sub subheader">
+            Recognition & Awards
+          </div>
         </div>
-        <div class="awards__title_text">
+        <div class="awards__title_text heading-h5--mobile">
           <OnScrollFilledTextLight>
             Our work doesn’t chase awards; it earns them. Each recognition
             reflects the rigour, imagination, and care we bring to every
@@ -78,12 +80,12 @@ const onClickHandler = async () => {
       <!-- Awards List -->
       <div class="awards__collection">
         <div class="awards__collection_header">
-          <div>Platform</div>
-          <div class="awards__collection_header--center">
+          <div class="subheader-small">Platform</div>
+          <div class="awards__collection_header--center subheader-small">
             <div>Prize</div>
             <div>Project</div>
           </div>
-          <div>Year</div>
+          <div class="subheader-small">Year</div>
         </div>
         <ul class="awards__collection_list">
           <li
@@ -94,11 +96,11 @@ const onClickHandler = async () => {
             <div class="award-platform">
               <img :src="award.platform" :alt="award.project" />
             </div>
-            <div class="award-details">
+            <div class="award-details body--mobile-compact">
               <div class="award-details--prize">{{ award.prize }}</div>
               <div class="award-details--project">{{ award.project }}</div>
             </div>
-            <div class="award-year">{{ award.year }}</div>
+            <div class="award-year body--mobile-compact">{{ award.year }}</div>
           </li>
         </ul>
         <div class="awards__show-more">
@@ -143,10 +145,10 @@ const onClickHandler = async () => {
     &_count {
       position: relative;
       &-sub {
-        font-size: getRem(20);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 120%;
+        // font-size: getRem(20);
+        // font-style: normal;
+        // font-weight: 400;
+        // line-height: 120%;
         color: white(50);
         display: block;
         margin-top: 32px;
@@ -155,22 +157,18 @@ const onClickHandler = async () => {
         // left: 0;
       }
       h2 {
-        font-size: max(14.6vw, 196px);
+        // font-size: max(14.6vw, 196px);
         line-height: 0.6;
-        font-weight: 400;
+        // font-weight: 400;
         padding-bottom: 1.8vw;
         display: inline-block;
-        letter-spacing: -0.07em;
+        // letter-spacing: -0.07em;
       }
     }
     &_text {
-      font-size: clamp(30px, 1.875vw, 36px);
-      font-style: normal;
-      font-weight: 400;
       line-height: 120%;
-      letter-spacing: -0.36px;
       @include respond(mobile) {
-        font-size: max(30px, 8vw);
+        // font-size: max(30px, 8vw);
       }
     }
   }
@@ -181,14 +179,8 @@ const onClickHandler = async () => {
       grid-template-columns: 0.3fr 1fr 0.3fr;
       gap: getRem(16);
       color: white(50);
-      font-family: 'RoobertMono';
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 1.92;
-      text-transform: uppercase;
       border-bottom: 1px solid white(10);
-      padding-bottom: getRem(6);
+      padding-bottom: getRem(12);
       @include respond(mobile) {
         display: none;
       }
@@ -212,7 +204,6 @@ const onClickHandler = async () => {
         padding-top: getRem(8);
         border-color: white(20);
         align-items: flex-start;
-        font-size: getRem(12);
         &:first-child {
           border-top: 1px solid white(20);
         }

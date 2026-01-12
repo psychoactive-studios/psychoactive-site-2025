@@ -35,7 +35,7 @@ const getHref = (news) => {
           :href="getHref(news)"
         />
       </div>
-      <div class="news-list__more">
+      <div class="news-list__more body-button">
         <div class="news-list__more_line" />
         <LinkWithHover href="/content-hub">
           Explore Our Content Hub
@@ -68,7 +68,7 @@ const getHref = (news) => {
   }
   &__grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: getRem(16);
     @media screen and (max-width: 1400px) {
       grid-template-columns: repeat(2, 1fr);
@@ -82,12 +82,7 @@ const getHref = (news) => {
     display: flex;
     align-items: center;
     gap: 1rem;
-    font-size: 1rem;
-    font-family: 'RoobertMono';
-    font-style: normal;
-    font-weight: 500;
     line-height: 27px; /* 168.75% */
-    text-transform: uppercase;
     @include respond(mobile) {
       margin-top: getRem(64);
     }

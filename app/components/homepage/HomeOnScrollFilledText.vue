@@ -41,7 +41,7 @@ onMounted(async () => {
 <template>
   <div
     ref="elementRef"
-    class="text-block"
+    class="text-block heading-h2--mobile"
     :data-current-time="`${currenTime} NZT`"
     :data-current-days="`${currentDay} days`"
   >
@@ -55,15 +55,25 @@ onMounted(async () => {
 @use '~/assets/styles/mixins' as *;
 .text-block {
   color: $color-foreground;
-  font-size: 3.646vw;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 110%;
-  letter-spacing: getRem(-1.4);
+  // font-size: 3.646vw;
+  // font-style: normal;
+  // font-weight: 400;
+  // line-height: 110%;
+  // letter-spacing: getRem(-1.4);
   position: relative;
   padding-bottom: 0.15vw;
+  padding-left: max(110px, 7.3vw);
+  padding-right: max(110px, 7.3vw);
   @include respond(mobile) {
-    font-size: 8vw;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  & > *:first-child {
+    padding-left: 10%;
+    @include respond(mobile) {
+      padding-left: 20%;
+    }
   }
 
   &:deep(.dark) {
@@ -72,6 +82,11 @@ onMounted(async () => {
   &:deep(img) {
     display: inline-block;
     margin: 0 getRem(16);
+    height: 0.6em;
+    width: auto;
+    &.icon-large {
+      height: 0.8em;
+    }
     @include respond(mobile) {
       margin: 0 getRem(12);
       height: 5vw;
@@ -81,26 +96,28 @@ onMounted(async () => {
   &::before,
   &::after {
     content: attr(data-current-days);
-    display: inline-block;
-    width: 10%;
+    display: block;
     font-family: 'RoobertMono';
     font-style: normal;
-    font-size: clamp(12px, 1.3vw, 16px);
+    font-size: 12px;
     font-weight: 500;
     line-height: 1;
     text-transform: uppercase;
     color: white(50);
-    vertical-align: top;
     margin-top: 0.85rem;
+    letter-spacing: normal;
     white-space: nowrap;
+    position: absolute;
     @include respond(mobile) {
       visibility: hidden;
     }
   }
+  &::before {
+    top: 0;
+    left: 0;
+  }
   &::after {
     content: attr(data-current-time);
-    width: auto;
-    vertical-align: bottom;
     margin-top: 0;
     margin-bottom: 0.6rem;
     position: absolute;

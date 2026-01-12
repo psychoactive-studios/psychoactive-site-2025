@@ -23,7 +23,7 @@ import PartnersMobile from '~/components/ui/PartnersMobile.vue';
 const params = qs.stringify({
   populate: {
     works: {
-      populate: ['mainImage'],
+      populate: ['mainImage', 'hero'],
     },
     feedbacks: {
       populate: {
