@@ -27,6 +27,7 @@ const fileList = [
   '/sound/Medium-Hum7.mp3',
   '/sound/Medium-Hum8.mp3',
 ];
+
 const sounds = {};
 const isMuted = ref(false);
 
@@ -53,15 +54,32 @@ export default function () {
     });
   }
 
-  function playInteractionSound() {
+  function playInteractionSound(name = 'Medium-Hum1') {
     if (isMuted.value) return;
-    const randomIndex = Math.floor(Math.random() * fileList.length);
-    const sound = sounds[fileList[randomIndex]];
+
+    const fullPath = fileList.find((path) => path.includes(name));
+
+    if (!fullPath) {
+      console.warn(`Sound not found: ${name}`);
+      return;
+    }
+
+    const sound = sounds[fullPath];
 
     if (sound) {
       sound.play();
     }
   }
+
+  // function playRandomSound() {
+  //   if (isMuted.value) return;
+  //   const randomIndex = Math.floor(Math.random() * fileList.length);
+  //   const sound = sounds[fileList[randomIndex]];
+
+  //   if (sound) {
+  //     sound.play();
+  //   }
+  // }
   return {
     isMuted,
     loadSounds,
