@@ -138,15 +138,10 @@ const handleClick = () => {
     &-text {
       visibility: hidden;
     }
-    h3 {
-    }
     p {
       margin-top: getRem(8);
       opacity: 0.5;
       mix-blend-mode: difference;
-      @include respond(mobile) {
-        font-size: getRem(14);
-      }
     }
   }
 

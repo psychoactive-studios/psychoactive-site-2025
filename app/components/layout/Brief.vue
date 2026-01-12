@@ -65,7 +65,7 @@ const briefMouseLeaveHandler = () => {
           <PlusIcon />
           <PlusIcon />
         </div>
-        <div class="brief__idea_text">Have an idea?</div>
+        <div class="brief__idea_text subheader--mobile">Have an idea?</div>
         <div class="brief__idea_plus">
           <PlusIcon />
           <PlusIcon />
