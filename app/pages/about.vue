@@ -143,8 +143,8 @@ definePageMeta({
       min-height: initial;
     }
   }
-  &__metamorphosis {
-  }
+  // &__metamorphosis {
+  // }
   &__collaboration {
     margin-top: 240px;
     @include respond(mobile) {

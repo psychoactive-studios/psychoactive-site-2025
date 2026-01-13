@@ -218,8 +218,8 @@ function enterAnimation(el) {
   <main class="works">
     <div class="container">
       <div ref="titleRef" class="works__title">
-        <h1>OUR Projects</h1>
-        <p>
+        <h1 class="subheader--mobile">OUR Projects</h1>
+        <p class="heading-h5--mobile">
           Where bold ideas become living, breathing digital experiences. Crafted
           with intention and built to perform.
         </p>
@@ -246,28 +246,13 @@ function enterAnimation(el) {
   &__title {
     margin-bottom: 200px;
     max-width: calc(50% - getRem(10));
-    font-size: getRem(32);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 121%;
-    letter-spacing: -1.52px;
     @include respond('mobile') {
       max-width: 100%;
-      font-size: max(24px, 6.4vw);
       margin-bottom: 120px;
     }
     & > h1 {
-      font-family: 'RoobertMono';
-      font-size: 1rem;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 146%; /* 23.36px */
-      text-transform: uppercase;
       color: white(60);
-      margin-bottom: getRem(20);
-      @include respond('mobile') {
-        font-size: getRem(14);
-      }
+      margin-bottom: getRem(24);
     }
   }
   &__grid {
