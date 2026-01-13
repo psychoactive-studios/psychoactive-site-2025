@@ -10,7 +10,7 @@
         playsinline
       />
       <div class="container">
-        <h2>Our Ethos</h2>
+        <h2 class="display-4xl--medium">Our Ethos</h2>
       </div>
     </div>
     <div class="container">
@@ -74,6 +74,7 @@
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/mixins' as *;
+@use '~/assets/styles/typography' as *;
 
 .our-ethos {
   margin-top: -15vh;
@@ -105,13 +106,6 @@
     }
     .container {
       margin-top: auto;
-    }
-    h2 {
-      font-size: 14.585vw;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 100%;
-      letter-spacing: -0.07em;
     }
   }
   &__list {
@@ -195,22 +189,15 @@
         }
       }
       .item-title {
-        font-size: max(2.5vw, 24px);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 120%; /* 57.6px */
-        letter-spacing: -0.02em;
+        @extend .heading-h4--mobile;
         @include respond(mobile) {
           padding-left: 24px;
         }
       }
       .item-text {
+        @extend .body--mobile;
         max-width: 33.3%;
         margin-right: 7%;
-        font-size: max(1.042vw, 16px);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 130%; /* 26px */
         color: white(80);
         @include respond(mobile) {
           max-width: initial;

@@ -104,8 +104,8 @@ const handleClick = (e) => {
               <div class="dots-bottom" />
             </div>
             <div class="metamorphosis__title_text">
-              <h2>Metamorphosis</h2>
-              <p class="text-lg">/ˌmɛtəˈmɔːfəsɪs,ˌmɛtəmɔːˈfəʊsɪs/</p>
+              <h2 class="display-2xl--medium">Metamorphosis</h2>
+              <p class="body-large--mobile">/ˌmɛtəˈmɔːfəsɪs,ˌmɛtəmɔːˈfəʊsɪs/</p>
             </div>
           </div>
         </div>
@@ -113,22 +113,22 @@ const handleClick = (e) => {
         <div class="metamorphosis__definition">
           <div class="metamorphosis__definition_section">
             <p>
-              Noun DIGITAL TRANSFORMATION<br />
-              noun: metamorphosis; plural noun: metamorphoses
+              Noun <span class="digital-label">DIGITAL TRANSFORMATION</span
+              ><br />
+              noun: <b>metamorphosis</b>; plural noun: <b>metamorphoses</b>
             </p>
-            <p>
-              <span class="text-lg">Psychoactive definition</span>
+            <p class="body--mobile">
               (in a brand or organisation) the process of transformation from an
               outdated or underperforming digital presence into a distinctive,
               intelligent, and high-performing web experience
             </p>
-            <p class="text-lg">
+            <p class="body-large--mobile">
               “After working with Psychoactive, the brand underwent digital
               metamorphosis.”
             </p>
           </div>
           <div class="metamorphosis__definition_section">
-            <h3>Outcomes:</h3>
+            <h3 class="body-large--mobile">Outcomes:</h3>
             <ul class="tags-list">
               <li class="tag">transformation</li>
               <li class="tag">clarity</li>
@@ -140,7 +140,7 @@ const handleClick = (e) => {
             </ul>
           </div>
           <div class="metamorphosis__definition_section origin">
-            <h3>Origin:</h3>
+            <h3 class="body-large--mobile">Origin:</h3>
             <ul class="origin-list">
               <li>
                 <div class="origin-title">
@@ -148,7 +148,7 @@ const handleClick = (e) => {
                   <div class="line" />
                 </div>
                 <div class="origin-definition">
-                  <div class="text-lg">metamorphoun</div>
+                  <div class="body-large--mobile">metamorphoun</div>
                   <div>(to transform, change shape)</div>
                 </div>
               </li>
@@ -158,7 +158,7 @@ const handleClick = (e) => {
                   <div class="line" />
                 </div>
                 <div class="origin-definition">
-                  <div class="text-lg">metamorphosis</div>
+                  <div class="body-large--mobile">metamorphosis</div>
                   <div>(late Middle English)</div>
                 </div>
               </li>
@@ -168,16 +168,15 @@ const handleClick = (e) => {
                   <div class="line" />
                 </div>
                 <div class="origin-definition">
-                  <div class="text-lg">metamorphosis</div>
-                  <div>(2018)</div>
+                  <div class="body-large--mobile">metamorphosis</div>
+                  <div>(Psychoactive definition)</div>
                 </div>
               </li>
             </ul>
           </div>
-          <div class="metamorphosis__definition_section text-lg">
-            NEW ZEALAND (2018) — redefined by Psychoactive Studios to describe
-            the digital evolution of brands through strategy, design, and
-            technology.
+          <div class="metamorphosis__definition_section body--mobile">
+            Redefined by Psychoactive Studios to describe the digital evolution
+            of brands through strategy, design, and technology.
           </div>
         </div>
       </div>
@@ -188,7 +187,7 @@ const handleClick = (e) => {
           <span class="line" />
         </div>
         <button
-          class="button"
+          class="button body-button"
           @mouseenter="handleHoverEffect"
           @click="handleClick"
         >
@@ -220,6 +219,7 @@ const handleClick = (e) => {
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/mixins' as *;
+@use '~/assets/styles/typography' as *;
 
 @keyframes sound-impulse {
   0% {
@@ -239,19 +239,8 @@ const handleClick = (e) => {
     padding-top: 60px;
     padding-bottom: 0;
   }
-  .text-lg {
-    font-size: clamp(16px, 2vw, 24px);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 125%;
-  }
   .tag {
-    font-family: 'RoobertMono';
-    font-size: clamp(12px, 0.833333vw, 16px);
-    font-style: normal;
-    font-weight: 500;
-    line-height: 100%;
-    text-transform: uppercase;
+    @extend .subheader--mobile;
     white-space: nowrap;
     border-radius: 30px;
     border: 1px solid white(20);
@@ -366,11 +355,6 @@ const handleClick = (e) => {
     }
     &_text {
       & > h2 {
-        font-size: max(8.33333vw, 64px);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100%;
-        letter-spacing: -0.07em;
         background: linear-gradient(to right, white(50) 50%, white 50%);
         background-size: 200% 100%;
         background-position-x: 0%;
@@ -379,15 +363,10 @@ const handleClick = (e) => {
         background-clip: text;
         transition: background-position-x 0.5s ease-in-out;
         @include respond(mobile) {
-          font-size: 6.4vw;
-          font-style: normal;
-          font-weight: 400;
-          line-height: 121%;
-          letter-spacing: -0.02em;
           color: $color-foreground;
         }
       }
-      .text-lg {
+      .body-large--mobile {
         opacity: 0.5;
         margin-top: 16px;
         @include respond(mobile) {
@@ -413,7 +392,7 @@ const handleClick = (e) => {
     }
   }
   &__definition {
-    max-width: 37%;
+    max-width: 41.25%;
     margin: 80px auto 0 auto;
     display: flex;
     flex-direction: column;
@@ -441,14 +420,13 @@ const handleClick = (e) => {
           }
         }
       }
+      b {
+        font-weight: 750;
+      }
       & > p {
         margin-bottom: 1.2em;
       }
       & > h3 {
-        font-size: clamp(16px, 2vw, 24px);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 125%;
         color: $color-foreground;
         margin-bottom: 1em;
       }
@@ -512,6 +490,12 @@ const handleClick = (e) => {
         }
       }
     }
+    .digital-label {
+      display: inline-block;
+      background-color: white(10);
+      padding: 0 6px;
+      border-radius: 4px;
+    }
   }
   &__button {
     display: grid;
@@ -523,12 +507,6 @@ const handleClick = (e) => {
       text-align: center;
     }
     .button {
-      font-family: 'RoobertMono';
-      font-size: 1rem;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 100%;
-      text-transform: uppercase;
       padding: 12px 48px;
       border: 1px solid white(20);
       border-radius: 48px;

@@ -100,13 +100,13 @@ onUnmounted(() => {
 <template>
   <div ref="containerRef" class="our-story">
     <div class="our-story__title">
-      <h2>Our story</h2>
+      <h2 class="subheader--mobile">Our story</h2>
       <div class="title-line">
         <span class="line" />
       </div>
     </div>
     <div class="our-story__grid">
-      <div class="our-story__text">
+      <div class="our-story__text body-large--mobile">
         <p>
           Psychoactive was founded in 2018 by Andrew Hillstead, born from his
           Master’s research which explored how technology could be used to
@@ -144,22 +144,22 @@ onUnmounted(() => {
       <div class="our-story__stats">
         <ul class="our-story__stats_list">
           <li class="our-story__stats_item">
-            <div class="item-title">
-              <div>{{ Math.floor(data.founded).toLocaleString('en-US') }}</div>
+            <div class="item-title display-2xl--strong">
+              <div>{{ Math.floor(data.founded) }}</div>
             </div>
-            <div class="item-text">
+            <div class="item-text body--mobile">
               <span>Founded, based in</span>
               <br />
               Wellington New Zealand
             </div>
           </li>
           <li class="our-story__stats_item">
-            <div class="item-title">
+            <div class="item-title display-2xl--strong">
               <div>
                 {{ Math.floor(data.recognitions).toLocaleString('en-US') }}+
               </div>
             </div>
-            <div class="item-text">
+            <div class="item-text body--mobile">
               <span>Recognition & Awards</span>
               <br />
               backing our excellence
@@ -169,7 +169,7 @@ onUnmounted(() => {
             <div class="item-title">
               <img src="/img/awwards-logo.svg" alt="Awwwards." />
             </div>
-            <div class="item-text">
+            <div class="item-text body--mobile">
               <span>Nominated as the </span>
               <br />
               International Agency of the Year
@@ -195,12 +195,6 @@ onUnmounted(() => {
       margin-bottom: getRem(24);
     }
     h2 {
-      font-family: 'RoobertMono';
-      font-size: clamp(0.75rem, 1.333vw, 1rem);
-      font-style: normal;
-      font-weight: 500;
-      line-height: 100%;
-      text-transform: uppercase;
       white-space: nowrap;
       color: white(50);
     }
@@ -246,14 +240,10 @@ onUnmounted(() => {
     }
   }
   &__text {
-    font-size: max(1.25vw, 18px);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 125%;
     color: white(80);
     @include respond(mobile) {
-      font-size: min(4.26667vw, 18px);
-      line-height: 140%;
+      // font-size: min(4.26667vw, 18px);
+      // line-height: 140%;
     }
     p {
       margin-bottom: 1em;
@@ -282,12 +272,8 @@ onUnmounted(() => {
     }
     &_item {
       .item-title {
-        font-size: 8.33333vw;
-        font-style: normal;
-        font-weight: 400;
         line-height: 78%;
-        letter-spacing: -0.07em;
-        margin-bottom: 24px;
+        margin-bottom: 1.25vw;
         @include respond(mobile) {
           font-size: min(32vw, 160px);
           font-style: normal;
@@ -304,13 +290,6 @@ onUnmounted(() => {
         }
       }
       .item-text {
-        font-size: max(1.042vw, 18px);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 130%;
-        @include respond(mobile) {
-          font-size: min(4.26666vw, 18px);
-        }
         span {
           color: white(50);
         }

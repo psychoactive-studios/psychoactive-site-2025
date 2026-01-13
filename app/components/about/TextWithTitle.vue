@@ -75,7 +75,7 @@ onUnmounted(() => {
 <template>
   <section ref="containerRef" class="text-section">
     <div class="container">
-      <h2 class="text-section__title">{{ title }}</h2>
+      <h2 class="text-section__title subheader--mobile">{{ title }}</h2>
       <div class="text-section__content">
         <OnScrollFilledText>
           <slot />
@@ -99,12 +99,6 @@ onUnmounted(() => {
     }
   }
   &__title {
-    font-family: 'RoobertMono';
-    font-size: clamp(0.75rem, 1.333vw, 1rem);
-    font-style: normal;
-    font-weight: 500;
-    line-height: 100%;
-    text-transform: uppercase;
     white-space: nowrap;
     margin-top: 0.4rem;
     color: white(50);

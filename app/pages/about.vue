@@ -102,12 +102,12 @@ definePageMeta({
     <section class="about__collaboration">
       <div class="container">
         <div class="about__collaboration_title">
-          <h2>THRIVE THROUGH COLLABORATION</h2>
+          <h2 class="subheader--mobile">THRIVE THROUGH COLLABORATION</h2>
           <div class="title-line">
             <span class="line" />
           </div>
         </div>
-        <div class="about__collaboration_text">
+        <div class="about__collaboration_text heading-h1--mobile">
           A global network of designers, developers, creative thinkers, and
           strange creatures.
         </div>
@@ -156,12 +156,6 @@ definePageMeta({
       align-items: center;
       gap: getRem(48);
       h2 {
-        font-family: 'RoobertMono';
-        font-size: clamp(0.75rem, 1.333vw, 1rem);
-        font-style: normal;
-        font-weight: 500;
-        line-height: 100%;
-        text-transform: uppercase;
         white-space: nowrap;
         color: white(50);
       }
