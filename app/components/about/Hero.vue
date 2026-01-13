@@ -55,7 +55,7 @@ watch(isLoading, (newVal) => {
       />
       <HeroCenterLine class="hero__center-line" />
       <div class="container">
-        <h1 class="hero__title">
+        <h1 class="hero__title display-4xl">
           <span class="grey">Digital</span>
           <span class="white">Amphibians</span>
         </h1>
@@ -93,14 +93,10 @@ watch(isLoading, (newVal) => {
     z-index: -1;
   }
   &__title {
-    font-size: 14.588vw;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 100%;
-    letter-spacing: -0.07em;
     span {
       display: block;
       text-align: right;
+      white-space: nowrap;
       &.grey {
         text-align: left;
         color: white(50);

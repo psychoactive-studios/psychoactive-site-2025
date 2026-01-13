@@ -25,7 +25,7 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <div ref="elementRef" class="text-block">
+  <div ref="elementRef" class="text-block heading-h4--mobile">
     <slot />
   </div>
 </template>
@@ -36,16 +36,16 @@ onMounted(async () => {
 @use '~/assets/styles/mixins' as *;
 .text-block {
   color: $color-foreground;
-  font-size: 2.5vw;
-  font-style: normal;
-  font-weight: 400;
+  // font-size: 2.5vw;
+  // font-style: normal;
+  // font-weight: 400;
   line-height: 120%;
-  letter-spacing: -0.02em;
+  // letter-spacing: -0.02em;
   position: relative;
   isolation: isolate;
   @include respond(mobile) {
-    font-size: 6.4vw;
-    line-height: 121%;
+    // font-size: 6.4vw;
+    // line-height: 121%;
     text-align: left;
     :deep(p) {
       display: inline;
