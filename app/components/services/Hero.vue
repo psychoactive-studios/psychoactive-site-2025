@@ -52,12 +52,12 @@ watch(isLoading, (newVal) => {
       </div>
       <div class="container">
         <div class="scene">
-          <h1 class="title">OUR SERVICES</h1>
+          <h1 class="title subheader--mobile">OUR SERVICES</h1>
           <div class="circle--wrapper">
             <Circle class="circle" />
           </div>
           <HeroCenterLine />
-          <div class="top-text">
+          <div class="top-text display-large--mobile">
             <p class="grey">for brands that</p>
             <p>dare to stand out</p>
             <a
@@ -71,8 +71,8 @@ watch(isLoading, (newVal) => {
             </a>
           </div>
           <div class="bottom-text">
-            <div class="bottom-text__shape">We shape</div>
-            <div class="bottom-text__web">the Web</div>
+            <div class="bottom-text__shape heading-h4--mobile">We shape</div>
+            <div class="bottom-text__web display-4xl">the Web</div>
             <div class="bottom-text__web-svg">
               <img src="/img/the-web.svg" alt="" />
             </div>
@@ -156,16 +156,9 @@ watch(isLoading, (newVal) => {
       z-index: 2;
       top: 0;
       left: 0;
-      font-family: 'RoobertMono', sans-serif;
       color: white(50);
-      font-size: clamp(16px, 0.938vw, 18px);
-      font-weight: 500;
-      font-style: normal;
       line-height: 1;
       text-transform: uppercase;
-      @include respond(mobile) {
-        font-size: getRem(12);
-      }
     }
     .circle--wrapper {
       position: absolute;
@@ -198,16 +191,8 @@ watch(isLoading, (newVal) => {
       position: absolute;
       top: 0;
       right: 0;
-      font-size: 4.792vw;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 88%; /* 80.96px */
-      letter-spacing: -0.06em;
+      line-height: 88%;
       text-align: right;
-      @include respond(mobile) {
-        font-size: 8.55vw;
-        line-height: 121%;
-      }
       &__label {
         display: none;
         margin-top: 3.8vw;
@@ -231,16 +216,7 @@ watch(isLoading, (newVal) => {
         width: 100%;
       }
       &__shape {
-        font-size: 2.5vw;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 120%;
-        letter-spacing: -0.02em;
         color: #cfcfd0;
-        @include respond(mobile) {
-          font-size: 8.55vw;
-          line-height: 121%;
-        }
       }
       &__web {
         font-size: 14.585vw;
@@ -257,7 +233,7 @@ watch(isLoading, (newVal) => {
         &-svg {
           display: none;
           width: 100%;
-          margin-top: 1vw;
+          margin-top: 3vw;
           img {
             width: 100%;
           }

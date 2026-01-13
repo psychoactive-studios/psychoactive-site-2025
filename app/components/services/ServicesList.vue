@@ -41,11 +41,13 @@ onUnmounted(() => {
           :key="item.title"
           class="services-list__item"
         >
-          <h3 class="services-list__item_title">{{ item.title }}</h3>
+          <h3 class="services-list__item_title subheader--mobile">
+            {{ item.title }}
+          </h3>
           <div class="services-list__item_divider">
             <span class="line" />
           </div>
-          <div class="services-list__item_description">
+          <div class="services-list__item_description body-large--mobile">
             {{ item.description }}
           </div>
         </li>
@@ -89,14 +91,9 @@ onUnmounted(() => {
       flex-direction: column;
     }
     &_title {
-      font-family: 'RoobertMono';
-      font-size: clamp(getRem(12), 1.333vw, getRem(16));
-      font-style: normal;
-      font-weight: 500;
-      line-height: 100%;
-      text-transform: uppercase;
       white-space: nowrap;
       margin-top: 0.4rem;
+      color: white(50);
     }
     &_divider {
       flex-grow: 1;
@@ -131,13 +128,12 @@ onUnmounted(() => {
       }
     }
     &_description {
-      font-size: clamp(getRem(20), 1.333vw, getRem(24));
-      font-style: normal;
-      font-weight: 400;
-      line-height: 125%;
+      // font-size: clamp(getRem(20), 1.333vw, getRem(24));
+      // font-style: normal;
+      // font-weight: 400;
+      // line-height: 125%;
       color: white(80);
       width: 380px;
-      color: white(80);
     }
   }
 }

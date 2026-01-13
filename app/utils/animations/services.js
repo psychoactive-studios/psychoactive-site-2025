@@ -312,7 +312,7 @@ export const servicesListAnimation = (ctx, root) => {
             duration: 1,
             scrollTrigger: {
               trigger: root,
-              start: 'top center',
+              start: '5% center',
               end: () => `${window.innerHeight * 0.5} center`,
               scrub: true,
               onEnter: () => {
