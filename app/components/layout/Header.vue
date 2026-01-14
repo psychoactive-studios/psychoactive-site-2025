@@ -52,8 +52,8 @@ const onLogoHoverHandler = (e) => {
       class="logo"
       aria-label="Go to homepage"
       aria-describedby="main-logo"
-      @mouseenter="playInteractionSound"
-      @focus="playInteractionSound"
+      @mouseenter="() => playInteractionSound('home-hover')"
+      @focus="() => playInteractionSound('home-hover')  "
       @click.capture="onLogoClickHandler"
     >
       <MainAnimatedLogo
@@ -70,7 +70,7 @@ const onLogoHoverHandler = (e) => {
       class="header__sound-button"
       :muted="isMuted"
       @click="onSoundChangeHandler"
-      @mouseenter="playInteractionSound"
+      @mouseenter="() => playInteractionSound('mute-hover')"
       @focus="playInteractionSound"
     />
     <ClientOnly>

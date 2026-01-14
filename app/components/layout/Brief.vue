@@ -4,6 +4,8 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
 import gsap from 'gsap';
 import BriefOurAIAgent from '~/assets/img/brief-our-AI-agent.svg';
 
+const { playInteractionSound } = useAudioManager();
+
 let footerBriefTimeline;
 const briefRef = ref(null);
 
@@ -42,6 +44,7 @@ const briefMouseEnterHandler = () => {
     overwrite: 'auto',
   });
   footerBriefTimeline.repeat(-1).restart();
+  playInteractionSound('ai-hover');
 };
 const briefMouseLeaveHandler = () => {
   gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {

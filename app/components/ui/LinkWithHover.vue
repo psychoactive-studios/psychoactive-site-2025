@@ -19,7 +19,7 @@ const handleHoverEffect = (el) => {
   const width = el.offsetWidth;
   gsap.set(el, { width });
 
-  playInteractionSound();
+  playInteractionSound('text-hover');
 
   // Store the original text
   gsap.to(el, {
