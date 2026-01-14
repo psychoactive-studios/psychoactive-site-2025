@@ -23,7 +23,7 @@ addResourceToLoad(1);
 onMounted(async () => {
   ctx = gsap.context(() => {}, containerRef.value);
   heroScrollAnimation(ctx, containerRef.value);
-  const blob = await $fetch('/video/ps_service_05.mp4', {
+  const blob = await $fetch('/video/service_04.mp4', {
     responseType: 'blob',
   });
   heroVideoResource.value = URL.createObjectURL(blob);
