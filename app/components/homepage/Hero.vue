@@ -50,6 +50,10 @@ watch(isLoading, (newVal) => {
 // const MAX_SCROLL_DURATION = 1.5; // Maximum duration (in seconds) for scroll animation
 
 const onPlayVideoHandler = (playerContainerRef) => {
+  playInteractionSound('click-1');
+  setTimeout(() => {
+    playInteractionSound('showreel-open-1');
+  }, 100);
   // Get ScrollTrigger by ID
   const trigger = ScrollTrigger.getById('homepage-hero-scrolltrigger');
 
@@ -101,6 +105,10 @@ const onScrollDownHandler = () => {
       x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2,
   });
 };
+
+const playDelayedSound = (name) => {
+  setTimeout(() => playInteractionSound(name), 200);
+};
 </script>
 
 <template>
@@ -133,8 +141,8 @@ const onScrollDownHandler = () => {
             <a
               href="https://webflow.com/@Psychoactive-Studios"
               target="_blank"
-              @mouseenter="playInteractionSound"
-              @focus="playInteractionSound"
+              @mouseenter="() => playInteractionSound('mute-hover')"
+              @focus="() => playInteractionSound('mute-hover')"
             >
               <!-- <WebflowLabel class="top-text__label" /> -->
               <WebflowBlackLabel class="top-text__label" />
@@ -157,8 +165,8 @@ const onScrollDownHandler = () => {
             class="dots-arrow"
             aria-label="Scroll down"
             @click="onScrollDownHandler"
-            @mouseenter="playInteractionSound"
-            @focus="playInteractionSound"
+            @mouseenter="() => playInteractionSound('showreel-hover-1')"
+            @focus="() => playInteractionSound('showreel-hover-1')"
           >
             <div class="dots-arrow__icon">
               <span class="dots-arrow__icon_dot dots-arrow__icon_dot--1" />
@@ -181,6 +189,8 @@ const onScrollDownHandler = () => {
             transparent-button
             :custom-handler="onPlayVideoHandler"
             aspect-ratio="2.22"
+            @mouseenter="playDelayedSound('showreel-hover-3')"
+            @focus="playDelayedSound('showreel-hover-3')"
           />
           <div class="bottom-text">
             <div class="bottom-text__imagine grey-text">Imagine</div>

@@ -2,30 +2,20 @@ import useLoader from '~/composables/useLoader';
 import { Howl } from 'howler';
 
 const fileList = [
-  // '/sound/deep-futuristic1.mp3',
-  // '/sound/deep-futuristic2.mp3',
-  // '/sound/deep-futuristic3.mp3',
-  // '/sound/deep-futuristic4.mp3',
-  // '/sound/deep-futuristic5.mp3',
-  // '/sound/deep-futuristic6.mp3',
-  // '/sound/deep-futuristic7.mp3',
-  // '/sound/deep-futuristic8.mp3',
-  // '/sound/Super-Low-Hummm1.mp3',
-  // '/sound/Super-Low-Hummm2.mp3',
-  // '/sound/Super-Low-Hummm3.mp3',
-  // '/sound/Super-Low-Hummm4.mp3',
-  // '/sound/Super-Low-Hummm5.mp3',
-  // '/sound/Super-Low-Hummm6.mp3',
-  // '/sound/Super-Low-Hummm7.mp3',
-  // '/sound/Super-Low-Hummm8.mp3',
-  '/sound/Medium-Hum1.mp3',
-  '/sound/Medium-Hum2.mp3',
-  '/sound/Medium-Hum3.mp3',
-  '/sound/Medium-Hum4.mp3',
-  '/sound/Medium-Hum5.mp3',
-  '/sound/Medium-Hum6.mp3',
-  '/sound/Medium-Hum7.mp3',
-  '/sound/Medium-Hum8.mp3',
+  '/sound/temp/home-hover.wav',
+  '/sound/temp/ai-hover.wav',
+  '/sound/temp/text-hover.wav',
+  '/sound/temp/card-hover.wav',
+  '/sound/temp/click-1.wav',
+  '/sound/temp/menu-close.wav',
+  '/sound/temp/menu-hover-close.wav',
+  '/sound/temp/menu-hover-1.wav',
+  '/sound/temp/menu-open.wav',
+  '/sound/temp/mute-hover.wav',
+  '/sound/temp/showreel-hover-1.wav',
+  '/sound/temp/showreel-hover-2.wav',
+  '/sound/temp/showreel-hover-3.wav',
+  '/sound/temp/showreel-open-1.wav',
 ];
 
 const sounds = {};
@@ -42,7 +32,7 @@ export default function () {
 
       const sound = new Howl({
         src: [file],
-        volume: 0.5,
+        volume: 1,
         onload: () => {
           resourceLoaded();
         },
@@ -54,7 +44,7 @@ export default function () {
     });
   }
 
-  function playInteractionSound(name = 'Medium-Hum1') {
+  function playInteractionSound(name = 'text-hover') {
     if (isMuted.value) return;
 
     const fullPath = fileList.find((path) => path.includes(name));
@@ -68,6 +58,7 @@ export default function () {
 
     if (sound) {
       sound.play();
+      console.log(`Playing sound: ${name}`);
     }
   }
 

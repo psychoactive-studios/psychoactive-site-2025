@@ -192,6 +192,7 @@ watch(isVideoOpen, (newVal) => {
 });
 
 const onClickHandler = () => {
+  playInteractionSound('click-1');
   // Prevent multiple clicks during animation
   const isAnimating =
     gsap.getById('open-timeline-main')?.isActive() ||
@@ -202,6 +203,9 @@ const onClickHandler = () => {
 
   if (isVideoOpen.value) {
     onPlayerClose();
+    setTimeout(() => {
+      playInteractionSound('menu-close');
+    }, 100);
     return;
   }
 
@@ -209,18 +213,29 @@ const onClickHandler = () => {
   if (isNavOpen.value) {
     transitionTimelineOut.restart();
     closeNavigation();
+    setTimeout(() => {
+      playInteractionSound('menu-close');
+    }, 100);
   } else {
     transitionTimelineIn.restart();
     openNavigation();
+    setTimeout(() => {
+      playInteractionSound('menu-open');
+    }, 100);
   }
 };
 
 const onMouseEnterHandler = () => {
-  playInteractionSound();
   if (isNavOpen.value || isVideoOpen.value) {
     hoverTimelineCloseIn.restart();
+    setTimeout(() => {
+      playInteractionSound('menu-hover-close');
+    }, 200);
   } else {
     hoverTimelineIn.restart();
+    setTimeout(() => {
+      playInteractionSound('menu-hover-1');
+    }, 200);
   }
 };
 

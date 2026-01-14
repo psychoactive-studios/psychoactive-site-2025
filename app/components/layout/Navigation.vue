@@ -31,7 +31,7 @@ onMounted(() => {
 });
 
 const talkButtonHoverHandler = () => {
-  playInteractionSound();
+  playInteractionSound('text-hover');
   if (gsap.isTweening('.navigation__talk_button')) return;
   talkButtonHoverTween.restart();
 };
