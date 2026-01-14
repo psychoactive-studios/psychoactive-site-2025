@@ -78,7 +78,7 @@ onUnmounted(() => {
 <template>
   <ul ref="containerRef" class="grid">
     <li class="grid__item">
-      <div class="grid__item_number">
+      <div class="grid__item_number display-xl--mobile">
         {{ Math.floor(data.worldOfWearableArt).toLocaleString('en-US') }}+
       </div>
       <div class="grid__item_info">
@@ -87,7 +87,7 @@ onUnmounted(() => {
       </div>
     </li>
     <li class="grid__item">
-      <div class="grid__item_number">
+      <div class="grid__item_number display-xl--mobile">
         {{ Math.floor(data.summerGameFest).toLocaleString('en-US') }} million+
       </div>
       <div class="grid__item_info">
@@ -96,7 +96,7 @@ onUnmounted(() => {
       </div>
     </li>
     <li class="grid__item">
-      <div class="grid__item_number">
+      <div class="grid__item_number display-xl--mobile">
         {{ Math.floor(data.superAI).toLocaleString('en-US') }}+
       </div>
       <div class="grid__item_info">
@@ -119,11 +119,6 @@ onUnmounted(() => {
   }
   &__item {
     &_number {
-      font-size: 6.25vw;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 100%; /* 120px */
-      letter-spacing: -0.06em;
       color: white(80);
       @include respond(mobile) {
         font-size: max(10.25vw, 42px);

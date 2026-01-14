@@ -94,15 +94,17 @@ const onClickHandler = () => {
             <span class="dots--br" />
           </div>
           <div class="left-text" @click="onClickHandler">
-            <div class="grey-text">Premium</div>
-            <h1>
+            <div class="grey-text subheader--mobile">The Bolest</div>
+            <h1 class="display-large--mobile">
               <span class="blue">Webflow</span>
               <span>Enterprise</span>
               <span>Partner</span>
             </h1>
           </div>
           <div class="right-text">
-            <div class="grey-text">Pushing the boundaries of the web</div>
+            <div class="grey-text subheader--mobile">
+              Pushing the boundaries of the web
+            </div>
             <a
               href="https://webflow.com/@Psychoactive-Studios"
               target="_blank"
@@ -125,12 +127,12 @@ const onClickHandler = () => {
 @use '~/assets/styles/variables' as *;
 .grey-text {
   color: white(50);
-  font-family: 'RoobertMono';
-  font-size: clamp(12px, 0.938vw, 18px);
-  font-style: normal;
-  font-weight: 500;
-  line-height: 100%; /* 16px */
-  text-transform: uppercase;
+  // font-family: 'RoobertMono';
+  // font-size: clamp(12px, 0.938vw, 18px);
+  // font-style: normal;
+  // font-weight: 500;
+  // line-height: 100%; /* 16px */
+  // text-transform: uppercase;
 }
 .hero {
   .container {
@@ -244,11 +246,6 @@ const onClickHandler = () => {
   bottom: 0;
   h1 {
     margin-top: getRem(4);
-    font-size: max(4.8vw, 32px);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 88%;
-    letter-spacing: -0.06em;
     transform-origin: left bottom;
     span {
       display: block;
@@ -257,8 +254,6 @@ const onClickHandler = () => {
       }
     }
     @include respond(mobile) {
-      font-size: max(11.2vw, 42px);
-      line-height: 121%;
       span {
         display: inline-block;
         margin-right: 0.3em;

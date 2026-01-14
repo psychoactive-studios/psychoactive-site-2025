@@ -82,7 +82,7 @@ const leave = (el, done) => {
       :class="{ 'accordion__item--active': activeIndices.includes(index) }"
     >
       <button class="accordion__header" @click="toggle(index)">
-        <span class="accordion__title">{{ item.title }}</span>
+        <span class="accordion__title subheader--mobile">{{ item.title }}</span>
         <Transition
           :css="false"
           @before-enter="beforeEnter"
@@ -93,7 +93,7 @@ const leave = (el, done) => {
             v-if="activeIndices.includes(index)"
             class="accordion__content-wrapper"
           >
-            <div class="accordion__content">
+            <div class="accordion__content body--mobile">
               <div class="accordion__content_inner">
                 <!-- Paragraphs -->
                 <template
@@ -264,12 +264,6 @@ const leave = (el, done) => {
   }
 
   &__title {
-    font-family: 'RoobertMono';
-    font-size: max(0.833333vw, 16px);
-    font-style: normal;
-    font-weight: 500;
-    line-height: 100%; /* 16px */
-    text-transform: uppercase;
     white-space: nowrap;
     flex-grow: 1;
     margin-right: 1rem;
@@ -287,10 +281,6 @@ const leave = (el, done) => {
   }
 
   &__content {
-    font-size: max(1.042vw, 20px);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 130%;
     &_inner {
       padding-top: 0.95vw;
       @include respond(laptop) {

@@ -86,7 +86,10 @@ const leave = (el, done) => {
       class="accordion__item"
       :class="{ 'accordion__item--active': activeIndices.includes(index) }"
     >
-      <button class="accordion__header" @click="toggle(index)">
+      <button
+        class="accordion__header heading-h5--mobile"
+        @click="toggle(index)"
+      >
         <span class="accordion__title">{{ item.title }}</span>
       </button>
 
@@ -101,7 +104,7 @@ const leave = (el, done) => {
           class="accordion__content-wrapper"
         >
           <div class="accordion__content">
-            <div class="accordion__content_inner">
+            <div class="accordion__content_inner body--mobile">
               {{ item.description }}
             </div>
           </div>
@@ -133,10 +136,6 @@ const leave = (el, done) => {
     background: none;
     border: none;
     cursor: pointer;
-    font-size: clamp(20px, 1.666666vw, 32px);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 112.5%;
     color: white(50);
     transition: color 0.5s ease;
   }
@@ -150,10 +149,6 @@ const leave = (el, done) => {
   }
 
   &__content {
-    font-size: clamp(16px, 1.042vw, 20px);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 130%;
     color: white(80);
     position: relative;
     margin-top: clamp(20px, 2.19vw, 42px);
