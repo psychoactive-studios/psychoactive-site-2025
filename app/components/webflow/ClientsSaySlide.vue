@@ -19,15 +19,15 @@ const { feedback } = props;
       />
     </div>
     <div class="slide__body">
-      <h3>CLIENT SAY</h3>
-      <div class="slide__body-text">
+      <h3 class="subheader--mobile">CLIENT SAY</h3>
+      <div class="slide__body-text body--mobile">
         {{ feedback.feedback }}
       </div>
       <div class="slide__body-author">
-        <div class="slide__body-author-name">
+        <div class="slide__body-author-name body-large--mobile">
           {{ feedback.client.name }}
         </div>
-        <div class="slide__body-author-position">
+        <div class="slide__body-author-position subheader--mobile">
           {{ feedback.client.position }}
         </div>
       </div>
@@ -38,6 +38,7 @@ const { feedback } = props;
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/mixins' as *;
+@use '~/assets/styles/typography' as *;
 .slide {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -74,12 +75,6 @@ const { feedback } = props;
       flex-grow: 1;
     }
     h3 {
-      font-family: 'RoobertMono';
-      font-size: max(0.835vw, 12px);
-      font-style: normal;
-      font-weight: 500;
-      line-height: 100%; /* 16px */
-      text-transform: uppercase;
       color: white(50);
       margin-bottom: getRem(48);
       @include respond(mobile) {
@@ -87,29 +82,19 @@ const { feedback } = props;
       }
     }
     &-text {
-      font-size: max(1.25vw, 16px);
-      font-style: normal;
-      font-weight: 400;
-      line-height: 125%;
       margin-bottom: getRem(24);
     }
     &-author {
       margin-top: auto;
       &-name {
-        font-size: max(1.25vw, 16px);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 125%;
+        // font-size: max(1.25vw, 16px);
+        // font-style: normal;
+        // font-weight: 400;
+        // line-height: 125%;
         color: white(80);
         margin-bottom: getRem(12);
       }
       &-position {
-        font-family: 'RoobertMono';
-        font-size: max(0.835vw, 12px);
-        font-style: normal;
-        font-weight: 500;
-        line-height: 100%; /* 16px */
-        text-transform: uppercase;
         color: white(50);
       }
     }

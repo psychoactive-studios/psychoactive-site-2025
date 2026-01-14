@@ -66,7 +66,7 @@ onUnmounted(() => {
 <template>
   <div ref="containerRef" class="our-services">
     <div class="our-services__accordion">
-      <h2>OUR SERVICES</h2>
+      <h2 class="subheader--mobile">Full-service Webflow expertise</h2>
       <ServicesAccordion ref="accordionRef" :list="data" />
     </div>
     <div class="our-services__media">
@@ -96,12 +96,6 @@ onUnmounted(() => {
       order: 2;
     }
     h2 {
-      font-family: 'RoobertMono';
-      font-size: clamp(12px, 0.8333vw, 16px);
-      font-style: normal;
-      font-weight: 500;
-      line-height: 100%; /* 16px */
-      text-transform: uppercase;
       color: white(50);
       margin-bottom: 1rem;
       :deep(.char-center) {
