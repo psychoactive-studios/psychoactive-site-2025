@@ -53,6 +53,7 @@ watch(isLoading, (newVal) => {
         muted
         playsinline
       />
+      <div class="hero__video-overlay" />
       <HeroCenterLine class="hero__center-line" />
       <div class="container">
         <h1 class="hero__title display-4xl">
@@ -66,8 +67,10 @@ watch(isLoading, (newVal) => {
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/variables' as *;
 .hero {
   pointer-events: none;
+  background-color: $color-background;
   &__wrapper {
     @include flex-center;
     flex-direction: column;
@@ -89,8 +92,16 @@ watch(isLoading, (newVal) => {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     z-index: -1;
+    mix-blend-mode: lighten;
+    &-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      inset: 0;
+      background: url('/img/video-player-dots-overlay.svg') repeat center;
+    }
   }
   &__title {
     span {
