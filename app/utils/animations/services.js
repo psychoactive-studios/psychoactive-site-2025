@@ -195,6 +195,7 @@ export const heroScrollAnimation = (ctx, isPlaying) => {
                 id: 'services-hero-scrolltrigger',
                 trigger: '.hero__wrapper',
                 pin: true, // pin the trigger element while active
+                pinType: 'transform',
                 pinSpacing: false,
                 start: 'top top', // when the top of the trigger hits the top of the viewport
                 end: '75% top', // end after scrolling 500px beyond the start
