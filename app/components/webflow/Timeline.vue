@@ -257,6 +257,7 @@ $range: $max - $min + 1;
           justify-content: space-between;
           .item__dot {
             margin-top: 0;
+            background-color: #136df4;
           }
         }
         &__dot {
