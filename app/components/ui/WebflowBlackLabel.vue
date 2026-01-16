@@ -9,7 +9,7 @@ const mouseEnterHandler = () => {
       .timeline()
       .to(labelRef.value.querySelector('.label-background'), {
         duration: 0.3,
-        scale: 0.9,
+        opacity: 1,
         // ease: 'power3.inOut',
       })
       .set(
@@ -39,7 +39,7 @@ const mouseLeaveHandler = () => {
   if (labelRef.value) {
     gsap.to(labelRef.value.querySelector('.label-background'), {
       duration: 0.3,
-      scale: 1,
+      opacity: 0,
       // ease: 'power3.inOut',
     });
   }
@@ -53,6 +53,7 @@ const mouseLeaveHandler = () => {
     viewBox="0 0 272 47"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    class="label-border"
     @mouseenter="mouseEnterHandler"
     @mouseleave="mouseLeaveHandler"
   >
@@ -158,7 +159,13 @@ const mouseLeaveHandler = () => {
 </template>
 
 <style lang="scss" scoped>
+@use '~/assets/styles/functions' as *;
+.label-border {
+  border: 1px solid white(20);
+  border-radius: getRem(24);
+}
 .label-background {
   transform-origin: center;
+  opacity: 0;
 }
 </style>
