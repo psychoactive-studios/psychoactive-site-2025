@@ -18,7 +18,7 @@ import useAudioManager from '~/composables/useAudioManager';
 import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
-const { onPlayerOpen } = useVideoPlayer();
+const { onPlayerOpen, previewVideoData } = useVideoPlayer();
 const { playInteractionSound } = useAudioManager();
 const { isLoading } = useLoader();
 
@@ -42,6 +42,8 @@ onUnmounted(() => {
 });
 
 watch(isLoading, (newVal) => {
+  console.log('previewVideoData', previewVideoData.value);
+
   if (!newVal) {
     heroInitAnimation(ctx, scrollSmoother);
   }
@@ -192,7 +194,7 @@ const playDelayedSound = (name) => {
 
           <VideoPreview
             class="video-player homehero-prepared"
-            preview="/video/preview_reel.mp4"
+            :preview="previewVideoData || '/video/preview_reel.mp4'"
             src="https://vjs.zencdn.net/v/oceans.mp4"
             transparent-button
             :custom-handler="onPlayVideoHandler"
