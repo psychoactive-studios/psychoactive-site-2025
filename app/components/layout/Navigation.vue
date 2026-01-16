@@ -6,10 +6,12 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import gsap from 'gsap';
 import { navigationData } from '~/data/navigationData';
+import useVideoPlayer from '~/composables/useVideoPlayer';
 
 const { navigationRef, initNavigation, transitionFromNavigation } =
   useNavigation();
 const { playInteractionSound } = useAudioManager();
+const { previewVideoData } = useVideoPlayer();
 
 let talkButtonHoverTween;
 
@@ -62,7 +64,7 @@ const clickOnLinkHandler = (e) => {
         <div class="navigation__video">
           <VideoPreview
             class="video-player"
-            preview="/video/preview_reel.mp4"
+            :preview="previewVideoData || '/video/preview_reel.mp4'"
             src="https://vjs.zencdn.net/v/oceans.mp4"
             :dots="false"
             :autoplay="false"

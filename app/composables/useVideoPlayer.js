@@ -16,6 +16,7 @@ const isMuted = ref(false);
 const currentTime = ref(0);
 const duration = ref(0);
 const progress = ref(0);
+const previewVideoData = ref(null);
 
 export default function () {
   const onPlayerOpen = async (previewId) => {
@@ -339,5 +340,6 @@ export default function () {
     playHandler,
     formatTime,
     setupVideoListeners,
+    previewVideoData,
   };
 }
