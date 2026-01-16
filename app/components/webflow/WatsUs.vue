@@ -208,11 +208,10 @@ onUnmounted(() => {
 @use '~/assets/styles/mixins' as *;
 
 .what-sets-us {
-  @include flex-center;
   background-color: $color-foreground;
   color: $color-background;
   min-height: 100dvh;
-  padding: 60px 0 60px 0;
+  padding: 160px 0;
   @include respond(mobile) {
     min-height: auto;
     padding: 48px 0 120px 0;
