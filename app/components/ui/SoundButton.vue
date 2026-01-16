@@ -1,5 +1,7 @@
 <script setup>
-defineProps({
+import gsap from 'gsap';
+
+const props = defineProps({
   mode: {
     type: String,
     default: 'outline', // or 'outline'
@@ -8,6 +10,67 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  speed: {
+    type: Number,
+    default: 1.5,
+  },
+});
+
+const lines = ref([]);
+
+const animateLine = (index) => {
+  const line = lines.value[index];
+  if (!line || props.muted) return;
+
+  const targetScale = 1 + Math.random() * 6;
+  const duration = (0.2 + Math.random() * 0.4) / props.speed;
+
+  gsap.to(line, {
+    scaleY: targetScale,
+    duration: duration,
+    ease: 'power1.inOut',
+    onComplete: () => animateLine(index),
+  });
+};
+
+const startAnimation = () => {
+  lines.value.forEach((line, index) => {
+    if (line) {
+      gsap.killTweensOf(line);
+      animateLine(index);
+    }
+  });
+};
+
+const stopAnimation = () => {
+  lines.value.forEach((line) => {
+    if (line) {
+      gsap.killTweensOf(line);
+      gsap.to(line, {
+        scaleY: 1,
+        duration: 0.3,
+        ease: 'power2.out',
+      });
+    }
+  });
+};
+
+watch(
+  () => props.muted,
+  (isMuted) => {
+    if (isMuted) {
+      stopAnimation();
+    } else {
+      nextTick(() => {
+        startAnimation();
+      });
+    }
+  },
+  { immediate: true }
+);
+
+onBeforeUnmount(() => {
+  lines.value.forEach((line) => line && gsap.killTweensOf(line));
 });
 </script>
 <template>
@@ -18,7 +81,12 @@ defineProps({
       `sound-button--${muted ? 'muted' : 'unmuted'}`,
     ]"
   >
-    <span />
+    <span
+      v-for="i in 6"
+      :key="i"
+      :ref="(el) => (lines[i - 1] = el)"
+      :class="['sound-button__line', `line--${i}`]"
+    />
   </button>
 </template>
 
@@ -32,90 +100,36 @@ defineProps({
   border-radius: 50%;
   position: relative;
   overflow: hidden;
-  &::after {
+  border: 1px solid white(20);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+
+  &::before {
     content: '';
     position: absolute;
-    top: calc(50% - 3px);
-    left: calc(50% - 3px);
-    width: 6px;
-    height: 6px;
-    background: $color-foreground;
+    display: block;
+    inset: 0;
+    background: white(20);
     border-radius: 50%;
     z-index: 1;
-  }
-  &--unmuted {
-    & > span {
-      width: 6px;
-      height: 6px;
-      position: relative;
-      z-index: 1;
-      &::before,
-      &::after {
-        content: '';
-        position: absolute;
-        border-radius: 50%;
-        animation: pulse 1.6s linear infinite;
-        transform: scale(0);
-        width: 48px;
-        height: 48px;
-        border: 2px solid white(100);
-        top: -21px;
-        left: -21px;
-      }
-      &::before {
-        animation-delay: 0.5s;
-      }
-    }
-  }
-  &--muted {
-    span {
-      width: 6px;
-      height: 6px;
-      position: relative;
-      z-index: 1;
-      &::after {
-        content: '';
-        position: absolute;
-        border-radius: 50%;
-        animation: none;
-        width: 48px;
-        height: 48px;
-        border: 1px solid white(50);
-        top: -21px;
-        left: -21px;
-        animation: flicker-effect 0.6s ease;
-      }
-    }
-  }
-  &--filled {
-    &::after {
-      background-color: $color-background;
-    }
-    &::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      background: $color-foreground;
-      transition: scale 0.3s cubic-bezier(0.33, 1, 0.68, 1);
-      z-index: 0;
-    }
-    & > span {
-      &::before,
-      &::after {
-        border-color: $color-background;
-      }
-    }
-    &:hover {
-      &::before {
-        scale: 0.85;
-      }
-    }
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
   }
   &:hover {
-    &::after {
-      animation: flicker-effect 0.6s ease;
+    &::before {
+      opacity: 1;
     }
+  }
+  &__line {
+    width: 1px;
+    height: 2px;
+    background-color: $color-foreground;
+    display: inline-block;
+    // transform-origin: center bottom;
+    z-index: 2;
+    position: relative;
   }
 }
 
@@ -127,57 +141,6 @@ defineProps({
   100% {
     transform: scale(1);
     opacity: 0;
-  }
-}
-
-@keyframes flicker-effect {
-  0% {
-    opacity: 1;
-  }
-  4% {
-    opacity: 0.1;
-  }
-  // 9% {
-  //   opacity: 0.8;
-  // }
-  15% {
-    opacity: 0.9;
-  }
-  21% {
-    opacity: 0.1;
-  }
-  26% {
-    opacity: 0.9;
-  }
-  32% {
-    opacity: 0;
-  }
-  // 40% {
-  //   opacity: 0.2;
-  // }
-  48% {
-    opacity: 1;
-  }
-  56% {
-    opacity: 0.1;
-  }
-  // 62% {
-  //   opacity: 1;
-  // }
-  70% {
-    opacity: 1;
-  }
-  78% {
-    opacity: 0;
-  }
-  86% {
-    opacity: 1;
-  }
-  93% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
   }
 }
 </style>
