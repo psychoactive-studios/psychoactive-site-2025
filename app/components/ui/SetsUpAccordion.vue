@@ -203,6 +203,9 @@ const leave = (el, done) => {
       position: absolute;
       right: max(0.833333vw, 16px);
       top: 0;
+      @include respond(mobile) {
+        right: 0;
+      }
     }
     &_overlay {
       position: absolute;
@@ -268,6 +271,10 @@ const leave = (el, done) => {
     flex-grow: 1;
     margin-right: 1rem;
     padding: max(0.78vw, 16px) 0;
+    @include respond(mobile) {
+      white-space: normal;
+      margin-right: 56px;
+    }
   }
 
   &__content-wrapper {
