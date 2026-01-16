@@ -254,6 +254,7 @@ export const heroScrollAnimation = (ctx) => {
                 id: 'webflow-hero-scrolltrigger',
                 trigger: '.container',
                 pin: true, // pin the trigger element while active
+                pinType: 'transform',
                 start: 'top top', // when the top of the trigger hits the top of the viewport
                 end: 'bottom top', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
@@ -717,6 +718,7 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
           id: 'webflow-timeline-scrolltrigger',
           trigger: '.timeline__inner',
           pin: true, // pin the trigger element while active
+          pinType: 'transform',
           start: 'top top', // when the top of the trigger hits the top of the viewport
           end: 'bottom top', // end after scrolling 500px beyond the start
           scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
