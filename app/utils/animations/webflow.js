@@ -234,6 +234,52 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 =======================================================*/
 const inputTime = 1;
 const circleTime = 0.5;
+
+// Calculate scale for title to reach center of viewport
+const getTitleScale = () => {
+  const titleElement = document.querySelector(title);
+  if (!titleElement) return 2;
+
+  const titleRect = titleElement.getBoundingClientRect();
+  const titleLeft = titleRect.left;
+  const titleWidth = titleRect.width;
+  const viewportCenter = window.innerWidth / 2;
+
+  // Calculate distance from title start to viewport center
+  const distanceToCenter = viewportCenter - titleLeft;
+
+  // Calculate required scale: (distance to center * 2) / current width
+  const requiredScale = (distanceToCenter * 2) / titleWidth;
+
+  return Math.max(requiredScale, 1) / 2; // Ensure scale is at least 1
+};
+
+// Calculate Y offset for leftGreyText to position it above scaled title
+const getLeftGreyTextOffset = () => {
+  const titleElement = document.querySelector(title);
+  const greyTextElement = document.querySelector(leftGreyText);
+
+  if (!titleElement || !greyTextElement) return '-12vw';
+
+  const titleRect = titleElement.getBoundingClientRect();
+  const greyTextRect = greyTextElement.getBoundingClientRect();
+  const scale = getTitleScale();
+
+  // Calculate title's new height after scaling
+  const titleScaledHeight = titleRect.height * scale;
+
+  // Calculate how much title expands upward (centered scaling)
+  const titleExpansionUp = (titleScaledHeight - titleRect.height) / 2;
+
+  // Calculate distance from grey text bottom to title top
+  const currentGap = titleRect.top - greyTextRect.bottom;
+
+  // Total offset needed: move up by title expansion + maintain some gap
+  const offsetPx = -(titleExpansionUp + currentGap + titleRect.height);
+
+  return `${offsetPx / 1.5}px`;
+};
+
 export const heroScrollAnimation = (ctx) => {
   const matchMedia = gsap.matchMedia();
   ctx.add(() => {
@@ -319,7 +365,11 @@ export const heroScrollAnimation = (ctx) => {
             .to(
               title,
               {
-                scale: 2,
+                scale: () => {
+                  console.log('getTitleScale()', getTitleScale());
+
+                  return getTitleScale();
+                },
                 duration: inputTime,
                 // ease: 'power1.in',
               },
@@ -328,7 +378,7 @@ export const heroScrollAnimation = (ctx) => {
             .to(
               leftGreyText,
               {
-                y: '-12vw',
+                y: () => getLeftGreyTextOffset(),
                 duration: inputTime,
                 // ease: 'power1.in',
               },
