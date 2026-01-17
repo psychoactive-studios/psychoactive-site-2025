@@ -183,10 +183,22 @@ section.services {
     // z-index: 5;
 
     &__label {
-      position: absolute;
-      top: 0;
-      right: 0;
+      position: fixed;
+      top: 48px;
+      right: 160px;
       pointer-events: all;
+      :deep(.label-border) {
+        border-color: rgba(0, 0, 0, 0.2);
+      }
+      :deep(.label-background) {
+        fill: rgba(0, 0, 0, 0.1);
+      }
+      :deep(.char) {
+        fill: $color-background;
+      }
+      :deep(.shape) {
+        fill: $color-background;
+      }
     }
 
     &__videos {
