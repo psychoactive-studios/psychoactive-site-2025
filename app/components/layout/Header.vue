@@ -53,7 +53,7 @@ const onLogoHoverHandler = (e) => {
       aria-label="Go to homepage"
       aria-describedby="main-logo"
       @mouseenter="() => playInteractionSound('home-hover')"
-      @focus="() => playInteractionSound('home-hover')  "
+      @focus="() => playInteractionSound('home-hover')"
       @click.capture="onLogoClickHandler"
     >
       <MainAnimatedLogo
@@ -123,7 +123,7 @@ const onLogoHoverHandler = (e) => {
     }
   }
   &__sound-button {
-    position: fixed;
+    position: fixed !important;
     top: 110px;
     right: 48px;
     z-index: 100;

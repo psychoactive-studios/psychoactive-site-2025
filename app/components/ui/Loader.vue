@@ -9,7 +9,9 @@ const { isSoundApproved } = useAudioManager();
 <template>
   <div class="loader">
     <MainAnimatedLogo id="loader-logo" aria-label="Loading..." loop />
-    <SoundCursor v-if="!isSoundApproved" />
+    <ClientOnly>
+      <SoundCursor v-if="!isSoundApproved" />
+    </ClientOnly>
   </div>
 </template>
 
