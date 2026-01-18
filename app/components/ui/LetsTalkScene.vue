@@ -126,6 +126,7 @@ async function loadSvgs() {
 }
 
 function nextShape(index) {
+  isStarted.value = true;
   if (svgsData.value.length <= 1) return;
 
   if (typeof index === 'number') {
