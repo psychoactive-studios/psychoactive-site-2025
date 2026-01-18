@@ -1,5 +1,4 @@
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import useLoader from '~/composables/useLoader';
 
@@ -530,8 +529,6 @@ const getDotsPercent = () => {
 
   return { xPercent: `${xPercent}%`, yPercent: `${yPercent}%` };
 };
-
-console.log('Scrolltrigger', ScrollTrigger);
 
 const outputTime = 1.3;
 export const heroScrollAnimation = (ctx, isPlaying) => {

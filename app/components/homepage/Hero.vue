@@ -42,8 +42,6 @@ onUnmounted(() => {
 });
 
 watch(isLoading, (newVal) => {
-  console.log('previewVideoData', previewVideoData.value);
-
   if (!newVal) {
     heroInitAnimation(ctx, scrollSmoother);
   }

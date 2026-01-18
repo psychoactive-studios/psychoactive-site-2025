@@ -18,8 +18,6 @@ const props = defineProps({
 
 const { mainImage, slug, mainTitle, hero } = props?.data || {};
 
-console.log('data', props.data);
-
 const handleMouseEnter = () => {
   // Stop any ongoing animations on this element
   if (gsap.isTweening(titleRef.value)) return;

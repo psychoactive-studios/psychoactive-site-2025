@@ -360,8 +360,6 @@ export const heroScrollAnimation = (ctx) => {
               title,
               {
                 scale: () => {
-                  console.log('getTitleScale()', getTitleScale());
-
                   return getTitleScale();
                 },
                 duration: inputTime,
