@@ -1,8 +1,11 @@
 <script setup>
 import gsap from 'gsap';
+import useAudioManager from '~/composables/useAudioManager';
 
 const cursor = ref(null);
 let ctx;
+
+const { isSoundApproved } = useAudioManager();
 
 onMounted(() => {
   ctx = gsap.context(() => {
@@ -74,7 +77,8 @@ const handleClick = () => {
           ease: 'power2.in',
         },
         '<+=0.1'
-      );
+      )
+      .add(() => (isSoundApproved.value = true));
   });
 };
 </script>

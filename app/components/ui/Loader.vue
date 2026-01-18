@@ -1,12 +1,15 @@
 <script setup>
 import MainAnimatedLogo from './MainAnimatedLogo.vue';
 import SoundCursor from './SoundCursor.vue';
+import useAudioManager from '~/composables/useAudioManager';
+
+const { isSoundApproved } = useAudioManager();
 </script>
 
 <template>
   <div class="loader">
     <MainAnimatedLogo id="loader-logo" aria-label="Loading..." loop />
-    <SoundCursor />
+    <SoundCursor v-if="!isSoundApproved" />
   </div>
 </template>
 
