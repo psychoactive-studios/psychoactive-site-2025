@@ -52,6 +52,23 @@ const onLoopComplete = () => {
       delay: 0.3,
       onComplete: stopLoading,
     });
+
+    gsap
+      .timeline()
+      .to('#sound-cursor .cursor__sound-icon', {
+        scale: 0,
+        duration: 0.2,
+        ease: 'power2.in',
+      })
+      .to(
+        '#sound-cursor .cursor__text',
+        {
+          opacity: 0,
+          duration: 0.2,
+          ease: 'power2.in',
+        },
+        '<+=0.1'
+      );
   }
 };
 </script>

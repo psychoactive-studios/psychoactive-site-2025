@@ -1,10 +1,12 @@
 <script setup>
 import MainAnimatedLogo from './MainAnimatedLogo.vue';
+import SoundCursor from './SoundCursor.vue';
 </script>
 
 <template>
   <div class="loader">
     <MainAnimatedLogo id="loader-logo" aria-label="Loading..." loop />
+    <SoundCursor />
   </div>
 </template>
 
@@ -18,5 +20,6 @@ import MainAnimatedLogo from './MainAnimatedLogo.vue';
   inset: 0;
   background-color: $color-background;
   z-index: 9999; /* Ensure it overlays other content */
+  cursor: none;
 }
 </style>
