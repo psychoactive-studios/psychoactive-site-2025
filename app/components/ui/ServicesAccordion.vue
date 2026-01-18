@@ -19,6 +19,10 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  onToggle: {
+    type: Function,
+    default: null,
+  },
 });
 
 const activeIndices = ref([]);
@@ -47,6 +51,7 @@ const toggle = (index) => {
       activeIndices.value = [index];
     }
   }
+  props.onToggle?.(index);
 };
 
 defineExpose({
