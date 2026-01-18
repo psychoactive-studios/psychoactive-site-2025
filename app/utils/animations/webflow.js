@@ -262,7 +262,6 @@ const getLeftGreyTextOffset = () => {
   if (!titleElement || !greyTextElement) return '-12vw';
 
   const titleRect = titleElement.getBoundingClientRect();
-  const greyTextRect = greyTextElement.getBoundingClientRect();
   const scale = getTitleScale();
 
   // Calculate title's new height after scaling
@@ -271,13 +270,8 @@ const getLeftGreyTextOffset = () => {
   // Calculate how much title expands upward (centered scaling)
   const titleExpansionUp = (titleScaledHeight - titleRect.height) / 2;
 
-  // Calculate distance from grey text bottom to title top
-  const currentGap = titleRect.top - greyTextRect.bottom;
-
-  // Total offset needed: move up by title expansion + maintain some gap
-  const offsetPx = -(titleExpansionUp + currentGap + titleRect.height);
-
-  return `${offsetPx / 1.5}px`;
+  // Grey text needs to move up by the amount title expands upward
+  return `${-titleExpansionUp * 2}px`;
 };
 
 export const heroScrollAnimation = (ctx) => {
