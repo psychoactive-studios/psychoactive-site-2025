@@ -2,6 +2,7 @@
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 import SoundButton from '../ui/SoundButton.vue';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const { playInteractionSound } = useAudioManager();
 
@@ -59,6 +60,7 @@ const handleClick = (e) => {
     overwrite: true,
     onComplete: () => {
       gsap.set(el, { clearProps: 'all' });
+      ScrollTrigger.refresh();
     },
   });
   isOpen.value = !isOpen.value;
