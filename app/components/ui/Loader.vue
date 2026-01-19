@@ -7,7 +7,7 @@ const { isSoundApproved } = useAudioManager();
 </script>
 
 <template>
-  <div class="loader">
+  <div :class="['loader', isSoundApproved && 'loader--no-sound-cursor']">
     <MainAnimatedLogo id="loader-logo" aria-label="Loading..." loop />
     <ClientOnly>
       <SoundCursor v-if="!isSoundApproved" />
@@ -26,5 +26,8 @@ const { isSoundApproved } = useAudioManager();
   background-color: $color-background;
   z-index: 9999; /* Ensure it overlays other content */
   cursor: none;
+  &--no-sound-cursor {
+    cursor: default;
+  }
 }
 </style>
