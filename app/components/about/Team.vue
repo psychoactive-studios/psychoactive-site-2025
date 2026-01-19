@@ -1,6 +1,7 @@
 <script setup>
 import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 import { useMediaQuery } from '@vueuse/core';
+import { teamData } from '~/data/teamData.js';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 </script>
@@ -8,61 +9,16 @@ const isMobile = useMediaQuery('(max-width: 768px)');
   <section class="team">
     <ClientOnly>
       <ul v-if="!isMobile" class="team__list">
-        <li class="team__list_item">
+        <li
+          v-for="person in teamData"
+          :key="person.name"
+          class="team__list_item"
+        >
           <div class="item__img">
-            <img src="/img/team-Andrew.jpg" alt="" />
+            <img :src="person.photo" alt="" />
           </div>
-          <h3 class="item__name">Andrew</h3>
-          <div class="item__role">Creative director</div>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Luca.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Luca</h3>
-          <div class="item__role">Creative director</div>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Sheridan.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Sheridan</h3>
-          <div class="item__role">Creative director</div>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Alex.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Alex</h3>
-          <div class="item__role">Creative director</div>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Andrew.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Andrew</h3>
-          <div class="item__role">Creative director</div>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Luca.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Luca</h3>
-          <div class="item__role">Creative director</div>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Sheridan.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Sheridan</h3>
-          <div class="item__role">Creative director</div>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Alex.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Alex</h3>
-          <div class="item__role">Creative director</div>
+          <h3 class="item__name">{{ person.name }}</h3>
+          <div class="item__role">{{ person.role }}</div>
         </li>
       </ul>
 
