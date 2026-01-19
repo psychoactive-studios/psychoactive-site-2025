@@ -88,11 +88,11 @@ const handleToggle = (index) => {
         class="our-services__media_scene"
         :auto-play="false"
         :svg-urls="[
-          '/img/frog_steps/frog01.svg',
-          '/img/frog_steps/frog02.svg',
-          '/img/frog_steps/frog03.svg',
-          '/img/frog_steps/frog04.svg',
-          '/img/frog_steps/frog05.svg',
+          '/img/webflow/icon_01.svg',
+          '/img/webflow/icon_02.svg',
+          '/img/webflow/icon_03.svg',
+          '/img/webflow/icon_04.svg',
+          '/img/webflow/icon_05.svg',
         ]"
       />
     </div>
