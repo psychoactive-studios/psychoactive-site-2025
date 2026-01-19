@@ -23,7 +23,7 @@ addResourceToLoad(1);
 onMounted(async () => {
   ctx = gsap.context(() => {}, containerRef.value);
   heroScrollAnimation(ctx, containerRef.value);
-  const blob = await $fetch('/video/ps_service_05.mp4', {
+  const blob = await $fetch('/video/service_04.mp4', {
     responseType: 'blob',
   });
   heroVideoResource.value = URL.createObjectURL(blob);
@@ -53,9 +53,10 @@ watch(isLoading, (newVal) => {
         muted
         playsinline
       />
+      <div class="hero__video-overlay" />
       <HeroCenterLine class="hero__center-line" />
       <div class="container">
-        <h1 class="hero__title">
+        <h1 class="hero__title display-4xl">
           <span class="grey">Digital</span>
           <span class="white">Amphibians</span>
         </h1>
@@ -66,8 +67,10 @@ watch(isLoading, (newVal) => {
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/variables' as *;
 .hero {
   pointer-events: none;
+  background-color: $color-background;
   &__wrapper {
     @include flex-center;
     flex-direction: column;
@@ -89,18 +92,22 @@ watch(isLoading, (newVal) => {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     z-index: -1;
+    mix-blend-mode: lighten;
+    &-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      inset: 0;
+      background: url('/img/video-player-dots-overlay.svg') repeat center;
+    }
   }
   &__title {
-    font-size: 14.588vw;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 100%;
-    letter-spacing: -0.07em;
     span {
       display: block;
       text-align: right;
+      white-space: nowrap;
       &.grey {
         text-align: left;
         color: white(50);

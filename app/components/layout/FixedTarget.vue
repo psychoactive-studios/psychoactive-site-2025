@@ -71,7 +71,7 @@ const { currentTransitionImage } = useWorks();
                 />
               </div>
 
-              <div class="stepper__step-texts">
+              <div class="stepper__step-texts body">
                 <div
                   v-for="item in stepperTextsData"
                   :key="item.id"
@@ -92,7 +92,7 @@ const { currentTransitionImage } = useWorks();
                   class="stepper__titles_title"
                 >
                   <div class="title-number">{{ item.number }}</div>
-                  <h2 class="title-text">{{ item.title }}</h2>
+                  <h2 class="title-text display-4xl">{{ item.title }}</h2>
                   <div class="title-right">
                     <ul class="title-services">
                       <li v-for="service in item.list" :key="service">
@@ -183,10 +183,22 @@ section.services {
     // z-index: 5;
 
     &__label {
-      position: absolute;
-      top: 0;
-      right: 0;
+      position: fixed;
+      top: 48px;
+      right: 160px;
       pointer-events: all;
+      :deep(.label-border) {
+        border-color: rgba(0, 0, 0, 0.2);
+      }
+      :deep(.label-background) {
+        fill: rgba(0, 0, 0, 0.1);
+      }
+      :deep(.char) {
+        fill: $color-background;
+      }
+      :deep(.shape) {
+        fill: $color-background;
+      }
     }
 
     &__videos {
@@ -230,9 +242,6 @@ section.services {
       top: 0;
       left: 0;
       font-size: clamp(16px, 1.25vw, 24px);
-      font-style: normal;
-      font-weight: 400;
-      line-height: 1.25; /* 125% */
       width: 25%;
       color: $color-background;
       .text {
@@ -266,11 +275,7 @@ section.services {
           margin-bottom: 9.5vw;
         }
         .title-text {
-          font-size: 14.588vw;
-          font-style: normal;
-          font-weight: 400;
           line-height: 77%;
-          letter-spacing: -0.07em;
           white-space: nowrap;
           opacity: 0.94;
         }

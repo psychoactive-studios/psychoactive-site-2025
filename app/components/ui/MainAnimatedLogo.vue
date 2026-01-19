@@ -3,9 +3,11 @@ import gsap from 'gsap';
 import lottie from 'lottie-web';
 import loaderData from '~/assets/lottie/logo-V02.json';
 import useLoader from '~/composables/useLoader';
+import useAudioManager from '~/composables/useAudioManager';
 
 const { resourcesToLoad, loadedResources, stopLoading, isLoading } =
   useLoader();
+const { isSoundApproved } = useAudioManager();
 
 const animationContainer = ref(null);
 const animationInstance = ref(null);
@@ -52,6 +54,24 @@ const onLoopComplete = () => {
       delay: 0.3,
       onComplete: stopLoading,
     });
+
+    gsap
+      .timeline()
+      .to('#sound-cursor .cursor__sound-icon', {
+        scale: 0,
+        duration: 0.2,
+        ease: 'power2.in',
+      })
+      .to(
+        '#sound-cursor .cursor__text',
+        {
+          opacity: 0,
+          duration: 0.2,
+          ease: 'power2.in',
+        },
+        '<+=0.1'
+      )
+      .add(() => (isSoundApproved.value = true));
   }
 };
 </script>

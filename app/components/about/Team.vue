@@ -1,6 +1,7 @@
 <script setup>
 import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 import { useMediaQuery } from '@vueuse/core';
+import { teamData } from '~/data/teamData.js';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 </script>
@@ -8,53 +9,16 @@ const isMobile = useMediaQuery('(max-width: 768px)');
   <section class="team">
     <ClientOnly>
       <ul v-if="!isMobile" class="team__list">
-        <li class="team__list_item">
+        <li
+          v-for="person in teamData"
+          :key="person.name"
+          class="team__list_item"
+        >
           <div class="item__img">
-            <img src="/img/team-Andrew.jpg" alt="" />
+            <img :src="person.photo" alt="" />
           </div>
-          <h3 class="item__name">Andrew</h3>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Luca.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Luca</h3>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Sheridan.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Sheridan</h3>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Alex.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Alex</h3>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Andrew.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Andrew</h3>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Luca.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Luca</h3>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Sheridan.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Sheridan</h3>
-        </li>
-        <li class="team__list_item">
-          <div class="item__img">
-            <img src="/img/team-Alex.jpg" alt="" />
-          </div>
-          <h3 class="item__name">Alex</h3>
+          <h3 class="item__name">{{ person.name }}</h3>
+          <div class="item__role">{{ person.role }}</div>
         </li>
       </ul>
 
@@ -108,6 +72,8 @@ const isMobile = useMediaQuery('(max-width: 768px)');
   </section>
 </template>
 <style lang="scss" scoped>
+@use '~/assets/styles/typography' as *;
+@use '~/assets/styles/functions' as *;
 .team {
   &__list {
     display: grid;
@@ -117,7 +83,6 @@ const isMobile = useMediaQuery('(max-width: 768px)');
   &__list_item {
     display: flex;
     flex-direction: column;
-    gap: 24px;
     .item__img {
       aspect-ratio: 0.69;
       border-radius: 10px;
@@ -129,10 +94,13 @@ const isMobile = useMediaQuery('(max-width: 768px)');
       }
     }
     .item__name {
-      font-size: 1.044vw;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 130%;
+      @extend .body--mobile;
+      margin-top: 1.25vw;
+    }
+    .item__role {
+      @extend .subheader-small;
+      color: white(50);
+      margin-top: 0.625vw;
     }
   }
   &__swiper {

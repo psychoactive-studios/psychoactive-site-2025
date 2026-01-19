@@ -23,7 +23,7 @@ import PartnersMobile from '~/components/ui/PartnersMobile.vue';
 const params = qs.stringify({
   populate: {
     works: {
-      populate: ['mainImage'],
+      populate: ['mainImage', 'hero'],
     },
     feedbacks: {
       populate: {
@@ -141,15 +141,15 @@ definePageMeta({
       </div>
       <section class="webflow__partners">
         <div v-if="!isMobile" class="container">
-          <h2 class="webflow__partners_title--desktop">
-            Partner to the world’s leading innovation brands and events.
+          <h2 class="webflow__partners_title--desktop subheader">
+            Partner to the world’s leading innovation brands and events
           </h2>
           <PartnersDesktop />
         </div>
         <div v-if="isMobile">
           <div class="container">
-            <h2 class="webflow__partners_title--mobile">
-              Partner to the world’s leading innovation brands and events.
+            <h2 class="webflow__partners_title--mobile subheader--mobile">
+              Partner to the world’s leading innovation brands and events
             </h2>
           </div>
           <PartnersMobile />
@@ -214,23 +214,10 @@ definePageMeta({
     &_title {
       &--desktop {
         margin-bottom: 2.5vw;
-        font-family: 'RoobertMono';
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 100%; /* 16px */
-        text-transform: uppercase;
         text-align: center;
         color: white(50);
       }
       &--mobile {
-        display: none;
-        font-family: 'RoobertMono';
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 100%; /* 16px */
-        text-transform: uppercase;
         text-align: center;
         color: white(50);
         margin-bottom: 24px;

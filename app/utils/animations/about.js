@@ -90,6 +90,7 @@ export const heroScrollAnimation = (ctx, root) => {
           start: 'top top',
           end: 'bottom top',
           pin: true,
+          pinType: 'transform',
           scrub: 0.5,
           pinSpacing: false,
         },

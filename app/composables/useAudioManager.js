@@ -20,6 +20,7 @@ const fileList = [
 
 const sounds = {};
 const isMuted = ref(false);
+const isSoundApproved = ref(false);
 
 const { addResourceToLoad, resourceLoaded } = useLoader();
 
@@ -75,5 +76,6 @@ export default function () {
     isMuted,
     loadSounds,
     playInteractionSound,
+    isSoundApproved,
   };
 }

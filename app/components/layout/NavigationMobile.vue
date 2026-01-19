@@ -7,6 +7,7 @@ import useNavigation from '~/composables/useNavigation';
 import loaderData from '~/assets/lottie/logo-V02.json';
 import lottie from 'lottie-web';
 import { onClickOutside } from '@vueuse/core';
+import { navigationData } from '~/data/navigationData';
 
 // Reactive state to track if the navigation is open
 const isOpen = ref(false);
@@ -221,7 +222,7 @@ onClickOutside(navigationMobileRef, () => {
         <button class="navigation-mobile__talk-button">let's talk</button>
       </div>
       <ul class="navigation-mobile__list">
-        <li class="navigation-mobile__item">
+        <li class="navigation-mobile__item heading-h2--mobile-menu">
           <LinkWithHover href="/" @click="onToggleNavigation">
             Home
           </LinkWithHover>
@@ -229,15 +230,20 @@ onClickOutside(navigationMobileRef, () => {
             <span class="line" />
           </div>
         </li>
-        <li class="navigation-mobile__item">
-          <LinkWithHover href="/about" @click="onToggleNavigation">
-            About
+
+        <li
+          v-for="item in navigationData"
+          :key="item.id"
+          class="navigation-mobile__item heading-h2--mobile-menu"
+        >
+          <LinkWithHover :href="item.url" @click="onToggleNavigation">
+            {{ item.title }}
           </LinkWithHover>
           <div class="navigation-mobile__item-line">
             <span class="line" />
           </div>
         </li>
-        <li class="navigation-mobile__item">
+        <!-- <li class="navigation-mobile__item">
           <LinkWithHover href="/work" @click="onToggleNavigation">
             Work
           </LinkWithHover>
@@ -268,7 +274,7 @@ onClickOutside(navigationMobileRef, () => {
           <div class="navigation-mobile__item-line">
             <span class="line" />
           </div>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
@@ -388,13 +394,13 @@ onClickOutside(navigationMobileRef, () => {
     gap: getRem(32);
   }
   &__item {
-    font-size: clamp(48px, 3.646vw, 70px);
+    // font-size: clamp(48px, 3.646vw, 70px);
     line-height: 74%;
     display: flex;
     gap: 1.5vw;
     align-items: center;
     @include respond(mobile) {
-      font-size: getRem(36);
+      // font-size: getRem(36);
       line-height: 1;
       gap: getRem(12);
       margin-right: 8px;

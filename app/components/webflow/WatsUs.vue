@@ -185,7 +185,7 @@ onUnmounted(() => {
   <div ref="containerRef" class="what-sets-us">
     <div class="container">
       <div class="what-sets-us__wrapper">
-        <h2>What sets us apart</h2>
+        <h2 class="heading-h1--mobile">What sets us apart</h2>
         <SetsUpAccordion :list="data" :multiple="true" />
         <!-- <div class="what-sets-us__show-more">
           <button @mouseenter="onMouseEnterHandler" @focus="onFocusHandler">
@@ -208,11 +208,10 @@ onUnmounted(() => {
 @use '~/assets/styles/mixins' as *;
 
 .what-sets-us {
-  @include flex-center;
   background-color: $color-foreground;
   color: $color-background;
   min-height: 100dvh;
-  padding: 60px 0 60px 0;
+  padding: 160px 0;
   @include respond(mobile) {
     min-height: auto;
     padding: 48px 0 120px 0;
@@ -225,11 +224,6 @@ onUnmounted(() => {
     }
   }
   h2 {
-    font-size: clamp(32px, 5vw, 96px);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 100%;
-    letter-spacing: -0.06em;
     margin-bottom: clamp(24px, 4.18vw, 80px);
   }
   &__show-more {

@@ -6,10 +6,12 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import gsap from 'gsap';
 import { navigationData } from '~/data/navigationData';
+import useVideoPlayer from '~/composables/useVideoPlayer';
 
 const { navigationRef, initNavigation, transitionFromNavigation } =
   useNavigation();
 const { playInteractionSound } = useAudioManager();
+const { previewVideoData } = useVideoPlayer();
 
 let talkButtonHoverTween;
 
@@ -62,7 +64,7 @@ const clickOnLinkHandler = (e) => {
         <div class="navigation__video">
           <VideoPreview
             class="video-player"
-            preview="/video/preview_reel.mp4"
+            :preview="previewVideoData || '/video/preview_reel.mp4'"
             src="https://vjs.zencdn.net/v/oceans.mp4"
             :dots="false"
             :autoplay="false"
@@ -73,7 +75,7 @@ const clickOnLinkHandler = (e) => {
             <li
               v-for="item in navigationData"
               :key="item.id"
-              class="navigation__item"
+              class="navigation__item heading-h2"
             >
               <LinkWithHover
                 :href="item.url"
@@ -91,7 +93,7 @@ const clickOnLinkHandler = (e) => {
             <span />
           </div>
           <button
-            class="navigation__talk_button"
+            class="navigation__talk_button body-button"
             @mouseenter="talkButtonHoverHandler"
             @focus="talkButtonHoverHandler"
           >
@@ -213,13 +215,13 @@ const clickOnLinkHandler = (e) => {
     }
   }
   &__item {
-    font-size: clamp(48px, 3.646vw, 70px);
+    // font-size: clamp(48px, 3.646vw, 70px);
     line-height: 74%;
     display: flex;
     gap: 1.5vw;
     align-items: center;
     @include respond(mobile) {
-      font-size: getRem(36);
+      // font-size: getRem(36);
       line-height: 1;
       gap: getRem(12);
       margin-right: 8px;
@@ -315,8 +317,6 @@ const clickOnLinkHandler = (e) => {
 
     &_button {
       pointer-events: all;
-      font-family: 'RoobertMono', sans-serif;
-      font-size: 1rem;
       color: $color-foreground;
       cursor: pointer;
       padding: 0 24px;

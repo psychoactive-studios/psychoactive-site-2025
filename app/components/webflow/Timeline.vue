@@ -68,7 +68,7 @@ onUnmounted(() => {
               <img src="/img/webflow-logo.svg" alt="" />
               <h3>Early Adopter</h3>
             </div>
-            <div class="item__dot" />
+            <div class="item__dot item__dot--white" />
             <div class="item__info">
               <h4>Psychoactive began</h4>
               <div class="item__info_text">
@@ -112,7 +112,10 @@ onUnmounted(() => {
               <h3>Premium Partner</h3>
               <div class="enterprise blue">Enterprise</div>
             </div>
-            <div class="item__dot" />
+            <div class="item__dots">
+              <div class="item__dot" />
+              <div class="item__dot" />
+            </div>
             <div class="item__info">
               <h4>Psychoactive is</h4>
               <div class="item__info_text">
@@ -248,6 +251,15 @@ $range: $max - $min + 1;
             }
           }
         }
+        &__dots {
+          margin-top: 32px;
+          display: flex;
+          justify-content: space-between;
+          .item__dot {
+            margin-top: 0;
+            background-color: #136df4;
+          }
+        }
         &__dot {
           margin-top: 32px;
           width: 6px;
@@ -255,6 +267,9 @@ $range: $max - $min + 1;
           background-color: $color-foreground;
           border-radius: 50%;
           opacity: 0.2;
+          &--white {
+            opacity: 1;
+          }
         }
         &__info {
           margin-top: 72px;

@@ -234,6 +234,46 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 =======================================================*/
 const inputTime = 1;
 const circleTime = 0.5;
+
+// Calculate scale for title to reach center of viewport
+const getTitleScale = () => {
+  const titleElement = document.querySelector(title);
+  if (!titleElement) return 2;
+
+  const titleRect = titleElement.getBoundingClientRect();
+  const titleLeft = titleRect.left;
+  const titleWidth = titleRect.width;
+  const viewportCenter = window.innerWidth / 2;
+
+  // Calculate distance from title start to viewport center
+  const distanceToCenter = viewportCenter - titleLeft;
+
+  // Calculate required scale: (distance to center * 2) / current width
+  const requiredScale = (distanceToCenter * 2) / titleWidth;
+
+  return Math.max(requiredScale, 1) / 2; // Ensure scale is at least 1
+};
+
+// Calculate Y offset for leftGreyText to position it above scaled title
+const getLeftGreyTextOffset = () => {
+  const titleElement = document.querySelector(title);
+  const greyTextElement = document.querySelector(leftGreyText);
+
+  if (!titleElement || !greyTextElement) return '-12vw';
+
+  const titleRect = titleElement.getBoundingClientRect();
+  const scale = getTitleScale();
+
+  // Calculate title's new height after scaling
+  const titleScaledHeight = titleRect.height * scale;
+
+  // Calculate how much title expands upward (centered scaling)
+  const titleExpansionUp = (titleScaledHeight - titleRect.height) / 2;
+
+  // Grey text needs to move up by the amount title expands upward
+  return `${-titleExpansionUp * 2}px`;
+};
+
 export const heroScrollAnimation = (ctx) => {
   const matchMedia = gsap.matchMedia();
   ctx.add(() => {
@@ -254,6 +294,7 @@ export const heroScrollAnimation = (ctx) => {
                 id: 'webflow-hero-scrolltrigger',
                 trigger: '.container',
                 pin: true, // pin the trigger element while active
+                pinType: 'transform',
                 start: 'top top', // when the top of the trigger hits the top of the viewport
                 end: 'bottom top', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
@@ -308,7 +349,7 @@ export const heroScrollAnimation = (ctx) => {
                 trigger: '.hero__wrapper',
                 //pin: true, // pin the trigger element while active
                 start: 'top top', // when the top of the trigger hits the top of the viewport
-                end: '150% top', // end after scrolling 500px beyond the start
+                end: '75% top', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
                 invalidateOnRefresh: true,
                 // markers: true,
@@ -318,7 +359,9 @@ export const heroScrollAnimation = (ctx) => {
             .to(
               title,
               {
-                scale: 2.2,
+                scale: () => {
+                  return getTitleScale();
+                },
                 duration: inputTime,
                 // ease: 'power1.in',
               },
@@ -327,7 +370,7 @@ export const heroScrollAnimation = (ctx) => {
             .to(
               leftGreyText,
               {
-                y: '-15.3vw',
+                y: () => getLeftGreyTextOffset(),
                 duration: inputTime,
                 // ease: 'power1.in',
               },
@@ -717,6 +760,7 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
           id: 'webflow-timeline-scrolltrigger',
           trigger: '.timeline__inner',
           pin: true, // pin the trigger element while active
+          pinType: 'transform',
           start: 'top top', // when the top of the trigger hits the top of the viewport
           end: 'bottom top', // end after scrolling 500px beyond the start
           scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar

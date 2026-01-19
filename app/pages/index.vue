@@ -20,7 +20,7 @@ import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
 const params = qs.stringify({
   populate: {
     works: {
-      populate: ['mainImage'],
+      populate: ['mainImage', 'hero'],
     },
     articles: {
       populate: ['category', 'preview', 'work'],
@@ -119,6 +119,9 @@ definePageMeta({
         <!-- Partners Section -->
         <section class="partners">
           <div class="container">
+            <h2 class="partners__title subheader">
+              Partner to the world’s leading innovation brands and events
+            </h2>
             <PartnersDesktop />
           </div>
         </section>
@@ -126,7 +129,7 @@ definePageMeta({
         <!-- Mobile Digital Text Section -->
         <section v-if="isMobile" class="mobile-digital">
           <div class="container">
-            <h2>Digital First design agency</h2>
+            <h2 class="subheader--mobile">Digital First design agency</h2>
             <a href="https://webflow.com/@Psychoactive-Studios" target="_blank">
               <WebflowLabel />
             </a>
@@ -139,19 +142,24 @@ definePageMeta({
               <!-- Filled Text Section -->
               <section v-if="work.id === 'filled-text'" class="filled-text">
                 <HomeOnScrollFilledText>
-                  What sets us apart is our
-                  <img src="/img/text-icon-1.svg" alt="icon1" />
-                  <span class="dark">obsession</span> with the moment your
-                  audience first encounters your brand online. That split second
-                  where
-                  <img src="/img/text-icon-2.svg" alt="icon2" />
-                  <span class="dark">curiosity</span>
-                  transforms into
-                  <img src="/img/text-icon-3.svg" alt="icon3" />
-                  <span class="dark">connection</span>. We don't just build
-                  websites; we architect
-                  <img src="/img/text-icon-4.svg" alt="icon4" />
-                  <span class="dark">experiences</span> that linger in the mind.
+                  <span class="dark">What sets us apart is our</span>
+                  <img src="/img/text-icon-1.svg" alt="icon1" />obsession
+                  <span class="dark"
+                    >with the moment your audience first encounters your brand
+                    online. That split second where</span
+                  >
+                  <img
+                    src="/img/text-icon-2.svg"
+                    class="icon-large"
+                    alt="icon2"
+                  />curiosity
+                  <span class="dark">transforms into</span>
+                  <img src="/img/text-icon-3.svg" alt="icon3" />connection.
+                  <span class="dark"
+                    >We don't just build websites; we architect</span
+                  >
+                  <img src="/img/text-icon-4.svg" alt="icon4" />experiences
+                  <span class="dark">that linger in the mind.</span>
                 </HomeOnScrollFilledText>
               </section>
               <CaseStadyPreview v-else :data="work" />
@@ -165,19 +173,24 @@ definePageMeta({
               <!-- Filled Text Section -->
               <section v-if="work.id === 'filled-text'" class="filled-text">
                 <HomeOnScrollFilledText>
-                  What sets us apart is our
-                  <img src="/img/text-icon-1.svg" alt="icon1" />
-                  <span class="dark">obsession</span> with the moment your
-                  audience first encounters your brand online. That split second
-                  where
-                  <img src="/img/text-icon-2.svg" alt="icon2" />
-                  <span class="dark">curiosity</span>
-                  transforms into
-                  <img src="/img/text-icon-3.svg" alt="icon3" />
-                  <span class="dark">connection</span>. We don't just build
-                  websites; we architect
-                  <img src="/img/text-icon-4.svg" alt="icon4" />
-                  <span class="dark">experiences</span> that linger in the mind.
+                  <span class="dark">What sets us apart is our</span>
+                  <img src="/img/text-icon-1.svg" alt="icon1" />obsession
+                  <span class="dark"
+                    >with the moment your audience first encounters your brand
+                    online. That split second where</span
+                  >
+                  <img
+                    src="/img/text-icon-2.svg"
+                    class="icon-large"
+                    alt="icon2"
+                  />curiosity
+                  <span class="dark">transforms into</span>
+                  <img src="/img/text-icon-3.svg" alt="icon3" />connection.
+                  <span class="dark"
+                    >We don't just build websites; we architect</span
+                  >
+                  <img src="/img/text-icon-4.svg" alt="icon4" />experiences
+                  <span class="dark">that linger in the mind.</span>
                 </HomeOnScrollFilledText>
               </section>
 
@@ -187,14 +200,18 @@ definePageMeta({
                 class="mobile-scale"
               >
                 <div class="container">
-                  <div class="mobile-scale__imagine">Imagine</div>
+                  <div class="mobile-scale__imagine display-large--mobile">
+                    Imagine
+                  </div>
                   <div class="mobile-scale__scale">
                     <ScaleMobileText />
                     <div class="mobile-scale__scale-arrows">
                       <span>&larr;</span><span>&rarr;</span>
                     </div>
                   </div>
-                  <div class="mobile-scale__innovate">Innovate</div>
+                  <div class="mobile-scale__innovate display-large--mobile">
+                    Innovate
+                  </div>
                 </div>
               </section>
 
@@ -202,102 +219,6 @@ definePageMeta({
             </template>
           </div>
         </section>
-
-        <!-- Cases Section First Part -->
-        <!-- <section class="cases">
-          <div class="container">
-            <CaseStadyPreview
-              src="/img/work/hero-super-ai.jpg"
-              title="SuperAI Conference"
-              description="Worlds largest AI event"
-              href="/work/super-ai"
-            />
-            <CaseStadyPreview
-              src="/img/work/hero-gravity.jpg"
-              title="Gravity"
-              description="Enterprise-Grade Product Development"
-              href="/work/gravity"
-            />
-            <CaseStadyPreview
-              src="/img/cases/case-hellboy.jpg"
-              title="Hellboy Web of Wyrd"
-              description="beat 'em up roguelike Video game"
-            />
-          </div>
-        </section> -->
-
-        <!-- Cases Section Second Part Desktop -->
-        <!-- <section v-if="!isMobile" class="cases">
-          <div class="container">
-            <CaseStadyPreview
-              src="/img/cases/case-world-of-wearableArt.jpg"
-              title="World of WearableArt"
-              description="New Zealand's Largest theatrical Spectacle"
-            />
-            <CaseStadyPreview
-              src="/img/cases/case-blackbird.jpg"
-              title="Blackbird Ventures"
-              description="Australasia's leading venture capital firm"
-            />
-            <CaseStadyPreview
-              src="/img/cases/case-summer-game-fest.jpg"
-              title="Summer Game Fest"
-              description="The global stage for gaming reveals"
-            />
-            <CaseStadyPreview
-              src="/img/cases/case-woolf-university.jpg"
-              title="WOOLF University"
-              description="Global access to accredited higher education"
-            />
-          </div>
-        </section> -->
-
-        <!-- <section v-if="isMobile" class="mobile-cases-second-part">
-          <div class="container">
-            <CaseStadyPreview
-              src="/img/cases/case-world-of-wearableArt.jpg"
-              title="World of WearableArt"
-              description="New Zealand's Largest theatrical Spectacle"
-            />
-            <CaseStadyPreview
-              src="/img/cases/case-blackbird.jpg"
-              title="Blackbird Ventures"
-              description="Australasia's leading venture capital firm"
-            />
-          </div>
-          <div class="filled-text">
-            <div class="container">
-              <HomeOnScrollFilledText>
-                What sets us apart is our
-                <img src="/img/text-icon-mobile-1.svg" alt="icon1" />
-                <span class="dark">obsession</span> with the moment your
-                audience first encounters your brand online. That split second
-                where
-                <img src="/img/text-icon-mobile-2.svg" alt="icon2" />
-                <span class="dark">curiosity</span>
-                transforms into
-                <img src="/img/text-icon-mobile-3.svg" alt="icon3" />
-                <span class="dark">connection</span>. We don't just build
-                websites; we architect
-                <img src="/img/text-icon-mobile-4.svg" alt="icon4" />
-                <span class="dark">experiences</span> that linger in minds long
-                after the screen goes dark.
-              </HomeOnScrollFilledText>
-            </div>
-          </div>
-          <div class="container">
-            <CaseStadyPreview
-              src="/img/cases/case-summer-game-fest.jpg"
-              title="Summer Game Fest"
-              description="The global stage for gaming reveals"
-            />
-            <CaseStadyPreview
-              src="/img/cases/case-woolf-university.jpg"
-              title="WOOLF University"
-              description="Global access to accredited higher education"
-            />
-          </div>
-        </section> -->
 
         <!-- News Section -->
         <HomeNewsList :data="articles" />
@@ -327,6 +248,11 @@ definePageMeta({
   position: relative;
   z-index: 1;
   background-color: $color-background;
+  &__title {
+    text-align: center;
+    opacity: 0.5;
+    margin-bottom: 3vw;
+  }
   @include respond(mobile) {
     display: none;
   }
@@ -341,12 +267,7 @@ definePageMeta({
   padding-top: getRem(42);
   text-align: center;
   h2 {
-    font-family: 'RoobertMono';
-    font-size: getRem(14);
-    font-style: normal;
-    font-weight: 500;
     line-height: 146%;
-    text-transform: uppercase;
     color: white(80);
     margin-bottom: getRem(22);
   }
@@ -360,11 +281,6 @@ definePageMeta({
   margin-bottom: 60px;
   &__imagine,
   &__innovate {
-    font-size: max(36px, 9.6vw);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 88%;
-    letter-spacing: min(-2.16px, -0.575vw);
     color: $color-grey;
   }
   &__innovate {

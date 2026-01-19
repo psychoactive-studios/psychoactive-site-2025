@@ -67,13 +67,13 @@ const handleClick = () => {
       <div class="case-study-preview__title">
         <div class="case-study-preview__title-wapper">
           <div class="case-study-preview__title-text">{{ mainTitle }}</div>
-          <h3 ref="titleRef">
+          <h3 ref="titleRef" class="body-large--mobile">
             <NuxtLink :to="`/work/${slug}`" @click.prevent.stop="handleClick">{{
               mainTitle
             }}</NuxtLink>
           </h3>
         </div>
-        <p>{{ hero?.subTitle }}</p>
+        <p class="subheader--mobile">{{ hero?.subTitle }}</p>
       </div>
       <div class="case-study-preview__dots">
         <span />
@@ -136,22 +136,10 @@ const handleClick = () => {
     &-text {
       visibility: hidden;
     }
-    h3 {
-      font-size: getRem(20);
-      line-height: 1.4;
-      font-weight: 400;
-    }
     p {
-      font-family: 'RoobertMono';
-      font-size: getRem(16);
-      font-weight: 500;
-      line-height: 1.5;
-      text-transform: uppercase;
+      margin-top: getRem(8);
       opacity: 0.5;
       mix-blend-mode: difference;
-      @include respond(mobile) {
-        font-size: getRem(14);
-      }
     }
   }
 

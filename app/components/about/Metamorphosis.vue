@@ -1,11 +1,14 @@
 <script setup>
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
+import SoundButton from '../ui/SoundButton.vue';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const { playInteractionSound } = useAudioManager();
 
 const letsTalkButtonRef = ref(null);
 const isOpen = ref(false);
+const isMuted = ref(true);
 
 const handleHoverEffect = () => {
   const el = letsTalkButtonRef.value;
@@ -57,6 +60,7 @@ const handleClick = (e) => {
     overwrite: true,
     onComplete: () => {
       gsap.set(el, { clearProps: 'all' });
+      ScrollTrigger.refresh();
     },
   });
   isOpen.value = !isOpen.value;
@@ -67,7 +71,11 @@ const handleClick = (e) => {
     <div :class="['metamorphosis__wrapper', { open: isOpen }]">
       <div class="metamorphosis__content">
         <div class="container">
-          <div class="metamorphosis__title">
+          <div
+            class="metamorphosis__title"
+            @mouseenter="() => (isMuted = false)"
+            @mouseleave="() => (isMuted = true)"
+          >
             <div class="metamorphosis__title_media">
               <video
                 src="/video/service_03.mp4"
@@ -76,36 +84,15 @@ const handleClick = (e) => {
                 loop
                 playsinline
               />
-              <button class="metamorphosis__title_button">
-                <svg
-                  width="29"
-                  height="21"
-                  viewBox="0 0 29 21"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M5.17157 14.6756H2C0.895431 14.6756 0 13.7802 0 12.6756V8.17558C0 7.07101 0.89543 6.17558 2 6.17558H5.17157C5.70201 6.17558 6.21071 5.96487 6.58579 5.5898L11.5858 0.589796C12.8457 -0.670134 15 0.222199 15 2.00401V18.8472C15 20.629 12.8457 21.5213 11.5858 20.2614L6.58579 15.2614C6.21071 14.8863 5.70201 14.6756 5.17157 14.6756Z"
-                    fill="currentColor"
-                  />
-                  <path
-                    d="M23.2405 17.3996C27.2696 13.1701 27.2111 6.68034 23.2423 2.89957C22.8424 2.51864 22.8271 1.88566 23.208 1.48577C23.5889 1.08589 24.2219 1.07053 24.6218 1.45146C29.4504 6.05125 29.4211 13.8112 24.6886 18.7791C24.3077 19.1789 23.6747 19.1943 23.2748 18.8134C22.875 18.4324 22.8596 17.7995 23.2405 17.3996Z"
-                    fill="currentColor"
-                    class="path-1"
-                  />
-                  <path
-                    d="M18.6948 12.5337C20.0512 11.0005 19.9274 8.95108 18.767 7.92447C18.3533 7.55853 18.3147 6.92654 18.6806 6.51289C19.0465 6.09925 19.6785 6.06057 20.0922 6.42651C22.2409 8.32743 22.1299 11.6692 20.1928 13.8589C19.8269 14.2725 19.1949 14.3112 18.7812 13.9452C18.3676 13.5793 18.3289 12.9473 18.6948 12.5337Z"
-                    fill="currentColor"
-                    class="path-2"
-                  />
-                </svg>
-              </button>
+              <div class="metamorphosis__title_button">
+                <SoundButton :muted="isMuted" />
+              </div>
               <div class="dots-top" />
               <div class="dots-bottom" />
             </div>
             <div class="metamorphosis__title_text">
-              <h2>Metamorphosis</h2>
-              <p class="text-lg">/ˌmɛtəˈmɔːfəsɪs,ˌmɛtəmɔːˈfəʊsɪs/</p>
+              <h2 class="display-2xl--medium">Metamorphosis</h2>
+              <p class="body-large--mobile">/ˌmɛtəˈmɔːfəsɪs,ˌmɛtəmɔːˈfəʊsɪs/</p>
             </div>
           </div>
         </div>
@@ -113,22 +100,22 @@ const handleClick = (e) => {
         <div class="metamorphosis__definition">
           <div class="metamorphosis__definition_section">
             <p>
-              Noun DIGITAL TRANSFORMATION<br />
-              noun: metamorphosis; plural noun: metamorphoses
+              Noun <span class="digital-label">DIGITAL TRANSFORMATION</span
+              ><br />
+              noun: <b>metamorphosis</b>; plural noun: <b>metamorphoses</b>
             </p>
-            <p>
-              <span class="text-lg">Psychoactive definition</span>
+            <p class="body--mobile">
               (in a brand or organisation) the process of transformation from an
               outdated or underperforming digital presence into a distinctive,
               intelligent, and high-performing web experience
             </p>
-            <p class="text-lg">
+            <p class="body-large--mobile">
               “After working with Psychoactive, the brand underwent digital
               metamorphosis.”
             </p>
           </div>
           <div class="metamorphosis__definition_section">
-            <h3>Outcomes:</h3>
+            <h3 class="body-large--mobile">Outcomes:</h3>
             <ul class="tags-list">
               <li class="tag">transformation</li>
               <li class="tag">clarity</li>
@@ -140,7 +127,7 @@ const handleClick = (e) => {
             </ul>
           </div>
           <div class="metamorphosis__definition_section origin">
-            <h3>Origin:</h3>
+            <h3 class="body-large--mobile">Origin:</h3>
             <ul class="origin-list">
               <li>
                 <div class="origin-title">
@@ -148,7 +135,7 @@ const handleClick = (e) => {
                   <div class="line" />
                 </div>
                 <div class="origin-definition">
-                  <div class="text-lg">metamorphoun</div>
+                  <div class="body-large--mobile">metamorphoun</div>
                   <div>(to transform, change shape)</div>
                 </div>
               </li>
@@ -158,7 +145,7 @@ const handleClick = (e) => {
                   <div class="line" />
                 </div>
                 <div class="origin-definition">
-                  <div class="text-lg">metamorphosis</div>
+                  <div class="body-large--mobile">metamorphosis</div>
                   <div>(late Middle English)</div>
                 </div>
               </li>
@@ -168,16 +155,15 @@ const handleClick = (e) => {
                   <div class="line" />
                 </div>
                 <div class="origin-definition">
-                  <div class="text-lg">metamorphosis</div>
-                  <div>(2018)</div>
+                  <div class="body-large--mobile">metamorphosis</div>
+                  <div>(Psychoactive definition)</div>
                 </div>
               </li>
             </ul>
           </div>
-          <div class="metamorphosis__definition_section text-lg">
-            NEW ZEALAND (2018) — redefined by Psychoactive Studios to describe
-            the digital evolution of brands through strategy, design, and
-            technology.
+          <div class="metamorphosis__definition_section body--mobile">
+            Redefined by Psychoactive Studios to describe the digital evolution
+            of brands through strategy, design, and technology.
           </div>
         </div>
       </div>
@@ -188,7 +174,7 @@ const handleClick = (e) => {
           <span class="line" />
         </div>
         <button
-          class="button"
+          class="button body-button"
           @mouseenter="handleHoverEffect"
           @click="handleClick"
         >
@@ -220,6 +206,7 @@ const handleClick = (e) => {
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/mixins' as *;
+@use '~/assets/styles/typography' as *;
 
 @keyframes sound-impulse {
   0% {
@@ -239,19 +226,8 @@ const handleClick = (e) => {
     padding-top: 60px;
     padding-bottom: 0;
   }
-  .text-lg {
-    font-size: clamp(16px, 2vw, 24px);
-    font-style: normal;
-    font-weight: 400;
-    line-height: 125%;
-  }
   .tag {
-    font-family: 'RoobertMono';
-    font-size: clamp(12px, 0.833333vw, 16px);
-    font-style: normal;
-    font-weight: 500;
-    line-height: 100%;
-    text-transform: uppercase;
+    @extend .subheader--mobile;
     white-space: nowrap;
     border-radius: 30px;
     border: 1px solid white(20);
@@ -298,6 +274,7 @@ const handleClick = (e) => {
     &::after {
       bottom: 0;
     }
+
     &_media {
       @include flex-center;
       position: relative;
@@ -347,30 +324,16 @@ const handleClick = (e) => {
       }
     }
     &_button {
-      @include flex-center;
-      width: 33%;
+      // width: 34%;
       aspect-ratio: 1;
       background-color: $color-background;
+      position: relative;
       z-index: 1;
       border-radius: 50%;
-      color: $color-foreground;
-      @include respond(mobile) {
-        width: 48px;
-        height: 48px;
-        background-color: $color-foreground;
-        color: $color-background;
-      }
-      svg {
-        width: 40%;
-      }
+      padding: 12px;
     }
     &_text {
       & > h2 {
-        font-size: max(8.33333vw, 64px);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 100%;
-        letter-spacing: -0.07em;
         background: linear-gradient(to right, white(50) 50%, white 50%);
         background-size: 200% 100%;
         background-position-x: 0%;
@@ -379,15 +342,10 @@ const handleClick = (e) => {
         background-clip: text;
         transition: background-position-x 0.5s ease-in-out;
         @include respond(mobile) {
-          font-size: 6.4vw;
-          font-style: normal;
-          font-weight: 400;
-          line-height: 121%;
-          letter-spacing: -0.02em;
           color: $color-foreground;
         }
       }
-      .text-lg {
+      .body-large--mobile {
         opacity: 0.5;
         margin-top: 16px;
         @include respond(mobile) {
@@ -413,7 +371,7 @@ const handleClick = (e) => {
     }
   }
   &__definition {
-    max-width: 37%;
+    max-width: 41.25%;
     margin: 80px auto 0 auto;
     display: flex;
     flex-direction: column;
@@ -441,14 +399,13 @@ const handleClick = (e) => {
           }
         }
       }
+      b {
+        font-weight: 750;
+      }
       & > p {
         margin-bottom: 1.2em;
       }
       & > h3 {
-        font-size: clamp(16px, 2vw, 24px);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 125%;
         color: $color-foreground;
         margin-bottom: 1em;
       }
@@ -512,6 +469,12 @@ const handleClick = (e) => {
         }
       }
     }
+    .digital-label {
+      display: inline-block;
+      background-color: white(10);
+      padding: 0 6px;
+      border-radius: 4px;
+    }
   }
   &__button {
     display: grid;
@@ -523,12 +486,6 @@ const handleClick = (e) => {
       text-align: center;
     }
     .button {
-      font-family: 'RoobertMono';
-      font-size: 1rem;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 100%;
-      text-transform: uppercase;
       padding: 12px 48px;
       border: 1px solid white(20);
       border-radius: 48px;

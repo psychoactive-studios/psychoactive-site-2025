@@ -33,11 +33,13 @@ onMounted(async () => {
             class="contact__media_scene"
             :auto-play="false"
             :svg-urls="[
-              '/img/frog_steps/frog01.svg',
-              '/img/frog_steps/frog02.svg',
-              '/img/frog_steps/frog03.svg',
-              '/img/frog_steps/frog04.svg',
-              '/img/frog_steps/frog05.svg',
+              '/img/contact/step_01.svg',
+              '/img/contact/step_02.svg',
+              '/img/contact/step_03.svg',
+              '/img/contact/step_04.svg',
+              '/img/contact/step_05.svg',
+              '/img/contact/step_06.svg',
+              '/img/contact/step_07.svg',
             ]"
           />
         </section>
