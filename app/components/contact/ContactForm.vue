@@ -16,10 +16,11 @@ const {
   previousSectionRef,
   stepSectionRef,
   stepSectionTextRef,
-  stepMessage,
+  currentMessage,
   previousMessage,
   actionsRef,
   handleTestClick,
+  handleNextStep,
 } = useContact();
 
 const { isLoading } = useLoader();
@@ -125,8 +126,8 @@ function enterAnimation() {
       '+=1'
     )
     .add(() => {
-      previousMessage.value = stepMessage.value;
-      stepMessage.value =
+      previousMessage.value = currentMessage.value;
+      currentMessage.value =
         'Oh look, a visitor! I should start charging admission. Need anything?';
       gsap.set([stepSectionRef.value, stepSectionTextRef.value], {
         clearProps: 'all',
@@ -139,17 +140,20 @@ function enterAnimation() {
       duration: 1,
       ease: 'power2.inOut',
     })
-    .set(actionsRef.buttons, {
+    .set(actionsRef.introButtons, {
       autoAlpha: 1,
     })
-    .from(actionsRef.buttons.querySelectorAll('.contact-form__action_button'), {
-      opacity: 0,
-      scale: 0.9,
-      duration: 1,
-      stagger: 0.25,
-    })
+    .from(
+      actionsRef.introButtons.querySelectorAll('.contact-form__action_button'),
+      {
+        opacity: 0,
+        scale: 0.9,
+        duration: 1,
+        stagger: 0.25,
+      }
+    )
     .to(
-      actionsRef.buttons.querySelectorAll(
+      actionsRef.introButtons.querySelectorAll(
         '.contact-form__action_button .link-button__visible-text'
       ),
       {
@@ -195,18 +199,18 @@ function enterAnimation() {
         {{ previousMessage }}
       </div>
       <div ref="stepSectionRef" class="contact-form__step">
-        <span ref="stepSectionTextRef">{{ stepMessage }}</span>
+        <span ref="stepSectionTextRef">{{ currentMessage }}</span>
       </div>
       <div class="contact-form__action">
         <div
-          :ref="(el) => (actionsRef.buttons = el)"
+          :ref="(el) => (actionsRef.introButtons = el)"
           class="contact-form__action_item -buttons"
         >
           <LinkButton
             class="contact-form__action_button"
             size="small"
             data-index="0"
-            @click="handleTestClick"
+            @click="(e) => handleNextStep('ask_name', e)"
           >
             start a project
           </LinkButton>

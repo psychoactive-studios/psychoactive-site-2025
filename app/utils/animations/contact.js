@@ -58,8 +58,8 @@ export const testClickAnimation = (e, refs) => {
       '<'
     )
     .add(() => {
-      refs.previousMessage.value = refs.stepMessage.value;
-      refs.stepMessage.value =
+      refs.previousMessage.value = refs.currentMessage.value;
+      refs.currentMessage.value =
         'Ah, the sweet scent of collaboration. Let’s make some digital magic.';
       gsap.set(
         [
@@ -98,8 +98,8 @@ export const testClickAnimation = (e, refs) => {
       '<'
     )
     .add(() => {
-      refs.previousMessage.value = refs.stepMessage.value;
-      refs.stepMessage.value =
+      refs.previousMessage.value = refs.currentMessage.value;
+      refs.currentMessage.value =
         'Alright, let’s not be strangers. What should I call the genius behind this project?';
       gsap.set(
         [
