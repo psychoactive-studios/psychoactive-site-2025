@@ -1,7 +1,7 @@
 <script setup>
 import PlusIcon from '~/assets/icons/icon-plus.svg';
 import PlayIcon from '~/assets/icons/icon-play.svg';
-
+import useAudioManager from '~/composables/useAudioManager';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 import { SplitText } from 'gsap/SplitText';
 
@@ -37,6 +37,7 @@ const props = defineProps({
 });
 
 const playerContainerRef = ref(null);
+const { playInteractionSound } = useAudioManager();
 
 onMounted(() => {
   SplitText.create(
@@ -71,6 +72,16 @@ const currentAspectRatio = computed(() => {
 const uniqueId = `player-preview-${useId()}`;
 
 const { currentPreview, onPlayerOpen } = useVideoPlayer();
+
+const handleVideoClick = () => {
+  playInteractionSound('click-1');
+  playInteractionSound('showreel-open-1', 100);
+  if (props.customHandler) {
+    props.customHandler(uniqueId);
+  } else {
+    onPlayerOpen(uniqueId);
+  }
+};
 </script>
 <template>
   <div class="player">
@@ -114,9 +125,8 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
                 { 'play-button--transparent': transparentButton },
               ]"
               aria-label="Play video"
-              @click="
-                customHandler ? customHandler(uniqueId) : onPlayerOpen(uniqueId)
-              "
+              @click="handleVideoClick"
+              @mouseenter="playInteractionSound('play-hover-menu', 200)"
             >
               <PlayIcon />
             </button>

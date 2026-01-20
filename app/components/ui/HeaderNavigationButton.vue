@@ -203,9 +203,7 @@ const onClickHandler = () => {
 
   if (isVideoOpen.value) {
     onPlayerClose();
-    setTimeout(() => {
-      playInteractionSound('menu-close');
-    }, 100);
+    playInteractionSound('menu-close', 100);
     return;
   }
 
@@ -213,29 +211,21 @@ const onClickHandler = () => {
   if (isNavOpen.value) {
     transitionTimelineOut.restart();
     closeNavigation();
-    setTimeout(() => {
-      playInteractionSound('menu-close');
-    }, 100);
+    playInteractionSound('menu-close', 100);
   } else {
     transitionTimelineIn.restart();
     openNavigation();
-    setTimeout(() => {
-      playInteractionSound('menu-open');
-    }, 100);
+    playInteractionSound('menu-open', 100);
   }
 };
 
 const onMouseEnterHandler = () => {
   if (isNavOpen.value || isVideoOpen.value) {
     hoverTimelineCloseIn.restart();
-    setTimeout(() => {
-      playInteractionSound('menu-hover-close');
-    }, 200);
+    playInteractionSound('menu-hover-close', 250);
   } else {
     hoverTimelineIn.restart();
-    setTimeout(() => {
-      playInteractionSound('menu-hover-1');
-    }, 200);
+    playInteractionSound('menu-hover-1', 250);
   }
 };
 

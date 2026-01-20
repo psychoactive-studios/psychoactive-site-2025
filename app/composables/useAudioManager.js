@@ -1,12 +1,24 @@
 import useLoader from '~/composables/useLoader';
 import { Howl } from 'howler';
+import { ref } from 'vue';
 
 const fileList = [
   '/sound/temp/home-hover.wav',
+  '/sound/temp/home-hover-new.wav',
+  '/sound/temp/talk-btn-hover.wav',
   '/sound/temp/ai-hover.wav',
-  '/sound/temp/text-hover.wav',
+  '/sound/temp/text-hover-short.wav',
+  '/sound/temp/text-hover-1.wav',
+  '/sound/temp/text-hover-2.wav',
+  '/sound/temp/text-hover-3.wav',
+  '/sound/temp/text-hover-4.wav',
+  '/sound/temp/text-hover-5.wav',
   '/sound/temp/card-hover.wav',
   '/sound/temp/click-1.wav',
+  '/sound/temp/click-2.wav',
+  '/sound/temp/click-3.wav',
+  '/sound/temp/click-4.wav',
+  '/sound/temp/click-5.wav',
   '/sound/temp/menu-close.wav',
   '/sound/temp/menu-hover-close.wav',
   '/sound/temp/menu-hover-1.wav',
@@ -16,11 +28,24 @@ const fileList = [
   '/sound/temp/showreel-hover-2.wav',
   '/sound/temp/showreel-hover-3.wav',
   '/sound/temp/showreel-open-1.wav',
+  '/sound/temp/scroll-btn-hover.wav',
+  '/sound/temp/btn-hover-down.wav',
+  '/sound/temp/btn-hover-simple.wav',
+  '/sound/temp/play-hover-simple.wav',
+  '/sound/temp/play-hover-menu.wav',
+  '/sound/temp/awards-footer-hover-1.wav',
+  '/sound/temp/awards-footer-hover-2.wav',
+  '/sound/temp/awards-footer-hover-3.wav',
+  '/sound/temp/awards-footer-hover-4.wav',
+  '/sound/temp/awards-footer-hover-5.wav',
 ];
 
 const sounds = {};
 const isMuted = ref(false);
 const isSoundApproved = ref(false);
+const lastPlayedIndices = new Map();
+const currentLoopId = ref(null);
+const currentLoopSound = ref(null);
 
 const { addResourceToLoad, resourceLoaded } = useLoader();
 
@@ -45,7 +70,7 @@ export default function () {
     });
   }
 
-  function playInteractionSound(name = 'text-hover') {
+  function playInteractionSound(name = 'text-hover-short', delay = 0) {
     if (isMuted.value) return;
 
     const fullPath = fileList.find((path) => path.includes(name));
@@ -58,24 +83,75 @@ export default function () {
     const sound = sounds[fullPath];
 
     if (sound) {
-      sound.play();
-      console.log(`Playing sound: ${name}`);
+      setTimeout(() => {
+        sound.play();
+        console.log(`Playing sound: ${name} with delay: ${delay}ms`);
+      }, delay);
     }
   }
 
-  // function playRandomSound() {
-  //   if (isMuted.value) return;
-  //   const randomIndex = Math.floor(Math.random() * fileList.length);
-  //   const sound = sounds[fileList[randomIndex]];
+  function playRandomSound(name = 'text-hover', delay = 0) {
+    if (isMuted.value) return;
+    let randomIndexBetweenOneAndFive;
 
-  //   if (sound) {
-  //     sound.play();
-  //   }
-  // }
+    const lastIndex = lastPlayedIndices.get(name);
+
+    do {
+      randomIndexBetweenOneAndFive = Math.floor(Math.random() * 5) + 1;
+    } while (randomIndexBetweenOneAndFive === lastIndex);
+
+    lastPlayedIndices.set(name, randomIndexBetweenOneAndFive);
+
+    const sound =
+      sounds[
+        fileList.find((path) =>
+          path.includes(`${name}-${randomIndexBetweenOneAndFive}`)
+        )
+      ];
+    if (!sound) {
+      console.warn(`Sound not found: ${name}`);
+      return;
+    }
+
+    if (sound) {
+      setTimeout(() => {
+        sound.play();
+        console.log(`Playing sound: ${sound} with delay: ${delay}ms`);
+      }, delay);
+    }
+  }
+
+  function playContinuousSound(name) {
+    if (isMuted.value) return;
+
+    const fullPath = fileList.find((path) => path.includes(name));
+    if (!fullPath || !sounds[fullPath]) return;
+
+    const sound = sounds[fullPath];
+
+    sound.loop(true);
+    const id = sound.play();
+
+    currentLoopSound.value = sound;
+    currentLoopId.value = id;
+  }
+
+  function stopContinuousSound() {
+    if (currentLoopSound.value && currentLoopId.value !== null) {
+      currentLoopSound.value.loop(false, currentLoopId.value);
+
+      currentLoopSound.value = null;
+      currentLoopId.value = null;  
+    }
+  }
+
   return {
     isMuted,
     loadSounds,
     playInteractionSound,
+    playRandomSound,
+    playContinuousSound,
+    stopContinuousSound,
     isSoundApproved,
   };
 }

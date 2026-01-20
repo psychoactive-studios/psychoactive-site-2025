@@ -2,9 +2,9 @@
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, playRandomSound } = useAudioManager();
 
-defineProps({
+const props = defineProps({
   href: {
     type: String,
     default: null,
@@ -18,8 +18,6 @@ const handleHoverEffect = (el) => {
   // Set the width to prevent layout shift
   const width = el.offsetWidth;
   gsap.set(el, { width });
-
-  playInteractionSound('text-hover');
 
   // Store the original text
   gsap.to(el, {
@@ -38,6 +36,12 @@ const handleHoverEffect = (el) => {
 };
 
 const onMouseEnterHandler = (e) => {
+  if (gsap.isTweening(e.target)) return;
+  if (props.href && props.href.includes('hello@psychoactive.co.nz')) {
+    playInteractionSound('scroll-btn-hover');
+  } else {
+    playRandomSound('text-hover');
+  }
   handleHoverEffect(e.target);
 };
 

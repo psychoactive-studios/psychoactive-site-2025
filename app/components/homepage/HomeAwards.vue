@@ -5,7 +5,7 @@ import useAudioManager from '~/composables/useAudioManager';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import gsap from 'gsap';
 
-const { playInteractionSound } = useAudioManager();
+const { playRandomSound } = useAudioManager();
 const { scrollSmoother } = useScrollSmoother();
 
 // Number of awards to show initially and on each "Show More" click
@@ -24,8 +24,6 @@ const handleHoverEffect = () => {
   const width = el.offsetWidth;
   gsap.set(el, { width });
 
-  playInteractionSound();
-
   // Store the original text
   gsap.to(el, {
     duration: 0.7,
@@ -43,6 +41,7 @@ const handleHoverEffect = () => {
 };
 
 const onMouseEnterHandler = () => {
+  playRandomSound('text-hover');
   handleHoverEffect();
 };
 
@@ -51,6 +50,7 @@ const onFocusHandler = () => {
 };
 
 const onClickHandler = async () => {
+  playRandomSound('click');
   offSetRef.value += showOffset.value;
   await nextTick();
   scrollSmoother.value.refresh();
