@@ -14,10 +14,18 @@ defineProps({
     type: String,
     default: '',
   },
+  hasError: {
+    type: Boolean,
+    default: false,
+  },
+  errorMessage: {
+    type: String,
+    default: '',
+  },
 });
 </script>
 <template>
-  <label class="text-field">
+  <label class="text-field" :class="{ 'has-error': hasError || errorMessage }">
     <input
       v-model="model"
       class="text-field__input"
@@ -26,6 +34,9 @@ defineProps({
       :name="name"
     />
     <div class="text-field__border" />
+    <span v-if="errorMessage" class="text-field__error body-small">{{
+      errorMessage
+    }}</span>
   </label>
 </template>
 <style scoped lang="scss">
@@ -33,6 +44,15 @@ defineProps({
 @use '~/assets/styles/variables' as *;
 .text-field {
   display: inline-block;
+  position: relative;
+  &.has-error {
+    .text-field__border {
+      background-color: rgbaColor(#ff3333, 20);
+      &::before {
+        background-color: #ff3333;
+      }
+    }
+  }
   &__input {
     background: none;
     outline: none;
@@ -79,6 +99,28 @@ defineProps({
   .text-field__input:focus + .text-field__border {
     &::before {
       transform: scaleX(1);
+    }
+  }
+
+  &__error {
+    display: block;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    color: #ff4b4b;
+    padding-left: 18px;
+    letter-spacing: normal;
+    &::before {
+      content: '';
+      display: block;
+      width: 6px;
+      height: 6px;
+      background-color: #c23231;
+      border-radius: 50%;
+      margin-right: 12px;
+      position: absolute;
+      top: 0.5em;
+      left: 0;
     }
   }
 }

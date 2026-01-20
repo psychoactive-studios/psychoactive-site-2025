@@ -70,7 +70,6 @@ const talkButtonHoverHandler = () => {
   <button
     v-else
     ref="letsTalkButtonRef"
-    type="button"
     :class="['link-button', mode, size]"
     @mouseenter="talkButtonHoverHandler"
     @focus="talkButtonHoverHandler"

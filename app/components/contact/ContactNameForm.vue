@@ -1,49 +1,81 @@
 <script setup>
+import { useField, useForm } from 'vee-validate';
 import { tadiSteps } from '~/data/contactData';
 import ButtonDotsArrow from '../ui/ButtonDotsArrow.vue';
 import TextField from '../ui/TextField.vue';
 import useContact from '~/composables/useContact';
+import LinkButton from '../ui/LinkButton.vue';
 
 const { userData, currentStepId, handleNextStep } = useContact();
 
-const onSubmit = (e) => {
-  e.preventDefault();
-  if (!userData.name?.trim()) return;
-  console.log('userData.name', userData.name);
+// Налаштування форми та валідації
+const { handleSubmit } = useForm();
+
+const { value: name, errorMessage } = useField(
+  'name',
+  (value) => {
+    if (!value || !value.trim()) {
+      return 'Fill your name please';
+    }
+    return true;
+  },
+  {
+    initialValue: userData.name, // Ініціалізуємо поточним значенням, якщо воно є
+  }
+);
+
+// Обробка відправки тільки якщо валідація пройшла успішно
+const onSubmit = handleSubmit((values) => {
+  console.log('userData.name', userData.name, values);
+  userData.name = values.name;
 
   // const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
   // handleNextStep(nextStepId);
-};
+});
 </script>
 
 <template>
   <form class="name-form" @submit="onSubmit">
-    <TextField
-      v-model="userData.name"
-      placeholder="Type your name"
-      class="name-form__input"
-    />
-    <ButtonDotsArrow direction="right" class="name-form__button" />
+    <div class="name-form__inner">
+      <TextField
+        v-model="name"
+        placeholder="Type your name"
+        class="name-form__input"
+        :error-message="errorMessage"
+      />
+    </div>
+    <LinkButton class="name-form__button" size="small">submit</LinkButton>
+    <!-- <ButtonDotsArrow direction="right" class="name-form__button" /> -->
   </form>
 </template>
 
 <style scoped lang="scss">
 @use '~/assets/styles/variables' as *;
+@use '~/assets/styles/functions' as *;
+
 .name-form {
-  display: flex;
-  gap: 24px;
   width: 100%;
-  &__input {
+
+  &__inner {
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
   }
+
+  &__input {
+    width: 100%;
+  }
+
   &__button {
-    width: 96px;
-    height: 100%;
-    border-radius: 48px;
-    background: #fff;
-    :deep(.dots-arrow__icon_dot) {
-      background-color: $color-background;
-    }
+    margin-top: 42px;
+    // width: 96px;
+    // height: 100%;
+    // border-radius: 48px;
+    // background: #fff;
+    // :deep(.dots-arrow__icon_dot) {
+    //   background-color: $color-background;
+    // }
   }
 }
 </style>
