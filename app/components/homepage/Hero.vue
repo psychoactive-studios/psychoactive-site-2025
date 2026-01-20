@@ -50,10 +50,6 @@ watch(isLoading, (newVal) => {
 // const MAX_SCROLL_DURATION = 1.5; // Maximum duration (in seconds) for scroll animation
 
 const onPlayVideoHandler = (playerContainerRef) => {
-  playInteractionSound('click-1');
-  setTimeout(() => {
-    playInteractionSound('showreel-open-1');
-  }, 100);
   // Get ScrollTrigger by ID
   const trigger = ScrollTrigger.getById('homepage-hero-scrolltrigger');
 
@@ -92,6 +88,8 @@ const onPlayVideoHandler = (playerContainerRef) => {
 };
 
 const onScrollDownHandler = () => {
+  playInteractionSound('click-1');
+  playInteractionSound('menu-close', 100);
   // Get ScrollTrigger by ID
   const trigger = ScrollTrigger.getById('homepage-hero-scrolltrigger');
   if (!scrollSmoother.value || !trigger) return;
@@ -104,10 +102,6 @@ const onScrollDownHandler = () => {
     easing: (x) =>
       x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2,
   });
-};
-
-const playDelayedSound = (name) => {
-  setTimeout(() => playInteractionSound(name), 200);
 };
 </script>
 
@@ -145,8 +139,8 @@ const playDelayedSound = (name) => {
             <a
               href="https://webflow.com/@Psychoactive-Studios"
               target="_blank"
-              @mouseenter="() => playInteractionSound('mute-hover')"
-              @focus="() => playInteractionSound('mute-hover')"
+              @mouseenter="() => playInteractionSound('text-hover-short', 100)"
+              @click="playInteractionSound('click-1')"
             >
               <!-- <WebflowLabel class="top-text__label" /> -->
               <WebflowBlackLabel class="top-text__label" />
@@ -173,8 +167,7 @@ const playDelayedSound = (name) => {
             class="dots-arrow"
             aria-label="Scroll down"
             @click="onScrollDownHandler"
-            @mouseenter="() => playInteractionSound('showreel-hover-1')"
-            @focus="() => playInteractionSound('showreel-hover-1')"
+            @mouseenter="() => playInteractionSound('scroll-btn-hover', 100)"
           >
             <div class="dots-arrow__icon">
               <span class="dots-arrow__icon_dot dots-arrow__icon_dot--1" />
@@ -197,8 +190,8 @@ const playDelayedSound = (name) => {
             transparent-button
             :custom-handler="onPlayVideoHandler"
             aspect-ratio="2.22"
-            @mouseenter="playDelayedSound('showreel-hover-3')"
-            @focus="playDelayedSound('showreel-hover-3')"
+            @mouseenter="playInteractionSound('showreel-hover-3', 200)"
+            @focus="playInteractionSound('showreel-hover-3', 200)"
           />
           <div class="bottom-text">
             <div class="bottom-text__imagine display-large grey-text">

@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { enableScroll } = useScrollSmoother();
+const { playInteractionSound } = useAudioManager();
 
 const currentPreview = ref(null);
 const videoPlayerModalRef = ref(null);
@@ -288,6 +289,7 @@ export default function () {
   };
 
   const playHandler = () => {
+    playInteractionSound('click-1');
     isPlaying.value = !isPlaying.value;
   };
 

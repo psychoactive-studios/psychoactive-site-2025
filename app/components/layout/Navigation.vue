@@ -33,7 +33,7 @@ onMounted(() => {
 });
 
 const talkButtonHoverHandler = () => {
-  playInteractionSound('text-hover');
+  playInteractionSound('talk-btn-hover');
   if (gsap.isTweening('.navigation__talk_button')) return;
   talkButtonHoverTween.restart();
 };
@@ -95,7 +95,7 @@ const clickOnLinkHandler = (e) => {
           <button
             class="navigation__talk_button body-button"
             @mouseenter="talkButtonHoverHandler"
-            @focus="talkButtonHoverHandler"
+            @click="playInteractionSound('click-3')"
           >
             Let’s talk
           </button>

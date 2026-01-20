@@ -6,7 +6,7 @@ import WebflowLabel from '../ui/WebflowLabel.vue';
 import Brief from './Brief.vue';
 import AnalogClock from '../ui/AnalogClock.vue';
 
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, playRandomSound } = useAudioManager();
 
 defineProps({
   transparent: {
@@ -36,8 +36,8 @@ defineProps({
           <a
             :href="award.url"
             target="_blank"
-            @mouseenter="playInteractionSound"
-            @focus="playInteractionSound"
+            @mouseenter="() => playRandomSound('awards-footer-hover')"
+            @click="playRandomSound('click')"
           >
             <NuxtImg :src="award.icon" :alt="award.name" />
           </a>
@@ -53,8 +53,8 @@ defineProps({
         <a
           href="https://webflow.com/@Psychoactive-Studios"
           target="_blank"
-          @mouseenter="playInteractionSound"
-          @focus="playInteractionSound"
+          @mouseenter="() => playInteractionSound('text-hover-short', 100)"
+          @click="playInteractionSound('click-1')"
         >
           <WebflowLabel />
         </a>

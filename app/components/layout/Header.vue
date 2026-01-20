@@ -13,7 +13,8 @@ import gsap from 'gsap';
 
 const mainLogoRef = ref(null);
 const { isOpen, transitionFromNavigation } = useNavigation();
-const { playInteractionSound, isMuted } = useAudioManager();
+const { playInteractionSound, playContinuousSound, stopContinuousSound, isMuted } =
+  useAudioManager();
 const { clickVideoCloseHandler } = useHomeVideoPlayerMobile();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
@@ -23,6 +24,12 @@ const onSoundChangeHandler = () => {
 };
 
 const onLogoClickHandler = (e) => {
+  const isHomePage = e.currentTarget.classList.contains(
+    'router-link-exact-active'
+  );
+  if (!isOpen.value && !isHomePage) {
+    playInteractionSound('click-3');
+  }
   const isAnimating = gsap.getById('open-timeline-main')?.isActive();
   if (isAnimating) {
     e.preventDefault();
@@ -38,9 +45,11 @@ const onLogoHoverHandler = (e) => {
   if (mainLogoRef.value && e.type === 'mouseenter') {
     mainLogoRef.value.animationInstance.loop = true;
     mainLogoRef.value.animationInstance.play();
+    playContinuousSound('home-hover-new');
   }
   if (mainLogoRef.value && e.type === 'mouseleave') {
     mainLogoRef.value.animationInstance.loop = false;
+    stopContinuousSound();
   }
 };
 </script>
@@ -52,8 +61,6 @@ const onLogoHoverHandler = (e) => {
       class="logo"
       aria-label="Go to homepage"
       aria-describedby="main-logo"
-      @mouseenter="() => playInteractionSound('home-hover')"
-      @focus="() => playInteractionSound('home-hover')"
       @click.capture="onLogoClickHandler"
     >
       <MainAnimatedLogo
@@ -70,8 +77,7 @@ const onLogoHoverHandler = (e) => {
       class="header__sound-button"
       :muted="isMuted"
       @click="onSoundChangeHandler"
-      @mouseenter="() => playInteractionSound('mute-hover')"
-      @focus="playInteractionSound"
+      @mouseenter="() => playInteractionSound('btn-hover-simple', 200)"
     />
     <ClientOnly>
       <Navigation v-if="!isMobile" />
