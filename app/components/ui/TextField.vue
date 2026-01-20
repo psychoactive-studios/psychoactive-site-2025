@@ -1,4 +1,6 @@
 <script setup>
+const model = defineModel({ type: String });
+
 defineProps({
   type: {
     type: String,
@@ -17,6 +19,7 @@ defineProps({
 <template>
   <label class="text-field">
     <input
+      v-model="model"
       class="text-field__input"
       :type="type"
       :placeholder="placeholder"
@@ -41,12 +44,12 @@ defineProps({
     font-style: normal;
     font-weight: 500;
     line-height: 1;
-    text-transform: uppercase;
     color: white;
     &::placeholder {
       color: white;
       opacity: 0.4;
       transition: opacity 0.5s ease;
+      text-transform: uppercase;
     }
     &:focus::placeholder {
       opacity: 0.8;

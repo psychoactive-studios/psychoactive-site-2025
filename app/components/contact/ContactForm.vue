@@ -14,8 +14,8 @@ const dotsRef = ref(null);
 const {
   sceneRef,
   previousSectionRef,
-  stepSectionRef,
-  stepSectionTextRef,
+  currentSectionRef,
+  currentSectionTextRef,
   currentMessage,
   previousMessage,
   actionsRef,
@@ -92,7 +92,7 @@ function enterAnimation() {
     .add(() => sceneRef.value.play(), 'start+=0.5')
     // First message
     .to(
-      stepSectionTextRef.value,
+      currentSectionTextRef.value,
       {
         backgroundPositionX: '-100%',
         duration: 1,
@@ -116,7 +116,7 @@ function enterAnimation() {
     )
     // First message transition
     .to(
-      stepSectionRef.value,
+      currentSectionRef.value,
       {
         transform: 'translateY(calc(-100% - 48px - 0.65em))',
         duration: 0.8,
@@ -129,13 +129,13 @@ function enterAnimation() {
       previousMessage.value = currentMessage.value;
       currentMessage.value =
         'Oh look, a visitor! I should start charging admission. Need anything?';
-      gsap.set([stepSectionRef.value, stepSectionTextRef.value], {
+      gsap.set([currentSectionRef.value, currentSectionTextRef.value], {
         clearProps: 'all',
       });
     })
 
     // Second message transition
-    .to(stepSectionTextRef.value, {
+    .to(currentSectionTextRef.value, {
       backgroundPositionX: '-100%',
       duration: 1,
       ease: 'power2.inOut',
@@ -198,8 +198,8 @@ function enterAnimation() {
       <div ref="previousSectionRef" class="contact-form__previous">
         {{ previousMessage }}
       </div>
-      <div ref="stepSectionRef" class="contact-form__step">
-        <span ref="stepSectionTextRef">{{ currentMessage }}</span>
+      <div ref="currentSectionRef" class="contact-form__step">
+        <span ref="currentSectionTextRef">{{ currentMessage }}</span>
       </div>
       <div class="contact-form__action">
         <div

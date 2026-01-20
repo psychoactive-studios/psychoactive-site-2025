@@ -5,14 +5,19 @@ import { testClickAnimation } from '~/utils/animations/contact';
 const MESSAGE_DELAY = 2;
 
 const sceneRef = ref(null);
+
 const previousSectionRef = ref(null);
-const stepSectionRef = ref(null);
-const stepSectionTextRef = ref(null);
+const currentSectionRef = ref(null);
+const currentSectionTextRef = ref(null);
 const currentMessage = ref('Hi I’m Psycho AI Agent');
 const previousMessage = ref(null);
 const actionsRef = reactive({
   introButtons: null,
   nameForm: null,
+});
+
+const userData = reactive({
+  name: null,
 });
 
 const currentStepId = ref('intro');
@@ -26,8 +31,8 @@ export default function useContact() {
     testClickAnimation(e, {
       sceneRef,
       previousSectionRef,
-      stepSectionRef,
-      stepSectionTextRef,
+      currentSectionRef,
+      currentSectionTextRef,
       currentMessage,
       previousMessage,
       actionsRef,
@@ -43,7 +48,7 @@ export default function useContact() {
     // Leave animation for actions
     if (currentStep.cta) {
       // Buttons leave animation
-      if (currentStep.cta === 'introButtons') {
+      if (currentStep.type === 'buttons') {
         const index = parseInt(event.currentTarget.dataset.index);
         const buttons = event.currentTarget
           .closest('.-buttons')
@@ -101,7 +106,7 @@ export default function useContact() {
           delay
         )
         .to(
-          stepSectionRef.value,
+          currentSectionRef.value,
           {
             transform: 'translateY(calc(-100% - 48px - 0.65em))',
             duration: 0.8,
@@ -115,8 +120,8 @@ export default function useContact() {
           currentMessage.value = getRandomMessage(message.variations);
           gsap.set(
             [
-              stepSectionRef.value,
-              stepSectionTextRef.value,
+              currentSectionRef.value,
+              currentSectionTextRef.value,
               previousSectionRef.value,
             ],
             {
@@ -124,7 +129,7 @@ export default function useContact() {
             }
           );
         })
-        .to(stepSectionTextRef.value, {
+        .to(currentSectionTextRef.value, {
           backgroundPositionX: '-100%',
           duration: 1,
           ease: 'power2.inOut',
@@ -143,6 +148,12 @@ export default function useContact() {
           }
         );
       }
+
+      // Update current step id
+      timeline.add(() => {
+        currentStepId.value = stepId;
+      });
+
       console.log('message', getRandomMessage(message.variations));
     });
   };
@@ -150,13 +161,13 @@ export default function useContact() {
   return {
     sceneRef,
     previousSectionRef,
-    stepSectionRef,
-    stepSectionTextRef,
+    currentSectionRef,
+    currentSectionTextRef,
     currentMessage,
     previousMessage,
-    actionsRef,
-    handleTestClick,
-    handleNextStep,
     currentStepId,
+    actionsRef,
+    handleNextStep,
+    userData,
   };
 }
