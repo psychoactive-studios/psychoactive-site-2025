@@ -3,7 +3,7 @@ import { useDateFormat, usePointer } from '@vueuse/core';
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 
-const { playInteractionSound } = useAudioManager();
+const { playRandomSound } = useAudioManager();
 const { pointerType } = usePointer();
 
 const props = defineProps({
@@ -46,8 +46,6 @@ const handleHoverEffect = () => {
   const height = titleRef.value.offsetHeight;
   gsap.set(titleRef.value, { width, height });
 
-  playInteractionSound();
-
   // Store the original text
   gsap.to(titleRef.value, {
     duration: 1.5,
@@ -65,6 +63,7 @@ const handleHoverEffect = () => {
 };
 
 const onMouseEnterHandler = (e) => {
+  playRandomSound('text-hover');
   handleHoverEffect(e.target);
 };
 
@@ -79,6 +78,7 @@ const onFocusHandler = (e) => {
     class="news-card"
     @mouseenter="onMouseEnterHandler"
     @focus="onFocusHandler"
+    @click="() => playRandomSound('click')"
   >
     <div class="news-card__description">
       <div class="news-card__description_info">
