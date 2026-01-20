@@ -26,6 +26,7 @@ export const tadiSteps = {
     ],
     // Тип інпуту (з'являється після останнього повідомлення)
     cta: 'introButtons',
+    type: 'buttons',
     sceneShape: 0,
   },
 
@@ -42,6 +43,7 @@ export const tadiSteps = {
       },
     ],
     cta: 'nameForm',
+    type: 'textField',
     sceneShape: 1,
     nextStep: 'ask_company_role',
   },
