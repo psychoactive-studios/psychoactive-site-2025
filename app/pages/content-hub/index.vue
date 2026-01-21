@@ -5,11 +5,13 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 import useNavigation from '~/composables/useNavigation';
 import NewsCard from '~/components/ui/NewsCard.vue';
 import useLoader from '~/composables/useLoader';
-
+import useAudioManager from '~/composables/useAudioManager';
 import { leaveAnimation } from '~/utils/animations/transitions';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
+
+const { playInteractionSound } = useAudioManager();
 
 const { scrollSmoother } = useScrollSmoother();
 const { isLoading } = useLoader();
@@ -40,6 +42,7 @@ if (error.value) {
 watch(isLoading, (loading) => {
   if (!loading) {
     enterAnimation();
+    playInteractionSound('content-load');
   }
 });
 

@@ -12,10 +12,12 @@ import {
 import ServicesHero3DSceneMobile from '../ui/ServicesHero3DSceneMobile.vue';
 import { useMediaQuery } from '@vueuse/core';
 import ServicesHero3DScene from '../ui/ServicesHero3DScene.vue';
+import useAudioManager from '~/composables/useAudioManager';
 
 const { isLoading } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
 const isMobile = useMediaQuery('(max-width: 768px)');
+const { playInteractionSound } = useAudioManager();
 
 const containerRef = ref(null);
 const isPlaying = ref(true);
@@ -35,6 +37,7 @@ onUnmounted(() => {
 watch(isLoading, (newVal) => {
   if (!newVal) {
     heroInitAnimation(ctx, scrollSmoother);
+    playInteractionSound('services-load');
   }
 });
 </script>
@@ -81,8 +84,8 @@ watch(isLoading, (newVal) => {
             <a
               href="https://webflow.com/@Psychoactive-Studios"
               target="_blank"
-              @mouseenter="playInteractionSound"
-              @focus="playInteractionSound"
+              @mouseenter="() => playInteractionSound('text-hover-short', 100)"
+              @click="() => playInteractionSound('click-1')"
             >
               <WebflowLabel class="right-label__svg" />
             </a>

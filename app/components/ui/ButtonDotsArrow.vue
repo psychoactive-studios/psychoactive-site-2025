@@ -16,7 +16,12 @@ defineProps({
   },
 });
 
-const { playInteractionSound } = useAudioManager();
+const handleClickSound = () => {
+  playRandomSound('click');
+  playInteractionSound('menu-close', 50);
+};
+
+const { playInteractionSound, playRandomSound } = useAudioManager();
 </script>
 <template>
   <button
@@ -27,8 +32,8 @@ const { playInteractionSound } = useAudioManager();
       { 'dots-arrow--bordered': bordered },
     ]"
     aria-label="Scroll down"
-    @mouseenter="playInteractionSound"
-    @focus="playInteractionSound"
+    @mouseenter="() => playRandomSound('scroll-btn-hover')"
+    @click="handleClickSound"
   >
     <div class="dots-arrow__icon">
       <span class="dots-arrow__icon_dot dots-arrow__icon_dot--1" />

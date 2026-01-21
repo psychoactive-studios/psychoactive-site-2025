@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import gsap from 'gsap';
+import useAudioManager from '~/composables/useAudioManager';
 
 const props = defineProps({
   list: {
@@ -26,6 +27,7 @@ const props = defineProps({
 });
 
 const activeIndices = ref([]);
+const { playInteractionSound, playRandomSound } = useAudioManager();
 
 if (props.defaultOpen !== null) {
   if (Array.isArray(props.defaultOpen)) {
@@ -38,17 +40,23 @@ if (props.defaultOpen !== null) {
 }
 
 const toggle = (index) => {
+  playRandomSound('click');
+
   if (props.multiple) {
     if (activeIndices.value.includes(index)) {
       activeIndices.value = activeIndices.value.filter((i) => i !== index);
+      playInteractionSound('accordion-close', 100);
     } else {
       activeIndices.value.push(index);
+      playInteractionSound('accordion-open', 100);
     }
   } else {
     if (activeIndices.value.includes(index)) {
       activeIndices.value = [];
+      playInteractionSound('accordion-close', 100);
     } else {
       activeIndices.value = [index];
+      playInteractionSound('accordion-open', 100);
     }
   }
   props.onToggle?.(index);

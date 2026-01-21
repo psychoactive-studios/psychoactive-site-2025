@@ -26,7 +26,7 @@ defineProps({
 });
 
 const talkButtonHoverHandler = () => {
-  playInteractionSound();
+  playInteractionSound('menu-hover-close', 50);
   const el = letsTalkButtonRef.value?.querySelector(
     '.link-button__visible-text'
   );
@@ -73,7 +73,7 @@ const talkButtonHoverHandler = () => {
     type="button"
     :class="['link-button', mode, size]"
     @mouseenter="talkButtonHoverHandler"
-    @focus="talkButtonHoverHandler"
+    @click="() => playInteractionSound('click-3')"
   >
     <span class="link-button__hidden-text">
       <slot />

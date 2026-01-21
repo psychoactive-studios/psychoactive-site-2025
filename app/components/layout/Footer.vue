@@ -14,6 +14,10 @@ defineProps({
     default: false,
   },
 });
+const handleClick = () => {
+  playRandomSound('click');
+  playInteractionSound('menu-close', 200);
+};
 </script>
 
 <template>
@@ -21,7 +25,7 @@ defineProps({
     <section class="navigation">
       <ul class="links">
         <template v-for="(link, index) in footerData.links" :key="link.title">
-          <li class="link body-button">
+          <li class="link body-button" @click="handleClick">
             <LinkWithHover :href="link.url">{{ link.title }}</LinkWithHover>
           </li>
           <li v-if="index < footerData.links.length - 1" class="separator" />

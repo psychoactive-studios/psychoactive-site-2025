@@ -3,6 +3,15 @@ import { Howl } from 'howler';
 import { ref } from 'vue';
 
 const fileList = [
+  '/sound/temp/content-load.wav',
+  '/sound/temp/work-load.wav',
+  '/sound/temp/about-load.wav',
+  '/sound/temp/webflow-load.wav',
+  '/sound/temp/home-load.wav',
+  '/sound/temp/services-load.wav',
+  '/sound/temp/sound-btn-hover-1.wav',
+  '/sound/temp/accordion-open.wav',
+  '/sound/temp/accordion-close.wav',
   '/sound/temp/home-hover.wav',
   '/sound/temp/home-hover-new.wav',
   '/sound/temp/talk-btn-hover.wav',
@@ -33,6 +42,7 @@ const fileList = [
   '/sound/temp/btn-hover-simple.wav',
   '/sound/temp/play-hover-simple.wav',
   '/sound/temp/play-hover-menu.wav',
+  '/sound/temp/share-hover.wav',
   '/sound/temp/awards-footer-hover-1.wav',
   '/sound/temp/awards-footer-hover-2.wav',
   '/sound/temp/awards-footer-hover-3.wav',
@@ -141,7 +151,7 @@ export default function () {
       currentLoopSound.value.loop(false, currentLoopId.value);
 
       currentLoopSound.value = null;
-      currentLoopId.value = null;  
+      currentLoopId.value = null;
     }
   }
 

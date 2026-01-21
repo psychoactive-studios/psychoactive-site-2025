@@ -4,7 +4,7 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
 import gsap from 'gsap';
 import BriefOurAIAgent from '~/assets/img/brief-our-AI-agent.svg';
 
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, playRandomSound } = useAudioManager();
 
 let footerBriefTimeline;
 const briefRef = ref(null);
@@ -76,6 +76,7 @@ const briefMouseLeaveHandler = () => {
         class="brief__title"
         @mouseenter="briefMouseEnterHandler"
         @mouseleave="briefMouseLeaveHandler"
+        @click="() => playInteractionSound('sound-btn-hover-1')"
       >
         <NuxtLink href="/" class="brief__title_text">
           <BriefOurAIAgent class="brief__title_text--original" />
@@ -89,7 +90,10 @@ const briefMouseLeaveHandler = () => {
       </div>
       <div class="brief__email">
         Or email the old fashioned way:
-        <LinkWithHover href="mailto:hello@psychoactive.co.nz">
+        <LinkWithHover
+          href="mailto:hello@psychoactive.co.nz"
+          @click="() => playRandomSound('click')"
+        >
           hello@psychoactive.co.nz
         </LinkWithHover>
       </div>

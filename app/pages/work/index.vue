@@ -10,10 +10,12 @@ import { SplitText } from 'gsap/SplitText';
 import { leaveAnimation } from '~/utils/animations/transitions';
 import Footer from '~/components/layout/Footer.vue';
 import useNavigation from '~/composables/useNavigation';
+import useAudioManager from '~/composables/useAudioManager';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
 
+const { playInteractionSound } = useAudioManager();
 // Build query params for Strapi API
 // Strapi recommends using the 'qs' library to parse and stringify nested
 // objects for complex query URLs instead of creating them manually.
@@ -109,6 +111,7 @@ onUnmounted(() => {
 watch(isLoading, (newVal) => {
   if (!newVal) {
     enterAnimation();
+    playInteractionSound('work-load');
   }
 });
 

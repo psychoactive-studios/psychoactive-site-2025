@@ -3,8 +3,7 @@ import BulgeImage from '@/components/ui/BulgeImage.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import gsap from 'gsap';
 
-const { playInteractionSound } = useAudioManager();
-
+const { playInteractionSound, playRandomSound } = useAudioManager();
 const containerRef = ref(null);
 const titleRef = ref(null);
 const imageRef = ref(null);
@@ -26,7 +25,7 @@ const handleMouseEnter = () => {
   const width = titleRef.value.offsetWidth;
   gsap.set(titleRef.value, { width });
 
-  playInteractionSound();
+  playRandomSound('text-hover');
 
   // Store the original text
   gsap.to(titleRef.value, {
@@ -45,6 +44,8 @@ const handleMouseEnter = () => {
 };
 
 const handleClick = () => {
+  playRandomSound('click');
+  playInteractionSound('menu-close', 150);
   if (imageRef.value && imageRef.value.handleClick) {
     gsap.set(containerRef.value, { zIndex: 2 });
     imageRef.value.handleClick(`/work/${slug}`);
