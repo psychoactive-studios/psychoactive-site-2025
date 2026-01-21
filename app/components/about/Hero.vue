@@ -6,6 +6,7 @@ import {
   heroInitAnimation,
   heroScrollAnimation,
 } from '~/utils/animations/about';
+import useAudioManager from '~/composables/useAudioManager';
 
 // console.log('heroInitAnimation', heroInitAnimation);
 
@@ -16,6 +17,7 @@ let ctx = null;
 
 const { isLoading, addResourceToLoad, resourceLoaded } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
+const { playInteractionSound } = useAudioManager();
 
 // Indicate that this component has a resource to load
 addResourceToLoad(1);
@@ -38,6 +40,7 @@ watch(isLoading, (newVal) => {
   if (!newVal) {
     heroVideoplayerRef.value.play();
     heroInitAnimation(ctx, scrollSmoother);
+    playInteractionSound('about-load');
   }
 });
 </script>

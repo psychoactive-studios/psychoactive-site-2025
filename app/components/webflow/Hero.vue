@@ -48,10 +48,13 @@ onUnmounted(() => {
 watch(isLoading, (newVal) => {
   if (!newVal) {
     heroInitAnimation(ctx, scrollSmoother);
+    playInteractionSound('webflow-load');
   }
 });
 
 const onClickHandler = () => {
+  playInteractionSound('click-1');
+  playInteractionSound('menu-close', 100);
   const targetElement = document.querySelector('.webflow__video-reels');
   const elementY = targetElement.getBoundingClientRect().top;
   const elementHeight = targetElement.getBoundingClientRect().height;
@@ -108,13 +111,17 @@ const onClickHandler = () => {
             <a
               href="https://webflow.com/@Psychoactive-Studios"
               target="_blank"
-              @mouseenter="playInteractionSound"
-              @focus="playInteractionSound"
+              @mouseenter="() => playInteractionSound('text-hover-short', 100)"
+              @click="() => playInteractionSound('click-1')"
             >
               <WebflowLabel class="right-text__label" />
             </a>
           </div>
-          <ButtonDotsArrow class="bottom-down" @click="onClickHandler" />
+          <ButtonDotsArrow
+            class="bottom-down"
+            @click="onClickHandler"
+            @mouseenter="() => playInteractionSound('scroll-btn-hover', 100)"
+          />
         </div>
       </div>
     </div>

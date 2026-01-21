@@ -8,6 +8,7 @@ import ArticleContent from '~/components/ui/ArticleContent.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useNavigation from '~/composables/useNavigation';
 import useLoader from '~/composables/useLoader';
+import useAudioManager from '~/composables/useAudioManager';
 import { calculateReadingTime } from '~/utils/comput';
 import { leaveAnimation } from '~/utils/animations/transitions';
 
@@ -15,6 +16,7 @@ import { leaveAnimation } from '~/utils/animations/transitions';
 const config = useRuntimeConfig();
 
 const { scrollSmoother } = useScrollSmoother();
+const { playInteractionSound, playRandomSound } = useAudioManager();
 
 const { isLoading } = useLoader();
 const router = useRouter();
@@ -228,7 +230,12 @@ function footerTextAnimationInit() {
         <div class="article__body_wrapper">
           <div class="article__body_share">
             <h3>Share:</h3>
-            <a href="#" aria-label="Share on Facebook">
+            <a
+              href="#"
+              aria-label="Share on Facebook"
+              @mouseenter="() => playInteractionSound('share-hover')"
+              @click="() => playRandomSound('click')"
+            >
               <img src="/img/icon-x.svg" alt="" />
             </a>
             <a href="#" aria-label="Share on Facebook">

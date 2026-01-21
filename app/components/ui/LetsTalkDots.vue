@@ -355,7 +355,7 @@ onUnmounted(() => {
 });
 
 const talkButtonHoverHandler = () => {
-  playInteractionSound();
+  playInteractionSound('talk-btn-hover');
   if (gsap.isTweening(letsTalkButtonRef.value)) return;
   gsap.to(letsTalkButtonRef.value, {
     duration: 0.5,
@@ -384,7 +384,7 @@ const talkButtonHoverHandler = () => {
       href="/"
       class="lets-talk__link"
       @mouseenter="talkButtonHoverHandler"
-      @focus="talkButtonHoverHandler"
+      @click="playInteractionSound('click-3')"
     >
       {{ text }}
     </a>

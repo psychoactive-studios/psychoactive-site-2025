@@ -4,7 +4,7 @@ import useAudioManager from '~/composables/useAudioManager';
 import SoundButton from '../ui/SoundButton.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, playRandomSound } = useAudioManager();
 
 const letsTalkButtonRef = ref(null);
 const isOpen = ref(false);
@@ -19,7 +19,7 @@ const handleHoverEffect = () => {
   const width = el.offsetWidth;
   gsap.set(el, { width });
 
-  playInteractionSound();
+  playRandomSound('text-hover');
 
   // Store the original text
   gsap.to(el, {
@@ -38,6 +38,8 @@ const handleHoverEffect = () => {
 };
 
 const handleClick = (e) => {
+  playRandomSound('click');
+  playInteractionSound('menu-')
   const button = e.currentTarget;
   const el = letsTalkButtonRef.value;
 

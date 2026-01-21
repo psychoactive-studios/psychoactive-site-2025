@@ -13,8 +13,12 @@ import gsap from 'gsap';
 
 const mainLogoRef = ref(null);
 const { isOpen, transitionFromNavigation } = useNavigation();
-const { playInteractionSound, playContinuousSound, stopContinuousSound, isMuted } =
-  useAudioManager();
+const {
+  playInteractionSound,
+  playContinuousSound,
+  stopContinuousSound,
+  isMuted,
+} = useAudioManager();
 const { clickVideoCloseHandler } = useHomeVideoPlayerMobile();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
@@ -29,6 +33,7 @@ const onLogoClickHandler = (e) => {
   );
   if (!isOpen.value && !isHomePage) {
     playInteractionSound('click-3');
+    playInteractionSound('menu-close', 250);
   }
   const isAnimating = gsap.getById('open-timeline-main')?.isActive();
   if (isAnimating) {

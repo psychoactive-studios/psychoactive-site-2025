@@ -44,6 +44,7 @@ onUnmounted(() => {
 watch(isLoading, (newVal) => {
   if (!newVal) {
     heroInitAnimation(ctx, scrollSmoother);
+    playInteractionSound('home-load');
   }
 });
 
@@ -140,7 +141,7 @@ const onScrollDownHandler = () => {
               href="https://webflow.com/@Psychoactive-Studios"
               target="_blank"
               @mouseenter="() => playInteractionSound('text-hover-short', 100)"
-              @click="playInteractionSound('click-1')"
+              @click="() => playInteractionSound('click-1')"
             >
               <!-- <WebflowLabel class="top-text__label" /> -->
               <WebflowBlackLabel class="top-text__label" />

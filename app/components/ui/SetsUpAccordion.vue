@@ -1,5 +1,6 @@
 <script setup>
 import gsap from 'gsap';
+import useAudioManager from '~/composables/useAudioManager';
 
 const props = defineProps({
   list: {
@@ -21,6 +22,7 @@ const props = defineProps({
 });
 
 const activeIndices = ref([]);
+const { playInteractionSound, playRandomSound } = useAudioManager();
 
 if (props.defaultOpen !== null) {
   if (Array.isArray(props.defaultOpen)) {
@@ -33,16 +35,21 @@ if (props.defaultOpen !== null) {
 }
 
 const toggle = (index) => {
+  playRandomSound('click');
   if (props.multiple) {
     if (activeIndices.value.includes(index)) {
+      playInteractionSound('accordion-close', 100);
       activeIndices.value = activeIndices.value.filter((i) => i !== index);
     } else {
+      playInteractionSound('accordion-open', 100);
       activeIndices.value.push(index);
     }
   } else {
     if (activeIndices.value.includes(index)) {
+      playInteractionSound('accordion-close', 100);
       activeIndices.value = [];
     } else {
+      playInteractionSound('accordion-open', 100);
       activeIndices.value = [index];
     }
   }
@@ -81,7 +88,11 @@ const leave = (el, done) => {
       class="accordion__item"
       :class="{ 'accordion__item--active': activeIndices.includes(index) }"
     >
-      <button class="accordion__header" @click="toggle(index)">
+      <button
+        class="accordion__header"
+        @mouseenter="() => playInteractionSound('scroll-btn-hover')"
+        @click="toggle(index)"
+      >
         <span class="accordion__title subheader--mobile">{{ item.title }}</span>
         <Transition
           :css="false"

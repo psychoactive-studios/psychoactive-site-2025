@@ -1,9 +1,13 @@
 <script setup>
 import gsap from 'gsap';
+import useAudioManager from '~/composables/useAudioManager';
 
 const labelRef = ref(null);
+const { playInteractionSound } = useAudioManager();
 
 const mouseEnterHandler = () => {
+  playInteractionSound('text-hover-short', 100);
+
   if (labelRef.value) {
     gsap
       .timeline()
@@ -44,6 +48,12 @@ const mouseLeaveHandler = () => {
     });
   }
 };
+
+const clickSoundHandle = () => {
+  playInteractionSound('click-1');
+  playInteractionSound('menu-close', 150);
+};
+
 </script>
 <template>
   <svg
@@ -56,6 +66,7 @@ const mouseLeaveHandler = () => {
     class="label-border"
     @mouseenter="mouseEnterHandler"
     @mouseleave="mouseLeaveHandler"
+    @click="clickSoundHandle"
   >
     <rect class="label-background" width="272" height="47" rx="23.5" />
     <path
