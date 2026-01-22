@@ -39,7 +39,7 @@ const handleHoverEffect = () => {
 
 const handleClick = (e) => {
   playRandomSound('click');
-  playInteractionSound('menu-')
+  playInteractionSound('menu-');
   const button = e.currentTarget;
   const el = letsTalkButtonRef.value;
 
@@ -67,6 +67,7 @@ const handleClick = (e) => {
   });
   isOpen.value = !isOpen.value;
 };
+
 </script>
 <template>
   <div class="metamorphosis">
@@ -75,8 +76,11 @@ const handleClick = (e) => {
         <div class="container">
           <div
             class="metamorphosis__title"
-            @mouseenter="() => (isMuted = false)"
+            @mouseenter="
+              ((isMuted = false), playInteractionSound('accordion-close'))
+            "
             @mouseleave="() => (isMuted = true)"
+            @click="() => playInteractionSound('frog-new')"
           >
             <div class="metamorphosis__title_media">
               <video

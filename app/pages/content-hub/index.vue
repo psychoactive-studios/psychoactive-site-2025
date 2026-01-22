@@ -42,7 +42,6 @@ if (error.value) {
 watch(isLoading, (loading) => {
   if (!loading) {
     enterAnimation();
-    playInteractionSound('content-load');
   }
 });
 
@@ -81,6 +80,8 @@ definePageMeta({
 });
 
 function enterAnimation(el) {
+  playInteractionSound('content-load');
+
   const layoutElements = gsap.utils.toArray([
     '#header-logo',
     '#header-navigation-button',

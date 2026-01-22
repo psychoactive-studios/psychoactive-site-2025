@@ -18,7 +18,8 @@ defineProps({
 
 const handleClickSound = () => {
   playRandomSound('click');
-  playInteractionSound('menu-close', 50);
+  const randomIndex = Math.floor(Math.random() * 3) + 1;
+  playInteractionSound(`slider-${randomIndex}`, 50);
 };
 
 const { playInteractionSound, playRandomSound } = useAudioManager();
@@ -32,7 +33,7 @@ const { playInteractionSound, playRandomSound } = useAudioManager();
       { 'dots-arrow--bordered': bordered },
     ]"
     aria-label="Scroll down"
-    @mouseenter="() => playRandomSound('scroll-btn-hover')"
+    @mouseenter="() => playInteractionSound('scroll-btn-hover')"
     @click="handleClickSound"
   >
     <div class="dots-arrow__icon">

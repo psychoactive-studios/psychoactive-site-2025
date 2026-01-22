@@ -3,6 +3,10 @@ import { Howl } from 'howler';
 import { ref } from 'vue';
 
 const fileList = [
+  '/sound/temp/frog-new.wav',
+  '/sound/temp/slider-2.wav',
+  '/sound/temp/slider-3.wav',
+  '/sound/temp/contact-load.wav',
   '/sound/temp/content-load.wav',
   '/sound/temp/work-load.wav',
   '/sound/temp/about-load.wav',
@@ -148,7 +152,16 @@ export default function () {
 
   function stopContinuousSound() {
     if (currentLoopSound.value && currentLoopId.value !== null) {
-      currentLoopSound.value.loop(false, currentLoopId.value);
+      const sound = currentLoopSound.value;
+      const id = currentLoopId.value;
+      const fadeDuration = 1000;
+
+      sound.loop(false, id);
+      sound.fade(sound.volume(id), 0, fadeDuration, id);
+
+      setTimeout(() => {
+        sound.stop(id);
+      }, fadeDuration);
 
       currentLoopSound.value = null;
       currentLoopId.value = null;
