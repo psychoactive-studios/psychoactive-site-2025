@@ -3,6 +3,7 @@ import gsap from 'gsap';
 
 import useLoader from '~/composables/useLoader';
 import useContact from '~/composables/useContact';
+import useAudioManager from '~/composables/useAudioManager';
 
 import ContactNameForm from './ContactNameForm.vue';
 import LinkButton from '../ui/LinkButton.vue';
@@ -23,6 +24,7 @@ const {
 } = useContact();
 
 const { isLoading } = useLoader();
+const { playInteractionSound, playRandomSound } = useAudioManager();
 
 onMounted(() => {
   const dotsLeft = dotsRef.value.querySelector('.contact-form__dots .dot-left');
@@ -60,6 +62,7 @@ watch(isLoading, (newVal) => {
 });
 
 function enterAnimation() {
+  playInteractionSound('contact-load', 400);
   const circlePath1 = '.contact__media_circle-wrapper .circle .circle-path-1';
   const circlePath2 = '.contact__media_circle-wrapper .circle .circle-path-2';
   const circleDots = '.contact__media_circle-wrapper .circle .circle-dots';
@@ -188,7 +191,9 @@ function enterAnimation() {
       <span class="dot-right" />
     </div>
 
-    <ButtonOutline class="contact-back-button">Back</ButtonOutline>
+    <ButtonOutline class="contact-back-button" @click="playRandomSound('click')"
+      >Back</ButtonOutline
+    >
 
     <div class="contact-form__content">
       <div ref="previousSectionRef" class="contact-form__previous">
@@ -206,6 +211,7 @@ function enterAnimation() {
             class="contact-form__action_button"
             size="small"
             data-index="0"
+            @mouseenter="playRandomSound('text-hover')"
             @click="handleTestClick"
           >
             start a project
@@ -214,6 +220,7 @@ function enterAnimation() {
             class="contact-form__action_button"
             size="small"
             data-index="1"
+            @mouseenter="playRandomSound('text-hover')"
             @click="handleTestClick"
           >
             Join the team
@@ -222,6 +229,7 @@ function enterAnimation() {
             class="contact-form__action_button"
             size="small"
             data-index="2"
+            @mouseenter="playRandomSound('text-hover')"
             @click="handleTestClick"
           >
             Contacts

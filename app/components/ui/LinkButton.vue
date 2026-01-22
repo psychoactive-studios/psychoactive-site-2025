@@ -26,6 +26,7 @@ defineProps({
 });
 
 const talkButtonHoverHandler = () => {
+  // const buttonType = props.mode === 'light' ? 'dark' : 'light';
   playInteractionSound('menu-hover-close', 50);
   const el = letsTalkButtonRef.value?.querySelector(
     '.link-button__visible-text'

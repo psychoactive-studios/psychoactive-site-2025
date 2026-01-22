@@ -111,7 +111,6 @@ onUnmounted(() => {
 watch(isLoading, (newVal) => {
   if (!newVal) {
     enterAnimation();
-    playInteractionSound('work-load');
   }
 });
 
@@ -151,6 +150,8 @@ definePageMeta({
 });
 
 function enterAnimation(el) {
+  playInteractionSound('work-load');
+
   const layoutElements = gsap.utils.toArray([
     '#header-logo',
     '#header-navigation-button',

@@ -109,6 +109,8 @@ definePageMeta({
 });
 
 function enterAnimation(el) {
+  playInteractionSound('about-load');
+
   const layoutElements = gsap.utils.toArray([
     '#header-logo',
     '#header-navigation-button',
@@ -238,10 +240,20 @@ function footerTextAnimationInit() {
             >
               <img src="/img/icon-x.svg" alt="" />
             </a>
-            <a href="#" aria-label="Share on Facebook">
+            <a
+              href="#"
+              aria-label="Share on Facebook"
+              @mouseenter="() => playInteractionSound('share-hover')"
+              @click="() => playRandomSound('click')"
+            >
               <img src="/img/icon-f.svg" alt="" />
             </a>
-            <a href="#" aria-label="Share on Facebook">
+            <a
+              href="#"
+              aria-label="Share on Facebook"
+              @mouseenter="() => playInteractionSound('share-hover')"
+              @click="() => playRandomSound('click')"
+            >
               <img src="/img/icon-in.svg" alt="" />
             </a>
           </div>
