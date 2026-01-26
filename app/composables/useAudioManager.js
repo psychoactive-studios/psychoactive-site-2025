@@ -1,4 +1,5 @@
 import useLoader from '~/composables/useLoader';
+import { useMediaQuery } from '@vueuse/core';
 import { Howl } from 'howler';
 import { ref } from 'vue';
 
@@ -17,7 +18,7 @@ const fileList = [
   '/sound/temp/accordion-open.wav',
   '/sound/temp/accordion-close.wav',
   '/sound/temp/home-hover.wav',
-  '/sound/temp/home-hover-new.wav',
+  '/sound/temp/home-hover-latest.wav',
   '/sound/temp/talk-btn-hover.wav',
   '/sound/temp/ai-hover.wav',
   '/sound/temp/text-hover-short.wav',
@@ -58,20 +59,27 @@ const sounds = {};
 const isMuted = ref(false);
 const isSoundApproved = ref(false);
 const lastPlayedIndices = new Map();
-const currentLoopId = ref(null);
+const loopTimer = ref(null);
+const fadeTimer = ref(null);
 const currentLoopSound = ref(null);
+const currentLoopId = ref(null);
+const currentLoopStartTime = ref(0);
 
 const { addResourceToLoad, resourceLoaded } = useLoader();
 
-addResourceToLoad(fileList.length);
-
 export default function () {
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   function loadSounds() {
-    fileList.forEach((file) => {
-      if (sounds[file]) return;
+    if (isMobile.value) {
+      const frogSound = '/sound/temp/frog-new.wav';
+
+      if (sounds[frogSound]) return;
+
+      addResourceToLoad(1);
 
       const sound = new Howl({
-        src: [file],
+        src: frogSound,
         volume: 1,
         onload: () => {
           resourceLoaded();
@@ -80,12 +88,35 @@ export default function () {
           resourceLoaded();
         },
       });
-      sounds[file] = sound;
-    });
+      sounds[frogSound] = sound;
+    } else {
+      const newSounds = fileList.filter((file) => !sounds[file]);
+
+      if (newSounds.length === 0) return;
+
+      addResourceToLoad(newSounds.length);
+
+      newSounds.forEach((file) => {
+        const sound = new Howl({
+          src: [file],
+          volume: 1,
+          onload: () => {
+            resourceLoaded();
+          },
+          onloaderror: () => {
+            resourceLoaded();
+          },
+        });
+        sounds[file] = sound;
+      });
+    }
   }
 
   function playInteractionSound(name = 'text-hover-short', delay = 0) {
     if (isMuted.value) return;
+
+    const isMetamorphosis = name === 'frog-new';
+    if (isMobile.value && !isMetamorphosis) return;
 
     const fullPath = fileList.find((path) => path.includes(name));
 
@@ -105,7 +136,8 @@ export default function () {
   }
 
   function playRandomSound(name = 'text-hover', delay = 0) {
-    if (isMuted.value) return;
+    if (isMuted.value || isMobile.value) return;
+
     let randomIndexBetweenOneAndFive;
 
     const lastIndex = lastPlayedIndices.get(name);
@@ -136,32 +168,69 @@ export default function () {
   }
 
   function playContinuousSound(name) {
-    if (isMuted.value) return;
+    if (isMuted.value || isMobile.value) return;
 
     const fullPath = fileList.find((path) => path.includes(name));
     if (!fullPath || !sounds[fullPath]) return;
 
     const sound = sounds[fullPath];
-
-    sound.loop(true);
-    const id = sound.play();
+    sound.loop(false);
 
     currentLoopSound.value = sound;
-    currentLoopId.value = id;
+
+    const loopDuration = 1250;
+    const crossfadeTime = 20;
+    const masterFadeIn = 300;
+    let isFirstPlay = true;
+
+    const playTick = () => {
+      currentLoopStartTime.value = Date.now();
+      const id = sound.play();
+      currentLoopId.value = id;
+
+      sound.volume(0, id);
+      sound.fade(0, 1, isFirstPlay ? masterFadeIn : crossfadeTime, id);
+      isFirstPlay = false;
+
+      if (fadeTimer.value) clearTimeout(fadeTimer.value);
+
+      fadeTimer.value = setTimeout(() => {
+        if (sound.playing(id)) {
+          sound.fade(1, 0, crossfadeTime, id);
+        }
+      }, loopDuration - crossfadeTime);
+
+      loopTimer.value = setTimeout(playTick, loopDuration);
+    };
+
+    playTick();
   }
 
   function stopContinuousSound() {
+    if (loopTimer.value) {
+      clearTimeout(loopTimer.value);
+      loopTimer.value = null;
+    }
+
+    if (fadeTimer.value) {
+      clearTimeout(fadeTimer.value);
+      fadeTimer.value = null;
+    }
+
     if (currentLoopSound.value && currentLoopId.value !== null) {
       const sound = currentLoopSound.value;
       const id = currentLoopId.value;
-      const fadeDuration = 1000;
+      const loopDuration = 1250;
 
-      sound.loop(false, id);
-      sound.fade(sound.volume(id), 0, fadeDuration, id);
+      const now = Date.now();
+      const elapsed = now - currentLoopStartTime.value;
+      let remaining = loopDuration - elapsed;
+      if (remaining < 300) remaining = 300;
 
-      setTimeout(() => {
-        sound.stop(id);
-      }, fadeDuration);
+      const currentVol =
+        typeof sound.volume(id) === 'number' ? sound.volume(id) : 1;
+
+      sound.fade(currentVol, 0, remaining, id);
 
       currentLoopSound.value = null;
       currentLoopId.value = null;

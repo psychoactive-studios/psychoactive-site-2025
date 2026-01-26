@@ -20,7 +20,7 @@ import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen, previewVideoData } = useVideoPlayer();
 const { playInteractionSound } = useAudioManager();
-const { isLoading } = useLoader();
+const { isLoading, isFirstLoad } = useLoader();
 
 const container = ref(null);
 const isPlaying = ref(true);
@@ -44,7 +44,7 @@ onUnmounted(() => {
 watch(isLoading, (newVal) => {
   if (!newVal) {
     heroInitAnimation(ctx, scrollSmoother);
-    playInteractionSound('home-load');
+    if (!isFirstLoad.value) playInteractionSound('home-load');
   }
 });
 
