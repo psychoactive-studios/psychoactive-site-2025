@@ -22,6 +22,11 @@ const {
 const { clickVideoCloseHandler } = useHomeVideoPlayerMobile();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
+const isReady = ref(false);
+
+onMounted(() => {
+  isReady.value = true;
+});
 
 const onSoundChangeHandler = () => {
   isMuted.value = !isMuted.value;
@@ -50,7 +55,7 @@ const onLogoHoverHandler = (e) => {
   if (mainLogoRef.value && e.type === 'mouseenter') {
     mainLogoRef.value.animationInstance.loop = true;
     mainLogoRef.value.animationInstance.play();
-    playContinuousSound('home-hover-new');
+    playContinuousSound('home-hover-latest');
   }
   if (mainLogoRef.value && e.type === 'mouseleave') {
     mainLogoRef.value.animationInstance.loop = false;
@@ -78,6 +83,7 @@ const onLogoHoverHandler = (e) => {
     </NuxtLink>
     <HeaderNavigationButton />
     <SoundButton
+      v-if="isReady && !isMobile"
       id="header-sound-button"
       class="header__sound-button"
       :muted="isMuted"

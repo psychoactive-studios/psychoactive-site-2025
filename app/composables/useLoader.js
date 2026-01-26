@@ -36,6 +36,12 @@ export default function useLoader() {
 
   function stopLoading() {
     isLoading.value = false;
+
+    if (isFirstLoad.value) {
+      setTimeout(() => {
+        isFirstLoad.value = false;
+      }, 100);
+    }
   }
 
   // watch(loadedResources, (val) => {
