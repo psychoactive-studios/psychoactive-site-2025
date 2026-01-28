@@ -132,7 +132,7 @@ defineProps({
 
       <!-- CTA Component -->
       <div v-else-if="block.__component === 'shared.cta'" class="cta">
-        <LetsTalkDots mode="light" :text="block.buttonText" />
+        <LetsTalkDots mode="light" :text="block.buttonText" :scale="1.2" />
       </div>
 
       <!-- Media Grid Component -->

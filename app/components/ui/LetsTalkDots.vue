@@ -58,7 +58,9 @@ let lastY = 0;
 const lastMousePosition = { x: 0, y: 0 };
 
 // Constants
-const opacity = { base: 0.4, active: 1 };
+const baseOpacity = props.mode === 'light' ? 0.15 : 0.3;
+const activeOpacity = props.mode === 'light' ? 0.7 : 1;
+const opacity = { base: baseOpacity, active: activeOpacity };
 let threshold = 70; // Will be calculated as 25% of canvas width
 const speedThreshold = 150;
 let shockRadius = 150; // Will be calculated based on canvas width
@@ -178,10 +180,10 @@ function buildGrid() {
     dotSize = 4;
     dotGap = 8;
   } else if (width < 1600) {
-    dotSize = 6;
-    dotGap = 10;
+    dotSize = 4;
+    dotGap = 12;
   } else {
-    dotSize = 8;
+    dotSize = 6;
     dotGap = 16;
   }
 
