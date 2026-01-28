@@ -1,11 +1,15 @@
 <script setup>
+import { usePointer } from '@vueuse/core';
+import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 
 const { playInteractionSound } = useAudioManager();
+const { x, y } = usePointer();
 
 // const letsTalkButtonRef = ref(null);
 const isOpen = ref(true);
 const isMuted = ref(true);
+const isCursorVisible = ref(false);
 
 // const handleHoverEffect = () => {
 //   const el = letsTalkButtonRef.value;
@@ -64,6 +68,44 @@ const isMuted = ref(true);
 //   });
 //   isOpen.value = !isOpen.value;
 // };
+
+const handlemouseEnter = () => {
+  gsap.killTweensOf('#click-cursor');
+  isMuted.value = false;
+  isCursorVisible.value = true;
+  playInteractionSound('accordion-close');
+  gsap
+    .timeline()
+    .set('#click-cursor', { x: x.value + 8, y: y.value + 8 })
+    .to('#click-cursor', {
+      scale: 1,
+      duration: 0.3,
+      ease: 'power3.out',
+    });
+};
+
+const handlemouseLeave = () => {
+  isMuted.value = true;
+  gsap.to('#click-cursor', {
+    scale: 0,
+    duration: 0.3,
+    ease: 'power3.in',
+    overwrite: true,
+    onComplete: () => {
+      isCursorVisible.value = false;
+    },
+  });
+};
+
+watch([isCursorVisible, x, y], (newVal) => {
+  if (newVal[0]) {
+    gsap.to('#click-cursor', {
+      x: newVal[1] + 8,
+      y: newVal[2] + 8,
+      duration: 0.1,
+    });
+  }
+});
 </script>
 <template>
   <div class="metamorphosis">
@@ -84,10 +126,8 @@ const isMuted = ref(true);
         <div class="container">
           <div
             class="metamorphosis__title"
-            @mouseenter="
-              ((isMuted = false), playInteractionSound('accordion-close'))
-            "
-            @mouseleave="() => (isMuted = true)"
+            @mouseenter="handlemouseEnter"
+            @mouseleave="handlemouseLeave"
             @click="() => playInteractionSound('frog-new')"
           >
             <div class="metamorphosis__title_media">
