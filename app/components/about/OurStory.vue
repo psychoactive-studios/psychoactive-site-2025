@@ -106,7 +106,7 @@ onUnmounted(() => {
       </div>
     </div>
     <div class="our-story__grid">
-      <div class="our-story__text body-large--mobile">
+      <div class="our-story__text body--mobile">
         <p>
           Psychoactive was founded in 2018 by Andrew Hillstead, born from his
           Master’s research which explored how technology could be used to
@@ -246,7 +246,14 @@ onUnmounted(() => {
       // line-height: 140%;
     }
     p {
-      margin-bottom: 1em;
+      margin-bottom: 1.5em;
+    }
+    p:first-child {
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 7%;
+      }
     }
     p:last-child {
       margin-bottom: 0;
