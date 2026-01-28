@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import ServicesAccordion from '../ui/ServicesAccordion.vue';
 import { SplitText } from 'gsap/SplitText';
 import LetsTalkScene from '../ui/LetsTalkScene.vue';
+import LetsTalkSceneGL from '../ui/LetsTalkSceneGL.vue';
 
 defineProps({
   data: {
@@ -78,12 +79,13 @@ const handleToggle = (index) => {
       <ServicesAccordion
         ref="accordionRef"
         :list="data"
+        :prevent-closing-all="true"
         @toggle="handleToggle"
       />
     </div>
     <div class="our-services__media">
       <!-- <img src="/img/test-webflow-our-services.jpg" alt="Our Services Image" /> -->
-      <LetsTalkScene
+      <LetsTalkSceneGL
         ref="sceneRef"
         class="our-services__media_scene"
         :auto-play="false"
@@ -107,6 +109,7 @@ const handleToggle = (index) => {
 .our-services {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-items: center;
   gap: getRem(24);
   width: 100%;
   @include respond(mobile) {
@@ -129,10 +132,12 @@ const handleToggle = (index) => {
     }
   }
   &__media {
-    aspect-ratio: 1.31;
+    aspect-ratio: 1;
     // border-radius: getRem(10);
-    overflow: hidden;
+    // overflow: hidden;
     // background-color: $color-foreground;
+    min-width: 0;
+    width: 100%;
     @include respond(mobile) {
       order: 1;
     }

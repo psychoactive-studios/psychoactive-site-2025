@@ -23,6 +23,10 @@ const props = defineProps({
     type: Function,
     default: null,
   },
+  preventClosingAll: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const activeIndices = ref([]);
@@ -40,12 +44,14 @@ if (props.defaultOpen !== null) {
 const toggle = (index) => {
   if (props.multiple) {
     if (activeIndices.value.includes(index)) {
+      if (props.preventClosingAll && activeIndices.value.length === 1) return;
       activeIndices.value = activeIndices.value.filter((i) => i !== index);
     } else {
       activeIndices.value.push(index);
     }
   } else {
     if (activeIndices.value.includes(index)) {
+      if (props.preventClosingAll) return;
       activeIndices.value = [];
     } else {
       activeIndices.value = [index];
