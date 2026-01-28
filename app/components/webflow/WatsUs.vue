@@ -22,9 +22,9 @@ onMounted(async () => {
     gsap.utils.toArray([
       containerRef.value.querySelector('h2'),
       containerRef.value.querySelectorAll('.accordion__title'),
-      containerRef.value.querySelectorAll(
-        '.what-sets-us__show-more button > span'
-      ),
+      // containerRef.value.querySelectorAll(
+      //   '.what-sets-us__show-more button > span'
+      // ),
     ]),
     {
       type: 'words,chars',
@@ -79,45 +79,45 @@ onMounted(async () => {
           ease: 'power3.inOut',
         },
         'secotndPart+=0.2'
-      )
-      .from(
-        '.what-sets-us__show-more',
-        {
-          scaleX: 0,
-          duration: 0.6,
-          ease: 'power3.inOut',
-        },
-        '-=0.8'
-      )
-      .to('.what-sets-us__show-more .char-center', {
-        duration: 3,
-        scrambleText: {
-          text: '{original}',
-          chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
-          tweenLength: false,
-        },
-      })
-      .from(
-        '.what-sets-us__show-more .char-center',
-        {
-          opacity: 0,
-          duration: 0.01,
-          stagger: {
-            amount: 1,
-            from: 'random',
-          },
-        },
-        '<'
-      )
-      .from(
-        '.what-sets-us__show-more_dots span',
-        {
-          opacity: 0,
-          duration: 0.4,
-          stagger: 0.1,
-        },
-        '<+=0.3'
       );
+    // .from(
+    //   '.what-sets-us__show-more',
+    //   {
+    //     scaleX: 0,
+    //     duration: 0.6,
+    //     ease: 'power3.inOut',
+    //   },
+    //   '-=0.8'
+    // )
+    // .to('.what-sets-us__show-more .char-center', {
+    //   duration: 3,
+    //   scrambleText: {
+    //     text: '{original}',
+    //     chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+    //     tweenLength: false,
+    //   },
+    // })
+    // .from(
+    //   '.what-sets-us__show-more .char-center',
+    //   {
+    //     opacity: 0,
+    //     duration: 0.01,
+    //     stagger: {
+    //       amount: 1,
+    //       from: 'random',
+    //     },
+    //   },
+    //   '<'
+    // )
+    // .from(
+    //   '.what-sets-us__show-more_dots span',
+    //   {
+    //     opacity: 0,
+    //     duration: 0.4,
+    //     stagger: 0.1,
+    //   },
+    //   '<+=0.3'
+    // );
 
     containerRef.value
       .querySelectorAll('.accordion__title')
