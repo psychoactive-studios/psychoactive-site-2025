@@ -2,7 +2,6 @@
 import gsap from 'gsap';
 import ServicesAccordion from '../ui/ServicesAccordion.vue';
 import { SplitText } from 'gsap/SplitText';
-import LetsTalkScene from '../ui/LetsTalkScene.vue';
 import LetsTalkSceneGL from '../ui/LetsTalkSceneGL.vue';
 
 defineProps({
@@ -96,6 +95,7 @@ const handleToggle = (index) => {
           '/img/webflow/icon_04.svg',
           '/img/webflow/icon_05.svg',
         ]"
+        :scale="1.2"
       />
     </div>
   </div>

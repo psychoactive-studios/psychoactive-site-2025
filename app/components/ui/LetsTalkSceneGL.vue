@@ -22,6 +22,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  scale: {
+    type: Number,
+    default: 1,
+  },
 });
 
 gsap.registerPlugin(ScrollTrigger);
@@ -77,10 +81,10 @@ let lastY = 0;
 const lastMousePosition = { x: 0, y: 0 };
 
 // Constants
-const opacity = { base: 0.6, active: 1 };
-const threshold = 100;
+const opacity = { base: 0.4, active: 1 };
+let threshold = 100;
 const speedThreshold = 150;
-const shockRadius = 200;
+let shockRadius = 200;
 const shockPower = 3;
 const maxSpeed = 5000;
 
@@ -199,7 +203,7 @@ function initWebGL() {
   gl = canvasRef.value.getContext('webgl', {
     alpha: true,
     antialias: true,
-    premultipliedAlpha: false,
+    premultipliedAlpha: true,
   });
 
   if (!gl) {
@@ -261,8 +265,15 @@ function buildGrid() {
   const contW = rect.width;
   const contH = rect.height;
 
-  const cols = Math.floor((contW + dotGap) / (dotSize + dotGap));
-  const rows = Math.floor((contH + dotGap) / (dotSize + dotGap));
+  // Calculate usable area for dots (original size before scale)
+  const usableW = contW / props.scale;
+  const usableH = contH / props.scale;
+
+  threshold = usableW * 0.14;
+  shockRadius = usableW * 0.35;
+
+  const cols = Math.floor((usableW + dotGap) / (dotSize + dotGap));
+  const rows = Math.floor((usableH + dotGap) / (dotSize + dotGap));
   dotCount = cols * rows;
 
   const totalGridWidth = cols * dotSize + (cols - 1) * dotGap;
@@ -416,6 +427,9 @@ function updateShapeVisibility(animate = true) {
   const contW = rect.width;
   const contH = rect.height;
 
+  const usableW = contW / props.scale;
+  const usableH = contH / props.scale;
+
   // Create temporary 2D canvas for path testing
   const tempCanvas = document.createElement('canvas');
   tempCanvas.width = 1;
@@ -437,8 +451,8 @@ function updateShapeVisibility(animate = true) {
       const vbW = data.viewBox[2];
       const vbH = data.viewBox[3];
 
-      const scaleX = contW / vbW;
-      const scaleY = contH / vbH;
+      const scaleX = usableW / vbW;
+      const scaleY = usableH / vbH;
       svgScale = Math.min(scaleX, scaleY) * 0.9;
 
       const drawW = vbW * svgScale;
@@ -778,7 +792,12 @@ function render() {
   gl.clear(gl.COLOR_BUFFER_BIT);
 
   gl.enable(gl.BLEND);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+  gl.blendFuncSeparate(
+    gl.SRC_ALPHA,
+    gl.ONE_MINUS_SRC_ALPHA,
+    gl.ONE,
+    gl.ONE_MINUS_SRC_ALPHA
+  );
 
   gl.useProgram(program);
 
@@ -911,7 +930,11 @@ onUnmounted(() => {
     ]"
   >
     <div class="dots-wrap">
-      <canvas ref="canvasRef" class="dots-canvas" />
+      <canvas
+        ref="canvasRef"
+        class="dots-canvas"
+        :style="{ transform: `scale(${scale})` }"
+      />
     </div>
   </section>
 </template>
