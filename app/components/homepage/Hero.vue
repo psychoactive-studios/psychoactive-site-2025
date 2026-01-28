@@ -380,7 +380,8 @@ const onScrollDownHandler = () => {
           }
           &__label {
             width: auto;
-            height: clamp(36px, 2.5vw, 48px);
+            // height: clamp(36px, 2.5vw, 48px);
+            height: 48px;
             margin-left: auto;
             pointer-events: all;
           }
