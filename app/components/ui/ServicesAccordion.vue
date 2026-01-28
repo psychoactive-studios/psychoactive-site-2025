@@ -24,6 +24,10 @@ const props = defineProps({
     type: Function,
     default: null,
   },
+  preventClosingAll: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const activeIndices = ref([]);
@@ -44,6 +48,7 @@ const toggle = (index) => {
 
   if (props.multiple) {
     if (activeIndices.value.includes(index)) {
+      if (props.preventClosingAll && activeIndices.value.length === 1) return;
       activeIndices.value = activeIndices.value.filter((i) => i !== index);
       playInteractionSound('accordion-close', 100);
     } else {
@@ -52,6 +57,7 @@ const toggle = (index) => {
     }
   } else {
     if (activeIndices.value.includes(index)) {
+      if (props.preventClosingAll) return;
       activeIndices.value = [];
       playInteractionSound('accordion-close', 100);
     } else {
