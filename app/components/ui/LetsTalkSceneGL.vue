@@ -44,7 +44,9 @@ let dotGap = 6;
 let positionBuffer = null;
 let offsetBuffer = null;
 let basePositions = null; // Float32Array [x, y, x, y, ...]
-let currentPositions = null; // Float32Array for animation offsets [x, y, x, y, ...]
+let currentPositions = null; // Float32Array for final combined offsets [x, y, x, y, ...]
+let animationOffsets = null; // Float32Array for morph animation offsets
+let interactionOffsets = null; // Float32Array for mouse interaction offsets
 let startPositions = null; // Float32Array for animation start positions
 let targetPositions = null; // Float32Array for target offsets
 let visibilityBuffer = null;
@@ -56,7 +58,6 @@ let opacities = null; // Float32Array for mouse proximity
 let velocities = null; // Float32Array for physics
 
 // Animation state
-let animationProgress = 1; // 0 to 1
 let isAnimating = false;
 const animationDuration = 1.5; // seconds
 let animationStartTime = 0;
@@ -76,7 +77,7 @@ let lastY = 0;
 const lastMousePosition = { x: 0, y: 0 };
 
 // Constants
-const opacity = { base: 0.5, active: 1 };
+const opacity = { base: 0.6, active: 1 };
 const threshold = 100;
 const speedThreshold = 150;
 const shockRadius = 200;
@@ -272,6 +273,8 @@ function buildGrid() {
   // Initialize arrays
   basePositions = new Float32Array(dotCount * 2);
   currentPositions = new Float32Array(dotCount * 2);
+  animationOffsets = new Float32Array(dotCount * 2);
+  interactionOffsets = new Float32Array(dotCount * 2);
   startPositions = new Float32Array(dotCount * 2);
   targetPositions = new Float32Array(dotCount * 2);
   currentVisibility = new Float32Array(dotCount);
@@ -292,6 +295,10 @@ function buildGrid() {
     basePositions[i * 2 + 1] = baseY;
     currentPositions[i * 2] = 0;
     currentPositions[i * 2 + 1] = 0;
+    animationOffsets[i * 2] = 0;
+    animationOffsets[i * 2 + 1] = 0;
+    interactionOffsets[i * 2] = 0;
+    interactionOffsets[i * 2 + 1] = 0;
     startPositions[i * 2] = 0;
     startPositions[i * 2 + 1] = 0;
     targetPositions[i * 2] = 0;
@@ -454,13 +461,13 @@ function updateShapeVisibility(animate = true) {
 
     const target = insideAny ? 1 : 0;
     const prevVis = currentVisibility[i];
-    const prevX = currentPositions[i * 2];
-    const prevY = currentPositions[i * 2 + 1];
+    const prevAnimX = animationOffsets[i * 2];
+    const prevAnimY = animationOffsets[i * 2 + 1];
 
     // Store start values for animation
     startVisibility[i] = prevVis;
-    startPositions[i * 2] = prevX;
-    startPositions[i * 2 + 1] = prevY;
+    startPositions[i * 2] = prevAnimX;
+    startPositions[i * 2 + 1] = prevAnimY;
 
     targetVisibility[i] = target;
 
@@ -472,8 +479,8 @@ function updateShapeVisibility(animate = true) {
         // Appearing - start from random position
         startPositions[i * 2] = (Math.random() - 0.5) * 200;
         startPositions[i * 2 + 1] = (Math.random() - 0.5) * 200;
-        currentPositions[i * 2] = startPositions[i * 2];
-        currentPositions[i * 2 + 1] = startPositions[i * 2 + 1];
+        animationOffsets[i * 2] = startPositions[i * 2];
+        animationOffsets[i * 2 + 1] = startPositions[i * 2 + 1];
         targetPositions[i * 2] = 0;
         targetPositions[i * 2 + 1] = 0;
       } else if (target === 0 && prevVis >= 0.5) {
@@ -488,8 +495,8 @@ function updateShapeVisibility(animate = true) {
     } else {
       // Instant update
       currentVisibility[i] = target;
-      currentPositions[i * 2] = 0;
-      currentPositions[i * 2 + 1] = 0;
+      animationOffsets[i * 2] = 0;
+      animationOffsets[i * 2 + 1] = 0;
       startPositions[i * 2] = 0;
       startPositions[i * 2 + 1] = 0;
       targetPositions[i * 2] = 0;
@@ -498,7 +505,6 @@ function updateShapeVisibility(animate = true) {
   }
 
   if (animate) {
-    animationProgress = 0;
     animationStartTime = performance.now();
     isAnimating = true;
   }
@@ -545,13 +551,13 @@ function updateAnimation() {
     // Use different easing for appearing vs disappearing
     const t = isAppearing ? elasticOut(dotProgress) : power2In(dotProgress);
 
-    // Interpolate position from start to target
-    currentPositions[i * 2] = lerp(
+    // Interpolate animation offset from start to target
+    animationOffsets[i * 2] = lerp(
       startPositions[i * 2],
       targetPositions[i * 2],
       t
     );
-    currentPositions[i * 2 + 1] = lerp(
+    animationOffsets[i * 2 + 1] = lerp(
       startPositions[i * 2 + 1],
       targetPositions[i * 2 + 1],
       t
@@ -564,8 +570,8 @@ function updateAnimation() {
   if (allDone) {
     // Snap to final values
     for (let i = 0; i < dotCount; i++) {
-      currentPositions[i * 2] = targetPositions[i * 2];
-      currentPositions[i * 2 + 1] = targetPositions[i * 2 + 1];
+      animationOffsets[i * 2] = targetPositions[i * 2];
+      animationOffsets[i * 2 + 1] = targetPositions[i * 2 + 1];
       currentVisibility[i] = targetVisibility[i];
     }
     isAnimating = false;
@@ -615,8 +621,14 @@ function handleMouseMove() {
 
   // Update opacities based on mouse proximity
   for (let i = 0; i < dotCount; i++) {
-    const dotX = basePositions[i * 2] + currentPositions[i * 2];
-    const dotY = basePositions[i * 2 + 1] + currentPositions[i * 2 + 1];
+    const dotX =
+      basePositions[i * 2] +
+      animationOffsets[i * 2] +
+      interactionOffsets[i * 2];
+    const dotY =
+      basePositions[i * 2 + 1] +
+      animationOffsets[i * 2 + 1] +
+      interactionOffsets[i * 2 + 1];
     const dist = Math.hypot(dotX - localX, dotY - localY);
     const t = Math.max(0, 1 - dist / threshold);
     opacities[i] = opacity.base + (opacity.active - opacity.base) * t;
@@ -625,8 +637,8 @@ function handleMouseMove() {
     if (speed > speedThreshold && dist < threshold) {
       const pushX = (dotX - localX + vx * 0.005) * 0.1;
       const pushY = (dotY - localY + vy * 0.005) * 0.1;
-      currentPositions[i * 2] += pushX;
-      currentPositions[i * 2 + 1] += pushY;
+      interactionOffsets[i * 2] += pushX;
+      interactionOffsets[i * 2 + 1] += pushY;
     }
   }
 }
@@ -654,8 +666,14 @@ function handleScroll() {
   lastMousePosition.y = localY;
 
   for (let i = 0; i < dotCount; i++) {
-    const dotX = basePositions[i * 2] + currentPositions[i * 2];
-    const dotY = basePositions[i * 2 + 1] + currentPositions[i * 2 + 1];
+    const dotX =
+      basePositions[i * 2] +
+      animationOffsets[i * 2] +
+      interactionOffsets[i * 2];
+    const dotY =
+      basePositions[i * 2 + 1] +
+      animationOffsets[i * 2 + 1] +
+      interactionOffsets[i * 2 + 1];
     const dist = Math.hypot(dotX - localX, dotY - localY);
     const t = Math.max(0, 1 - dist / threshold);
     opacities[i] = opacity.base + (opacity.active - opacity.base) * t;
@@ -679,8 +697,14 @@ function handleClick(e) {
   const localY = e.pageY - canvasPageY;
 
   for (let i = 0; i < dotCount; i++) {
-    const dotX = basePositions[i * 2] + currentPositions[i * 2];
-    const dotY = basePositions[i * 2 + 1] + currentPositions[i * 2 + 1];
+    const dotX =
+      basePositions[i * 2] +
+      animationOffsets[i * 2] +
+      interactionOffsets[i * 2];
+    const dotY =
+      basePositions[i * 2 + 1] +
+      animationOffsets[i * 2 + 1] +
+      interactionOffsets[i * 2 + 1];
     const dist = Math.hypot(dotX - localX, dotY - localY);
 
     if (dist < shockRadius) {
@@ -696,8 +720,6 @@ function handleClick(e) {
 
 // Spring back animation with physics (velocity + friction)
 function updateSpringBack() {
-  if (isAnimating) return;
-
   const springStrength = 0.01; // Stiffness (Lower = slower return, e.g. 0.01)
   const friction = 0.9; // Damping (Higher = more slippery/floaty, e.g. 0.9)
 
@@ -708,8 +730,8 @@ function updateSpringBack() {
       const idxY = i * 2 + 1;
 
       // Force towards center (0,0) - Hooke's Law: F = -kx
-      const dx = -currentPositions[idxX];
-      const dy = -currentPositions[idxY];
+      const dx = -interactionOffsets[idxX];
+      const dy = -interactionOffsets[idxY];
 
       // Apply spring force to velocity
       velocities[idxX] += dx * springStrength;
@@ -719,9 +741,9 @@ function updateSpringBack() {
       velocities[idxX] *= friction;
       velocities[idxY] *= friction;
 
-      // Apply velocity to position
-      currentPositions[idxX] += velocities[idxX];
-      currentPositions[idxY] += velocities[idxY];
+      // Apply velocity to interaction offset
+      interactionOffsets[idxX] += velocities[idxX];
+      interactionOffsets[idxY] += velocities[idxY];
     } else {
       // Reset velocities for hidden dots
       velocities[i * 2] = 0;
@@ -742,6 +764,14 @@ function render() {
   // Update animations
   updateAnimation();
   updateSpringBack();
+
+  // Combine animation and interaction offsets
+  for (let i = 0; i < dotCount; i++) {
+    currentPositions[i * 2] =
+      animationOffsets[i * 2] + interactionOffsets[i * 2];
+    currentPositions[i * 2 + 1] =
+      animationOffsets[i * 2 + 1] + interactionOffsets[i * 2 + 1];
+  }
 
   // Clear
   gl.clearColor(0, 0, 0, 0);
