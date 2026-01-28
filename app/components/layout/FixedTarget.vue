@@ -186,7 +186,12 @@ section.services {
       position: fixed;
       top: 48px;
       right: 160px;
+      height: 48px;
       pointer-events: all;
+      & > svg {
+        width: auto;
+        height: 48px;
+      }
       :deep(.label-border) {
         border-color: rgba(0, 0, 0, 0.2);
       }
