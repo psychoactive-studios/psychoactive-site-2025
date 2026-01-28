@@ -77,7 +77,6 @@
 @use '~/assets/styles/typography' as *;
 
 .our-ethos {
-  margin-top: -15vh;
   @include respond(mobile) {
     margin-top: 0;
   }
