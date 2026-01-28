@@ -140,17 +140,10 @@ function play() {
 }
 
 function nextShape(index) {
-  console.log(
-    'LetsTalkSceneGL: nextShape called with index:',
-    index,
-    'svgsData.length:',
-    svgsData.value.length
-  );
   isStarted.value = true;
 
   // If no SVGs loaded yet, just mark as started
   if (svgsData.value.length === 0) {
-    console.log('LetsTalkSceneGL: No SVGs loaded yet, waiting...');
     return;
   }
 
@@ -159,7 +152,7 @@ function nextShape(index) {
   } else {
     currentSvgIndex.value = (currentSvgIndex.value + 1) % svgsData.value.length;
   }
-  console.log('LetsTalkSceneGL: currentSvgIndex:', currentSvgIndex.value);
+
   updateShapeVisibility(true);
 }
 
@@ -188,7 +181,6 @@ function createProgram(vertexShader, fragmentShader) {
   gl.linkProgram(prog);
 
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-    console.error('Program link error:', gl.getProgramInfoLog(prog));
     return null;
   }
   return prog;
@@ -196,7 +188,6 @@ function createProgram(vertexShader, fragmentShader) {
 
 function initWebGL() {
   if (!canvasRef.value) {
-    console.log('LetsTalkSceneGL: initWebGL - no canvas ref');
     return false;
   }
 
@@ -225,19 +216,11 @@ function initWebGL() {
   visibilityBuffer = gl.createBuffer();
   opacityBuffer = gl.createBuffer();
 
-  console.log('LetsTalkSceneGL: WebGL initialized successfully');
   return true;
 }
 
 function buildGrid() {
-  console.log('LetsTalkSceneGL: buildGrid called');
   if (!canvasRef.value || !gl) {
-    console.log(
-      'LetsTalkSceneGL: buildGrid early return - canvas:',
-      !!canvasRef.value,
-      'gl:',
-      !!gl
-    );
     return;
   }
 
@@ -340,8 +323,6 @@ async function loadSvgs() {
   const urls = props.svgUrls;
   svgsData.value = [];
 
-  console.log('LetsTalkSceneGL: Loading SVGs:', urls);
-
   for (const url of urls) {
     try {
       const response = await fetch(url);
@@ -379,12 +360,6 @@ async function loadSvgs() {
 
       if (paths.length > 0) {
         svgsData.value.push({ paths, viewBox });
-        console.log(
-          'LetsTalkSceneGL: Loaded SVG:',
-          url,
-          'paths:',
-          paths.length
-        );
       } else {
         console.warn('LetsTalkSceneGL: No paths found in:', url);
       }
@@ -393,32 +368,13 @@ async function loadSvgs() {
     }
   }
 
-  console.log(
-    'LetsTalkSceneGL: Total SVGs loaded:',
-    svgsData.value.length,
-    'isStarted:',
-    isStarted.value
-  );
-
   if (svgsData.value.length > 0 && isStarted.value) {
     updateShapeVisibility(false);
   }
 }
 
 function updateShapeVisibility(animate = true) {
-  console.log(
-    'LetsTalkSceneGL: updateShapeVisibility called, animate:',
-    animate,
-    'dotCount:',
-    dotCount
-  );
   if (!canvasRef.value || !basePositions) {
-    console.log(
-      'LetsTalkSceneGL: updateShapeVisibility early return - canvas:',
-      !!canvasRef.value,
-      'basePositions:',
-      !!basePositions
-    );
     return;
   }
 
