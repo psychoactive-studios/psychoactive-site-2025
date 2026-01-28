@@ -230,7 +230,7 @@ function enterAnimation(el) {
       </div>
       <div class="works__grid">
         <template v-for="work in displayedWorks" :key="work.id">
-          <LetsTalkDots v-if="work.id === 'letstalk'" />
+          <LetsTalkDots v-if="work.id === 'letstalk'" :scale="1.2" />
           <CaseStadyPreview v-else :data="work" />
         </template>
       </div>
