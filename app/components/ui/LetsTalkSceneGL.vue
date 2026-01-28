@@ -85,7 +85,7 @@ const opacity = { base: 0.4, active: 1 };
 let threshold = 100;
 const speedThreshold = 150;
 let shockRadius = 200;
-const shockPower = 3;
+const shockPower = 2;
 const maxSpeed = 5000;
 
 // Shaders
@@ -649,8 +649,8 @@ function handleMouseMove() {
 
     // Push dots on fast mouse movement
     if (speed > speedThreshold && dist < threshold) {
-      const pushX = (dotX - localX + vx * 0.005) * 0.1;
-      const pushY = (dotY - localY + vy * 0.005) * 0.1;
+      const pushX = (dotX - localX + vx * 0.005) * 0.02;
+      const pushY = (dotY - localY + vy * 0.005) * 0.02;
       interactionOffsets[i * 2] += pushX;
       interactionOffsets[i * 2 + 1] += pushY;
     }
