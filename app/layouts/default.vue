@@ -7,10 +7,13 @@ import ModalContainer from '~/components/ui/VideoPlayerModal.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 import useLoader from '~/composables/useLoader';
+import { navigationData } from '~/data/navigationData';
+import useNavigation from '~/composables/useNavigation';
 
 const { loadSounds } = useAudioManager();
 const { previewVideoData } = useVideoPlayer();
 const { addResourceToLoad, resourceLoaded } = useLoader();
+const { showLayoutElementsRequired } = useNavigation();
 
 // Indicate that this component has a resource to load
 addResourceToLoad(1);
@@ -18,14 +21,7 @@ addResourceToLoad(1);
 const route = useRoute();
 
 onMounted(async () => {
-  const layoutElements = gsap.utils.toArray([
-    '#header-logo',
-    '#header-navigation-button',
-    '#header-sound-button',
-  ]);
-  gsap.set(layoutElements, { scale: 0 });
   loadSounds();
-
   const blob = await $fetch('/video/preview_reel.mp4', {
     responseType: 'blob',
   });
@@ -36,7 +32,11 @@ onMounted(async () => {
 watch(
   () => route.fullPath,
   (newPath) => {
-    if (newPath === '/') {
+    const isTargetWithLoader =
+      newPath === '/' ||
+      navigationData?.find((item) => item.url === newPath)?.loader;
+
+    if (isTargetWithLoader) {
       const layoutElements = gsap.utils.toArray([
         '#header-logo',
         '#header-navigation-button',
@@ -47,6 +47,8 @@ watch(
         duration: 0.8,
         ease: 'power4.in',
       });
+    } else {
+      showLayoutElementsRequired.value = true;
     }
   }
 );
@@ -61,3 +63,11 @@ watch(
     </ScrollProvider>
   </div>
 </template>
+
+<style>
+#header-logo,
+#header-navigation-button,
+#header-sound-button {
+  scale: 0;
+}
+</style>

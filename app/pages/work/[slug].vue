@@ -67,9 +67,11 @@ definePageMeta({
     css: false,
     mode: 'out-in',
     onEnter: (_, done) => {
+      const { showLayoutElementsRequired } = useNavigation();
       const { workPageInit } = useWorks();
       done();
       workPageInit();
+      showLayoutElementsRequired.value = false;
     },
     onLeave: (el, done) => {
       const { transitionFromNavigation } = useNavigation();

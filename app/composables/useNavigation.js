@@ -14,6 +14,7 @@ const navigationMobileRef = ref(null);
 
 // Reactive state to track if the transition is from navigation
 const transitionFromNavigation = ref(false);
+const showLayoutElementsRequired = ref(false);
 
 // GSAP timelines for animations
 let openTimelineMain, openTimelineItems, closeTimeline;
@@ -32,10 +33,6 @@ let navBackground,
   letsLines;
 
 export default function () {
-  watch(transitionFromNavigation, (newValue) => {
-    console.log('transitionFromNavigation changed:', newValue);
-  });
-
   function initNavigation() {
     // Select DOM elements for animations
     navBackground = navigationRef?.value?.querySelector(
@@ -302,5 +299,6 @@ export default function () {
     openNavigation,
     closeNavigation,
     transitionFromNavigation,
+    showLayoutElementsRequired,
   };
 }

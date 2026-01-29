@@ -13,8 +13,6 @@ const { navigationRef, initNavigation, transitionFromNavigation } =
 const { playInteractionSound } = useAudioManager();
 const { previewVideoData } = useVideoPlayer();
 
-const route = useRoute();
-
 let talkButtonHoverTween;
 
 onMounted(() => {
@@ -46,32 +44,7 @@ const clickOnLinkHandler = (e) => {
     e.preventDefault();
     return;
   }
-
-  // Determine if the clicked link should trigger the loader animation
-  const isTargetWithLoader =
-    navigationData.find(
-      (item) => item.url === e.currentTarget.getAttribute('href')
-    ).loader && route.path !== e.currentTarget.getAttribute('href');
-
-  console.log('isTargetWithLoader', isTargetWithLoader, route.path);
-
-  // Trigger layout elements animation if needed content-hub
-  if (isTargetWithLoader) {
-    const layoutElements = gsap.utils.toArray([
-      '#header-logo',
-      '#header-navigation-button',
-      '#header-sound-button',
-    ]);
-    gsap.to(layoutElements, {
-      scale: 0,
-      opacity: 0,
-      duration: 0.75,
-      ease: 'power3.out',
-      delay: 0.3,
-    });
-  }
-
-  transitionFromNavigation.value = isTargetWithLoader;
+  transitionFromNavigation.value = true;
   document.querySelector('#header-navigation-button').click();
   // scrollSmoother.value.stop();
 };
