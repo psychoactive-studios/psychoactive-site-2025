@@ -1,9 +1,5 @@
-<script setup>
-import useCursor from '~/composables/useCursor';
-const { cursorRef, cursorText } = useCursor();
-</script>
 <template>
-  <div ref="cursorRef" class="click-cursor">{{ cursorText }}</div>
+  <div id="click-cursor" class="click-cursor">CLICK ME</div>
 </template>
 <style scoped lang="scss">
 @use '~/assets/styles/variables' as *;
