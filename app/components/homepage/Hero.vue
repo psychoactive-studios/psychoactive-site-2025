@@ -88,7 +88,7 @@ const onPlayVideoHandler = (playerContainerRef) => {
   //   .add(() => onPlayerOpen(playerContainerRef));
 };
 
-const onScrollDownHandler = () => {
+const onScrollDownHandler = (e) => {
   playInteractionSound('click-1');
   playInteractionSound('menu-close', 100);
   // Get ScrollTrigger by ID
@@ -96,6 +96,12 @@ const onScrollDownHandler = () => {
   if (!scrollSmoother.value || !trigger) return;
   // Check if scrollSmoother and trigger exist
   const y = trigger?.end;
+  gsap
+    .timeline()
+    .set(e.currentTarget, { pointerEvents: 'none' })
+    .set(e.currentTarget, { clearProps: 'pointerEvents' }, '+=1.5');
+
+  console.log('trigger', trigger);
 
   scrollSmoother.value.scrollTo(y, {
     duration: 1.5,
