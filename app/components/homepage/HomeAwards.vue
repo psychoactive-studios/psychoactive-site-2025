@@ -194,7 +194,7 @@ const onClickHandler = async () => {
     }
     &_item {
       display: grid;
-      grid-template-columns: 0.3fr 1fr 0.3fr;
+      grid-template-columns: 0.3fr 1fr 0.15fr;
       gap: getRem(16);
       padding-top: getRem(20);
       padding-bottom: getRem(20);
@@ -221,7 +221,7 @@ const onClickHandler = async () => {
       }
       .award-details {
         display: grid;
-        grid-template-columns: 1fr 0.3fr;
+        grid-template-columns: 1fr 0.5fr;
         gap: getRem(16);
         @include respond(mobile) {
           grid-template-columns: 1fr;
