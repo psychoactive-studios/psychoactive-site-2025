@@ -18,6 +18,9 @@ const { href } = props;
 onMounted(() => {
   ctx = gsap.context(() => {
     const letsButton = containerRef?.value?.querySelector('.work__cta_button');
+    const letsButtonText = containerRef?.value?.querySelector(
+      '.work__cta_button .link-button__visible-text'
+    );
 
     const letsBlock = gsap.utils.toArray(
       containerRef?.value?.querySelectorAll('.work__cta_navigation')
@@ -60,7 +63,7 @@ onMounted(() => {
       )
       .from(letsLines, { width: '0%', duration: 1, ease: 'power3.inOut' }, '<')
       .to(
-        letsButton,
+        letsButtonText,
         {
           duration: 1,
           ease: 'none',
@@ -130,7 +133,7 @@ onUnmounted(() => {
     }
   }
   &_button {
-    width: 222px;
+    // width: 222px;
     clip-path: inset(0% 35% round 64px);
   }
   &_navigation {
