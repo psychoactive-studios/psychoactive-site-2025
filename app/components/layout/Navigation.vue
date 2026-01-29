@@ -78,9 +78,10 @@ const clickOnLinkHandler = (e) => {
             >
               <LinkWithHover
                 :href="item.url"
+                :data-sup="item.sup || null"
                 @click.capture="clickOnLinkHandler"
-                >{{ item.title }}</LinkWithHover
-              >
+                >{{ item.title }}
+              </LinkWithHover>
               <div class="navigation__item-line">
                 <span class="line" />
               </div>
@@ -219,6 +220,26 @@ const clickOnLinkHandler = (e) => {
     display: flex;
     gap: 1.5vw;
     align-items: center;
+    a[data-sup] {
+      position: relative;
+      margin-right: 24px;
+      &::after {
+        content: attr(data-sup);
+        display: inline-block;
+        font-family: 'RoobertMono';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 100%; /* 16px */
+        text-transform: uppercase;
+        color: $color-background;
+        letter-spacing: 1px;
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 0;
+        opacity: 0.5;
+      }
+    }
     @include respond(mobile) {
       // font-size: getRem(36);
       line-height: 1;

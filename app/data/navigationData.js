@@ -3,5 +3,11 @@ export const navigationData = [
   { id: 'work', title: 'Work', url: '/work', loader: false },
   { id: 'services', title: 'Services', url: '/services', loader: true },
   { id: 'webflow', title: 'Webflow', url: '/webflow', loader: true },
-  { id: 'content', title: 'Content', url: '/content-hub', loader: false },
+  {
+    id: 'content',
+    title: 'Content',
+    url: '/content-hub',
+    loader: false,
+    sup: 'Hub',
+  },
 ];
