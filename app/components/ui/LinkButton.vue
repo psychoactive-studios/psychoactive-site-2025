@@ -25,12 +25,11 @@ defineProps({
   },
 });
 
-const talkButtonHoverHandler = () => {
+const talkButtonHoverHandler = (e) => {
   // const buttonType = props.mode === 'light' ? 'dark' : 'light';
   playInteractionSound('menu-hover-close', 50);
-  const el = letsTalkButtonRef.value?.querySelector(
-    '.link-button__visible-text'
-  );
+
+  const el = e.currentTarget?.querySelector('.link-button__visible-text');
   if (!el || gsap.isTweening(el)) return;
   // Set the width to prevent layout shift
   // const width = el.offsetWidth;
