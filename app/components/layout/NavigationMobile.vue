@@ -262,7 +262,11 @@ onClickOutside(navigationMobileRef, () => {
           :key="item.id"
           class="navigation-mobile__item heading-h2--mobile-menu"
         >
-          <LinkWithHover :href="item.url" @click="onToggleNavigation">
+          <LinkWithHover
+            :href="item.url"
+            :data-sup="item.sup || null"
+            @click="onToggleNavigation"
+          >
             {{ item.title }}
           </LinkWithHover>
           <div class="navigation-mobile__item-line">
@@ -438,6 +442,25 @@ onClickOutside(navigationMobileRef, () => {
     display: flex;
     gap: 1.5vw;
     align-items: center;
+    a[data-sup] {
+      position: relative;
+      &::after {
+        content: attr(data-sup);
+        display: inline-block;
+        font-family: 'RoobertMono';
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 100%;
+        text-transform: uppercase;
+        color: $color-background;
+        letter-spacing: 1px;
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 0;
+        opacity: 0.5;
+      }
+    }
     @include respond(mobile) {
       // font-size: getRem(36);
       line-height: 1;
