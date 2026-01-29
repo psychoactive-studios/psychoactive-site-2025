@@ -52,7 +52,7 @@ watch(isLoading, (newVal) => {
   }
 });
 
-const onClickHandler = () => {
+const onClickHandler = (e) => {
   playInteractionSound('click-1');
   playInteractionSound('menu-close', 100);
   const targetElement = document.querySelector('.webflow__video-reels');
@@ -60,6 +60,11 @@ const onClickHandler = () => {
   const elementHeight = targetElement.getBoundingClientRect().height;
   const windowHeight = window.innerHeight;
   const y = elementY - (windowHeight - elementHeight) / 2;
+
+  gsap
+    .timeline()
+    .set(e.currentTarget, { pointerEvents: 'none' })
+    .set(e.currentTarget, { clearProps: 'pointerEvents' }, '+=1.5');
 
   scrollSmoother.value.scrollTo(y, {
     duration: 1.5,

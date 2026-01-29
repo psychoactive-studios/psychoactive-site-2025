@@ -625,7 +625,8 @@ export const heroScrollAnimation = (ctx, isPlaying) => {
                 duration: 0.01,
               },
               'output-of-elements+=0.15'
-            ) /* ======= Dots arrow part ========= */
+            )
+            /* ======= Dots arrow part ========= */
             .fromTo(
               gsap.utils.toArray([dotsArrowIcon, dotsArrowPlusIcons]),
               { autoAlpha: 1 },
@@ -637,6 +638,7 @@ export const heroScrollAnimation = (ctx, isPlaying) => {
               },
               'output-of-elements'
             )
+            .set(dotsArrowBox, { visibility: 'hidden' })
             /* ======= Canvas part ========= */
             .fromTo(
               canvas,
