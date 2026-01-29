@@ -15,6 +15,7 @@ const { playInteractionSound } = useAudioManager();
 
 const { scrollSmoother } = useScrollSmoother();
 const { isLoading } = useLoader();
+const { showLayoutElementsRequired } = useNavigation();
 
 const { data: articlesData, error } = await useFetch(`/api/articles`, {
   baseURL: config.public.strapiBaseUrl,
@@ -113,7 +114,8 @@ function enterAnimation(el) {
       { scale: 1, opacity: 1, duration: 0.75, ease: 'power3.out' },
       '<+=1'
     )
-    .add(() => scrollSmoother.value.start(), '<');
+    .add(() => scrollSmoother.value.start(), '<')
+    .add(() => (showLayoutElementsRequired.value = false));
 }
 </script>
 <template>

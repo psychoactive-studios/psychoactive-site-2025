@@ -10,6 +10,7 @@ import Footer from '~/components/layout/Footer.vue';
 import useLoader from '~/composables/useLoader';
 import useNavigation from '~/composables/useNavigation';
 import useScrollSmoother from '~/composables/useScrollSmoother';
+import useCursor from '~/composables/useCursor';
 
 import { aboutPageInitAnimation } from '~/utils/animations/about';
 import { leaveAnimation } from '~/utils/animations/transitions';
@@ -46,7 +47,14 @@ definePageMeta({
       }, 50);
     },
     onLeave: (el, done) => {
+      const { cursorRef } = useCursor();
       const { transitionFromNavigation } = useNavigation();
+      gsap.set(cursorRef.value, {
+        scale: 0,
+        duration: 0.3,
+        ease: 'power3.in',
+        overwrite: true,
+      });
       if (transitionFromNavigation.value) {
         gsap
           .timeline()

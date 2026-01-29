@@ -20,6 +20,7 @@ const { playInteractionSound, playRandomSound } = useAudioManager();
 
 const { isLoading } = useLoader();
 const router = useRouter();
+const { showLayoutElementsRequired } = useNavigation();
 
 const footerScrollTextRef = ref(null);
 const articleBodyRef = ref(null);
@@ -163,7 +164,8 @@ function enterAnimation(el) {
       },
       '<'
     )
-    .add(() => scrollSmoother.value.start(), '<');
+    .add(() => scrollSmoother.value.start(), '<')
+    .add(() => (showLayoutElementsRequired.value = false));
 }
 
 function footerTextAnimationInit() {

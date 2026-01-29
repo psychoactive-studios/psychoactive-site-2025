@@ -68,6 +68,7 @@ if (error.value) {
 
 const { isLoading } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
+const { showLayoutElementsRequired } = useNavigation();
 
 const titleRef = ref(null);
 const displayedCount = ref(4);
@@ -120,8 +121,15 @@ definePageMeta({
     css: false,
     mode: 'out-in',
     onEnter: (el, done) => {
-      done();
+      const layoutElements = gsap.utils.toArray([
+        '#header-logo',
+        '#header-navigation-button',
+        '#header-sound-button',
+      ]);
+      // Форсувати видимість елементів
+      gsap.set(layoutElements, { scale: 1, opacity: 1, clearProps: 'all' });
       gsap.set(el, { visibility: 'hidden' });
+      done();
 
       setTimeout(() => {
         scrollSmoother.value.scrollTo(0, {
@@ -205,7 +213,8 @@ function enterAnimation(el) {
       { scale: 1, opacity: 1, duration: 0.75, ease: 'power3.out' },
       '<+=1'
     )
-    .add(() => scrollSmoother.value.start(), '<');
+    .add(() => scrollSmoother.value.start(), '<')
+    .add(() => (showLayoutElementsRequired.value = false));
   // if (isFirstLoad.value) {
   //   tl.from(
   //     layoutElements,

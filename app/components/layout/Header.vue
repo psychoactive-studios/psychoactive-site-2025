@@ -12,7 +12,8 @@ import { useMediaQuery } from '@vueuse/core';
 import gsap from 'gsap';
 
 const mainLogoRef = ref(null);
-const { isOpen, transitionFromNavigation } = useNavigation();
+const { isOpen, transitionFromNavigation, showLayoutElementsRequired } =
+  useNavigation();
 const {
   playInteractionSound,
   playContinuousSound,
@@ -65,7 +66,9 @@ const onLogoHoverHandler = (e) => {
 </script>
 
 <template>
-  <header class="header">
+  <header
+    :class="['header', { 'required-elements': showLayoutElementsRequired }]"
+  >
     <NuxtLink
       to="/"
       class="logo"
@@ -145,7 +148,6 @@ const onLogoHoverHandler = (e) => {
     right: 48px;
     z-index: 100;
     mix-blend-mode: exclusion;
-    transform: scale(0);
     &::after {
       transition: background-color 0.3s ease;
       transition-delay: 0.3s;
@@ -173,6 +175,15 @@ const onLogoHoverHandler = (e) => {
     }
     @include respond(mobile) {
       display: none;
+    }
+  }
+  &.required-elements {
+    #header-logo,
+    #header-navigation-button,
+    #header-sound-button {
+      transform: scale(1) !important;
+      scale: 1 !important;
+      opacity: 1 !important;
     }
   }
 }
