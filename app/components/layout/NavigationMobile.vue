@@ -1,7 +1,5 @@
 <script setup>
 import gsap from 'gsap';
-
-import IconPlus from '~/assets/icons/icon-plus-1.svg';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 import useNavigation from '~/composables/useNavigation';
 import loaderData from '~/assets/lottie/logo-V02.json';

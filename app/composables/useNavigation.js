@@ -32,6 +32,10 @@ let navBackground,
   letsLines;
 
 export default function () {
+  watch(transitionFromNavigation, (newValue) => {
+    console.log('transitionFromNavigation changed:', newValue);
+  });
+
   function initNavigation() {
     // Select DOM elements for animations
     navBackground = navigationRef?.value?.querySelector(

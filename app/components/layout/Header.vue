@@ -145,6 +145,7 @@ const onLogoHoverHandler = (e) => {
     right: 48px;
     z-index: 100;
     mix-blend-mode: exclusion;
+    transform: scale(0);
     &::after {
       transition: background-color 0.3s ease;
       transition-delay: 0.3s;
