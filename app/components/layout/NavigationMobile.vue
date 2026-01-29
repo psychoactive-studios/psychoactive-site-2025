@@ -8,6 +8,7 @@ import loaderData from '~/assets/lottie/logo-V02.json';
 import lottie from 'lottie-web';
 import { onClickOutside } from '@vueuse/core';
 import { navigationData } from '~/data/navigationData';
+import IconMenuDots from '../ui/IconMenuDots.vue';
 
 // Reactive state to track if the navigation is open
 const isOpen = ref(false);
@@ -54,6 +55,18 @@ const onToggleNavigation = () => {
           scale: 1,
           duration: 1.1,
           ease: 'expo.inOut',
+        },
+        'open'
+      )
+      .to(
+        '.navigation-mobile__button .icon-text',
+        {
+          duration: 1,
+          scrambleText: {
+            text: 'CLOSE',
+            chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%=+<>/?',
+            tweenLength: false,
+          },
         },
         'open'
       )
@@ -175,6 +188,18 @@ const onToggleNavigation = () => {
         'open'
       )
       .to(
+        '.navigation-mobile__button .icon-text',
+        {
+          duration: 1,
+          scrambleText: {
+            text: 'MENU',
+            chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%=+<>/?',
+            tweenLength: false,
+          },
+        },
+        'open'
+      )
+      .to(
         '.navigation-mobile__button .icon',
         { rotate: 0, duration: 1, ease: 'expo.inOut' },
         'open'
@@ -206,7 +231,10 @@ onClickOutside(navigationMobileRef, () => {
       @pointerup.prevent="onToggleNavigation"
     >
       <span class="text">psychoactive®</span>
-      <IconPlus class="icon" />
+      <div class="icon-wrapper">
+        <span class="icon-text">MENU</span>
+        <IconMenuDots class="icon" />
+      </div>
     </button>
     <div class="navigation-mobile__background">
       <NuxtLink
@@ -317,6 +345,19 @@ onClickOutside(navigationMobileRef, () => {
     bottom: 0;
     transform-origin: center;
     pointer-events: all;
+    .icon-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      .icon-text {
+        font-family: 'RoobertMono', sans-serif;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 146%; /* 20.44px */
+        text-transform: uppercase;
+      }
+    }
   }
   &__background {
     background-color: #f1f1f1;
