@@ -1,10 +1,11 @@
 <script setup>
-import { usePointer } from '@vueuse/core';
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
+import useCursor from '~/composables/useCursor';
 
 const { playInteractionSound } = useAudioManager();
-const { x, y } = usePointer();
+
+const { pointerX, pointerY, cursorRef, cursorText } = useCursor();
 
 // const letsTalkButtonRef = ref(null);
 const isOpen = ref(true);
@@ -71,13 +72,14 @@ const isCursorVisible = ref(false);
 
 const handlemouseEnter = () => {
   gsap.killTweensOf('#click-cursor');
+  cursorText.value = 'CLICK ME';
   isMuted.value = false;
   isCursorVisible.value = true;
   playInteractionSound('accordion-close');
   gsap
     .timeline()
-    .set('#click-cursor', { x: x.value + 8, y: y.value + 8 })
-    .to('#click-cursor', {
+    .set(cursorRef.value, { x: pointerX.value + 8, y: pointerY.value + 8 })
+    .to(cursorRef.value, {
       scale: 1,
       duration: 0.3,
       ease: 'power3.out',
@@ -86,7 +88,7 @@ const handlemouseEnter = () => {
 
 const handlemouseLeave = () => {
   isMuted.value = true;
-  gsap.to('#click-cursor', {
+  gsap.to(cursorRef.value, {
     scale: 0,
     duration: 0.3,
     ease: 'power3.in',
@@ -97,9 +99,9 @@ const handlemouseLeave = () => {
   });
 };
 
-watch([isCursorVisible, x, y], (newVal) => {
+watch([isCursorVisible, pointerX, pointerY], (newVal) => {
   if (newVal[0]) {
-    gsap.to('#click-cursor', {
+    gsap.to(cursorRef.value, {
       x: newVal[1] + 8,
       y: newVal[2] + 8,
       duration: 0.1,

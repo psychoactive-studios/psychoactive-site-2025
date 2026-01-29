@@ -3,11 +3,18 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 import gsap from 'gsap';
 import BriefOurAIAgent from '~/assets/img/brief-our-AI-agent.svg';
+import useCursor from '~/composables/useCursor';
+import { useClipboard } from '@vueuse/core';
 
 const { playInteractionSound, playRandomSound } = useAudioManager();
+const { pointerX, pointerY, cursorRef, cursorText } = useCursor();
+const { copy } = useClipboard({
+  source: 'hello@psychoactive.co.nz',
+});
 
 let footerBriefTimeline;
 const briefRef = ref(null);
+const isCursorVisible = ref(false);
 
 onMounted(() => {
   const dotsLeft = briefRef.value.querySelector('.brief__title_dots .dot-left');
@@ -55,6 +62,46 @@ const briefMouseLeaveHandler = () => {
   });
   footerBriefTimeline.repeat(0).reverse();
 };
+
+const emailClickHandler = () => {
+  if (gsap.getById('email-copy-cursor'))
+    gsap.getById('email-copy-cursor').kill();
+
+  copy();
+  playRandomSound('click');
+  isCursorVisible.value = true;
+  cursorText.value = 'Copied to clipboard';
+  gsap
+    .timeline({
+      id: 'email-copy-cursor',
+    })
+    .set(cursorRef.value, { x: pointerX.value + 8, y: pointerY.value + 8 })
+    .to(cursorRef.value, {
+      scale: 1,
+      duration: 0.3,
+      ease: 'power3.out',
+    })
+    .to(
+      cursorRef.value,
+      {
+        scale: 0,
+        duration: 0.3,
+        ease: 'power3.out',
+      },
+      '+=3'
+    )
+    .add(() => (isCursorVisible.value = false));
+};
+
+watch([isCursorVisible, pointerX, pointerY], (newVal) => {
+  if (newVal[0]) {
+    gsap.to(cursorRef.value, {
+      x: newVal[1] + 8,
+      y: newVal[2] + 8,
+      duration: 0.1,
+    });
+  }
+});
 </script>
 
 <template>
@@ -90,10 +137,7 @@ const briefMouseLeaveHandler = () => {
       </div>
       <div class="brief__email">
         Or email the old fashioned way:
-        <LinkWithHover
-          href="mailto:hello@psychoactive.co.nz"
-          @click="() => playRandomSound('click')"
-        >
+        <LinkWithHover @click="emailClickHandler">
           hello@psychoactive.co.nz
         </LinkWithHover>
       </div>
@@ -296,9 +340,11 @@ const briefMouseLeaveHandler = () => {
     @include respond(mobile) {
       font-size: getRem(14);
     }
-    a {
+    a,
+    span {
       color: white(100);
       display: inline-block;
+      cursor: pointer;
       @include respond(mobile) {
         margin-top: getRem(8);
         display: block;
