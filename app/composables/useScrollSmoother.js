@@ -37,6 +37,12 @@ export default function () {
     //   this.resize();
     // };
 
+    lenis.scrollTo(0, {
+      immediate: true,
+      lock: true,
+      force: true,
+    });
+
     scrollSmoother.value = lenis;
 
     // Integrate with GSAP ScrollTrigger
