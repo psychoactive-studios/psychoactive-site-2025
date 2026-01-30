@@ -2,7 +2,6 @@
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 import useCursor from '~/composables/useCursor';
-import LinkWithHover from '../ui/LinkWithHover.vue';
 
 const { playInteractionSound } = useAudioManager();
 
@@ -73,7 +72,7 @@ const isCursorVisible = ref(false);
 
 const handlemouseEnter = () => {
   gsap.killTweensOf('#click-cursor');
-  cursorText.value = 'CLICK ME';
+  cursorText.value = 'CLICK for sound';
   isMuted.value = false;
   isCursorVisible.value = true;
   playInteractionSound('accordion-close');
@@ -377,9 +376,9 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
       }
       video {
         position: absolute;
-        inset: -25%;
+        inset: -30%;
         max-width: none;
-        width: 150%;
+        width: 160%;
         translate: 0px 5%;
       }
     }
