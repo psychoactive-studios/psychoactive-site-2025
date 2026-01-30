@@ -11,6 +11,7 @@ import useLoader from '~/composables/useLoader';
 import useAudioManager from '~/composables/useAudioManager';
 import { calculateReadingTime } from '~/utils/comput';
 import { leaveAnimation } from '~/utils/animations/transitions';
+import { useMediaQuery } from '@vueuse/core';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -18,7 +19,7 @@ const config = useRuntimeConfig();
 const { scrollSmoother } = useScrollSmoother();
 const { playInteractionSound, playRandomSound } = useAudioManager();
 
-const { isLoading } = useLoader();
+const { isLoading, isFirstLoad } = useLoader();
 const router = useRouter();
 const { showLayoutElementsRequired } = useNavigation();
 
@@ -111,6 +112,7 @@ definePageMeta({
 
 function enterAnimation(el) {
   playInteractionSound('about-load');
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const layoutElements = gsap.utils.toArray([
     '#header-logo',
@@ -120,7 +122,7 @@ function enterAnimation(el) {
 
   if (el) gsap.set(el, { visibility: 'visible' });
 
-  gsap
+  const timeline = gsap
     .timeline()
     .from('.article__hero_image--bg', {
       y: '100vh',
@@ -163,7 +165,24 @@ function enterAnimation(el) {
         ease: 'power3.out',
       },
       '<'
-    )
+    );
+  if (isMobile && isFirstLoad.value) {
+    timeline.fromTo(
+      document.querySelector('.navigation-mobile'),
+      {
+        y: 64,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power3.out',
+      },
+      '<+=0.5'
+    );
+  }
+  timeline
     .add(() => scrollSmoother.value.start(), '<')
     .add(() => (showLayoutElementsRequired.value = false));
 }

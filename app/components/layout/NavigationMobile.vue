@@ -221,6 +221,7 @@ onClickOutside(navigationMobileRef, () => {
 
 <template>
   <div
+    id="header-navigation-mobile"
     ref="navigationMobileRef"
     :class="['navigation-mobile', { opened: isOpen }]"
   >

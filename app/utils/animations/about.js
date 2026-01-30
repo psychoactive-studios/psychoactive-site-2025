@@ -66,9 +66,10 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
           /* ======= Layout elements part mobile ========= */
           tl.fromTo(
             document.querySelector('.navigation-mobile'),
-            { yPercent: 200 },
+            { yPercent: 200, opacity: 0 },
             {
               yPercent: 0,
+              opacity: 1,
               duration: 1,
               ease: 'power3.out',
             },

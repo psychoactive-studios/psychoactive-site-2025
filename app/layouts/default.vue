@@ -40,8 +40,10 @@ watch(
       const layoutElements = gsap.utils.toArray([
         '#header-logo',
         '#header-navigation-button',
+        '#header-navigation-mobile',
         '#header-sound-button',
       ]);
+
       gsap.to(layoutElements, {
         opacity: 0,
         duration: 0.8,
