@@ -176,7 +176,7 @@ const onClickHandler = async () => {
     margin-top: 85px;
     &_header {
       display: grid;
-      grid-template-columns: 0.3fr 1fr 0.3fr;
+      grid-template-columns: 0.3fr 1fr 0.15fr;
       gap: getRem(16);
       color: white(50);
       border-bottom: 1px solid white(10);
@@ -186,7 +186,7 @@ const onClickHandler = async () => {
       }
       &--center {
         display: grid;
-        grid-template-columns: 1fr 0.3fr;
+        grid-template-columns: 1fr 0.5fr;
       }
       & > div:last-child {
         text-align: right;
@@ -222,6 +222,7 @@ const onClickHandler = async () => {
       .award-details {
         display: grid;
         grid-template-columns: 1fr 0.5fr;
+        align-items: center;
         gap: getRem(16);
         @include respond(mobile) {
           grid-template-columns: 1fr;
