@@ -1,6 +1,6 @@
 import { usePointer } from '@vueuse/core';
 
-const { x: pointerX, y: pointerY } = usePointer();
+const { x: pointerX, y: pointerY, pointerType } = usePointer();
 
 const cursorRef = ref();
 const cursorText = ref('');
@@ -11,5 +11,6 @@ export default function useCursor() {
     pointerY,
     cursorRef,
     cursorText,
+    pointerType,
   };
 }
