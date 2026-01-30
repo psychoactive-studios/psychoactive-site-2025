@@ -16,10 +16,6 @@ const { previewVideoData } = useVideoPlayer();
 let talkButtonHoverTween;
 
 onMounted(() => {
-  SplitText.create('#main-navigation .navigation__item a', {
-    type: 'chars',
-    charsClass: 'char-center',
-  });
   initNavigation();
   talkButtonHoverTween = gsap.to('.navigation__talk_button', {
     duration: 0.5,
