@@ -2,6 +2,7 @@
 import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 import { useMediaQuery } from '@vueuse/core';
 import { teamData } from '~/data/teamData.js';
+import BulgeImage from '../ui/BulgeImage.vue';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 </script>
@@ -14,9 +15,16 @@ const isMobile = useMediaQuery('(max-width: 768px)');
           :key="person.name"
           class="team__list_item"
         >
-          <div class="item__img">
+          <BulgeImage
+            ref="imageRef"
+            class="item__img"
+            :src="person.photo"
+            :cursor="false"
+            :strength="0.3"
+          />
+          <!-- <div class="item__img">
             <img :src="person.photo" alt="" />
-          </div>
+          </div> -->
           <h3 class="item__name">{{ person.name }}</h3>
           <div class="item__role">{{ person.role }}</div>
         </li>
@@ -83,6 +91,7 @@ const isMobile = useMediaQuery('(max-width: 768px)');
   &__list_item {
     display: flex;
     flex-direction: column;
+    min-width: 0;
     .item__img {
       aspect-ratio: 0.69;
       border-radius: 10px;
