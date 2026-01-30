@@ -10,16 +10,16 @@ export const leaveAnimation = (el, done) => {
     .timeline()
     .set(el, { transformOrigin: `center ${originCenter}px` })
     .to(el, {
-      scale: 0,
+      scale: 0.6,
       duration: 1,
-      ease: 'power4.in',
+      ease: 'power2.in',
     })
     .to(
       el,
       {
         opacity: 0,
         duration: 0.8,
-        ease: 'power4.in',
+        ease: 'power2.in',
       },
       '<'
     )

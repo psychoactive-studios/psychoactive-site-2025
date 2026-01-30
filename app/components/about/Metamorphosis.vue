@@ -2,6 +2,7 @@
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 import useCursor from '~/composables/useCursor';
+import LinkWithHover from '../ui/LinkWithHover.vue';
 
 const { playInteractionSound } = useAudioManager();
 
@@ -120,8 +121,19 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
           loop
           playsinline
         />
-        <h3 class="metamorphosis__video_title subheader">created by ARTiST</h3>
       </div>
+      <!-- <div class="metamorphosis__video_title">
+        <h3 class="subheader">
+          Psychoactive Metamorphosis Tessellation. Alexandre Bannwarth (2020).
+          Custom frame-by-frame animation. Commissioned by Psychoactive.
+        </h3>
+        <div class="metamorphosis__video_title-link">
+          <div class="line"></div>
+          <LinkWithHover href="/">
+            Read more: How we designed the Psychoactive brand identity
+          </LinkWithHover>
+        </div>
+      </div> -->
     </div>
     <div :class="['metamorphosis__wrapper', { open: isOpen }]">
       <div class="metamorphosis__content">
@@ -318,6 +330,7 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
     grid-template-rows: 0fr;
     transition: grid-template-rows 0.5s cubic-bezier(0.66, 0, 0.34, 1);
     overflow: hidden;
+    margin-top: 160px;
     &.open {
       grid-template-rows: 1fr;
     }
@@ -649,15 +662,12 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
   }
   &__video {
     position: relative;
-    margin-bottom: 160px;
     @include respond(mobile) {
       margin-top: 60px;
     }
     &_title {
-      position: absolute;
-      right: 0;
-      top: calc(100% + 24px);
-      color: white(80);
+      margin-top: 24px;
+      text-align: center;
     }
     video {
       width: 100%;
