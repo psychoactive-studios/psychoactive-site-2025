@@ -1,5 +1,6 @@
 // composables/useNavigation.js
 import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
 import { ref } from 'vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
@@ -32,8 +33,56 @@ let navBackground,
   letsButton,
   letsLines;
 
+// Store SplitText instances for cleanup
+let splitTextInstances = [];
+
 export default function () {
+  /**
+   * Cleans up all animations and GSAP instances to prevent memory leaks
+   */
+  function cleanupNavigation() {
+    // Kill all timelines
+    if (openTimelineMain) {
+      openTimelineMain.kill();
+      openTimelineMain = null;
+    }
+    if (openTimelineItems) {
+      openTimelineItems.kill();
+      openTimelineItems = null;
+    }
+    if (closeTimeline) {
+      closeTimeline.kill();
+      closeTimeline = null;
+    }
+
+    // Revert all SplitText instances
+    splitTextInstances.forEach((instance) => {
+      if (instance && instance.revert) {
+        instance.revert();
+      }
+    });
+    splitTextInstances = [];
+
+    console.log('Navigation animations cleaned up');
+  }
+
   function initNavigation() {
+    // Clean up existing animations before reinitializing
+    cleanupNavigation();
+
+    const splitTextInstance = SplitText.create(
+      '#main-navigation .navigation__item a',
+      {
+        type: 'chars',
+        charsClass: 'char-center',
+      }
+    );
+    splitTextInstances.push(splitTextInstance);
+    SplitText.create('#main-navigation .navigation__item a', {
+      type: 'chars',
+      charsClass: 'char-center',
+    });
+
     // Select DOM elements for animations
     navBackground = navigationRef?.value?.querySelector(
       '.navigation__background'
@@ -257,7 +306,11 @@ export default function () {
         // Enable scrolling
         enableScroll();
         isOpen.value = false;
-      }, 'init+=0.2');
+      }, 'init+=0.2')
+      .add(() => {
+        // Clean up and reinitialize navigation to prevent memory leaks
+        initNavigation();
+      });
   }
 
   /**
