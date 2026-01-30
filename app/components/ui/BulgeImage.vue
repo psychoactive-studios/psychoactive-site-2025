@@ -9,7 +9,9 @@
     @touchmove="handleMouseMove"
   >
     <canvas v-if="shouldActivate" ref="canvasEl" />
-    <div v-if="shouldActivate" ref="cursorRef" class="cursor">Open</div>
+    <div v-if="shouldActivate && cursor" ref="cursorRef" class="cursor">
+      Open
+    </div>
   </div>
 </template>
 
@@ -44,6 +46,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  cursor: {
+    type: Boolean,
+    default: true,
+  },
+  strength: {
+    type: Number,
+    default: 0.7,
+  },
 });
 
 const rootEl = ref(null);
@@ -62,7 +72,7 @@ let scrollTriggerInstance = null;
 
 const settings = {
   animationDuration: 0.5,
-  maxStrength: 0.7,
+  maxStrength: props.strength,
   lerpFactor: 0.05, // Interpolation factor
 };
 
@@ -133,8 +143,8 @@ const handleMouseEnter = () => {
   lastMousePosition.x = eventX.value;
   lastMousePosition.y = eventY.value;
 
-  if (pointerType.value !== 'mouse') {
-    return; // Skip cursor animation for non-mouse pointers
+  if (pointerType.value !== 'mouse' || !props.cursor) {
+    return; // Skip cursor animation for non-mouse pointers or when cursor is disabled
   }
 
   // Calculate mouse position relative to the element (0 to 1)
@@ -156,8 +166,8 @@ const handleMouseEnter = () => {
 const handleMouseLeave = () => {
   if (!shouldActivate.value) return;
   isHovered.value = false;
-  if (pointerType.value !== 'mouse') {
-    return; // Skip cursor animation for non-mouse pointers
+  if (pointerType.value !== 'mouse' || !props.cursor) {
+    return; // Skip cursor animation for non-mouse pointers or when cursor is disabled
   }
   gsap.to(cursorRef.value, {
     scale: 0,
@@ -176,13 +186,17 @@ const handleClick = (href) => {
   const target = document.querySelector('.work-transition');
   const duration = 1.5;
 
-  gsap
-    .timeline()
-    .to(cursorRef.value, {
+  const timeline = gsap.timeline();
+
+  if (props.cursor && cursorRef.value) {
+    timeline.to(cursorRef.value, {
       scale: 0,
       duration: 0.5,
       ease: 'power4.inOut',
-    })
+    });
+  }
+
+  timeline
     .to(
       targetStrength,
       {
@@ -190,7 +204,7 @@ const handleClick = (href) => {
         duration: duration,
         ease: 'power4.inOut',
       },
-      '<'
+      props.cursor && cursorRef.value ? '<' : undefined
     )
     .to(
       rootEl.value,
@@ -345,13 +359,15 @@ function handleMouseMove() {
   const relativeX = eventX.value - rect.left;
   const relativeY = eventY.value - rect.top;
 
-  gsap.to(cursorRef.value, {
-    x: relativeX + 16,
-    y: relativeY + 16,
-    duration: 0.5,
-    ease: 'power2.out',
-    overwrite: 'auto',
-  });
+  if (props.cursor && cursorRef.value) {
+    gsap.to(cursorRef.value, {
+      x: relativeX + 16,
+      y: relativeY + 16,
+      duration: 0.5,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    });
+  }
 
   mouse.x = gsap.utils.clamp(0, 1, relativeX / rect.width);
   mouse.y = gsap.utils.clamp(0, 1, 1.0 - relativeY / rect.height);
@@ -367,13 +383,15 @@ function handleScroll() {
   const relativeY = lastMousePosition.y - rect.top;
 
   // Update cursor position
-  gsap.to(cursorRef.value, {
-    x: relativeX + 16,
-    y: relativeY + 16,
-    duration: 0.3,
-    ease: 'power2.out',
-    overwrite: 'auto',
-  });
+  if (props.cursor && cursorRef.value) {
+    gsap.to(cursorRef.value, {
+      x: relativeX + 16,
+      y: relativeY + 16,
+      duration: 0.3,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    });
+  }
 
   // Update mouse coordinates for shader
   mouse.x = gsap.utils.clamp(0, 1, relativeX / rect.width);
