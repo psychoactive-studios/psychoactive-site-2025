@@ -7,6 +7,7 @@ import NewsCard from '~/components/ui/NewsCard.vue';
 import useLoader from '~/composables/useLoader';
 import useAudioManager from '~/composables/useAudioManager';
 import { leaveAnimation } from '~/utils/animations/transitions';
+import { useMediaQuery } from '@vueuse/core';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -14,7 +15,7 @@ const config = useRuntimeConfig();
 const { playInteractionSound } = useAudioManager();
 
 const { scrollSmoother } = useScrollSmoother();
-const { isLoading } = useLoader();
+const { isLoading, isFirstLoad } = useLoader();
 const { showLayoutElementsRequired } = useNavigation();
 
 const { data: articlesData, error } = await useFetch(`/api/articles`, {
@@ -82,6 +83,7 @@ definePageMeta({
 
 function enterAnimation(el) {
   playInteractionSound('content-load');
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const layoutElements = gsap.utils.toArray([
     '#header-logo',
@@ -91,7 +93,7 @@ function enterAnimation(el) {
 
   if (el) gsap.set(el, { visibility: 'visible' });
 
-  gsap
+  const timeline = gsap
     .timeline()
     .from('.content-hub .content-hub__title', {
       y: 400,
@@ -113,7 +115,24 @@ function enterAnimation(el) {
       layoutElements,
       { scale: 1, opacity: 1, duration: 0.75, ease: 'power3.out' },
       '<+=1'
-    )
+    );
+  if (isMobile && isFirstLoad.value) {
+    timeline.fromTo(
+      document.querySelector('.navigation-mobile'),
+      {
+        y: 64,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power3.out',
+      },
+      '<+=0.5'
+    );
+  }
+  timeline
     .add(() => scrollSmoother.value.start(), '<')
     .add(() => (showLayoutElementsRequired.value = false));
 }

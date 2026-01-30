@@ -11,6 +11,7 @@ import { leaveAnimation } from '~/utils/animations/transitions';
 import Footer from '~/components/layout/Footer.vue';
 import useNavigation from '~/composables/useNavigation';
 import useAudioManager from '~/composables/useAudioManager';
+import { useMediaQuery } from '@vueuse/core';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -66,7 +67,7 @@ if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
 
-const { isLoading } = useLoader();
+const { isLoading, isFirstLoad } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
 const { showLayoutElementsRequired } = useNavigation();
 
@@ -159,6 +160,7 @@ definePageMeta({
 
 function enterAnimation(el) {
   playInteractionSound('work-load');
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const layoutElements = gsap.utils.toArray([
     '#header-logo',
@@ -168,7 +170,7 @@ function enterAnimation(el) {
 
   if (el) gsap.set(el, { visibility: 'visible' });
 
-  gsap
+  const timeline = gsap
     .timeline()
     .from('.works .works__title', {
       y: 400,
@@ -212,7 +214,24 @@ function enterAnimation(el) {
       layoutElements,
       { scale: 1, opacity: 1, duration: 0.75, ease: 'power3.out' },
       '<+=1'
-    )
+    );
+  if (isMobile && isFirstLoad.value) {
+    timeline.fromTo(
+      document.querySelector('.navigation-mobile'),
+      {
+        y: 64,
+        opacity: 0,
+      },
+      {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power3.out',
+      },
+      '<+=0.5'
+    );
+  }
+  timeline
     .add(() => scrollSmoother.value.start(), '<')
     .add(() => (showLayoutElementsRequired.value = false));
   // if (isFirstLoad.value) {
