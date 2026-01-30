@@ -1,9 +1,14 @@
 <script setup>
 import useCursor from '~/composables/useCursor';
-const { cursorRef, cursorText } = useCursor();
+const { cursorRef, cursorText, pointerType } = useCursor();
 </script>
 <template>
-  <div ref="cursorRef" class="click-cursor">{{ cursorText }}</div>
+  <div
+    ref="cursorRef"
+    :class="['click-cursor', { touch: pointerType === 'touch' }]"
+  >
+    {{ cursorText }}
+  </div>
 </template>
 <style scoped lang="scss">
 @use '~/assets/styles/variables' as *;
@@ -28,5 +33,8 @@ const { cursorRef, cursorText } = useCursor();
   will-change: transform;
   transform: scale(0);
   pointer-events: none;
+  &.touch {
+    display: none;
+  }
 }
 </style>

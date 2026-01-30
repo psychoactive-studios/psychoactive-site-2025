@@ -2,6 +2,7 @@
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 import useCursor from '~/composables/useCursor';
+import LinkWithHover from '../ui/LinkWithHover.vue';
 
 const { playInteractionSound } = useAudioManager();
 
@@ -121,18 +122,19 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
           playsinline
         />
       </div>
-      <!-- <div class="metamorphosis__video_title">
+      <div class="metamorphosis__video_title">
         <h3 class="subheader">
           Psychoactive Metamorphosis Tessellation. Alexandre Bannwarth (2020).
           Custom frame-by-frame animation. Commissioned by Psychoactive.
         </h3>
         <div class="metamorphosis__video_title-link">
-          <div class="line"></div>
-          <LinkWithHover href="/">
+          <div class="line" />
+          <LinkWithHover href="/" class="subheader">
             Read more: How we designed the Psychoactive brand identity
           </LinkWithHover>
+          <div class="line" />
         </div>
-      </div> -->
+      </div>
     </div>
     <div :class="['metamorphosis__wrapper', { open: isOpen }]">
       <div class="metamorphosis__content">
@@ -330,6 +332,9 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
     transition: grid-template-rows 0.5s cubic-bezier(0.66, 0, 0.34, 1);
     overflow: hidden;
     margin-top: 160px;
+    @include respond(mobile) {
+      margin-top: 60px;
+    }
     &.open {
       grid-template-rows: 1fr;
     }
@@ -667,6 +672,55 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
     &_title {
       margin-top: 24px;
       text-align: center;
+      text-transform: uppercase;
+      color: white(50);
+      position: relative;
+      z-index: 1;
+      @include respond(mobile) {
+        text-align: left;
+      }
+      &-link {
+        display: flex;
+        gap: 40px;
+        justify-content: center;
+        align-items: center;
+        margin-top: 8px;
+        @include respond(mobile) {
+          margin-top: 16px;
+        }
+        a {
+          display: inline-block;
+          color: $color-foreground;
+          white-space: inherit;
+        }
+        .line {
+          flex-grow: 1;
+          height: 1px;
+          background-color: white(10);
+          position: relative;
+          @include respond(tablet) {
+            display: none;
+          }
+          &::before,
+          &::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            width: 7px;
+            height: 7px;
+            background-color: $color-dots;
+            border-radius: 50%;
+          }
+          &::before {
+            top: -3px;
+            left: -3px;
+          }
+          &::after {
+            top: -3px;
+            right: -4px;
+          }
+        }
+      }
     }
     video {
       width: 100%;
