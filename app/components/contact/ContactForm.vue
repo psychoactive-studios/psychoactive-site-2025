@@ -24,7 +24,12 @@ const {
 } = useContact();
 
 const { isLoading } = useLoader();
-const { playInteractionSound, playRandomSound } = useAudioManager();
+const {
+  playInteractionSound,
+  playRandomSound,
+  isSoundApproved,
+  hasInteracted,
+} = useAudioManager();
 
 onMounted(() => {
   const dotsLeft = dotsRef.value.querySelector('.contact-form__dots .dot-left');
@@ -62,7 +67,8 @@ watch(isLoading, (newVal) => {
 });
 
 function enterAnimation() {
-  playInteractionSound('contact-load', 400);
+  if (isSoundApproved.value && hasInteracted.value)
+    playInteractionSound('contact-load', 400);
   const circlePath1 = '.contact__media_circle-wrapper .circle .circle-path-1';
   const circlePath2 = '.contact__media_circle-wrapper .circle .circle-path-2';
   const circleDots = '.contact__media_circle-wrapper .circle .circle-dots';

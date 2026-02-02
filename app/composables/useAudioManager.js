@@ -4,6 +4,7 @@ import { Howl } from 'howler';
 import { ref } from 'vue';
 
 const fileList = [
+  '/sound/warp-hover.wav',
   '/sound/logo-hover.wav',
   '/sound/frog-new.wav',
   '/sound/slider-2.wav',
@@ -57,6 +58,7 @@ const fileList = [
 const sounds = {};
 const isMuted = ref(false);
 const isSoundApproved = ref(false);
+const hasInteracted = ref(false);
 const lastPlayedIndices = new Map();
 const loopTimer = ref(null);
 const fadeTimer = ref(null);
@@ -181,8 +183,9 @@ export default function () {
     sound.loop(false);
 
     currentLoopSound.value = sound;
+    const isLogoSound = name === 'logo-hover';
 
-    const loopDuration = 1250;
+    const loopDuration = isLogoSound ? 1250 : sound.duration() * 1000;
     const crossfadeTime = 20;
     const masterFadeIn = 300;
     let isFirstPlay = true;
@@ -249,5 +252,6 @@ export default function () {
     playContinuousSound,
     stopContinuousSound,
     isSoundApproved,
+    hasInteracted,
   };
 }

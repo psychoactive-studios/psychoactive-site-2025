@@ -4,8 +4,7 @@ import useLoader from '~/composables/useLoader';
 import useAudioManager from '~/composables/useAudioManager';
 
 const { isLoading } = useLoader();
-const { playInteractionSound } = useAudioManager();
-const hasInteracted = ref(false);
+const { playInteractionSound, hasInteracted } = useAudioManager();
 
 onBeforeMount(() => {
   // Check if we are on the client

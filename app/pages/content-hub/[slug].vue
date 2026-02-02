@@ -17,7 +17,7 @@ import { useMediaQuery } from '@vueuse/core';
 const config = useRuntimeConfig();
 
 const { scrollSmoother } = useScrollSmoother();
-const { playInteractionSound, playRandomSound } = useAudioManager();
+const { playInteractionSound, playRandomSound, isSoundApproved, hasInteracted } = useAudioManager();
 
 const { isLoading, isFirstLoad } = useLoader();
 const router = useRouter();
@@ -111,7 +111,8 @@ definePageMeta({
 });
 
 function enterAnimation(el) {
-  playInteractionSound('about-load');
+  if (isSoundApproved.value && hasInteracted.value)
+    playInteractionSound('about-load');
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const layoutElements = gsap.utils.toArray([
