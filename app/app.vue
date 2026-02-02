@@ -29,14 +29,7 @@ const handleGlobalClick = (event) => {
     'a, button, input, textarea, select, [role="button"]'
   );
 
-  if (!isInteractive) {
-    console.log('Background click - Playing wake-up sound');
-    playInteractionSound('sound-btn-hover-1');
-  } else {
-    console.log(
-      'Interactive click - Skipping wake-up sound (Button handles it)'
-    );
-  }
+  if (!isInteractive) playInteractionSound('sound-btn-hover-1');
 
   hasInteracted.value = true;
   window.removeEventListener('click', handleGlobalClick);
