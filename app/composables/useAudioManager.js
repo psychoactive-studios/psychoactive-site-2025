@@ -127,10 +127,15 @@ export default function () {
     const sound = sounds[fullPath];
 
     if (sound) {
-      setTimeout(() => {
+      if (delay === 0) {
         sound.play();
-        console.log(`Playing sound: ${name} with delay: ${delay}ms`);
-      }, delay);
+        console.log(`Playing sound (sync): ${name}`);
+      } else {
+        setTimeout(() => {
+          sound.play();
+          console.log(`Playing sound (async): ${name} with delay: ${delay}ms`);
+        }, delay);
+      }
     }
   }
 
