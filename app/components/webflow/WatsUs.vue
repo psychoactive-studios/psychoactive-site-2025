@@ -50,7 +50,7 @@ onMounted(async () => {
         'firstPart'
       )
       .from(
-        '.accordion__header_icon svg',
+        '.accordion__header_icon',
         {
           scale: 0,
           duration: 0.6,
