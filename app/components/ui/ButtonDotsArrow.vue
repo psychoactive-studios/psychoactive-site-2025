@@ -14,6 +14,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+  mode: {
+    type: String,
+    default: 'light',
+  },
 });
 
 const handleClickSound = () => {
@@ -29,6 +33,7 @@ const { playInteractionSound, playRandomSound } = useAudioManager();
     :class="[
       'dots-arrow',
       `dots-arrow--${direction}`,
+      `dots-arrow--${mode}`,
       { 'dots-arrow--rounded': rounded },
       { 'dots-arrow--bordered': bordered },
     ]"
@@ -55,7 +60,8 @@ const { playInteractionSound, playRandomSound } = useAudioManager();
   transition:
     opacity $transition-easeOutCubic,
     background-color $transition-easeOutCubic,
-    border-color $transition-easeOutCubic;
+    border-color $transition-easeOutCubic,
+    transform $transition-easeOutCubic;
   &:disabled {
     opacity: 0.4;
     pointer-events: none;
@@ -63,7 +69,6 @@ const { playInteractionSound, playRandomSound } = useAudioManager();
   &:hover {
     border-color: transparent;
     &.dots-arrow--bordered {
-      border: 1px solid white(20);
       background-color: rgbaColor($color-foreground, 20);
     }
     .dots-arrow__icon {
@@ -102,6 +107,22 @@ const { playInteractionSound, playRandomSound } = useAudioManager();
       &--3 {
         bottom: 1px;
         left: calc(50% - 3px);
+      }
+    }
+  }
+  &--dark {
+    .dots-arrow__icon {
+      &_dot {
+        background-color: #101012;
+      }
+    }
+    &.dots-arrow--bordered {
+      border: 1px solid rgbaColor(#101012, 20);
+    }
+    &:hover {
+      border-color: transparent;
+      &.dots-arrow--bordered {
+        background-color: rgbaColor(#101012, 20);
       }
     }
   }
