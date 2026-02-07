@@ -58,24 +58,18 @@ const talkButtonHoverHandler = () => {
   min-width: 96px;
   height: 48px;
   border-radius: 48px;
-  background: transparent;
+  background-color: transparent;
   color: white(80);
   font-size: 16px;
   cursor: pointer;
   position: relative;
-  &::before {
-    content: '';
-    display: block;
-    position: absolute;
-    inset: 0;
-    border: 1px solid white(20);
-    border-radius: 48px;
-    transition: scale 0.3s cubic-bezier(0.33, 1, 0.68, 1);
-  }
+  border: 1px solid white(20);
+  transition:
+    background-color 0.3s cubic-bezier(0.33, 1, 0.68, 1),
+    border-color 0.3s cubic-bezier(0.33, 1, 0.68, 1);
   &:hover {
-    &::before {
-      scale: 0.85;
-    }
+    background-color: white(20);
+    border-color: transparent;
   }
   &__hidden-text {
     visibility: hidden;
