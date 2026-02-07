@@ -1,6 +1,7 @@
 <script setup>
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
+import ButtonDotsArrow from './ButtonDotsArrow.vue';
 
 const props = defineProps({
   list: {
@@ -124,41 +125,19 @@ const leave = (el, done) => {
             </div>
           </div>
         </Transition>
-        <span class="accordion__header_icon">
-          <svg
-            width="48"
-            height="48"
-            viewBox="0 0 48 48"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect
-              x="0.5"
-              y="0.5"
-              width="47"
-              height="47"
-              rx="23.5"
-              stroke="#101012"
-              stroke-opacity="0.1"
-            />
-            <path
-              d="M24 29C25.6569 29 27 30.3431 27 32C27 33.6569 25.6569 35 24 35C22.3431 35 21 33.6569 21 32C21 30.3431 22.3431 29 24 29Z"
-              fill="black"
-            />
-            <path
-              d="M16 21C17.6569 21 19 22.3431 19 24C19 25.6569 17.6569 27 16 27C14.3431 27 13 25.6569 13 24C13 22.3431 14.3431 21 16 21Z"
-              fill="black"
-            />
-            <path
-              d="M32 21C33.6569 21 35 22.3431 35 24C35 25.6569 33.6569 27 32 27C30.3431 27 29 25.6569 29 24C29 22.3431 30.3431 21 32 21Z"
-              fill="black"
-            />
-            <path
-              d="M24 13C25.6569 13 27 14.3431 27 16C27 17.6569 25.6569 19 24 19C22.3431 19 21 17.6569 21 16C21 14.3431 22.3431 13 24 13Z"
-              fill="black"
-            />
-          </svg>
-        </span>
+        <!-- <ButtonDotsArrow
+          class="accordion__header_icon"
+          mode="dark"
+          :rounded="true"
+          :bordered="true"
+        /> -->
+        <div class="accordion__header_icon">
+          <div class="dots">
+            <span class="dot dot--1" />
+            <span class="dot dot--2" />
+            <span class="dot dot--3" />
+          </div>
+        </div>
         <div class="accordion__header_border">
           <div class="accordion__header_overlay" />
         </div>
@@ -184,7 +163,9 @@ const leave = (el, done) => {
   &__item {
     &--active {
       .accordion__header_icon {
-        transform: rotate(45deg);
+        .dots {
+          transform: rotate(180deg);
+        }
       }
       .accordion__header_overlay {
         opacity: 1;
@@ -207,15 +188,46 @@ const leave = (el, done) => {
       flex-direction: column;
     }
     &_icon {
+      @include flex-center;
       width: 48px;
       height: 48px;
       flex-shrink: 0;
-      transition: transform 0.5s ease-in-out;
       position: absolute;
       right: max(0.833333vw, 16px);
       top: 0;
+      border: 1px solid rgbaColor($color-background, 20);
+      border-radius: 50%;
+      transition:
+        border-color $transition-easeOutCubic,
+        background-color $transition-easeOutCubic;
       @include respond(mobile) {
         right: 0;
+      }
+      .dots {
+        width: 16px;
+        height: 16px;
+        position: relative;
+        transition: transform 0.3s ease-in-out;
+        .dot {
+          display: block;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          position: absolute;
+          background-color: $color-background;
+          &--1 {
+            top: 2px;
+            left: 1px;
+          }
+          &--2 {
+            top: 2px;
+            right: 1px;
+          }
+          &--3 {
+            bottom: 1px;
+            left: calc(50% - 3px);
+          }
+        }
       }
     }
     &_overlay {
@@ -261,16 +273,17 @@ const leave = (el, done) => {
     }
     &:hover {
       .accordion__header_icon {
-        svg path {
-          animation: flicker-effect-3 0.5s forwards;
-          &:nth-child(2) {
-            animation-delay: 0.2s;
+        border-color: transparent;
+        background-color: rgbaColor(#101012, 20);
+        .dots {
+          :deep(.dot--1) {
+            animation: flicker-effect-1 0.6s ease;
           }
-          &:nth-child(3) {
-            animation-delay: 0.3s;
+          :deep(.dot--2) {
+            animation: flicker-effect-3 0.6s ease;
           }
-          &:nth-child(4) {
-            animation-delay: 0.4s;
+          :deep(.dot--3) {
+            animation: flicker-effect-5 0.6s ease;
           }
         }
       }
