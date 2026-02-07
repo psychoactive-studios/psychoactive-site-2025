@@ -51,12 +51,21 @@ const { playInteractionSound, playRandomSound } = useAudioManager();
   @include flex-center;
   width: 48px;
   height: 48px;
-  transition: opacity 0.3s ease;
+  background-color: transparent;
+  transition:
+    opacity $transition-easeOutCubic,
+    background-color $transition-easeOutCubic,
+    border-color $transition-easeOutCubic;
   &:disabled {
     opacity: 0.4;
     pointer-events: none;
   }
   &:hover {
+    border-color: transparent;
+    &.dots-arrow--bordered {
+      border: 1px solid white(20);
+      background-color: rgbaColor($color-foreground, 20);
+    }
     .dots-arrow__icon {
       &_dot {
         &--1 {
@@ -97,7 +106,7 @@ const { playInteractionSound, playRandomSound } = useAudioManager();
     }
   }
   &--bordered {
-    border: 1px solid white(10);
+    border: 1px solid white(20);
   }
   &--rounded {
     border-radius: 50%;
