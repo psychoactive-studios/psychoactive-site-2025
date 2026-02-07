@@ -11,11 +11,6 @@ const mouseEnterHandler = () => {
   if (labelRef.value) {
     gsap
       .timeline()
-      .to(labelRef.value.querySelector('.label-background'), {
-        duration: 0.3,
-        opacity: 1,
-        // ease: 'power3.inOut',
-      })
       .set(
         labelRef.value.querySelectorAll('.char'),
         {
@@ -39,21 +34,10 @@ const mouseEnterHandler = () => {
   }
 };
 
-const mouseLeaveHandler = () => {
-  if (labelRef.value) {
-    gsap.to(labelRef.value.querySelector('.label-background'), {
-      duration: 0.3,
-      opacity: 0,
-      // ease: 'power3.inOut',
-    });
-  }
-};
-
 const clickSoundHandle = () => {
   playInteractionSound('click-1');
   playInteractionSound('menu-close', 150);
 };
-
 </script>
 <template>
   <svg
@@ -65,7 +49,6 @@ const clickSoundHandle = () => {
     xmlns="http://www.w3.org/2000/svg"
     class="label-border"
     @mouseenter="mouseEnterHandler"
-    @mouseleave="mouseLeaveHandler"
     @click="clickSoundHandle"
   >
     <rect class="label-background" width="272" height="47" rx="23.5" />
@@ -152,11 +135,19 @@ const clickSoundHandle = () => {
 .label-border {
   border: 1px solid white(20);
   border-radius: getRem(24);
+  transition: border-color $transition-easeOutCubic;
+  &:hover {
+    border-color: transparent;
+    .label-background {
+      opacity: 1;
+    }
+  }
 }
 .label-background {
   transform-origin: center;
   opacity: 0;
   fill: white(10);
+  transition: opacity $transition-easeOutCubic;
 }
 .char {
   fill: $color-foreground;

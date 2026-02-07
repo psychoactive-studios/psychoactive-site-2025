@@ -46,6 +46,7 @@ const talkButtonHoverHandler = () => {
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/variables' as *;
 .button {
   @include flex-center;
   font-family: 'RoobertMono';
@@ -65,8 +66,8 @@ const talkButtonHoverHandler = () => {
   position: relative;
   border: 1px solid white(20);
   transition:
-    background-color 0.3s cubic-bezier(0.33, 1, 0.68, 1),
-    border-color 0.3s cubic-bezier(0.33, 1, 0.68, 1);
+    background-color $transition-easeOutCubic,
+    border-color $transition-easeOutCubic;
   &:hover {
     background-color: white(20);
     border-color: transparent;

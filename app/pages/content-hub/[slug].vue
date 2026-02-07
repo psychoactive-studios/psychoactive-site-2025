@@ -647,8 +647,13 @@ function footerTextAnimationInit() {
         height: 48px;
         border-radius: 50%;
         border: 1px solid rgbaColor($color-background, 20);
+        background-color: transparent;
+        transition:
+          background-color $transition-easeOutCubic,
+          border-color $transition-easeOutCubic;
         &:hover {
-          animation: flicker-effect-1 0.5s forwards;
+          background-color: rgbaColor($color-background, 20);
+          border: transparent;
         }
       }
     }
