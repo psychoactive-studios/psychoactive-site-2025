@@ -314,7 +314,6 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
 }
 
 .metamorphosis {
-  padding-bottom: 160px;
   @include respond(portrait) {
     padding-top: 60px;
     padding-bottom: 0;
