@@ -45,7 +45,7 @@ watch(
       ]);
 
       gsap.to(layoutElements, {
-        opacity: 0,
+        scale: 0,
         duration: 0.8,
         ease: 'power4.in',
       });
