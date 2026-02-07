@@ -1,7 +1,6 @@
 <script setup>
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
-import ButtonDotsArrow from './ButtonDotsArrow.vue';
 
 const props = defineProps({
   list: {
