@@ -55,7 +55,7 @@ watch(isLoading, (newVal) => {
 const onClickHandler = (e) => {
   playInteractionSound('click-1');
   playInteractionSound('menu-close', 100);
-  const targetElement = document.querySelector('.webflow__video-reels');
+  const targetElement = document.querySelector('.webflow__onscroll-text');
   const elementY = targetElement.getBoundingClientRect().top;
   const elementHeight = targetElement.getBoundingClientRect().height;
   const windowHeight = window.innerHeight;
