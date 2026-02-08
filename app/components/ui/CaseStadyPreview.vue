@@ -1,9 +1,11 @@
 <script setup>
 import BulgeImage from '@/components/ui/BulgeImage.vue';
 import useAudioManager from '~/composables/useAudioManager';
+import useHeader from '~/composables/useHeader';
 import gsap from 'gsap';
 
 const { playInteractionSound, playRandomSound } = useAudioManager();
+const { mode } = useHeader();
 const containerRef = ref(null);
 const titleRef = ref(null);
 const imageRef = ref(null);
@@ -50,6 +52,7 @@ const handleClick = () => {
     gsap.set(containerRef.value, { zIndex: 2 });
     imageRef.value.handleClick(`/work/${slug}`);
   }
+  mode.value = 'light';
 };
 </script>
 
