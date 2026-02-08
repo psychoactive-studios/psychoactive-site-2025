@@ -4,10 +4,23 @@ import useAudioManager from '~/composables/useAudioManager';
 
 const { playInteractionSound } = useAudioManager();
 const buttonRef = ref(null);
+const NuxtLink = resolveComponent('NuxtLink');
+
+defineProps({
+  mode: {
+    type: String,
+    default: 'light',
+  },
+  href: {
+    type: String,
+    default: null,
+  },
+});
 
 const talkButtonHoverHandler = () => {
   playInteractionSound();
-  const el = buttonRef.value?.querySelector('.button__visible-text');
+  const container = buttonRef.value?.$el || buttonRef.value;
+  const el = container?.querySelector('.button__visible-text');
   if (!el || gsap.isTweening(el)) return;
   // Set the width to prevent layout shift
   // const width = el.offsetWidth;
@@ -28,10 +41,12 @@ const talkButtonHoverHandler = () => {
 };
 </script>
 <template>
-  <button
+  <component
+    :is="href ? NuxtLink : 'button'"
     ref="buttonRef"
-    class="button"
-    type="button"
+    :to="href"
+    :type="!href ? 'button' : undefined"
+    :class="['button', `button--${mode}`]"
     @mouseenter="talkButtonHoverHandler"
     @focus="talkButtonHoverHandler"
   >
@@ -41,7 +56,7 @@ const talkButtonHoverHandler = () => {
     <span class="button__visible-text">
       <slot />
     </span>
-  </button>
+  </component>
 </template>
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
@@ -78,6 +93,22 @@ const talkButtonHoverHandler = () => {
   &__visible-text {
     position: absolute;
     z-index: 1;
+  }
+  &--light {
+    color: $color-foreground;
+    border-color: $color-foreground(20);
+    &:hover {
+      background-color: $color-foreground(20);
+      border-color: transparent;
+    }
+  }
+  &--dark {
+    color: $color-background;
+    border-color: rgbaColor(#101012, 20);
+    &:hover {
+      background-color: rgbaColor(#101012, 20);
+      border-color: transparent;
+    }
   }
 }
 </style>

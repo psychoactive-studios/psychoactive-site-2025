@@ -7,6 +7,7 @@ import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
 import WorkScrollProgressCircle from '../ui/WorkScrollProgressCircle.vue';
 import useWorks from '~/composables/useWorks.js';
 import ClickCursor from '../ui/ClickCursor.vue';
+import BackButton from '../work/BackButton.vue';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 const { currentTransitionImage } = useWorks();
@@ -17,6 +18,7 @@ const { currentTransitionImage } = useWorks();
       <img v-if="currentTransitionImage" :src="currentTransitionImage" />
     </section>
     <WorkScrollProgressCircle />
+    <BackButton />
 
     <ClickCursor />
 
