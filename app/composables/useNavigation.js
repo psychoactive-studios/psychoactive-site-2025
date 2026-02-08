@@ -313,7 +313,9 @@ export default function () {
       )
       .add(() => {
         // Enable scrolling
-        enableScroll();
+        console.log('transitionFromNavigation', transitionFromNavigation.value);
+
+        if (!transitionFromNavigation.value) enableScroll();
         isOpen.value = false;
       }, 'init+=0.2')
       .add(() => {

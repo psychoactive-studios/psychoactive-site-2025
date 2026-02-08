@@ -4,10 +4,13 @@ import gsap from 'gsap';
 import Brief from '~/components/layout/Brief.vue';
 import useNavigation from '~/composables/useNavigation';
 import useLoader from '~/composables/useLoader';
+import useHeader from '~/composables/useHeader';
+import useWorks from '~/composables/useWorks';
 
 import { useMediaQuery } from '@vueuse/core';
 import LinkButton from '~/components/ui/LinkButton.vue';
 import WorkArticleContent from '~/components/work/WorkArticleContent.vue';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -15,7 +18,9 @@ const config = useRuntimeConfig();
 const isMobile = useMediaQuery('(max-width: 768px)');
 const { isLoading } = useLoader();
 const { workPageInit, footerTextAnimationInit } = useWorks();
+const { mode } = useHeader();
 
+const illustrationRef = ref(null);
 const footerScrollTextRef = ref(null);
 
 const { params } = useRoute();
@@ -53,8 +58,10 @@ let ctx;
 onMounted(async () => {
   ctx = gsap.context(() => {});
   await nextTick();
-  animationsInit();
+  animationsInit(ctx);
   footerTextAnimationInit(ctx, footerScrollTextRef.value);
+  mode.value = 'light';
+  console.log('onMounted');
 });
 
 onUnmounted(() => {
@@ -70,11 +77,13 @@ definePageMeta({
       const { showLayoutElementsRequired } = useNavigation();
       const { workPageInit } = useWorks();
       done();
-      workPageInit();
+      workPageInit(ctx);
+      console.log('onEnter');
       showLayoutElementsRequired.value = false;
     },
     onLeave: (el, done) => {
       const { transitionFromNavigation } = useNavigation();
+      const { mode } = useHeader();
       if (transitionFromNavigation.value) {
         gsap
           .timeline()
@@ -82,6 +91,7 @@ definePageMeta({
           .set('#work-scroll-progress', { display: 'none' })
           .add(() => {
             transitionFromNavigation.value = false;
+            mode.value = 'mixed';
             done();
           }, '+=1');
         return;
@@ -105,14 +115,31 @@ definePageMeta({
         )
         .set('#work-scroll-progress', { display: 'none' })
         .add(() => {
+          mode.value = 'mixed';
           done();
         }, '+=0.1');
     },
   },
 });
 
-function animationsInit() {
+function animationsInit(ctx) {
   ctx.add(() => {
+    ScrollTrigger.create({
+      trigger: illustrationRef.value,
+      start: 'top top',
+      end: 'bottom 104px',
+      invalidateOnRefresh: true,
+      markers: true,
+      onLeave: () => {
+        console.log('onLeave');
+        mode.value = 'dark';
+      },
+      onEnterBack: () => {
+        console.log('onEnterBack');
+        mode.value = 'light';
+      },
+    });
+
     // Scroll progress circle animation
     if (!isMobile.value) {
       gsap.to('#work-scroll-progress', {
@@ -132,7 +159,7 @@ function animationsInit() {
   <main v-if="workData?.data" class="work">
     <div class="work__header--desktop">
       <!-- Illustration section -->
-      <section class="work__illustration">
+      <section ref="illustrationRef" class="work__illustration">
         <img :src="mainImage.url" alt="SuperAI Conference Illustration" />
       </section>
 
@@ -226,6 +253,7 @@ function animationsInit() {
         width: 100%;
         height: 100dvh;
         overflow: hidden;
+        z-index: 2;
 
         img {
           width: 100%;
