@@ -508,7 +508,7 @@ export const heroInitAnimationMobile = (ctx, scrollSmoother) => {
       )
       .add(() => {
         stopLoading();
-        scrollSmoother.value.start();
+        // scrollSmoother.value.start();
       });
   });
 };

@@ -10,6 +10,7 @@ export default function useWorks() {
 
   const workPageInit = async () => {
     setTimeout(() => {
+      // Animate layout elements back in
       const layoutElements = gsap.utils.toArray([
         '#header-logo',
         '#header-navigation-button',
@@ -21,6 +22,7 @@ export default function useWorks() {
         duration: 0.75,
         ease: 'power3.out',
       });
+
       gsap.timeline().set('#work-scroll-progress', { display: 'block' }).fromTo(
         '#work-scroll-progress',
         {

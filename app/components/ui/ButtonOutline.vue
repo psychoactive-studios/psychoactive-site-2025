@@ -81,6 +81,7 @@ const talkButtonHoverHandler = () => {
   position: relative;
   border: 1px solid white(20);
   transition:
+    color $transition-easeOutCubic,
     background-color $transition-easeOutCubic,
     border-color $transition-easeOutCubic;
   &:hover {
