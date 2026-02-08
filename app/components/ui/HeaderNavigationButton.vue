@@ -3,12 +3,14 @@ import gsap from 'gsap';
 import useNavigation from '~/composables/useNavigation';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 import useAudioManager from '~/composables/useAudioManager';
+import useHeader from '~/composables/useHeader';
 import { useMediaQuery } from '@vueuse/core';
 
 const buttonRef = ref(null);
 const { isOpen: isNavOpen, openNavigation, closeNavigation } = useNavigation();
 const { isOpen: isVideoOpen, onPlayerClose } = useVideoPlayer();
 const { playInteractionSound } = useAudioManager();
+const { mode } = useHeader();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -241,7 +243,10 @@ const onMouseLeaveHandler = () => {
   <button
     id="header-navigation-button"
     ref="buttonRef"
-    class="header__navigation-button"
+    :class="[
+      'header__navigation-button',
+      mode && `header__navigation-button--${mode}`,
+    ]"
     @click="onClickHandler"
     @mouseenter="onMouseEnterHandler"
     @mouseleave="onMouseLeaveHandler"
@@ -276,17 +281,7 @@ $flicker-ease: ease;
   gap: 4px;
   z-index: 102;
   transition: color 0.3s ease;
-  transition-delay: 0.3s;
-  mix-blend-mode: exclusion;
-  &.dark {
-    color: $color-foreground;
-    &::before {
-      background-color: $color-background;
-    }
-    .line {
-      background-color: white(50);
-    }
-  }
+  // transition-delay: 0.3s;
   &::before {
     content: '';
     position: absolute;
@@ -295,7 +290,12 @@ $flicker-ease: ease;
     background-color: $color-foreground;
     transition: opacity 0.3s ease;
     z-index: 0;
-    transition: scale 0.3s ease-in-out, background-color 0.3s ease 0.3s;
+    transition:
+      scale 0.3s ease-in-out,
+      background-color 0.3s ease;
+  }
+  &--mixed {
+    mix-blend-mode: exclusion;
   }
   .dot {
     width: 6px;
@@ -337,6 +337,15 @@ $flicker-ease: ease;
   &:hover {
     &::before {
       scale: 0.85;
+    }
+  }
+  &--dark {
+    color: $color-foreground;
+    &::before {
+      background-color: $color-background;
+    }
+    .line {
+      background-color: white(50);
     }
   }
   @include respond(portrait) {

@@ -1,5 +1,6 @@
 <script setup>
 import gsap from 'gsap';
+import useHeader from '~/composables/useHeader';
 
 const props = defineProps({
   mode: {
@@ -17,6 +18,8 @@ const props = defineProps({
 });
 
 const lines = ref([]);
+
+const { mode: colorMode } = useHeader();
 
 const animateLine = (index) => {
   const line = lines.value[index];
@@ -79,6 +82,7 @@ onBeforeUnmount(() => {
       'sound-button',
       `sound-button--${mode}`,
       `sound-button--${muted ? 'muted' : 'unmuted'}`,
+      `sound-button--${colorMode}`,
     ]"
   >
     <span
@@ -101,26 +105,29 @@ onBeforeUnmount(() => {
   position: relative;
   overflow: hidden;
   border: 1px solid white(20);
+  background-color: transparent;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 2px;
+  transition:
+    border-color $transition-easeOutCubic,
+    background-color $transition-easeOutCubic;
 
-  &::before {
-    content: '';
-    position: absolute;
-    display: block;
-    inset: 0;
-    background: white(20);
-    border-radius: 50%;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-  }
+  // &::before {
+  //   content: '';
+  //   position: absolute;
+  //   display: block;
+  //   inset: 0;
+  //   background: white(20);
+  //   border-radius: 50%;
+  //   z-index: 1;
+  //   opacity: 0;
+  //   transition: opacity 0.2s ease-in-out;
+  // }
   &:hover {
-    &::before {
-      opacity: 1;
-    }
+    border-color: transparent;
+    background-color: white(20);
   }
   &__line {
     width: 1px;
@@ -130,6 +137,17 @@ onBeforeUnmount(() => {
     // transform-origin: center bottom;
     z-index: 2;
     position: relative;
+    transition: background-color $transition-easeOutCubic;
+  }
+  &--dark {
+    border-color: rgbaColor(#101012, 20);
+    .sound-button__line {
+      background: $color-background;
+    }
+    &:hover {
+      border-color: transparent;
+      background-color: rgbaColor(#101012, 20);
+    }
   }
 }
 
