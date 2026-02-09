@@ -4,55 +4,55 @@ import { Howl } from 'howler';
 import { ref } from 'vue';
 
 const fileList = [
-  '/sound/warp-hover.wav',
+  '/sound/warp-hover.mp3',
   '/sound/logo-hover.wav',
-  '/sound/frog-new.wav',
-  '/sound/slider-2.wav',
-  '/sound/slider-3.wav',
-  '/sound/contact-load.wav',
-  '/sound/content-load.wav',
-  '/sound/work-load.wav',
-  '/sound/about-load.wav',
-  '/sound/webflow-load.wav',
-  '/sound/home-load.wav',
-  '/sound/services-load.wav',
-  '/sound/sound-btn-hover-1.wav',
-  '/sound/accordion-open.wav',
-  '/sound/accordion-close.wav',
-  '/sound/talk-btn-hover.wav',
-  '/sound/ai-hover.wav',
-  '/sound/text-hover-short.wav',
-  '/sound/text-hover-1.wav',
-  '/sound/text-hover-2.wav',
-  '/sound/text-hover-3.wav',
-  '/sound/text-hover-4.wav',
-  '/sound/text-hover-5.wav',
-  '/sound/card-hover.wav',
-  '/sound/click-1.wav',
-  '/sound/click-2.wav',
-  '/sound/click-3.wav',
-  '/sound/click-4.wav',
-  '/sound/click-5.wav',
-  '/sound/menu-close.wav',
-  '/sound/menu-hover-close.wav',
-  '/sound/menu-hover-1.wav',
-  '/sound/menu-open.wav',
-  '/sound/mute-hover.wav',
-  '/sound/showreel-hover-1.wav',
-  '/sound/showreel-hover-2.wav',
-  '/sound/showreel-hover-3.wav',
-  '/sound/showreel-open-1.wav',
-  '/sound/scroll-btn-hover.wav',
-  '/sound/btn-hover-down.wav',
-  '/sound/btn-hover-simple.wav',
-  '/sound/play-hover-simple.wav',
-  '/sound/play-hover-menu.wav',
-  '/sound/share-hover.wav',
-  '/sound/awards-footer-hover-1.wav',
-  '/sound/awards-footer-hover-2.wav',
-  '/sound/awards-footer-hover-3.wav',
-  '/sound/awards-footer-hover-4.wav',
-  '/sound/awards-footer-hover-5.wav',
+  '/sound/frog-new.mp3',
+  '/sound/slider-2.mp3',
+  '/sound/slider-3.mp3',
+  '/sound/contact-load.mp3',
+  '/sound/content-load.mp3',
+  '/sound/work-load.mp3',
+  '/sound/about-load.mp3',
+  '/sound/webflow-load.mp3',
+  '/sound/home-load.mp3',
+  '/sound/services-load.mp3',
+  '/sound/sound-btn-hover-1.mp3',
+  '/sound/accordion-open.mp3',
+  '/sound/accordion-close.mp3',
+  '/sound/talk-btn-hover.mp3',
+  '/sound/ai-hover.mp3',
+  '/sound/text-hover-short.mp3',
+  '/sound/text-hover-1.mp3',
+  '/sound/text-hover-2.mp3',
+  '/sound/text-hover-3.mp3',
+  '/sound/text-hover-4.mp3',
+  '/sound/text-hover-5.mp3',
+  '/sound/card-hover.mp3',
+  '/sound/click-1.mp3',
+  '/sound/click-2.mp3',
+  '/sound/click-3.mp3',
+  '/sound/click-4.mp3',
+  '/sound/click-5.mp3',
+  '/sound/menu-close.mp3',
+  '/sound/menu-hover-close.mp3',
+  '/sound/menu-hover-1.mp3',
+  '/sound/menu-open.mp3',
+  '/sound/mute-hover.mp3',
+  '/sound/showreel-hover-1.mp3',
+  '/sound/showreel-hover-2.mp3',
+  '/sound/showreel-hover-3.mp3',
+  '/sound/showreel-open-1.mp3',
+  '/sound/scroll-btn-hover.mp3',
+  '/sound/btn-hover-down.mp3',
+  '/sound/btn-hover-simple.mp3',
+  '/sound/play-hover-simple.mp3',
+  '/sound/play-hover-menu.mp3',
+  '/sound/share-hover.mp3',
+  '/sound/awards-footer-hover-1.mp3',
+  '/sound/awards-footer-hover-2.mp3',
+  '/sound/awards-footer-hover-3.mp3',
+  '/sound/awards-footer-hover-4.mp3',
+  '/sound/awards-footer-hover-5.mp3',
 ];
 
 const sounds = {};
@@ -81,7 +81,7 @@ export default function () {
 
       const sound = new Howl({
         src: frogSound,
-        volume: 1,
+        volume: 0.5,
         onload: () => {
           resourceLoaded();
         },
@@ -100,7 +100,7 @@ export default function () {
       newSounds.forEach((file) => {
         const sound = new Howl({
           src: [file],
-          volume: 1,
+          volume: 0.5,
           onload: () => {
             resourceLoaded();
           },
@@ -196,14 +196,14 @@ export default function () {
       currentLoopId.value = id;
 
       sound.volume(0, id);
-      sound.fade(0, 1, isFirstPlay ? masterFadeIn : crossfadeTime, id);
+      sound.fade(0, 0.5, isFirstPlay ? masterFadeIn : crossfadeTime, id);
       isFirstPlay = false;
 
       if (fadeTimer.value) clearTimeout(fadeTimer.value);
 
       fadeTimer.value = setTimeout(() => {
         if (sound.playing(id)) {
-          sound.fade(1, 0, crossfadeTime, id);
+          sound.fade(0.5, 0, crossfadeTime, id);
         }
       }, loopDuration - crossfadeTime);
 
@@ -243,12 +243,25 @@ export default function () {
       currentLoopId.value = null;
     }
   }
+  function setSoundVolume(name, volume) {
+    const fullPath = fileList.find((path) => path.includes(name));
+
+    if (!fullPath || !sounds[fullPath]) {
+      console.warn(
+        `Cannot set volume: Sound '${name}' not found or not loaded.`
+      );
+      return;
+    }
+
+    sounds[fullPath].volume(volume);
+  }
 
   return {
     isMuted,
     loadSounds,
     playInteractionSound,
     playRandomSound,
+    setSoundVolume,
     playContinuousSound,
     stopContinuousSound,
     isSoundApproved,
