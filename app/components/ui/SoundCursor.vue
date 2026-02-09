@@ -6,7 +6,6 @@ const cursor = ref(null);
 let ctx;
 
 const { isSoundApproved } = useAudioManager();
-const { playInteractionSound } = useAudioManager();
 
 onMounted(() => {
   ctx = gsap.context(() => {
@@ -62,7 +61,6 @@ onUnmounted(() => {
 });
 
 const handleClick = () => {
-  playInteractionSound('sound-btn-hover-1');
   ctx.add(() => {
     gsap
       .timeline()

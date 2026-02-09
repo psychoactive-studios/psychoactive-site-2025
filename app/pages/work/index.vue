@@ -16,7 +16,7 @@ import { useMediaQuery } from '@vueuse/core';
 // Config Strapi variables
 const config = useRuntimeConfig();
 
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, isSoundApproved, hasInteracted } = useAudioManager();
 // Build query params for Strapi API
 // Strapi recommends using the 'qs' library to parse and stringify nested
 // objects for complex query URLs instead of creating them manually.
@@ -159,7 +159,8 @@ definePageMeta({
 });
 
 function enterAnimation(el) {
-  playInteractionSound('work-load');
+  if (isSoundApproved.value && hasInteracted.value)
+    playInteractionSound('work-load');
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const layoutElements = gsap.utils.toArray([

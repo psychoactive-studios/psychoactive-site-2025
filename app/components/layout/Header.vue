@@ -56,7 +56,7 @@ const onLogoHoverHandler = (e) => {
   if (mainLogoRef.value && e.type === 'mouseenter') {
     mainLogoRef.value.animationInstance.loop = true;
     mainLogoRef.value.animationInstance.play();
-    playContinuousSound('home-hover-latest');
+    playContinuousSound('logo-hover');
   }
   if (mainLogoRef.value && e.type === 'mouseleave') {
     mainLogoRef.value.animationInstance.loop = false;

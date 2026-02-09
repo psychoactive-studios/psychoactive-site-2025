@@ -17,7 +17,7 @@ let ctx = null;
 
 const { isLoading, addResourceToLoad, resourceLoaded } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, isSoundApproved, hasInteracted } = useAudioManager();
 
 // Indicate that this component has a resource to load
 addResourceToLoad(1);
@@ -40,7 +40,7 @@ watch(isLoading, (newVal) => {
   if (!newVal) {
     heroVideoplayerRef.value.play();
     heroInitAnimation(ctx, scrollSmoother);
-    playInteractionSound('about-load');
+    if (isSoundApproved.value && hasInteracted.value) playInteractionSound('about-load');
   }
 });
 </script>

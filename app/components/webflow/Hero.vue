@@ -12,7 +12,7 @@ import {
   heroScrollAnimation,
 } from '~/utils/animations/webflow.js';
 
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, isSoundApproved, hasInteracted } = useAudioManager();
 const { scrollSmoother } = useScrollSmoother();
 
 const { isLoading, addResourceToLoad, resourceLoaded } = useLoader();
@@ -48,7 +48,8 @@ onUnmounted(() => {
 watch(isLoading, (newVal) => {
   if (!newVal) {
     heroInitAnimation(ctx, scrollSmoother);
-    playInteractionSound('webflow-load');
+    if (isSoundApproved.value && hasInteracted.value)
+      playInteractionSound('webflow-load');
   }
 });
 

@@ -17,7 +17,7 @@ import useAudioManager from '~/composables/useAudioManager';
 const { isLoading } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
 const isMobile = useMediaQuery('(max-width: 768px)');
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, isSoundApproved, hasInteracted } = useAudioManager();
 
 const containerRef = ref(null);
 const isPlaying = ref(true);
@@ -37,7 +37,8 @@ onUnmounted(() => {
 watch(isLoading, (newVal) => {
   if (!newVal) {
     heroInitAnimation(ctx, scrollSmoother);
-    playInteractionSound('services-load');
+    if (isSoundApproved.value && hasInteracted.value)
+      playInteractionSound('services-load');
   }
 });
 </script>

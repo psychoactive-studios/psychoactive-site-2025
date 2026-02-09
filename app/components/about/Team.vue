@@ -3,8 +3,10 @@ import { Splide, SplideSlide, SplideTrack } from '@splidejs/vue-splide';
 import { useMediaQuery } from '@vueuse/core';
 import { teamData } from '~/data/teamData.js';
 import BulgeImage from '../ui/BulgeImage.vue';
+import useAudioManager from '~/composables/useAudioManager';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
+const { playContinuousSound, stopContinuousSound } = useAudioManager();
 </script>
 <template>
   <section class="team">
@@ -21,6 +23,8 @@ const isMobile = useMediaQuery('(max-width: 768px)');
             :src="person.photo"
             :cursor="false"
             :strength="0.3"
+            @mouseenter="() => playContinuousSound('warp-hover')"
+            @mouseleave="() => stopContinuousSound()"
           />
           <!-- <div class="item__img">
             <img :src="person.photo" alt="" />

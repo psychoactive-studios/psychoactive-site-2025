@@ -45,9 +45,9 @@ const onMouseEnterHandler = (e) => {
   handleHoverEffect(e.target);
 };
 
-const onFocusHandler = (e) => {
-  handleHoverEffect(e.target);
-};
+// const onFocusHandler = (e) => {
+//   handleHoverEffect(e.target);
+// };
 </script>
 <template>
   <NuxtLink
@@ -55,16 +55,10 @@ const onFocusHandler = (e) => {
     :to="href"
     class="link-with-hover"
     @mouseenter="onMouseEnterHandler"
-    @focus="onFocusHandler"
   >
     <slot />
   </NuxtLink>
-  <span
-    v-else
-    class="link-with-hover"
-    @mouseenter="onMouseEnterHandler"
-    @focus="onFocusHandler"
-  >
+  <span v-else class="link-with-hover" @mouseenter="onMouseEnterHandler">
     <slot />
   </span>
 </template>

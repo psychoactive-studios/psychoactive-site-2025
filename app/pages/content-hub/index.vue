@@ -12,7 +12,7 @@ import { useMediaQuery } from '@vueuse/core';
 // Config Strapi variables
 const config = useRuntimeConfig();
 
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, isSoundApproved, hasInteracted } = useAudioManager();
 
 const { scrollSmoother } = useScrollSmoother();
 const { isLoading, isFirstLoad } = useLoader();
@@ -82,7 +82,8 @@ definePageMeta({
 });
 
 function enterAnimation(el) {
-  playInteractionSound('content-load');
+  if (isSoundApproved.value && hasInteracted.value)
+    playInteractionSound('content-load');
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const layoutElements = gsap.utils.toArray([
