@@ -57,7 +57,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="work__back" ref="backRef">
+  <div id="work-back-button" ref="backRef" class="work__back">
     <ButtonOutline
       href="/work"
       class="work__back_button"
@@ -74,8 +74,10 @@ onUnmounted(() => {
   position: fixed;
   inset: 48px 0 auto 0;
   margin: auto;
-  z-index: 1;
+  z-index: 90;
   display: flex;
   justify-content: center;
+  display: none;
+  scale: 0;
 }
 </style>

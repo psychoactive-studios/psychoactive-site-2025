@@ -66,8 +66,6 @@ export default function () {
     splitTextInstances = [];
 
     savedColorMode.value = null; // Clear saved color mode
-
-    console.log('Navigation animations cleaned up');
   }
 
   function initNavigation() {
@@ -313,8 +311,6 @@ export default function () {
       )
       .add(() => {
         // Enable scrolling
-        console.log('transitionFromNavigation', transitionFromNavigation.value);
-
         if (!transitionFromNavigation.value) enableScroll();
         isOpen.value = false;
       }, 'init+=0.2')

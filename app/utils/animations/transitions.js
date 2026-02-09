@@ -3,7 +3,6 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 
 export const leaveAnimation = (el, done) => {
   const { scrollSmoother } = useScrollSmoother();
-  console.log('scrollSmoother', scrollSmoother.value);
 
   scrollSmoother.value.stop();
   const originCenter = scrollSmoother.value.scroll + window.innerHeight / 2;
