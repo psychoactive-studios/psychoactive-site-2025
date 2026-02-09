@@ -11,6 +11,9 @@ import { useMediaQuery } from '@vueuse/core';
 import LinkButton from '~/components/ui/LinkButton.vue';
 import WorkArticleContent from '~/components/work/WorkArticleContent.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import ButtonDotsArrow from '~/components/ui/ButtonDotsArrow.vue';
+import useAudioManager from '~/composables/useAudioManager';
+import useScrollSmoother from '~/composables/useScrollSmoother';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -19,6 +22,8 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 const { isLoading } = useLoader();
 const { workPageInit, footerTextAnimationInit } = useWorks();
 const { mode } = useHeader();
+const { playInteractionSound } = useAudioManager();
+const { scrollSmoother } = useScrollSmoother();
 
 const illustrationRef = ref(null);
 const footerScrollTextRef = ref(null);
@@ -61,7 +66,6 @@ onMounted(async () => {
   animationsInit(ctx);
   footerTextAnimationInit(ctx, footerScrollTextRef.value);
   mode.value = 'light';
-  console.log('onMounted');
 });
 
 onUnmounted(() => {
@@ -78,7 +82,6 @@ definePageMeta({
       const { workPageInit } = useWorks();
       done();
       workPageInit(ctx);
-      console.log('onEnter');
       showLayoutElementsRequired.value = false;
     },
     onLeave: (el, done) => {
@@ -89,6 +92,7 @@ definePageMeta({
           .timeline()
           .set(el, { opacity: 0 })
           .set('#work-scroll-progress', { display: 'none' })
+          .set('#work-back-button', { display: 'none', scale: 0 })
           .add(() => {
             transitionFromNavigation.value = false;
             mode.value = 'mixed';
@@ -113,6 +117,7 @@ definePageMeta({
           },
           '<'
         )
+        .to('#work-back-button', { scale: 0 })
         .set('#work-scroll-progress', { display: 'none' })
         .add(() => {
           mode.value = 'mixed';
@@ -129,13 +134,10 @@ function animationsInit(ctx) {
       start: 'top top',
       end: 'bottom 104px',
       invalidateOnRefresh: true,
-      markers: true,
       onLeave: () => {
-        console.log('onLeave');
         mode.value = 'dark';
       },
       onEnterBack: () => {
-        console.log('onEnterBack');
         mode.value = 'light';
       },
     });
@@ -154,6 +156,26 @@ function animationsInit(ctx) {
     }
   });
 }
+
+const onClickHandler = (e) => {
+  playInteractionSound('click-1');
+  playInteractionSound('menu-close', 100);
+
+  const windowHeight = window.innerHeight;
+  const y = windowHeight;
+
+  gsap
+    .timeline()
+    .set(e.currentTarget, { pointerEvents: 'none' })
+    .set(e.currentTarget, { clearProps: 'pointerEvents' }, '+=1.5');
+
+  scrollSmoother.value.scrollTo(y, {
+    duration: 1.5,
+    force: true,
+    easing: (x) =>
+      x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2,
+  });
+};
 </script>
 <template>
   <main v-if="workData?.data" class="work">
@@ -161,10 +183,17 @@ function animationsInit(ctx) {
       <!-- Illustration section -->
       <section ref="illustrationRef" class="work__illustration">
         <img :src="mainImage.url" alt="SuperAI Conference Illustration" />
+        <div class="work__illustration_scroll">
+          <div id="work-scroll-down-text" class="body-button">scroll down</div>
+          <ButtonDotsArrow
+            id="work-scroll-down-button"
+            @click="onClickHandler"
+          />
+        </div>
       </section>
 
       <!-- Hero section -->
-      <section class="work__hero">
+      <section id="work-hero" class="work__hero">
         <div class="container">
           <h1 class="work__hero_title">{{ mainTitle }}</h1>
           <div class="work__hero_sub-title">{{ hero?.subTitle }}</div>
@@ -254,12 +283,27 @@ function animationsInit(ctx) {
         height: 100dvh;
         overflow: hidden;
         z-index: 2;
-
         img {
           width: 100%;
           height: 100%;
           display: block;
           object-fit: cover;
+        }
+        &_scroll {
+          position: absolute;
+          bottom: 48px;
+          left: 0;
+          right: 0;
+          margin: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          color: $color-foreground;
+          :deep(.char-center) {
+            will-change: opacity;
+            opacity: 0;
+          }
         }
       }
       .work__hero {
