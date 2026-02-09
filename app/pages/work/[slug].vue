@@ -26,7 +26,7 @@ const { playInteractionSound } = useAudioManager();
 const { scrollSmoother } = useScrollSmoother();
 
 const illustrationRef = ref(null);
-const footerScrollTextRef = ref(null);
+const footerRef = ref(null);
 
 const { params } = useRoute();
 
@@ -64,7 +64,7 @@ onMounted(async () => {
   ctx = gsap.context(() => {});
   await nextTick();
   animationsInit(ctx);
-  footerTextAnimationInit(ctx, footerScrollTextRef.value);
+  footerTextAnimationInit(ctx, footerRef.value);
   mode.value = 'light';
 });
 
@@ -248,19 +248,31 @@ const onClickHandler = (e) => {
       </div>
     </div>
 
-    <WorkArticleContent :data="article" :website-link="hero?.websiteLink" />
+    <!-- <WorkArticleContent :data="article" :website-link="hero?.websiteLink" /> -->
 
     <!-- Footer section -->
-    <footer class="work__footer">
+    <footer ref="footerRef" class="work__footer">
       <div class="work__footer_brief">
         <Brief />
       </div>
       <div class="work__footer_scroll">
         <div class="container">
-          <h2 ref="footerScrollTextRef">Scroll to go back to work page</h2>
+          <div class="body-large">
+            Keep scrolling to go back to <img src="/img/arrow-right-long.svg" />
+          </div>
+          <div class="work__footer_scroll--progress">
+            <img
+              v-for="n in 15"
+              :key="n"
+              :src="`/img/frog_steps/progress-logo-${n - 1}.svg`"
+              alt=""
+            />
+          </div>
+          <div class="heading-h2">work page</div>
         </div>
       </div>
     </footer>
+    <!-- <div class="footer-scroll-space" /> -->
   </main>
   <div v-else class="no-data">
     <p>Something went wrong.</p>
@@ -463,35 +475,52 @@ const onClickHandler = (e) => {
   &__footer {
     display: flex;
     flex-direction: column;
+    gap: 23dvh;
     background-color: $color-background;
+    min-height: 100dvh;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
     &_brief {
-      padding: 160px 0;
+      padding: 0;
     }
     &_scroll {
-      min-height: 100dvh;
-      display: flex;
-      align-items: center;
-      h2 {
-        font-size: clamp(48px, 3.65vw, 70px);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 88%; /* 61.6px */
-        letter-spacing: -0.035em;
-        color: $color-foreground;
-        text-align: center;
-        @include respond(mobile) {
-          font-size: max(5.33333vw, 20px);
-          font-style: normal;
-          font-weight: 400;
-          line-height: 130%;
+      color: $color-foreground;
+      .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 48px;
+        .body-large {
+          max-width: 230px;
+          img {
+            display: inline-block;
+            width: auto;
+            height: 14px;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+          }
         }
-        :deep(.char-center) {
-          will-change: opacity;
-          backface-visibility: hidden;
-          opacity: 0.3;
+        .heading-h2 {
+          white-space: nowrap;
+        }
+      }
+      &--progress {
+        display: flex;
+        justify-content: space-between;
+        flex-grow: 1;
+        img {
+          flex-shrink: 0;
+          width: 22px;
+          height: 22px;
+          opacity: 0.2;
         }
       }
     }
+  }
+  .footer-scroll-space {
+    height: 100dvh;
+    background-color: rgba(72, 255, 0, 0.498);
   }
 }
 .no-data {
