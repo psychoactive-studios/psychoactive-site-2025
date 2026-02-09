@@ -48,11 +48,11 @@ const { playContinuousSound, stopContinuousSound } = useAudioManager();
         aria-label="Our team"
       >
         <SplideTrack>
-          <SplideSlide>
+          <SplideSlide v-for="person in teamData" :key="person.name">
             <div class="item__img">
-              <img src="/img/team-Luca.jpg" alt="" />
+              <img :src="person.photo" :alt="person.name" />
             </div>
-            <h3 class="item__name">Luca</h3>
+            <h3 class="item__name">{{ person.name }}</h3>
           </SplideSlide>
           <SplideSlide>
             <div class="item__img">
