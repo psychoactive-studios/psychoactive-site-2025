@@ -481,6 +481,9 @@ const onClickHandler = (e) => {
     justify-content: center;
     position: relative;
     z-index: 1;
+    @include respond(laptop) {
+      gap: 10dvh;
+    }
     &_brief {
       padding: 0;
     }
@@ -491,8 +494,22 @@ const onClickHandler = (e) => {
         justify-content: space-between;
         align-items: flex-end;
         gap: 48px;
+        @include respond(desktop) {
+          gap: 24px;
+        }
+        @include respond(laptop) {
+          width: 100%;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          gap: 48px;
+        }
+
         .body-large {
           max-width: 230px;
+          @include respond(laptop) {
+            max-width: none;
+          }
           img {
             display: inline-block;
             width: auto;
@@ -509,6 +526,9 @@ const onClickHandler = (e) => {
         display: flex;
         justify-content: space-between;
         flex-grow: 1;
+        @include respond(laptop) {
+          gap: 3vw;
+        }
         img {
           flex-shrink: 0;
           width: 22px;
