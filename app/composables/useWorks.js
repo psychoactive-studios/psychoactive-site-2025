@@ -1,6 +1,7 @@
 import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 import useScrollSmoother from '~/composables/useScrollSmoother';
+import useHeader from '~/composables/useHeader';
 
 export const currentTransitionImage = ref(null);
 
@@ -96,31 +97,34 @@ export default function useWorks() {
   };
 
   async function footerTextAnimationInit(ctx, footer) {
-    SplitText.create(footer, {
-      type: 'words,chars',
-      charsClass: 'char-center',
-    });
-
-    await nextTick();
+    const { mode } = useHeader();
 
     ctx.add(() => {
-      gsap.to(footer.querySelectorAll('.char-center'), {
+      gsap.to(footer.querySelectorAll('.work__footer_scroll--progress img'), {
         scrollTrigger: {
           trigger: footer,
-          start: 'top bottom',
-          end: () =>
-            document
-              .querySelector('.work__footer_scroll')
-              .getBoundingClientRect().top,
+          start: 'top top',
+          end: 'bottom top',
+          pin: true,
           scrub: true,
           invalidateOnRefresh: true,
-          onLeave: () => {
-            router.push('/work');
+          markers: true,
+          onEnter: () => {
+            console.log('Entered footer scroll trigger');
+            mode.value = 'light';
+          },
+          onLeaveBack: () => {
+            console.log('Left footer scroll trigger, reverting mode');
+            mode.value = 'dark';
           },
         },
         opacity: 1,
         duration: 0.1,
         stagger: 0.05,
+        onComplete: () => {
+          console.log('Animation complete, navigating to /work');
+          router.push('/work');
+        },
       });
     });
   }

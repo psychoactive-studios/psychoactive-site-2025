@@ -441,7 +441,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 /* ====================================================
                   Initial animation mobile
 =======================================================*/
-export const heroInitAnimationMobile = (ctx, scrollSmoother) => {
+export const heroInitAnimationMobile = (ctx) => {
   const { stopLoading } = useLoader();
 
   ctx.add(() => {
