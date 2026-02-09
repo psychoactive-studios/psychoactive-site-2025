@@ -103,8 +103,6 @@ const onScrollDownHandler = (e) => {
     .set(e.currentTarget, { pointerEvents: 'none' })
     .set(e.currentTarget, { clearProps: 'pointerEvents' }, '+=1.5');
 
-  console.log('trigger', trigger);
-
   scrollSmoother.value.scrollTo(y, {
     duration: 1.5,
     force: true,
