@@ -108,7 +108,6 @@ export default function useWorks() {
           pin: true,
           scrub: true,
           invalidateOnRefresh: true,
-          markers: true,
           onEnter: () => {
             console.log('Entered footer scroll trigger');
             mode.value = 'light';
