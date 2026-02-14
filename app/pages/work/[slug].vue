@@ -248,16 +248,16 @@ const onClickHandler = (e) => {
       </div>
     </div>
 
-    <!-- <WorkArticleContent :data="article" :website-link="hero?.websiteLink" /> -->
+    <WorkArticleContent :data="article" :website-link="hero?.websiteLink" />
 
     <!-- Footer section -->
     <footer ref="footerRef" class="work__footer">
       <div class="work__footer_brief">
         <Brief />
       </div>
-      <div class="work__footer_scroll">
-        <div class="container">
-          <div class="body-large">
+      <div class="container">
+        <div class="work__footer_scroll">
+          <div class="body-large--mobile">
             Keep scrolling to go back to <img src="/img/arrow-right-long.svg" />
           </div>
           <div class="work__footer_scroll--progress">
@@ -268,11 +268,10 @@ const onClickHandler = (e) => {
               alt=""
             />
           </div>
-          <div class="heading-h2">work page</div>
+          <div class="heading-h2--mobile">work page</div>
         </div>
       </div>
     </footer>
-    <!-- <div class="footer-scroll-space" /> -->
   </main>
   <div v-else class="no-data">
     <p>Something went wrong.</p>
@@ -484,43 +483,91 @@ const onClickHandler = (e) => {
     @include respond(laptop) {
       gap: 10dvh;
     }
+    @include respond(mobile) {
+      gap: 0;
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        flex-grow: 1;
+        background: url('/img/icon-plus.svg') center center no-repeat;
+        opacity: 0.5;
+      }
+    }
     &_brief {
       padding: 0;
+      @include respond(mobile) {
+        display: none;
+      }
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 48px;
+      @include respond(desktop) {
+        gap: 24px;
+      }
+      @include respond(laptop) {
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 48px;
+      }
+      .body-large--mobile {
+        max-width: 230px;
+        @include respond(laptop) {
+          max-width: none;
+        }
+        @include respond(mobile) {
+          color: white(50);
+          text-align: center;
+          max-width: 150px;
+        }
+        img {
+          display: inline-block;
+          width: auto;
+          height: 14px;
+          vertical-align: middle;
+          margin-left: 0.5rem;
+          @include respond(mobile) {
+            display: none;
+          }
+        }
+      }
+      .heading-h2--mobile {
+        white-space: nowrap;
+      }
     }
     &_scroll {
       color: $color-foreground;
-      .container {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 48px;
+      width: 100%;
+      @include respond(desktop) {
+        gap: 24px;
+      }
+      @include respond(laptop) {
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
         gap: 48px;
-        @include respond(desktop) {
-          gap: 24px;
-        }
-        @include respond(laptop) {
-          width: 100%;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          gap: 48px;
-        }
-
-        .body-large {
-          max-width: 230px;
-          @include respond(laptop) {
-            max-width: none;
-          }
-          img {
-            display: inline-block;
-            width: auto;
-            height: 14px;
-            vertical-align: middle;
-            margin-left: 0.5rem;
-          }
-        }
-        .heading-h2 {
-          white-space: nowrap;
-        }
+      }
+      @include respond(mobile) {
+        width: 100%;
+        flex-shrink: 0;
+        aspect-ratio: 1;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
       }
       &--progress {
         display: flex;
@@ -529,18 +576,91 @@ const onClickHandler = (e) => {
         @include respond(laptop) {
           gap: 3vw;
         }
+        @include respond(mobile) {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          container-type: inline-size;
+          --icon-count: 15;
+        }
         img {
           flex-shrink: 0;
           width: 22px;
           height: 22px;
           opacity: 0.2;
+          @include respond(mobile) {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -11px;
+            margin-top: -11px;
+            --radius: 44cqw;
+            --angle: calc(360deg / var(--icon-count) * var(--i) - 90deg);
+            transform: 
+                /* 1. Rotate the coordinate axis to the desired angle */ rotate(
+                var(--angle)
+              )
+              /* 2. Translate the icon along this axis by the radius */
+              translateX(var(--radius))
+              /* 3. Compensate the rotation of the icon itself to keep it upright
+                      (multiply the angle by -1) */
+              rotate(calc(var(--angle) * -1));
+          }
+        }
+        @include respond(mobile) {
+          img {
+            &:nth-child(1) {
+              --i: 0;
+            }
+            &:nth-child(2) {
+              --i: 1;
+            }
+            &:nth-child(3) {
+              --i: 2;
+            }
+            &:nth-child(4) {
+              --i: 3;
+            }
+            &:nth-child(5) {
+              --i: 4;
+            }
+            &:nth-child(6) {
+              --i: 5;
+            }
+            &:nth-child(7) {
+              --i: 6;
+            }
+            &:nth-child(8) {
+              --i: 7;
+            }
+            &:nth-child(9) {
+              --i: 8;
+            }
+            &:nth-child(10) {
+              --i: 9;
+            }
+            &:nth-child(11) {
+              --i: 10;
+            }
+            &:nth-child(12) {
+              --i: 11;
+            }
+            &:nth-child(13) {
+              --i: 12;
+            }
+            &:nth-child(14) {
+              --i: 13;
+            }
+            &:nth-child(15) {
+              --i: 14;
+            }
+          }
         }
       }
     }
-  }
-  .footer-scroll-space {
-    height: 100dvh;
-    background-color: rgba(72, 255, 0, 0.498);
   }
 }
 .no-data {
