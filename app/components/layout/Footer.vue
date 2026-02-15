@@ -180,6 +180,10 @@ const handleClick = () => {
 
   .mobile-cta {
     flex-grow: 1;
+    display: none;
+    @include respond(mobile) {
+      display: block;
+    }
     &__wrapper {
       display: flex;
       flex-direction: column;
