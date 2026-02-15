@@ -109,11 +109,9 @@ export default function useWorks() {
           scrub: true,
           invalidateOnRefresh: true,
           onEnter: () => {
-            console.log('Entered footer scroll trigger');
             mode.value = 'light';
           },
           onLeaveBack: () => {
-            console.log('Left footer scroll trigger, reverting mode');
             mode.value = 'dark';
           },
         },
@@ -121,7 +119,6 @@ export default function useWorks() {
         duration: 0.1,
         stagger: 0.05,
         onComplete: () => {
-          console.log('Animation complete, navigating to /work');
           router.push('/work');
         },
       });
