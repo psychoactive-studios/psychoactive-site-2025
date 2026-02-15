@@ -96,7 +96,7 @@ export default function useWorks() {
     }, 100);
   };
 
-  async function footerTextAnimationInit(ctx, footer) {
+  function footerTextAnimationInit(ctx, footer) {
     const { mode } = useHeader();
 
     ctx.add(() => {

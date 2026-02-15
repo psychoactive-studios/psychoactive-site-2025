@@ -16,6 +16,8 @@ import { useMediaQuery } from '@vueuse/core';
 // Config Strapi variables
 const config = useRuntimeConfig();
 
+let ctx;
+
 const { scrollSmoother } = useScrollSmoother();
 const { playInteractionSound, playRandomSound, isSoundApproved, hasInteracted } = useAudioManager();
 
@@ -25,6 +27,7 @@ const { showLayoutElementsRequired } = useNavigation();
 
 const footerScrollTextRef = ref(null);
 const articleBodyRef = ref(null);
+const footerRef = ref(null);
 
 const { params } = useRoute();
 
@@ -58,16 +61,19 @@ const readingTime = computed(() => {
 });
 
 onMounted(async () => {
+  ctx = gsap.context(() => {});
+  await nextTick();
   SplitText.create(footerScrollTextRef.value, {
     type: 'words,chars',
     charsClass: 'char-center',
   });
-  setTimeout(footerTextAnimationInit, 100);
   await nextTick();
+  setTimeout(footerTextAnimationInit, 200);
 });
 
 onUnmounted(() => {
   ScrollTrigger.getAll().forEach((st) => st.kill());
+  ctx.revert();
 });
 
 watch(isLoading, (loading) => {
@@ -189,23 +195,35 @@ function enterAnimation(el) {
 }
 
 function footerTextAnimationInit() {
-  gsap.to(footerScrollTextRef.value.querySelectorAll('.char-center'), {
-    scrollTrigger: {
-      trigger: footerScrollTextRef.value,
-      start: 'top bottom',
-      end: () =>
-        document
-          .querySelector('.article__footer_scroll')
-          .getBoundingClientRect().top,
-      scrub: true,
-      invalidateOnRefresh: true,
-      onLeave: () => {
+  const { mode } = useHeader();
+  const footer = footerRef.value;
+
+  ctx.add(() => {
+    gsap.to(footer.querySelectorAll('.article__footer_scroll--progress img'), {
+      scrollTrigger: {
+        trigger: footer,
+        start: 'top top',
+        end: 'bottom top',
+        pin: true,
+        scrub: true,
+        invalidateOnRefresh: true,
+        onEnter: () => {
+          console.log('Entered footer scroll trigger');
+          mode.value = 'light';
+        },
+        onLeaveBack: () => {
+          console.log('Left footer scroll trigger, reverting mode');
+          mode.value = 'dark';
+        },
+      },
+      opacity: 1,
+      duration: 0.1,
+      stagger: 0.05,
+      onComplete: () => {
+        console.log('Animation complete, navigating to /content-hub');
         router.push('/content-hub');
       },
-    },
-    opacity: 1,
-    duration: 0.1,
-    stagger: 0.05,
+    });
   });
 }
 </script>
@@ -456,13 +474,25 @@ function footerTextAnimationInit() {
         </div>
       </div>
     </div>
-    <footer class="article__footer">
+    <!-- Footer section -->
+    <footer ref="footerRef" class="article__footer">
       <div class="article__footer_brief">
         <Brief />
       </div>
-      <div class="article__footer_scroll">
-        <div class="container">
-          <h2 ref="footerScrollTextRef">Scroll to back Content Hub</h2>
+      <div class="container">
+        <div class="article__footer_scroll">
+          <div class="body-large--mobile">
+            Keep scrolling to go back to <img src="/img/arrow-right-long.svg" />
+          </div>
+          <div class="article__footer_scroll--progress">
+            <img
+              v-for="n in 15"
+              :key="n"
+              :src="`/img/frog_steps/progress-logo-${n - 1}.svg`"
+              alt=""
+            />
+          </div>
+          <div class="heading-h2--mobile">Content hub</div>
         </div>
       </div>
     </footer>
@@ -662,25 +692,190 @@ function footerTextAnimationInit() {
   &__footer {
     display: flex;
     flex-direction: column;
+    gap: 23dvh;
+    background-color: $color-background;
+    min-height: 100dvh;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    @include respond(laptop) {
+      gap: 10dvh;
+    }
+    @include respond(mobile) {
+      gap: 0;
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        flex-grow: 1;
+        background: url('/img/icon-plus.svg') center center no-repeat;
+        opacity: 0.5;
+      }
+    }
     &_brief {
-      padding: 160px 0;
+      padding: 0;
+      @include respond(mobile) {
+        display: none;
+      }
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 48px;
+      @include respond(desktop) {
+        gap: 24px;
+      }
+      @include respond(laptop) {
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 48px;
+      }
+      .body-large--mobile {
+        max-width: 230px;
+        @include respond(laptop) {
+          max-width: none;
+        }
+        @include respond(mobile) {
+          color: white(50);
+          text-align: center;
+          max-width: 150px;
+        }
+        img {
+          display: inline-block;
+          width: auto;
+          height: 14px;
+          vertical-align: middle;
+          margin-left: 0.5rem;
+          @include respond(mobile) {
+            display: none;
+          }
+        }
+      }
+      .heading-h2--mobile {
+        white-space: nowrap;
+      }
     }
     &_scroll {
-      min-height: 100dvh;
+      color: $color-foreground;
       display: flex;
-      align-items: center;
-      h2 {
-        font-size: clamp(48px, 3.65vw, 70px);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 88%; /* 61.6px */
-        letter-spacing: -0.035em;
-        color: $color-foreground;
-        text-align: center;
-        :deep(.char-center) {
-          will-change: opacity;
-          backface-visibility: hidden;
-          opacity: 0.3;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 48px;
+      width: 100%;
+      @include respond(desktop) {
+        gap: 24px;
+      }
+      @include respond(laptop) {
+        width: 100%;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 48px;
+      }
+      @include respond(mobile) {
+        width: 100%;
+        flex-shrink: 0;
+        aspect-ratio: 1;
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+      }
+      &--progress {
+        display: flex;
+        justify-content: space-between;
+        flex-grow: 1;
+        @include respond(laptop) {
+          gap: 3vw;
+        }
+        @include respond(mobile) {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          container-type: inline-size;
+          --icon-count: 15;
+        }
+        img {
+          flex-shrink: 0;
+          width: 22px;
+          height: 22px;
+          opacity: 0.2;
+          @include respond(mobile) {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-left: -11px;
+            margin-top: -11px;
+            --radius: 44cqw;
+            --angle: calc(360deg / var(--icon-count) * var(--i) - 90deg);
+            transform: 
+                /* 1. Rotate the coordinate axis to the desired angle */ rotate(
+                var(--angle)
+              )
+              /* 2. Translate the icon along this axis by the radius */
+              translateX(var(--radius))
+              /* 3. Compensate the rotation of the icon itself to keep it upright
+                      (multiply the angle by -1) */
+              rotate(calc(var(--angle) * -1));
+          }
+        }
+        @include respond(mobile) {
+          img {
+            &:nth-child(1) {
+              --i: 0;
+            }
+            &:nth-child(2) {
+              --i: 1;
+            }
+            &:nth-child(3) {
+              --i: 2;
+            }
+            &:nth-child(4) {
+              --i: 3;
+            }
+            &:nth-child(5) {
+              --i: 4;
+            }
+            &:nth-child(6) {
+              --i: 5;
+            }
+            &:nth-child(7) {
+              --i: 6;
+            }
+            &:nth-child(8) {
+              --i: 7;
+            }
+            &:nth-child(9) {
+              --i: 8;
+            }
+            &:nth-child(10) {
+              --i: 9;
+            }
+            &:nth-child(11) {
+              --i: 10;
+            }
+            &:nth-child(12) {
+              --i: 11;
+            }
+            &:nth-child(13) {
+              --i: 12;
+            }
+            &:nth-child(14) {
+              --i: 13;
+            }
+            &:nth-child(15) {
+              --i: 14;
+            }
+          }
         }
       }
     }
