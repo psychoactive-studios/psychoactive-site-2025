@@ -5,6 +5,7 @@ import useAudioManager from '~/composables/useAudioManager';
 import WebflowLabel from '../ui/WebflowLabel.vue';
 import Brief from './Brief.vue';
 import AnalogClock from '../ui/AnalogClock.vue';
+import LinkButton from '../ui/LinkButton.vue';
 
 const { playInteractionSound, playRandomSound } = useAudioManager();
 
@@ -32,7 +33,16 @@ const handleClick = () => {
         </template>
       </ul>
     </section>
-    <Brief />
+    <Brief class="brief" />
+
+    <div class="container mobile-cta">
+      <section class="mobile-cta__wrapper">
+        <h2 class="mobile-cta__title">Have an idea?</h2>
+        <LinkButton href="https://superai.com" size="small">
+          let’s talk
+        </LinkButton>
+      </section>
+    </div>
 
     <section class="awards">
       <ul class="awards__list">
@@ -88,8 +98,9 @@ const handleClick = () => {
     padding-top: 160px;
   }
   @include respond(mobile) {
-    padding-top: 80px;
-    justify-content: space-around;
+    padding-top: 24px;
+    padding-bottom: 116px;
+    gap: 48px;
   }
   .navigation {
     @include respond(mobile) {
@@ -161,6 +172,55 @@ const handleClick = () => {
     }
   }
 
+  .brief {
+    @include respond(mobile) {
+      display: none;
+    }
+  }
+
+  .mobile-cta {
+    flex-grow: 1;
+    &__wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: getRem(32);
+      background-color: #1b1b1b;
+      border-radius: getRem(12);
+      height: 100%;
+    }
+    &__title {
+      font-family: 'RoobertMono';
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 120%;
+      text-transform: uppercase;
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 getRem(32);
+      position: relative;
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        width: 8px;
+        height: 8px;
+        position: absolute;
+        background: url('/img/icon-plus.svg') no-repeat center center;
+        opacity: 0.5;
+      }
+      &::before {
+        left: 100%;
+      }
+      &::after {
+        right: 100%;
+      }
+    }
+  }
+
   .awards {
     display: flex;
     justify-content: space-between;
@@ -184,7 +244,7 @@ const handleClick = () => {
       align-items: center;
       gap: 2.5vw;
       @include respond(mobile) {
-        width: 280px;
+        width: 100%;
         justify-content: space-around;
         gap: initial;
       }
@@ -212,6 +272,9 @@ const handleClick = () => {
       }
     }
     &__label {
+      @include respond(mobile) {
+        display: none;
+      }
       img,
       svg {
         height: clamp(36px, 2.5vw, 48px);
