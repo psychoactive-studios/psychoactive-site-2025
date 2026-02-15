@@ -7,7 +7,7 @@ import useLoader from '~/composables/useLoader';
 import useHeader from '~/composables/useHeader';
 import useWorks from '~/composables/useWorks';
 
-import { useMediaQuery } from '@vueuse/core';
+import { useDebounceFn, useMediaQuery } from '@vueuse/core';
 import LinkButton from '~/components/ui/LinkButton.vue';
 import WorkArticleContent from '~/components/work/WorkArticleContent.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -59,8 +59,21 @@ watch(isLoading, (newVal) => {
 });
 
 let ctx;
+let resizeObserver;
+
+// Debounce to optimize the number of ScrollTrigger.refresh() calls on resize
+const refreshScrollTrigger = useDebounceFn(() => {
+  ScrollTrigger.refresh();
+}, 200);
 
 onMounted(async () => {
+  resizeObserver = new ResizeObserver(() => {
+    refreshScrollTrigger();
+  });
+
+  // Observe the body for any size changes to trigger ScrollTrigger refresh
+  resizeObserver.observe(document.body);
+
   ctx = gsap.context(() => {});
   await nextTick();
   animationsInit(ctx);
@@ -70,6 +83,9 @@ onMounted(async () => {
 
 onUnmounted(() => {
   ctx.revert();
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+  }
 });
 
 definePageMeta({

@@ -11,12 +11,13 @@ import useLoader from '~/composables/useLoader';
 import useAudioManager from '~/composables/useAudioManager';
 import { calculateReadingTime } from '~/utils/comput';
 import { leaveAnimation } from '~/utils/animations/transitions';
-import { useMediaQuery } from '@vueuse/core';
+import { useDebounceFn, useMediaQuery } from '@vueuse/core';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
 
 let ctx;
+let resizeObserver;
 
 const { scrollSmoother } = useScrollSmoother();
 const { playInteractionSound, playRandomSound, isSoundApproved, hasInteracted } = useAudioManager();
@@ -60,9 +61,22 @@ const readingTime = computed(() => {
   return calculateReadingTime(plainText);
 });
 
+// Debounce to optimize the number of ScrollTrigger.refresh() calls on resize
+const refreshScrollTrigger = useDebounceFn(() => {
+  ScrollTrigger.refresh();
+}, 200);
+
 onMounted(async () => {
+  resizeObserver = new ResizeObserver(() => {
+    refreshScrollTrigger();
+  });
+
+  // Observe the body for any size changes to trigger ScrollTrigger refresh
+  resizeObserver.observe(document.body);
   ctx = gsap.context(() => {});
+
   await nextTick();
+
   SplitText.create(footerScrollTextRef.value, {
     type: 'words,chars',
     charsClass: 'char-center',
@@ -74,6 +88,9 @@ onMounted(async () => {
 onUnmounted(() => {
   ScrollTrigger.getAll().forEach((st) => st.kill());
   ctx.revert();
+  if (resizeObserver) {
+    resizeObserver.disconnect();
+  }
 });
 
 watch(isLoading, (loading) => {
@@ -208,11 +225,9 @@ function footerTextAnimationInit() {
         scrub: true,
         invalidateOnRefresh: true,
         onEnter: () => {
-          console.log('Entered footer scroll trigger');
           mode.value = 'light';
         },
         onLeaveBack: () => {
-          console.log('Left footer scroll trigger, reverting mode');
           mode.value = 'dark';
         },
       },
@@ -220,7 +235,6 @@ function footerTextAnimationInit() {
       duration: 0.1,
       stagger: 0.05,
       onComplete: () => {
-        console.log('Animation complete, navigating to /content-hub');
         router.push('/content-hub');
       },
     });
