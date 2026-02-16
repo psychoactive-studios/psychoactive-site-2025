@@ -284,7 +284,7 @@ const onClickHandler = (e) => {
               alt=""
             />
           </div>
-          <div class="heading-h2--mobile">work page</div>
+          <div class="heading-h2--mobile">Work page</div>
         </div>
       </div>
     </footer>
