@@ -23,7 +23,11 @@
   // transform-origin: right bottom;
   z-index: 1;
   mix-blend-mode: exclusion;
+  pointer-events: none;
   display: none;
+  @include respond(mobile) {
+    visibility: hidden;    
+  }
 
   &::before {
     content: '';
