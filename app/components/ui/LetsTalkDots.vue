@@ -4,12 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { gsap } from 'gsap';
 import { usePointer } from '@vueuse/core';
 import useScrollSmoother from '@/composables/useScrollSmoother';
-import useAudioManager from '~/composables/useAudioManager';
 import LinkButton from './LinkButton.vue';
-
-const { playInteractionSound } = useAudioManager();
-
-const letsTalkButtonRef = ref(null);
 
 const props = defineProps({
   mode: {
@@ -19,6 +14,10 @@ const props = defineProps({
   text: {
     type: String,
     default: "let's talk",
+  },
+  href: {
+    type: String,
+    default: '/',
   },
   scale: {
     type: Number,
@@ -536,20 +535,6 @@ onUnmounted(() => {
     if (program) gl.deleteProgram(program);
   }
 });
-
-const talkButtonHoverHandler = () => {
-  playInteractionSound('talk-btn-hover');
-  if (gsap.isTweening(letsTalkButtonRef.value)) return;
-  gsap.to(letsTalkButtonRef.value, {
-    duration: 0.5,
-    ease: 'none',
-    scrambleText: {
-      text: '{original}',
-      chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
-      tweenLength: false,
-    },
-  });
-};
 </script>
 
 <template>
@@ -566,7 +551,7 @@ const talkButtonHoverHandler = () => {
         :style="{ transform: `scale(${scale})` }"
       />
     </div>
-    <LinkButton href="https://superai.com" :mode="props.mode === 'light' ? 'dark' : 'light'" class="lets-talk__link" size="small">
+    <LinkButton :href="href" :mode="props.mode === 'light' ? 'dark' : 'light'" class="lets-talk__link" size="small">
       {{ text }}
     </LinkButton>    
   </section>

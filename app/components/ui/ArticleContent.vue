@@ -78,7 +78,22 @@ defineProps({
               v-for="(child, childIndex) in item.children"
               :key="childIndex"
             >
-              {{ child.text }}
+              <NuxtLink
+                v-if="child.type === 'link'"
+                :to="child.url"
+                :target="child.url.startsWith('http') ? '_blank' : '_self'"
+                :rel="child.url.startsWith('http') ? 'noopener noreferrer' : ''"
+              >
+                <template
+                  v-for="(linkChild, linkChildIndex) in child.children"
+                  :key="linkChildIndex"
+                >
+                  {{ linkChild.text }}
+                </template>
+              </NuxtLink>
+              <template v-else>
+                {{ child.text }}
+              </template>
             </template>
           </p>
 
@@ -132,7 +147,7 @@ defineProps({
 
       <!-- CTA Component -->
       <div v-else-if="block.__component === 'shared.cta'" class="cta">
-        <LetsTalkDots mode="light" :text="block.buttonText" :scale="1.2" />
+        <LetsTalkDots mode="light" :text="block.buttonText" :href="block.buttonLink" :scale="1.2" />
       </div>
 
       <!-- Media Grid Component -->
@@ -242,6 +257,9 @@ defineProps({
       font-size: clamp(getRem(16), 1.667vw, getRem(32));
       line-height: 112.5%;
     }
+  }
+  a {    
+    text-decoration: underline;
   }
   .image {
     margin-top: 120px;

@@ -27,7 +27,7 @@ defineProps({
 
 const talkButtonHoverHandler = (e) => {
   // const buttonType = props.mode === 'light' ? 'dark' : 'light';
-  playInteractionSound('menu-hover-close', 50);
+  playInteractionSound('talk-btn-hover');
 
   const el = e.currentTarget?.querySelector('.link-button__visible-text');
   if (!el || gsap.isTweening(el)) return;
