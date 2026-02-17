@@ -5,6 +5,7 @@ import { gsap } from 'gsap';
 import { usePointer } from '@vueuse/core';
 import useScrollSmoother from '@/composables/useScrollSmoother';
 import useAudioManager from '~/composables/useAudioManager';
+import LinkButton from './LinkButton.vue';
 
 const { playInteractionSound } = useAudioManager();
 
@@ -565,15 +566,9 @@ const talkButtonHoverHandler = () => {
         :style="{ transform: `scale(${scale})` }"
       />
     </div>
-    <a
-      ref="letsTalkButtonRef"
-      href="/"
-      class="lets-talk__link"
-      @mouseenter="talkButtonHoverHandler"
-      @click="playInteractionSound('click-3')"
-    >
+    <LinkButton href="https://superai.com" :mode="props.mode === 'light' ? 'dark' : 'light'" class="lets-talk__link" size="small">
       {{ text }}
-    </a>
+    </LinkButton>    
   </section>
 </template>
 
@@ -589,58 +584,12 @@ const talkButtonHoverHandler = () => {
   position: relative;
 
   &__link {
-    width: 214px;
+    // width: 214px;
     color: currentColor;
     text-decoration: none;
     position: absolute;
-    z-index: 0;
-    @include flex-center;
-    height: 64px;
-    padding: 0 getRem(56);
-    border-radius: 32px;
-    font-family: 'RoobertMono';
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 1.68;
-    text-transform: uppercase;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 48px;
-      z-index: -1;
-      transition: scale 0.3s cubic-bezier(0.33, 1, 0.68, 1);
-    }
-
-    &:hover {
-      &::before {
-        scale: 0.85;
-      }
-    }
-  }
-
-  &--dark {
-    .lets-talk__link {
-      color: $color-background;
-      &::before {
-        background-color: $color-foreground;
-      }
-    }
-  }
-
-  &--light {
-    .lets-talk__link {
-      color: $color-foreground;
-      &::before {
-        background-color: $color-background;
-      }
-    }
-  }
+    z-index: 0;    
+  }  
 }
 
 .dots-wrap {
