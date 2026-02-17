@@ -254,7 +254,7 @@ function footerTextAnimationInit() {
             <ul>
               <li>Published</li>
               <li>
-                {{ formatDate(articleData?.data?.createdAt) }}
+                {{ formatDate(articleData?.data?.published || articleData?.data?.createdAt) }}
               </li>
             </ul>
             <ul>
