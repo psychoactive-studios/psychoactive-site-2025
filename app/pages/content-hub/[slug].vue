@@ -55,6 +55,27 @@ if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
 
+// SEO meta from articleData.data.seo – only set when fields exist
+const seoMeta = computed(() => {
+  const seo = articleData.value?.data?.seo;
+  if (!seo) return {};
+  const meta = {};
+  if (seo.metaTitle) meta.title = seo.metaTitle;
+  if (seo.metaDescription) meta.description = seo.metaDescription;
+  if (seo.shareImage) {
+    const url =
+      typeof seo.shareImage === 'string'
+        ? seo.shareImage
+        : seo.shareImage?.url;
+    if (url) {
+      meta.ogImage = url.startsWith('http') ? url : `${config.public.strapiBaseUrl}${url}`;
+    }
+  }
+  return meta;
+});
+
+useSeoMeta(seoMeta.value);
+
 const readingTime = computed(() => {
   const plainText =
     articleBodyRef.value?.innerText || articleBodyRef?.value?.textContent || '';
