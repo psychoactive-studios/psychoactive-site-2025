@@ -35,9 +35,11 @@ export default defineNuxtConfig({
   // },
 
   runtimeConfig: {
+    strapiPreviewSecret: process.env.STRAPI_PREVIEW_SECRET || '',
     public: {
       strapiBaseUrl: process.env.NUXT_PUBLIC_STRAPI_BASE_URL || 'http://localhost:1337',
       strapiApiKey: process.env.STRAPI_API_KEY || '',
+      strapiPreviewUrl: process.env.STRAPI_PREVIEW_URL || '',
     }
   },
 
