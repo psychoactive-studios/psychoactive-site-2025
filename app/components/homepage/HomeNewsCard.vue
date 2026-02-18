@@ -48,7 +48,7 @@ const handleHoverEffect = () => {
 
   // Store the original text
   gsap.to(titleRef.value, {
-    duration: 1.5,
+    duration: 0.75,
     ease: 'none',
     scrambleText: {
       text: '{original}',
@@ -67,9 +67,6 @@ const onMouseEnterHandler = (e) => {
   handleHoverEffect(e.target);
 };
 
-const onFocusHandler = (e) => {
-  handleHoverEffect(e.target);
-};
 </script>
 
 <template>
@@ -77,7 +74,7 @@ const onFocusHandler = (e) => {
     :to="href"
     class="news-card"
     @mouseenter="onMouseEnterHandler"
-    @focus="onFocusHandler"
+    @mousedown="onMouseDownHandler"    
     @click="() => playRandomSound('click')"
   >
     <div class="news-card__description">
