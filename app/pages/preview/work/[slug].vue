@@ -3,7 +3,6 @@ import gsap from 'gsap';
 
 import Brief from '~/components/layout/Brief.vue';
 import useNavigation from '~/composables/useNavigation';
-import useLoader from '~/composables/useLoader';
 import useHeader from '~/composables/useHeader';
 import useWorks from '~/composables/useWorks';
 
@@ -19,7 +18,6 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 const config = useRuntimeConfig();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
-const { isLoading } = useLoader();
 const { workPageInit, footerTextAnimationInit } = useWorks();
 const { mode } = useHeader();
 const { playInteractionSound } = useAudioManager();
@@ -28,9 +26,16 @@ const { scrollSmoother } = useScrollSmoother();
 const illustrationRef = ref(null);
 const footerRef = ref(null);
 
-const { params } = useRoute();
+const { params, query } = useRoute();
 
-const { data: workData, error } = await useFetch(`/api/works/${params.slug}`, {
+
+if(query.secret !== config.public.strapiPreviewSecret) {
+  useRouter().replace('/not-found');
+}
+
+const { data: workData, error } = await useFetch(`/api/works/${params.slug}?status=${query.status || 'published'}`, {
+  server: false,
+  lazy: true,
   baseURL: config.public.strapiBaseUrl,
   headers: {
     Authorization: `Bearer ${config.public.strapiApiKey}`,
@@ -68,15 +73,28 @@ const seoMeta = computed(() => {
   }
   return meta;
 });
-useSeoMeta(seoMeta.value);
+useSeoMeta(seoMeta);
 
-const { mainTitle, mainImage, hero, article } = workData?.value?.data || {};
+const mainTitle = computed(() => workData.value?.data?.mainTitle);
+const mainImage = computed(() => workData.value?.data?.mainImage);
+const hero = computed(() => workData.value?.data?.hero);
+const article = computed(() => workData.value?.data?.article);
 
-watch(isLoading, (newVal) => {
-  if (!newVal) {
+// Activate animations and functions only after workData is loaded
+watch(
+  () => workData.value?.data,
+  async (data) => {
+    if (!data) return;
+    ctx?.revert();
+    await nextTick();
+    ctx = gsap.context(() => {});
+    animationsInit(ctx);
+    footerTextAnimationInit(ctx, footerRef.value);
     workPageInit();
-  }
-});
+    mode.value = 'light';
+  },
+  { immediate: true }
+);
 
 let ctx;
 let resizeObserver;
@@ -86,23 +104,15 @@ const refreshScrollTrigger = useDebounceFn(() => {
   ScrollTrigger.refresh();
 }, 200);
 
-onMounted(async () => {
+onMounted(() => {
   resizeObserver = new ResizeObserver(() => {
     refreshScrollTrigger();
   });
-
-  // Observe the body for any size changes to trigger ScrollTrigger refresh
   resizeObserver.observe(document.body);
-
-  ctx = gsap.context(() => {});
-  await nextTick();
-  animationsInit(ctx);
-  footerTextAnimationInit(ctx, footerRef.value);
-  mode.value = 'light';
 });
 
 onUnmounted(() => {
-  ctx.revert();
+  ctx?.revert();
   if (resizeObserver) {
     resizeObserver.disconnect();
   }
@@ -115,9 +125,7 @@ definePageMeta({
     mode: 'out-in',
     onEnter: (_, done) => {
       const { showLayoutElementsRequired } = useNavigation();
-      const { workPageInit } = useWorks();
       done();
-      workPageInit(ctx);
       showLayoutElementsRequired.value = false;
     },
     onLeave: (el, done) => {
@@ -309,10 +317,12 @@ const onClickHandler = (e) => {
       </div>
     </footer>
   </main>
-  <div v-else class="no-data">
-    <p>Something went wrong.</p>
-    <p>No data available.</p>
+  <div v-else>
+    <div class="no-data">
+      <p>Loading, please wait...</p>
+    </div>  
   </div>
+  
 </template>
 
 <style scoped lang="scss">

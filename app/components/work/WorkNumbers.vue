@@ -77,17 +77,17 @@ watch(
         number: Number(item.number),
       }));
 
-      nextTick(() => {
-        initAnimation();
-      });
+      setTimeout(() => {
+        initAnimation();        
+      }, 1000);      
     }
   },
   { immediate: true, deep: true }
 );
 
-onMounted(() => {
-  initAnimation();
-});
+// onMounted(() => {
+//   initAnimation();
+// });
 
 onUnmounted(() => {
   if (tl) tl.kill();

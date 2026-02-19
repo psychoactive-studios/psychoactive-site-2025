@@ -32,6 +32,12 @@ const footerRef = ref(null);
 
 const { params, query } = useRoute();
 
+
+if(query.secret !== config.public.strapiPreviewSecret) {
+  useRouter().replace('/not-found');
+}
+
+
 const { data: articleData, error } = await useFetch(
   `/api/articles/${params.slug}?status=${query.status || 'published'}`,
   {
@@ -115,8 +121,8 @@ onUnmounted(() => {
   }
 });
 
-watch(isLoading, (loading) => {
-  if (!loading) {
+watch([isLoading, articleData], (loading, articleData) => {
+  if (!loading && articleData?.data) {
     enterAnimation();
   }
 });
@@ -534,7 +540,7 @@ function footerTextAnimationInit() {
     </footer>
   </main>
   <div v-else class="no-data">
-    <p>Loading, please wait...</p>    
+    <p>Loading, please wait...</p>
   </div>
 </template>
 
