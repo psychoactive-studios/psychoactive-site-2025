@@ -33,7 +33,9 @@ const footerRef = ref(null);
 const { params, query } = useRoute();
 
 
-if(query.secret !== config.public.strapiPreviewSecret) {
+
+
+if(query.secret !== config.public.strapiPreviewSecret) {  
   useRouter().replace('/not-found');
 }
 
@@ -42,6 +44,7 @@ const { data: articleData, error } = await useFetch(
   `/api/articles/${params.slug}?status=${query.status || 'published'}`,
   {
     server: false,
+    lazy: true,
     baseURL: config.public.strapiBaseUrl,
     headers: {
       Authorization: `Bearer ${config.public.strapiApiKey}`,
@@ -121,11 +124,16 @@ onUnmounted(() => {
   }
 });
 
-watch([isLoading, articleData], (loading, articleData) => {
-  if (!loading && articleData?.data) {
+watch(
+  () => articleData.value?.data,
+  async (data) => {    
+    if (!data) return;
     enterAnimation();
-  }
-});
+  },
+  { immediate: true }
+);
+
+
 
 definePageMeta({
   scrollToTop: true,
