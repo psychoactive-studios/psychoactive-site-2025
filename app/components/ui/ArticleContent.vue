@@ -286,8 +286,7 @@ defineProps({
         grid-template-columns: 1fr;
       }
       img {
-        width: 100%;
-        aspect-ratio: 1 / 1;
+        width: 100%;        
         object-fit: cover;
       }
     }

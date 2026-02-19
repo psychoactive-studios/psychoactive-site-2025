@@ -48,7 +48,7 @@ const handleHoverEffect = () => {
 
   // Store the original text
   gsap.to(titleRef.value, {
-    duration: 0.75,
+    duration: 0.5,
     ease: 'none',
     scrambleText: {
       text: '{original}',
@@ -103,10 +103,11 @@ const onMouseEnterHandler = (e) => {
 @use '~/assets/styles/mixins' as *;
 .news-card {
   border-radius: 8px;
-  background: #1b1b1b;
+  background-color: #1b1b1b;
   padding: clamp(0.625rem, 0.833vw, 1rem);
   display: flex;
   gap: 1rem;
+  transition: background-color 0.3s ease;
   @media screen and (max-width: 1400px) {
     padding: 1rem;
   }
@@ -176,9 +177,10 @@ const onMouseEnterHandler = (e) => {
     }
   }
   &:hover {
-    .news-card__image img {
-      transform: scale(1.25);
-    }
+    // .news-card__image img {
+    //   transform: scale(1.25);
+    // }
+    background-color: white(5);
     .news-card__description_info::before {
       animation: flicker-effect-5 0.5s forwards;
     }
