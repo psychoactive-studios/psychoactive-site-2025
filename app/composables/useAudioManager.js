@@ -65,77 +65,88 @@ const fadeTimer = ref(null);
 const currentLoopSound = ref(null);
 const currentLoopId = ref(null);
 const currentLoopStartTime = ref(0);
+const globalVolume = ref(0.3);
 
 const { addResourceToLoad, resourceLoaded } = useLoader();
 
 export default function () {
   const isMobile = useMediaQuery('(max-width: 768px)');
 
+  const customVolumes = {
+    'awards-footer-hover-1': 0.6,
+    'awards-footer-hover-2': 0.6,
+    'awards-footer-hover-3': 0.6,
+    'awards-footer-hover-4': 0.6,
+    'awards-footer-hover-5': 0.6,
+    'text-hover-short': 0.6,
+    'scroll-btn-hover': 0.6,
+    'text-hover-1': 0.6,
+    'text-hover-2': 0.6,
+    'text-hover-3': 0.6,
+    'text-hover-4': 0.6,
+    'text-hover-5': 0.6,
+    'text-hover-short': 0.6,
+    'share-hover': 1,
+  };
+
   function loadSounds() {
-    if (isMobile.value) {
-      const frogSound = '/sound/frog-new.wav';
+    const filesToLoad = isMobile.value ? ['/sound/frog-new.mp3'] : fileList;
 
-      if (sounds[frogSound]) return;
+    const newSounds = filesToLoad.filter((file) => !sounds[file]);
+    if (newSounds.length === 0) return;
 
-      addResourceToLoad(1);
+    addResourceToLoad(newSounds.length);
 
-      const sound = new Howl({
-        src: frogSound,
-        volume: 0.5,
-        onload: () => {
-          resourceLoaded();
-        },
-        onloaderror: () => {
-          resourceLoaded();
-        },
+    newSounds.forEach((file) => {
+      const customKey = Object.keys(customVolumes).find((key) =>
+        file.includes(key)
+      );
+
+      const targetVolume =
+        customKey !== undefined
+          ? customVolumes[customKey]
+          : Number(globalVolume.value);
+
+      // CRITICAL FIX: Ensure mobile frog sound gets passed exactly like your original working code
+      const srcFormat =
+        isMobile.value && file === '/sound/frog-new.mp3' ? file : [file];
+
+      sounds[file] = new Howl({
+        src: srcFormat,
+        volume: targetVolume,
+        onload: () => resourceLoaded(),
+        onloaderror: () => resourceLoaded(),
       });
-      sounds[frogSound] = sound;
-    } else {
-      const newSounds = fileList.filter((file) => !sounds[file]);
-
-      if (newSounds.length === 0) return;
-
-      addResourceToLoad(newSounds.length);
-
-      newSounds.forEach((file) => {
-        const sound = new Howl({
-          src: [file],
-          volume: 0.5,
-          onload: () => {
-            resourceLoaded();
-          },
-          onloaderror: () => {
-            resourceLoaded();
-          },
-        });
-        sounds[file] = sound;
-      });
-    }
+    });
   }
 
   function playInteractionSound(name = 'text-hover-short', delay = 0) {
-    if (isMuted.value) return;
-
     const isMetamorphosis = name === 'frog-new';
+
+    if (isMuted.value && !isMetamorphosis) return;
     if (isMobile.value && !isMetamorphosis) return;
 
-    const fullPath = fileList.find((path) => path.includes(name));
-
-    if (!fullPath) {
-      console.warn(`Sound not found: ${name}`);
-      return;
+    let fullPath;
+    if (isMetamorphosis) {
+      fullPath = Object.keys(sounds).find((path) => path.includes('frog-new'));
+      if (!fullPath)
+        fullPath = isMobile.value
+          ? '/sound/frog-new.wav'
+          : '/sound/frog-new.mp3';
+    } else {
+      fullPath = fileList.find((path) => path.includes(name));
     }
+
+    if (!fullPath) return;
 
     const sound = sounds[fullPath];
 
     if (sound) {
       if (delay === 0) {
         sound.play();
-        console.log(`Playing sound (sync): ${name}`);
       } else {
         setTimeout(() => {
           sound.play();
-          console.log(`Playing sound (async): ${name} with delay: ${delay}ms`);
         }, delay);
       }
     }
@@ -196,14 +207,19 @@ export default function () {
       currentLoopId.value = id;
 
       sound.volume(0, id);
-      sound.fade(0, 0.5, isFirstPlay ? masterFadeIn : crossfadeTime, id);
+      sound.fade(
+        0,
+        globalVolume.value,
+        isFirstPlay ? masterFadeIn : crossfadeTime,
+        id
+      );
       isFirstPlay = false;
 
       if (fadeTimer.value) clearTimeout(fadeTimer.value);
 
       fadeTimer.value = setTimeout(() => {
         if (sound.playing(id)) {
-          sound.fade(0.5, 0, crossfadeTime, id);
+          sound.fade(globalVolume.value, 0, crossfadeTime, id);
         }
       }, loopDuration - crossfadeTime);
 
@@ -243,25 +259,23 @@ export default function () {
       currentLoopId.value = null;
     }
   }
-  function setSoundVolume(name, volume) {
-    const fullPath = fileList.find((path) => path.includes(name));
+  // function setSoundVolume(name, volume) {
+  //   const fullPath = fileList.find((path) => path.includes(name));
 
-    if (!fullPath || !sounds[fullPath]) {
-      console.warn(
-        `Cannot set volume: Sound '${name}' not found or not loaded.`
-      );
-      return;
-    }
-
-    sounds[fullPath].volume(volume);
-  }
+  //   if (!fullPath || !sounds[fullPath]) {
+  //     console.warn(
+  //       `Cannot set volume: Sound '${name}' not found or not loaded.`
+  //     );
+  //     return;
+  //   }
+  //   sounds[fullPath].volume(volume);
+  // }
 
   return {
     isMuted,
     loadSounds,
     playInteractionSound,
     playRandomSound,
-    setSoundVolume,
     playContinuousSound,
     stopContinuousSound,
     isSoundApproved,

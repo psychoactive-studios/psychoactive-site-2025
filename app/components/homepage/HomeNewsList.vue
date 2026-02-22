@@ -1,6 +1,9 @@
 <script setup>
 import HomeNewsCard from './HomeNewsCard.vue';
 import LinkWithHover from '../ui/LinkWithHover.vue';
+import useAudioManager from '~/composables/useAudioManager';
+
+const { playRandomSound } = useAudioManager();
 
 defineProps({
   data: {
@@ -37,7 +40,10 @@ const getHref = (news) => {
       </div>
       <div class="news-list__more body-button">
         <div class="news-list__more_line" />
-        <LinkWithHover href="/content-hub">
+        <LinkWithHover
+          href="/content-hub"
+          @click="() => playRandomSound('click')"
+        >
           Explore Our Content Hub
         </LinkWithHover>
         <div class="news-list__more_line" />
