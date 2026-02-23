@@ -17,7 +17,6 @@ defineProps({
 });
 const handleClick = () => {
   playRandomSound('click');
-  playInteractionSound('menu-close', 200);
 };
 </script>
 

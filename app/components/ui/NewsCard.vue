@@ -69,7 +69,6 @@ const onFocusHandler = (e) => {
 
 const handleSoundClick = () => {
   playRandomSound('click');
-  playInteractionSound('menu-close', 150);
 };
 </script>
 

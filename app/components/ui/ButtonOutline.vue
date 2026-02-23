@@ -18,7 +18,7 @@ defineProps({
 });
 
 const talkButtonHoverHandler = () => {
-  playInteractionSound();
+  playInteractionSound('text-hover');
   const container = buttonRef.value?.$el || buttonRef.value;
   const el = container?.querySelector('.button__visible-text');
   if (!el || gsap.isTweening(el)) return;
@@ -48,7 +48,6 @@ const talkButtonHoverHandler = () => {
     :type="!href ? 'button' : undefined"
     :class="['button', `button--${mode}`]"
     @mouseenter="talkButtonHoverHandler"
-    @focus="talkButtonHoverHandler"
   >
     <span class="button__hidden-text">
       <slot />
