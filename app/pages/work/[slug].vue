@@ -212,13 +212,15 @@ const onClickHandler = (e) => {
       x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2,
   });
 };
+
+
 </script>
 <template>
   <main v-if="workData?.data" class="work">
     <div class="work__header--desktop">
       <!-- Illustration section -->
       <section ref="illustrationRef" class="work__illustration">
-        <img :src="mainImage.url" alt="SuperAI Conference Illustration" />
+        <img :src="mainImage?.url" alt="SuperAI Conference Illustration" />
         <div class="work__illustration_scroll">
           <div id="work-scroll-down-text" class="body-button">scroll down</div>
           <ButtonDotsArrow
@@ -265,7 +267,7 @@ const onClickHandler = (e) => {
             <li><span>CLIENT:</span> {{ hero?.client }}</li>
           </ul>
           <div class="work__illustration">
-            <img :src="mainImage.formats.medium.url" :alt="mainTitle" />
+            <img :src="mainImage?.formats?.medium?.url || mainImage?.url" :alt="mainTitle" />
             <div class="work__illustration_bg" />
           </div>
         </div>
