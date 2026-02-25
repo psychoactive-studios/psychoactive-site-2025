@@ -51,8 +51,11 @@ const { data: workData, error } = await useFetch(`/api/works/${params.slug}?stat
   },
 });
 
-if (error.value) {
-  console.error('Error fetching work data:', error.value);
+if (error.value || !workData.value?.data) {  
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Case Study Not Found',    
+  });
 }
 
 // SEO meta from workData.data.seo – only set when fields exist

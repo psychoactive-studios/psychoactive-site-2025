@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     prerender: {
       // Automatically crawls all <a> links on pages and generates them
       crawlLinks: true,
+      failOnError: false,
       // Manually specify routes that must be generated
       // routes: ['/'],
       // If an error occurs on a page, the build won't fail

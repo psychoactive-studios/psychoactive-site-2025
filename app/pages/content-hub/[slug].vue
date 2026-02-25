@@ -51,8 +51,11 @@ const { data: articleData, error } = await useFetch(
   }
 );
 
-if (error.value) {
-  console.error('Error fetching article data:', error.value);
+if (error.value || !articleData.value?.data) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Article Not Found',    
+  });
 }
 
 // SEO meta from articleData.data.seo – only set when fields exist
