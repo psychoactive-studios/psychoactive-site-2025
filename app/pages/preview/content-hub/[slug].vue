@@ -39,6 +39,9 @@ if(query.secret !== config.public.strapiPreviewSecret) {
   useRouter().replace('/not-found');
 }
 
+console.log('URL: ', `${config.public.strapiBaseUrl}/api/articles/${params.slug}?status=${query.status || 'published'}`);
+console.log('API: ', config.public.strapiBaseUrl);
+
 
 const { data: articleData, error } = await useFetch(
   `/api/articles/${params.slug}?status=${query.status || 'published'}`,
