@@ -40,7 +40,7 @@ onMounted(async () => {
     });
 
     player.value.src({
-      src: 'sRTLFz00vPmVGILDDNh1D3cOLcutWv8hM6asar6YFcdc',
+      src: 'DGN9W75V8nDh4aERGzkYEbj4VOptDviiaNfPY6gA6Is',
       type: 'video/mux',
     });
   }
