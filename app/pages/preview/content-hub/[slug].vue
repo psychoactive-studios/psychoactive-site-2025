@@ -39,9 +39,6 @@ if(query.secret !== config.public.strapiPreviewSecret) {
   useRouter().replace('/not-found');
 }
 
-console.log('URL: ', `${config.public.strapiBaseUrl}/api/articles/${params.slug}?status=${query.status || 'published'}`);
-console.log('API: ', config.public.strapiBaseUrl);
-
 
 const { data: articleData, error } = await useFetch(
   `/api/articles/${params.slug}?status=${query.status || 'published'}`,
@@ -64,11 +61,8 @@ const { data: articleData, error } = await useFetch(
   }
 );
 
-if (error.value || !articleData.value?.data) {  
-  throw createError({
-    statusCode: 404,
-    statusMessage: 'Article Not Found',    
-  });
+if (error.value) {
+  console.error('Error fetching article data:', error.value);
 }
 
 // SEO meta from articleData.data.seo – only set when fields exist

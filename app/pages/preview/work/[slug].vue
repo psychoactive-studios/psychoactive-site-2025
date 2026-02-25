@@ -33,10 +33,6 @@ if(query.secret !== config.public.strapiPreviewSecret) {
   useRouter().replace('/not-found');
 }
 
-console.log('URL: ', `${config.public.strapiBaseUrl}/api/works/${params.slug}?status=${query.status || 'published'}`);
-console.log('API: ', config.public.strapiApiKey);
-
-
 const { data: workData, error } = await useFetch(`/api/works/${params.slug}?status=${query.status || 'published'}`, {
   server: false,
   lazy: true,
@@ -55,11 +51,8 @@ const { data: workData, error } = await useFetch(`/api/works/${params.slug}?stat
   },
 });
 
-if (error.value || !workData.value?.data) {  
-  throw createError({
-    statusCode: 404,
-    statusMessage: 'Case Study Not Found',    
-  });
+if (error.value) {
+  console.error('Error fetching work data:', error.value);
 }
 
 // SEO meta from workData.data.seo – only set when fields exist
