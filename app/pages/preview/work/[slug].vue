@@ -273,7 +273,7 @@ const onClickHandler = (e) => {
             <li><span>CLIENT:</span> {{ hero?.client }}</li>
           </ul>
           <div class="work__illustration">
-            <img :src="mainImage.formats.medium.url" :alt="mainTitle" />
+            <img :src="mainImage?.formats?.medium?.url || mainImage?.url" :alt="mainTitle" />
             <div class="work__illustration_bg" />
           </div>
         </div>
