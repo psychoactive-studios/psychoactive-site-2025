@@ -45,14 +45,30 @@ console.log('data', props.data);
       <!-- Fullwidth Image section -->
       <section
         v-if="block.__component === 'work.fullwidth-image' && !!block.image"
-        class="work__full-image"
-      >
-        <img
-          :src="block.image?.url"
-          :srcset="getSrcSet(block.image)"
-          sizes="100vw"
-          alt="Image"
+        :class="['work__full-image', { 'work__full-image--with-mobile': block.mobile }]"
+      >      
+        <video v-if="block.image.mime === 'video/mp4'" class="work__full-image_video" :src="block.image?.url"
+          autoplay
+          muted
+          loop
+          playsinline
         />
+        <img
+          v-else
+            class="work__full-image_image"
+            :src="block.image?.url"
+            :srcset="getSrcSet(block.image)"
+            sizes="100vw"
+            alt="Image"
+          />
+          <img          
+            v-if="block.mobile"
+            class="work__full-image_mobile-mobile"
+            :src="block.mobile?.url"
+            :srcset="getSrcSet(block.mobile)"
+            sizes="100vw"
+            alt="Image"
+          />
       </section>
 
       <!-- Text section -->
@@ -85,12 +101,28 @@ console.log('data', props.data);
       <!-- Container Image section -->
       <section
         v-if="block.__component === 'work.container-image' && !!block.image"
-        class="work__full-image"
+        :class="['work__full-image', { 'work__full-image--with-mobile': block.mobile }]"
       >
         <div class="container">
-          <img
+          <video v-if="block.image.mime === 'video/mp4'" class="work__full-image_video" :src="block.image?.url"
+          autoplay
+          muted
+          loop
+          playsinline
+        />
+        <img
+          v-else
+            class="work__full-image_image"
             :src="block.image?.url"
             :srcset="getSrcSet(block.image)"
+            sizes="100vw"
+            alt="Image"
+          />
+          <img          
+            v-if="block.mobile"
+            class="work__full-image_mobile-mobile"
+            :src="block.mobile?.url"
+            :srcset="getSrcSet(block.mobile)"
             sizes="100vw"
             alt="Image"
           />
@@ -163,6 +195,22 @@ console.log('data', props.data);
       width: 100%;
       height: auto;
       object-fit: cover;
+    }
+    &_image {
+      display: block;
+    }
+    &_mobile-mobile {
+      display: none;
+    }
+    &--with-mobile{
+      @include respond(mobile) {
+        .work__full-image_image {
+          display: none;
+        }
+        .work__full-image_mobile-mobile {
+          display: block;
+        }
+      }
     }
   }
   &__text-section {
