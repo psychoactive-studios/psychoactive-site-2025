@@ -409,7 +409,7 @@ const onClickHandler = (e) => {
             &::before {
               content: '';
               display: inline-block;
-              width: 3.9vw;
+              width: 3.9vw;              
             }
           }
           p {
@@ -469,13 +469,13 @@ const onClickHandler = (e) => {
             font-weight: 400;
             line-height: 140%; /* 22.4px */
 
-            & > *:first-child {
-              &::before {
-                content: '';
-                display: inline-block;
-                width: 10vw;
-              }
-            }
+            // & > *:first-child {
+            //   &::before {
+            //     content: '';
+            //     display: inline-block;
+            //     width: 10vw;
+            //   }
+            // }
             p {
               margin-bottom: 1.5em;
               &:last-child {
