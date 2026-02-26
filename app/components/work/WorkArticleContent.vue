@@ -155,20 +155,36 @@ console.log('data', props.data);
         class="work__mobile-section"
       >
         <img
-          :src="block.mainImage.url"
+          :src="block.mainImage?.url"
           alt="Image-1"
           class="work__mobile-section-image-1"
         />
         <img
-          :src="block.image1.url"
+          :src="block.image1?.url"
           alt="Image-2"
           class="work__mobile-section-image-2"
         />
         <img
-          :src="block.image2.url"
+          :src="block.image2?.url"
           alt="Image-2"
           class="work__mobile-section-image-3"
         />
+      </section>
+
+      <!-- Media Grid Section -->
+      <section
+        v-if="block.__component === 'shared.media-grid'"
+        class="work__media-grid"
+      >
+      <div class="container">
+        <img
+          v-for="image in block.mediaGrid"
+          :key="image.id"
+          :src="image?.url"
+          alt="Image-1"
+          class="work__media-grid-image"
+        />
+      </div>
       </section>
 
       <!-- CTA section -->
@@ -330,6 +346,23 @@ console.log('data', props.data);
     }
   }
 
+  &__media-grid {
+    margin-top: 120px;
+    margin-bottom: 120px;
+    @include respond(mobile) {
+      margin-top: 60px;
+      margin-bottom: 60px;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+    &-image {
+      width: 100%;
+      height: auto;      
+    }
+  }
   &__mobile-section {
     margin-top: 120px;
     padding-bottom: 120px;
