@@ -1,5 +1,6 @@
 <script setup>
 import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
 
 const numbersRef = ref(null);
 
@@ -15,6 +16,11 @@ let tl = null;
 
 const initAnimation = () => {
   if (!numbersRef.value || !displayItems.value.length) return;
+
+  SplitText.create('.work__numbers_number', {
+    type: 'chars',
+    charsClass: 'char-center',
+  }).chars;
 
   // Kill previous timeline if exists
   if (tl) tl.kill();
@@ -37,18 +43,29 @@ const initAnimation = () => {
     'start'
   );
 
-  displayItems.value.forEach((item, index) => {
-    const position = index === 0 ? 'start' : 'start+=0.2';
-    tl.from(
-      item,
+  numbersRef.value.querySelectorAll('.work__numbers_number').forEach((item, index) => {
+    const position = index === 0 ? 'start' : `start+=${index * 0.2}`;
+    tl.to(
+      item.querySelectorAll('.char-center'),
       {
-        number: 0,
-        duration: 1.5,
-        ease: 'power1.out',
+        duration: 3.5,
+        scrambleText: {
+          text: '{original}',
+          chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+          tweenLength: false,
+        },
       },
       position
-    );
-  });
+    )
+    .from(item.querySelectorAll('.char-center'), {
+      opacity: 0,
+      duration: 0.01,
+      stagger: {
+        amount: 1,
+        from: 'random',
+      },
+    }, position);
+  });  
 
   tl.fromTo(
     '.work__numbers_title-text',
@@ -70,13 +87,9 @@ const initAnimation = () => {
 
 watch(
   () => props.data,
-  (newData) => {
-    if (newData && newData.numberItem) {
-      displayItems.value = newData.numberItem.map((item) => ({
-        ...item,
-        number: Number(item.number),
-      }));
-
+  (newData) => {    
+    if (newData && newData.stats) {
+      displayItems.value = newData.stats;
       setTimeout(() => {
         initAnimation();        
       }, 1000);      
@@ -96,14 +109,13 @@ onUnmounted(() => {
 
 <template>
   <section ref="numbersRef" class="work__numbers">
-    <div class="container">
-      <ul class="work__numbers_list">
+    <div class="container">      
+      <ul :class="['work__numbers_list', { 'work__numbers_list--small': data.size === 'small' }]">
         <li v-for="item in displayItems" :key="item.id">
-          <div class="work__numbers_number">
-            {{ Math.floor(item.number).toLocaleString('en-US')
-            }}{{ item.suffix }}
+          <div class="work__numbers_number">            
+            {{ item.text }}
           </div>
-          <div class="work__numbers_title">
+          <div v-if="item.title" class="work__numbers_title">
             <div class="work__numbers_title-text">{{ item.title }}</div>
             <div class="work__numbers_title-line">
               <span class="line" />
@@ -133,12 +145,22 @@ onUnmounted(() => {
       margin-top: 60px;
       grid-template-columns: 1fr;
     }
+    &--small {    
+      row-gap: 8.5vw;
+      .work__numbers_number {        
+        font-size: max(4.275vw, 48px);
+        font-style: normal;
+        font-weight: 400;
+        line-height: 110%; /* 90.2px */
+        letter-spacing: -0.06em;
+      }
+    }
     li {
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
-  }
+  }  
   &_number {
     font-size: max(6.25vw, 64px);
     font-style: normal;

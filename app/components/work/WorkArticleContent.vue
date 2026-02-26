@@ -40,7 +40,7 @@ console.log('data', props.data);
   <article>
     <template v-for="(block, index) in data" :key="index">
       <!-- Numbers section -->
-      <WorkNumbers v-if="block.__component === 'work.numbers'" :data="block" />
+      <WorkNumbers v-if="block.__component === 'work.stats-grid'" :data="block" />
 
       <!-- Fullwidth Image section -->
       <section
