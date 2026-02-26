@@ -3,7 +3,7 @@ import WorkTextSection from '../ui/WorkTextSection.vue';
 import WorkCTAButton from './WorkCTAButton.vue';
 import WorkNumbers from './WorkNumbers.vue';
 
-defineProps({
+const props = defineProps({
   data: {
     type: Object,
     required: true,
@@ -31,6 +31,9 @@ const getSrcSet = (image) => {
 
   return srcSet.join(', ');
 };
+
+
+console.log('data', props.data);
 </script>
 
 <template>
@@ -41,11 +44,11 @@ const getSrcSet = (image) => {
 
       <!-- Fullwidth Image section -->
       <section
-        v-if="block.__component === 'work.fullwidth-image'"
+        v-if="block.__component === 'work.fullwidth-image' && !!block.image"
         class="work__full-image"
       >
         <img
-          :src="block.image.url"
+          :src="block.image?.url"
           :srcset="getSrcSet(block.image)"
           sizes="100vw"
           alt="Image"
@@ -64,14 +67,29 @@ const getSrcSet = (image) => {
         </div>
       </section>
 
+      <!-- Quote section -->
+      <section
+        v-if="block.__component === 'work.quote'"
+        class="work__quote-section"
+      >
+        <div class="container">
+          <div class="work__quote-section_text">
+            {{ block.text ? block.text.replace(/&nbsp;|\u00A0/g, ' ') : '' }}
+          </div>
+          <div v-if="block.subTitle" class="work__quote-section_subheader subheader">
+            {{ block.subTitle }}
+          </div>
+        </div>
+      </section>
+
       <!-- Container Image section -->
       <section
-        v-if="block.__component === 'work.container-image'"
+        v-if="block.__component === 'work.container-image' && !!block.image"
         class="work__full-image"
       >
         <div class="container">
           <img
-            :src="block.image.url"
+            :src="block.image?.url"
             :srcset="getSrcSet(block.image)"
             sizes="100vw"
             alt="Image"
@@ -151,6 +169,36 @@ const getSrcSet = (image) => {
     padding: 120px 0;
     @include respond(mobile) {
       padding: 60px 0;
+    }
+  }
+  &__quote-section {
+    padding: 120px 0;
+    @include respond(mobile) {
+      padding: 60px 0;
+    }    
+    &_text {
+      white-space: pre-wrap;
+      font-size: max(2.5vw, 32px);
+      font-style: normal;
+      font-weight: 400;
+      line-height: 120%;
+      letter-spacing: -0.96px;
+      text-align: center;
+      max-width: 66.23%;
+      margin: 0 auto;
+      @include respond(mobile) {
+        max-width: initial;
+        font-size: 6.4vw;
+        letter-spacing: -.48px;
+      }
+    }
+    &_subheader {      
+      text-align: center;
+      max-width: 66.23%;
+      margin: 20px auto 0 auto;
+      @include respond(mobile) {
+        max-width: initial;
+      }
     }
   }
   &__feedback {
