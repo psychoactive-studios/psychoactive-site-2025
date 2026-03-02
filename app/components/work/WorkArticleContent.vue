@@ -207,7 +207,7 @@ console.log('data', props.data);
     @include respond(mobile) {
       padding: 60px 0;
     }
-    img {
+    img, video {
       width: 100%;
       height: auto;
       object-fit: cover;
