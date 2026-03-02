@@ -58,6 +58,9 @@ if (error.value || !articleData.value?.data) {
   });
 }
 
+
+console.log('articleData', articleData.value);
+
 // SEO meta from articleData.data.seo – only set when fields exist
 const seoMeta = computed(() => {
   const seo = articleData.value?.data?.seo;

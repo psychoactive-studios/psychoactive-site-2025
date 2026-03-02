@@ -1,5 +1,6 @@
 <script setup>
 import LetsTalkDots from './LetsTalkDots.vue';
+import ArticleList from './ArticleList.vue';
 
 defineProps({
   data: {
@@ -97,29 +98,12 @@ defineProps({
             </template>
           </p>
 
-          <!-- Ordered List -->
-          <ol v-else-if="item.type === 'list' && item.format === 'ordered'">
-            <li v-for="(listItem, listIndex) in item.children" :key="listIndex">
-              <template
-                v-for="(child, childIndex) in listItem.children"
-                :key="childIndex"
-              >
-                {{ child.text }}
-              </template>
-            </li>
-          </ol>
+          <!-- List (Ordered & Unordered) -->
+          <ArticleList
+            v-else-if="item.type === 'list'"
+            :item="item"
+          />
 
-          <!-- Unordered List -->
-          <ul v-else-if="item.type === 'list' && item.format === 'unordered'">
-            <li v-for="(listItem, listIndex) in item.children" :key="listIndex">
-              <template
-                v-for="(child, childIndex) in listItem.children"
-                :key="childIndex"
-              >
-                {{ child.text }}
-              </template>
-            </li>
-          </ul>
         </template>
       </div>
 
@@ -368,23 +352,6 @@ defineProps({
       margin-top: 48px;
       margin-bottom: 48px;
     }
-  }
-  ol,
-  ul {
-    font-size: inherit;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 1.25;
-    padding-left: getRem(32);
-    li {
-      margin-bottom: 1.67em;
-    }
-  }
-  ol {
-    list-style-type: decimal;
-  }
-  ul {
-    list-style-type: disc;
   }
 }
 </style>

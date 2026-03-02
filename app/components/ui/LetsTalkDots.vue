@@ -568,9 +568,8 @@ onUnmounted(() => {
   display: flex;
   position: relative;
 
-  &__link {
-    // width: 214px;
-    color: currentColor;
+  a.lets-talk__link, button.lets-talk__link {
+    // width: 214px;    
     text-decoration: none;
     position: absolute;
     z-index: 0;    
