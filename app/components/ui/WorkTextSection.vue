@@ -100,15 +100,14 @@ onUnmounted(() => {
     font-style: normal;
     font-weight: 500;
     line-height: 100%;
-    text-transform: uppercase;
-    white-space: nowrap;
+    text-transform: uppercase;    
     margin-top: 0.4rem;
     min-width: 0;
     @include respond(mobile) {
       font-size: max(3.2vw, 12px);
       font-style: normal;
       font-weight: 500;
-      line-height: 72%;
+      line-height: 100%;      
     }
   }
   &__description {
