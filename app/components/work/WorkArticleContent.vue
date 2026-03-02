@@ -32,8 +32,6 @@ const getSrcSet = (image) => {
   return srcSet.join(', ');
 };
 
-
-console.log('data', props.data);
 </script>
 
 <template>
