@@ -18,9 +18,9 @@ const initAnimation = () => {
   if (!numbersRef.value || !displayItems.value.length) return;
 
   SplitText.create('.work__numbers_number', {
-    type: 'chars',
+    type: 'words, chars',
     charsClass: 'char-center',
-  }).chars;
+  });
 
   // Kill previous timeline if exists
   if (tl) tl.kill();
