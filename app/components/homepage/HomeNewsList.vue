@@ -32,7 +32,7 @@ const getHref = (news) => {
           v-for="news in data"
           :key="news.id"
           :title="news.title"
-          :category="news.category.name"
+          :category="news.category?.name"
           :date="news.updatedAt"
           :src="news.preview?.formats?.medium?.url || news.preview?.url"
           :href="getHref(news)"

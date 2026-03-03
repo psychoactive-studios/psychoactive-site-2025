@@ -222,7 +222,6 @@ definePageMeta({
 
         <!-- News Section -->
         <HomeNewsList :data="articles" />
-
         <!-- Awards Section -->
         <HomeAwards />
       </div>

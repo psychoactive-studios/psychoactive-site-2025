@@ -42,7 +42,7 @@ const handleHoverEffect = () => {
   if (gsap.isTweening(titleRef.value) || pointerType.value === 'touch') return;
 
   // Set the width to prevent layout shift
-  const width = titleRef.value.offsetWidth;
+  const width = titleRef.value.offsetWidth -1;
   const height = titleRef.value.offsetHeight;
   gsap.set(titleRef.value, { width, height });
 
