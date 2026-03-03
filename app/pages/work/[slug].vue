@@ -53,27 +53,19 @@ if (error.value || !workData.value?.data) {
   });
 }
 
+const { mainTitle, mainImage, hero, article } = workData?.value?.data || {};
+
 // SEO meta from workData.data.seo – only set when fields exist
 const seoMeta = computed(() => {
-  const seo = workData.value?.data?.seo;
-  if (!seo) return {};
+  const seo = workData.value?.data?.seo;  
   const meta = {};
-  if (seo.metaTitle) meta.title = seo.metaTitle;
-  if (seo.metaDescription) meta.description = seo.metaDescription;
-  if (seo.shareImage) {
-    const url =
-      typeof seo.shareImage === 'string'
-        ? seo.shareImage
-        : seo.shareImage?.url;
-    if (url) {
-      meta.ogImage = url.startsWith('http') ? url : `${config.public.strapiBaseUrl}${url}`;
-    }
-  }
+  meta.title = seo?.metaTitle || mainTitle;  
+  if (seo?.metaDescription) meta.description = seo?.metaDescription;    
+  meta.ogImage = mainImage?.url; 
   return meta;
 });
-useSeoMeta(seoMeta.value);
 
-const { mainTitle, mainImage, hero, article } = workData?.value?.data || {};
+useSeoMeta(seoMeta.value);
 
 watch(isLoading, (newVal) => {
   if (!newVal) {
