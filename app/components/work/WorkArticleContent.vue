@@ -35,10 +35,13 @@ const getSrcSet = (image) => {
 </script>
 
 <template>
-  <article>
+  <article class="work">
     <template v-for="(block, index) in data" :key="index">
       <!-- Numbers section -->
       <WorkNumbers v-if="block.__component === 'work.stats-grid'" :data="block" />
+
+      <!-- Centered Stat -->
+      <WorkCenteredStat  v-if="block.__component === 'work.centered-stat'" :data="block" />
 
       <!-- Fullwidth Image section -->
       <section
@@ -200,6 +203,8 @@ const getSrcSet = (image) => {
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/mixins' as *;
 .work {
+  position: relative;
+  z-index: 1;
   &__full-image {
     padding: 120px 0;
     @include respond(mobile) {
