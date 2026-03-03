@@ -84,7 +84,7 @@ const handleSoundClick = () => {
     <div class="news-card__description">
       <div class="news-card__description_info">
         <div class="news-card__description_info--category">
-          {{ data.category.name }}
+          {{ data.category?.name }}
         </div>
         <div class="news-card__description_info--date">
           {{ publishedAt }}

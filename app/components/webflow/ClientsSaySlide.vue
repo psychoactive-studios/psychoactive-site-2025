@@ -25,10 +25,10 @@ const { feedback } = props;
       </div>
       <div class="slide__body-author">
         <div class="slide__body-author-name body-large--mobile">
-          {{ feedback.client.name }}
+          {{ feedback.client?.name }}
         </div>
         <div class="slide__body-author-position subheader--mobile">
-          {{ feedback.client.position }}
+          {{ feedback.client?.position }}
         </div>
       </div>
     </div>

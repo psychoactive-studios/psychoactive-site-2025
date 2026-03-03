@@ -45,7 +45,7 @@ const getSrcSet = (image) => {
         v-if="block.__component === 'work.fullwidth-image' && !!block.image"
         :class="['work__full-image', { 'work__full-image--with-mobile': block.mobile }]"
       >      
-        <video v-if="block.image.mime === 'video/mp4'" class="work__full-image_video" :src="block.image?.url"
+        <video v-if="block.image?.mime === 'video/mp4'" class="work__full-image_video" :src="block.image?.url"
           autoplay
           muted
           loop
@@ -102,7 +102,7 @@ const getSrcSet = (image) => {
         :class="['work__full-image', { 'work__full-image--with-mobile': block.mobile }]"
       >
         <div class="container">
-          <video v-if="block.image.mime === 'video/mp4'" class="work__full-image_video" :src="block.image?.url"
+          <video v-if="block.image?.mime === 'video/mp4'" class="work__full-image_video" :src="block.image?.url"
           autoplay
           muted
           loop
@@ -131,7 +131,7 @@ const getSrcSet = (image) => {
       <div v-if="block.__component === 'work.feedback'" class="container">
         <section class="work__feedback">
           <div class="work__feedback_photo">
-            <img :src="block.image.url" :alt="block.image.name" />
+            <img :src="block.image?.url" :alt="block.image?.name" />
           </div>
           <div class="work__feedback_content">
             <blockquote>
