@@ -14,6 +14,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ButtonDotsArrow from '~/components/ui/ButtonDotsArrow.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import useScrollSmoother from '~/composables/useScrollSmoother';
+import ButtonOutline from '~/components/ui/ButtonOutline.vue';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -255,6 +256,14 @@ const onClickHandler = (e) => {
     <div class="work__header--mobile">
       <section class="work__hero">
         <div class="container">
+          <ButtonOutline
+            href="/work"
+            class="work__back_button"
+            mode="light"
+            @click="playRandomSound('click')"
+          >
+            Back
+          </ButtonOutline>
           <h1 class="work__hero_title">{{ mainTitle }}</h1>
           <div class="work__hero_sub-title">{{ hero?.subTitle }}</div>
           <ul class="work__hero_info">
@@ -502,6 +511,11 @@ const onClickHandler = (e) => {
         }
       }
     }
+  }
+
+  &__back_button {
+    display: inline-flex;
+    margin-bottom: 16px;
   }
 
   &__footer {

@@ -70,6 +70,7 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
+@use '~/assets/styles/mixins' as *;
 .work__back {
   position: fixed;
   inset: 48px 0 auto 0;
@@ -79,5 +80,8 @@ onUnmounted(() => {
   justify-content: center;
   display: none;
   scale: 0;
+  @include respond(mobile) {
+    visibility: hidden;
+  }
 }
 </style>
