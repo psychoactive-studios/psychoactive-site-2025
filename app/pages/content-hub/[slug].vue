@@ -12,6 +12,7 @@ import useAudioManager from '~/composables/useAudioManager';
 import { calculateReadingTime } from '~/utils/comput';
 import { leaveAnimation } from '~/utils/animations/transitions';
 import { useDebounceFn, useMediaQuery } from '@vueuse/core';
+import ButtonOutline from '~/components/ui/ButtonOutline.vue';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -24,7 +25,7 @@ const { playInteractionSound, playRandomSound, isSoundApproved, hasInteracted } 
 
 const { isLoading, isFirstLoad } = useLoader();
 const router = useRouter();
-const { showLayoutElementsRequired } = useNavigation();
+const { showLayoutElementsRequired, backButtonHref } = useNavigation();
 
 const footerScrollTextRef = ref(null);
 const articleBodyRef = ref(null);
@@ -147,11 +148,20 @@ definePageMeta({
           .timeline()
           .set(el, { opacity: 0 })
           .add(() => {
+            backButtonHref.value = null;
+          })
+          .add(() => {
             transitionFromNavigation.value = false;
             done();
           }, '+=1');
         return;
       }
+      gsap
+        .timeline()                
+        .to('#top-back-button', { scale: 0 })        
+        .add(() => {          
+          backButtonHref.value = null;
+        }, '+=0.1');
       leaveAnimation(el, done);
     },
   },
@@ -161,11 +171,13 @@ function enterAnimation(el) {
   if (isSoundApproved.value && hasInteracted.value)
     playInteractionSound('about-load');
   const isMobile = useMediaQuery('(max-width: 768px)');
+  backButtonHref.value = 'content-hub';
 
   const layoutElements = gsap.utils.toArray([
     '#header-logo',
     '#header-navigation-button',
     '#header-sound-button',
+    '#top-back-button',
   ]);
 
   if (el) gsap.set(el, { visibility: 'visible' });
@@ -235,8 +247,7 @@ function enterAnimation(el) {
     .add(() => (showLayoutElementsRequired.value = false));
 }
 
-function footerTextAnimationInit() {
-  const { mode } = useHeader();
+function footerTextAnimationInit() {  
   const footer = footerRef.value;
 
   ctx.add(() => {
@@ -248,12 +259,12 @@ function footerTextAnimationInit() {
         pin: true,
         scrub: true,
         invalidateOnRefresh: true,
-        onEnter: () => {
-          mode.value = 'light';
-        },
-        onLeaveBack: () => {
-          mode.value = 'dark';
-        },
+        // onEnter: () => {
+        //   mode.value = 'light';
+        // },
+        // onLeaveBack: () => {
+        //   mode.value = 'dark';
+        // },
       },
       opacity: 1,
       duration: 0.1,
@@ -269,7 +280,15 @@ function footerTextAnimationInit() {
   <main v-if="articleData?.data" class="article">
     <div class="article__hero">
       <div class="container">
-        <div class="article__hero_grid">
+        <ButtonOutline
+          href="/content-hub"
+          class="article__back_button"
+          mode="light"
+          @click="playRandomSound('click')"
+        >
+          Back
+        </ButtonOutline>
+        <div class="article__hero_grid">          
           <div class="article__hero_info">
             <ul>
               <li>Author</li>
@@ -335,180 +354,7 @@ function footerTextAnimationInit() {
               <img src="/img/icon-in.svg" alt="" />
             </a>
           </div>
-          <ArticleContent :data="articleData?.data?.article" />
-          <!-- <article>
-            <h2>
-              Small business owners with their sights on the future are
-              recognising the value of collaboration.
-            </h2>
-
-            <p class="large-body">
-              Through the Te Puni Kōkiri Cadetship programme, three creative
-              companies are sharing their baskets of knowledge, so their kaimahi
-              and businesses can thrive. Watch this video about their
-              collaboration.
-            </p>
-            <p>
-              Andrew Hillstead founded Psychoactive Studios digital design
-              agency to create beautiful, interactive, user friendly web
-              products and experiences. He is now teaming up with cultural
-              storytelling tech company VAKA and cultural photography business
-              Soldiers Rd Portraits. All three are on the brink of big, bold
-              expansion.
-            </p>
-            <p>Find out more about Vaka’s basket of knowledge.</p>
-            <p>Find out more about Soldiers Rd’s basket of knowledge.</p>
-
-            <div class="image">
-              <NuxtImg
-                src="/img/test-article-image-2.jpg"
-                sizes="100vw md:70vw xl:1600px"
-              />
-            </div>
-
-            <h2>Knowledge is community</h2>
-
-            <div class="quote">
-              <div class="quote__wrapper">
-                <blockquote>
-                  “We want to connect Jesse with my employee Callum Mudgway to
-                  create a supportive environment where he can grow. Callum’s an
-                  amazing designer. He now needs to be able to stand with mana
-                  and strength to present and work with clients every day,”
-                </blockquote>
-              </div>
-              <div class="quote__author">– says Andrew.</div>
-            </div>
-
-            <p>
-              At the same time, Andrew is sharing his web skills with the owners
-              of cultural portrait photography business, Soldiers Rd Portraits.
-            </p>
-            <p>
-              For nearly eight years, sisters-in-law Taaniko and Vienna
-              Nordstrom have been styling customers in Māori regalia for
-              indigenous inspired vintage portraits that plant a seed of
-              cultural identity and integrity. The business is now preparing to
-              expand nationwide.
-            </p>
-            <p>
-              Andrew’s helping us to bring the visual side of our business to
-              life in a way that will be perfect for expanding and telling our
-              stories explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te
-              Wairoa, Rongomaiwahine, Waikato-Tainui).
-            </p>
-
-            <p class="spacer" />
-
-            <h3>Knowledge is community text community text</h3>
-
-            <p>
-              At the same time, Andrew is sharing his web skills with the owners
-              of cultural portrait photography business, Soldiers Rd Portraits:
-            </p>
-            <ol>
-              <li>
-                For nearly eight years, sisters-in-law Taaniko and Vienna
-                Nordstrom have been styling customers in Māori regalia for
-                indigenous inspired vintage portraits that plant a seed of
-                cultural identity and integrity. The business is now preparing
-                to expand nationwide.
-              </li>
-              <li>
-                Andrew’s helping us to bring the visual side of our business to
-                life in a way that will be perfect for expanding and telling our
-                stories” explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te
-                Wairoa, Rongomaiwahine, Waikato-Tainui).
-              </li>
-            </ol>
-            <p>“He’s showing us how to update our website</p>
-            <p>
-              He’s showing us how to update our website so that it's fresh,
-              modern, showcases our work and gives people an idea of what we do
-              at a glance,” agrees Vienna (Ngāti Porou).
-            </p>
-            <div class="cta">
-              <LetsTalkDots mode="light" />
-            </div>
-            <h6>sub header text</h6>
-            <h2>Knowledge is community</h2>
-            <p>
-              At the same time, Andrew is sharing his web skills with the owners
-              of cultural portrait photography business, Soldiers Rd Portraits.
-            </p>
-
-            <ul>
-              <li>
-                For nearly eight years, sisters-in-law Taaniko and Vienna
-                Nordstrom have been styling customers in Māori regalia for
-                indigenous inspired vintage portraits that plant a seed of
-                cultural identity and integrity. The business is now preparing
-                to expand nationwide.
-              </li>
-              <li>
-                Andrew’s helping us to bring the visual side of our business to
-                life in a way that will be perfect for expanding and telling our
-                stories” explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te
-                Wairoa, Rongomaiwahine, Waikato-Tainui).
-              </li>
-              <li>
-                He’s showing us how to update our website so that it's fresh,
-                modern, showcases our work and gives people an idea of what we
-                do at a glance,” agrees Vienna (Ngāti Porou).
-              </li>
-              <li>
-                As Cadets, Taaniko and Vienna see Andrew’s support as crucial to
-                helping them achieve their business goals.
-              </li>
-            </ul>
-            <div class="image-double">
-              <img src="/img/test-article-image-2.jpg" alt="" />
-              <img src="/img/news/news-image-3.png" alt="" />
-            </div>
-            <p>
-              At the same time, Andrew is sharing his web skills with the owners
-              of cultural portrait photography business, Soldiers Rd Portraits.
-            </p>
-            <p>
-              For nearly eight years, sisters-in-law Taaniko and Vienna
-              Nordstrom have been styling customers in Māori regalia for
-              indigenous inspired vintage portraits that plant a seed of
-              cultural identity and integrity. The business is now preparing to
-              expand nationwide.
-            </p>
-            <p>
-              “Andrew’s helping us to bring the visual side of our business to
-              life in a way that will be perfect for expanding and telling our
-              stories” explains Taaniko (Ngāti Hine, Ngāti Kahungunu ki Te
-              Wairoa, Rongomaiwahine, Waikato-Tainui).
-            </p>
-            <p>
-              “He’s showing us how to update our website so that it's fresh,
-              modern, showcases our work and gives people an idea of what we do
-              at a glance,” agrees Vienna (Ngāti Porou).
-            </p>
-            <p>
-              As Cadets, Taaniko and Vienna see Andrew’s support as crucial to
-              helping them achieve their business goals.
-            </p>
-
-            <h2>
-              Title H2 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Quae, praesentium?
-            </h2>
-            <h3>
-              Title H3 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Quae, praesentium?
-            </h3>
-            <h4>
-              Title H4 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Quae, praesentium?
-            </h4>
-            <h5>
-              Title H5 Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Quae, praesentium?
-            </h5>
-          </article> -->
+          <ArticleContent :data="articleData?.data?.article" />          
         </div>
       </div>
     </div>
@@ -546,6 +392,13 @@ function footerTextAnimationInit() {
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/mixins' as *;
 .article {
+  &__back_button {
+    display: none;
+    margin-bottom: 32px;
+    @include respond(mobile) {
+      display: inline-flex;      
+    }
+  }
   &__hero {
     padding-top: 160px;
     @include respond(mobile) {
@@ -561,7 +414,7 @@ function footerTextAnimationInit() {
       }
       @include respond(mobile) {
         grid-template-columns: 1fr;
-        gap: getRem(120);
+        gap: getRem(24);
         margin-bottom: getRem(48);
       }
     }

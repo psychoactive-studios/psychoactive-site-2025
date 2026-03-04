@@ -109,6 +109,6 @@ const talkButtonHoverHandler = () => {
       background-color: rgbaColor(#101012, 20);
       border-color: transparent;
     }
-  }
+  }  
 }
 </style>

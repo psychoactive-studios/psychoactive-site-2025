@@ -59,7 +59,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div id="top-back-button" ref="backButtonRef" class="work__back">
+  <div id="top-back-button" ref="backButtonRef" :class="['work__back', `work__back--${mode}`]">
     <ButtonOutline
       v-if="backButtonHref"
       :href="`/${backButtonHref}`"
@@ -80,11 +80,13 @@ onUnmounted(() => {
   margin: auto;
   z-index: 90;
   display: flex;
-  justify-content: center;
-  display: none;
+  justify-content: center;  
   scale: 0;
   @include respond(mobile) {
     visibility: hidden;
+  }
+  &--mixed {
+    mix-blend-mode: exclusion;
   }
 }
 </style>
