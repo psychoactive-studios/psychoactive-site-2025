@@ -234,6 +234,10 @@ const onClickHandler = (e) => {
           <ul class="work__hero_info">
             <li><span>WHAT WE DID:</span> {{ hero?.whatWeDid }}</li>
             <li><span>CLIENT:</span> {{ hero?.client }}</li>
+            <li v-if="hero?.scaleEnterprise" class="scale">
+              <span>SCALE:</span>
+              <div class="scale__text">enterprise</div>
+            </li>
           </ul>
           <div class="work__hero_link">
             <LinkButton
@@ -267,8 +271,15 @@ const onClickHandler = (e) => {
           <h1 class="work__hero_title">{{ mainTitle }}</h1>
           <div class="work__hero_sub-title">{{ hero?.subTitle }}</div>
           <ul class="work__hero_info">
-            <li><span>WHAT WE DID:</span> {{ hero?.whatWeDid }}</li>
+            <li>
+              <span>WHAT WE DID:</span>
+              <div>{{ hero?.whatWeDid }}</div>
+            </li>
             <li><span>CLIENT:</span> {{ hero?.client }}</li>
+            <li v-if="hero?.scaleEnterprise" class="scale">
+              <span>SCALE:</span>
+              <div class="scale__text">enterprise</div>
+            </li>
           </ul>
           <div class="work__illustration">
             <img :src="mainImage?.formats?.medium?.url || mainImage?.url" :alt="mainTitle" />
@@ -388,8 +399,35 @@ const onClickHandler = (e) => {
           flex-direction: column;
           gap: 12px;
           max-width: 50%;
+          & > li {
+            display: flex;
+            gap: 0.5rem;
+            &.scale {
+              .scale__text {
+                white-space: nowrap;
+                color: $color-blue;
+                vertical-align: middle;
+                position: relative;
+                padding-left: 12px;
+                &::before {
+                  content: '';
+                  display: inline-block;
+                  width: 6px;
+                  height: 6px;
+                  background-color: $color-blue;
+                  border-radius: 50%;
+                  margin-right: 0.5rem;
+                  position: absolute;
+                  top: 50%;
+                  left: 0;
+                  transform: translateY(-50%);
+                }
+              }
+            }
+          }
           span {
             opacity: 0.6;
+            white-space: nowrap;
           }
         }
         &_link {
@@ -457,9 +495,36 @@ const onClickHandler = (e) => {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-bottom: 120px;
+            margin-bottom: 120px;            
+            & > li {
+              display: flex;
+              gap: 0.5rem;
+              &.scale {
+                .scale__text {
+                  white-space: nowrap;
+                  color: $color-blue;
+                  vertical-align: middle;
+                  position: relative;
+                  padding-left: 12px;
+                  &::before {
+                    content: '';
+                    display: inline-block;
+                    width: 6px;
+                    height: 6px;
+                    background-color: $color-blue;
+                    border-radius: 50%;
+                    margin-right: 0.5rem;
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    transform: translateY(-50%);
+                  }
+                }
+              }
+            }
             span {
               opacity: 0.6;
+              white-space: nowrap;
             }
           }
           &_description {

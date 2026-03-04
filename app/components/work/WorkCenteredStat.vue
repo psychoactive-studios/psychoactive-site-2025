@@ -19,10 +19,7 @@ let tl = null;
 
 
 const initAnimation = () => {  
-  if (!numbersRef.value) return;
-
-  console.log('numbersRef.value', numbersRef);
-  
+  if (!numbersRef.value) return; 
 
   SplitText.create('.centered-stat__number', {
     type: 'words, chars',
@@ -128,11 +125,6 @@ watch(
 onUnmounted(() => {
   if (tl) tl.kill();
 });
-
-
-console.log('props.data', props.data);
-
-
 </script>
 
 <template>
