@@ -2,12 +2,14 @@ import gsap from 'gsap';
 import { SplitText } from 'gsap/SplitText';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useHeader from '~/composables/useHeader';
+import useNavigation from './useNavigation';
 
 export const currentTransitionImage = ref(null);
 
 export default function useWorks() {
   const router = useRouter();
   const { enableScroll, scrollSmoother } = useScrollSmoother();
+  const { backButtonHref } = useNavigation();
 
   const workPageInit = async () => {
     const scrollDownText = SplitText.create('#work-scroll-down-text', {
@@ -17,17 +19,18 @@ export default function useWorks() {
 
     //
 
+    backButtonHref.value = 'work';
     setTimeout(() => {
       // Animate layout elements back in
       const layoutElements = gsap.utils.toArray([
         '#header-logo',
         '#header-navigation-button',
         '#header-sound-button',
-        '#work-back-button',
+        '#top-back-button',
       ]);
       gsap
         .timeline()
-        .set('#work-back-button', { display: 'flex' })
+        .set('#top-back-button', { display: 'flex' })
         .to(layoutElements, {
           scale: 1,
           opacity: 1,

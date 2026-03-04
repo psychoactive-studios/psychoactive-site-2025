@@ -3,18 +3,20 @@ import ButtonOutline from '../ui/ButtonOutline.vue';
 import { ref, onMounted, onUnmounted, watch } from 'vue';
 import gsap from 'gsap';
 import useHeader from '~/composables/useHeader';
+import useNavigation from '~/composables/useNavigation';
 
 const { playRandomSound } = useAudioManager();
 const { scrollSmoother } = useScrollSmoother();
 const { mode } = useHeader();
+const { backButtonRef, backButtonHref } = useNavigation();
 
-const backRef = ref(null);
+
 let cleanUpLenis = () => {};
 
 onMounted(() => {
-  if (!backRef.value) return;
+  if (!backButtonRef.value) return;
 
-  const setY = gsap.quickSetter(backRef.value, 'y', 'px');
+  const setY = gsap.quickSetter(backButtonRef.value, 'y', 'px');
   let currentY = 0;
   let lastScroll = 0;
   const hideOffset = -150;
@@ -57,9 +59,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div id="work-back-button" ref="backRef" class="work__back">
+  <div id="top-back-button" ref="backButtonRef" class="work__back">
     <ButtonOutline
-      href="/work"
+      v-if="backButtonHref"
+      :href="`/${backButtonHref}`"
       class="work__back_button"
       :mode="mode"
       @click="playRandomSound('click')"

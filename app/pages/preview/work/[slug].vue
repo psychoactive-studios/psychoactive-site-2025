@@ -136,7 +136,7 @@ definePageMeta({
           .timeline()
           .set(el, { opacity: 0 })
           .set('#work-scroll-progress', { display: 'none' })
-          .set('#work-back-button', { display: 'none', scale: 0 })
+          .set('#top-back-button', { display: 'none', scale: 0 })
           .add(() => {
             transitionFromNavigation.value = false;
             mode.value = 'mixed';
@@ -161,7 +161,7 @@ definePageMeta({
           },
           '<'
         )
-        .to('#work-back-button', { scale: 0 })
+        .to('#top-back-button', { scale: 0 })
         .set('#work-scroll-progress', { display: 'none' })
         .add(() => {
           mode.value = 'mixed';

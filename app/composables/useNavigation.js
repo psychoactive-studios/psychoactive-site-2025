@@ -14,6 +14,8 @@ const savedColorMode = ref(null); // To track the history of color modes for pro
 // Ref to the navigation DOM element
 const navigationRef = ref(null);
 const navigationMobileRef = ref(null);
+const backButtonRef = ref(null);
+const backButtonHref = ref(null);
 
 // Reactive state to track if the transition is from navigation
 const transitionFromNavigation = ref(false);
@@ -361,6 +363,8 @@ export default function () {
     isOpen,
     navigationRef,
     navigationMobileRef,
+    backButtonRef,
+    backButtonHref,
     initNavigation,
     openNavigation,
     closeNavigation,
