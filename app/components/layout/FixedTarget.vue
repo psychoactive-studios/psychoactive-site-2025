@@ -144,9 +144,6 @@ section.work-transition {
   }
 }
 
-section.work {
-}
-
 // Serives page section styles
 section.services {
   display: none;
