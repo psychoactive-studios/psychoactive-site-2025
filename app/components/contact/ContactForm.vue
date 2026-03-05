@@ -9,18 +9,27 @@ import ContactNameForm from './ContactNameForm.vue';
 import LinkButton from '../ui/LinkButton.vue';
 import ButtonOutline from '../ui/ButtonOutline.vue';
 
-let dotsTimeline;
-const dotsRef = ref(null);
+import { tadiSteps } from '~/data/contactData';
+import ContactRoleForm from './ContactRoleForm.vue';
+
+
+
 
 const {
   sceneRef,
+  dotsRef,
   previousSectionRef,
-  stepSectionRef,
-  stepSectionTextRef,
-  stepMessage,
+  currentSectionRef,
+  currentSectionTextRef,
+  enterAnimation,
+  currentMessage,
   previousMessage,
   actionsRef,
   handleTestClick,
+  handleNextStep,
+  getRandomMessage,
+  currentStepId,
+  dotsTimeline,
 } = useContact();
 
 const { isLoading } = useLoader();
@@ -32,11 +41,13 @@ const {
 } = useAudioManager();
 
 onMounted(() => {
+  currentMessage.value = getRandomMessage(tadiSteps[currentStepId.value]?.messages[0]?.variations);
+
   const dotsLeft = dotsRef.value.querySelector('.contact-form__dots .dot-left');
   const dotsRight = dotsRef.value.querySelector(
     '.contact-form__dots .dot-right'
   );
-  dotsTimeline = gsap
+  dotsTimeline.value = gsap
     .timeline({ paused: true })
     .to(gsap.utils.toArray([dotsLeft, dotsRight]), {
       duration: 0.8,
@@ -57,7 +68,7 @@ onMounted(() => {
       overwrite: 'auto',
     });
 
-  dotsTimeline.restart();
+  dotsTimeline.value.restart();
 });
 
 watch(isLoading, (newVal) => {
@@ -66,125 +77,7 @@ watch(isLoading, (newVal) => {
   }
 });
 
-function enterAnimation() {
-  if (isSoundApproved.value && hasInteracted.value)
-    playInteractionSound('contact-load', 400);
-  const circlePath1 = '.contact__media_circle-wrapper .circle .circle-path-1';
-  const circlePath2 = '.contact__media_circle-wrapper .circle .circle-path-2';
-  const circleDots = '.contact__media_circle-wrapper .circle .circle-dots';
 
-  const layoutElements = gsap.utils.toArray([
-    '#header-logo',
-    '#header-navigation-button',
-    '#header-sound-button',
-    '.contact-back-button',
-  ]);
-
-  gsap
-    .timeline()
-    /* ======= Circle part ========= */
-    .from(
-      [circlePath1, circlePath2],
-      {
-        strokeDashoffset: 626.43,
-        duration: 1.85,
-        ease: 'power3.inOut',
-      },
-      'start'
-    )
-    .from(
-      circleDots,
-      { autoAlpha: 0, rotate: 0, duration: 1.85, ease: 'power3.inOut' },
-      'start'
-    )
-    .add(() => sceneRef.value.play(), 'start+=0.5')
-    // First message
-    .to(
-      stepSectionTextRef.value,
-      {
-        backgroundPositionX: '-100%',
-        duration: 1,
-        ease: 'power2.inOut',
-      },
-      'start+=0.5'
-    )
-    .to(layoutElements, {
-      scale: 1,
-      opacity: 1,
-      duration: 0.75,
-      ease: 'power3.out',
-    })
-    .to(
-      dotsRef.value,
-      {
-        opacity: 1,
-        duration: 0.5,
-      },
-      '<'
-    )
-    // First message transition
-    .to(
-      stepSectionRef.value,
-      {
-        transform: 'translateY(calc(-100% - 48px - 0.65em))',
-        duration: 0.8,
-        opacity: 0.2,
-        ease: 'power4.out',
-      },
-      '+=1'
-    )
-    .add(() => {
-      previousMessage.value = stepMessage.value;
-      stepMessage.value =
-        'Oh look, a visitor! I should start charging admission. Need anything?';
-      gsap.set([stepSectionRef.value, stepSectionTextRef.value], {
-        clearProps: 'all',
-      });
-    })
-
-    // Second message transition
-    .to(stepSectionTextRef.value, {
-      backgroundPositionX: '-100%',
-      duration: 1,
-      ease: 'power2.inOut',
-    })
-    .set(actionsRef.buttons, {
-      autoAlpha: 1,
-    })
-    .from(actionsRef.buttons.querySelectorAll('.contact-form__action_button'), {
-      opacity: 0,
-      scale: 0.9,
-      duration: 1,
-      stagger: 0.25,
-    })
-    .to(
-      actionsRef.buttons.querySelectorAll(
-        '.contact-form__action_button .link-button__visible-text'
-      ),
-      {
-        duration: 1,
-        scrambleText: {
-          text: '{original}',
-          chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
-          // tweenLength: false,
-        },
-        stagger: 0.25,
-      },
-      '<'
-    )
-    .from(
-      '.contact__footer_email',
-      {
-        autoAlpha: 0,
-        scaleY: 0.8,
-        yPercent: 50,
-        ease: 'power3.out',
-        duration: 1,
-      },
-      '<'
-    )
-    .add(() => dotsTimeline.repeat(-1).restart());
-}
 </script>
 
 <!-- Oh look, a visitor! I should start charging admission. Need anything? -->
@@ -205,20 +98,19 @@ function enterAnimation() {
       <div ref="previousSectionRef" class="contact-form__previous">
         {{ previousMessage }}
       </div>
-      <div ref="stepSectionRef" class="contact-form__step">
-        <span ref="stepSectionTextRef">{{ stepMessage }}</span>
+      <div ref="currentSectionRef" class="contact-form__step">
+        <span ref="currentSectionTextRef">{{ currentMessage }}</span>
       </div>
       <div class="contact-form__action">
         <div
-          :ref="(el) => (actionsRef.buttons = el)"
+          :ref="(el) => (actionsRef.introButtons = el)"
           class="contact-form__action_item -buttons"
         >
           <LinkButton
             class="contact-form__action_button"
             size="small"
             data-index="0"
-            @mouseenter="playRandomSound('text-hover')"
-            @click="handleTestClick"
+            @click="(e) => handleNextStep('ask_name', e)"
           >
             start a project
           </LinkButton>
@@ -246,6 +138,12 @@ function enterAnimation() {
           class="contact-form__action_item -name-form"
         >
           <ContactNameForm />
+        </div>
+        <div
+          :ref="(el) => (actionsRef.roleForm = el)"
+          class="contact-form__action_item -role-form"
+        >
+          <ContactRoleForm />
         </div>
       </div>
     </div>
@@ -422,6 +320,9 @@ function enterAnimation() {
         visibility: hidden;
       }
       &.-name-form {
+        visibility: hidden;
+      }
+      &.-role-form {
         visibility: hidden;
       }
     }

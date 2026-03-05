@@ -70,7 +70,6 @@ const talkButtonHoverHandler = (e) => {
   <button
     v-else
     ref="letsTalkButtonRef"
-    type="button"
     :class="['link-button', mode, size]"
     @mouseenter="talkButtonHoverHandler"
     @click="() => playInteractionSound('click-3')"
