@@ -42,6 +42,13 @@ export const tadiSteps = {
         variations: ['Let’s start simple — what should I call you?'],
       },
     ],
+    confirmMessages: [
+      {
+        variations: [
+          'Nice to meet you, [Name]. You look like someone ready for transformation.',
+        ],
+      },      
+    ],
     cta: 'nameForm',
     type: 'textField',
     sceneShape: 1,
@@ -59,7 +66,8 @@ export const tadiSteps = {
         ],
       },
     ],
-    type: 'text_input',
+    cta: 'roleForm',
+    type: 'textField',
     inputType: 'email',
     model: 'email',
     sceneShape: 2,

@@ -11,25 +11,41 @@ const { userData, currentStepId, handleNextStep } = useContact();
 // Налаштування форми та валідації
 const { handleSubmit } = useForm();
 
-const { value: name, errorMessage } = useField(
-  'name',
+const { value: company, errorMessage: companyErrorMessage } = useField(
+  'company',
   (value) => {
     if (!value || !value.trim()) {
-      return 'Fill your name please';
+      return 'Fill your company name please';
     }
     return true;
   },
   {
-    initialValue: userData.name, // Ініціалізуємо поточним значенням, якщо воно є
+    initialValue: userData.company, // Ініціалізуємо поточним значенням, якщо воно є
   }
 );
 
+
+const { value: role, errorMessage: roleErrorMessage } = useField(
+  'role',
+  (value) => {
+    if (!value || !value.trim()) {
+      return 'Fill your role please';
+    }
+    return true;
+  },
+  {
+    initialValue: userData.role, // Ініціалізуємо поточним значенням, якщо воно є
+  }
+);
 // Обробка відправки тільки якщо валідація пройшла успішно
 const onSubmit = handleSubmit((values, event) => {
   console.log('userData.name', userData.name, values, event.evt);
-  userData.name = values.name;
-  const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
-  handleNextStep(nextStepId, event.evt);
+  userData.company = values.company;
+  userData.role = values.role;  
+  console.log('userData', userData);
+  // userData.name = values.name;
+  // const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
+  // handleNextStep(nextStepId, event.evt);
 });
 </script>
 
@@ -37,12 +53,18 @@ const onSubmit = handleSubmit((values, event) => {
   <form class="name-form" @submit="onSubmit">
     <div class="name-form__inner">
       <TextField
-        v-model="name"
-        placeholder="Type your name"
+        v-model="company"
+        placeholder="Type your company"
         class="name-form__input"
-        :error-message="errorMessage"
-      />
-    </div>
+        :error-message="companyErrorMessage"
+      />  
+      <TextField
+        v-model="role"
+        placeholder="Type your role"
+        class="name-form__input"
+        :error-message="roleErrorMessage"
+      />    
+    </div>    
     <LinkButton class="name-form__button" size="small">submit</LinkButton>
     <!-- <ButtonDotsArrow direction="right" class="name-form__button" /> -->
   </form>
@@ -60,6 +82,7 @@ const onSubmit = handleSubmit((values, event) => {
     display: flex;
     flex-direction: column;
     position: relative;
+    gap: getRem(24);
   }
 
   &__input {
