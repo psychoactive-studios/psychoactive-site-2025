@@ -1,6 +1,5 @@
 import gsap from 'gsap';
 import { tadiSteps } from '~/data/contactData';
-import { testClickAnimation } from '~/utils/animations/contact';
 
 const MESSAGE_DELAY = 0.1;
 
@@ -30,7 +29,7 @@ const userData = reactive({
   role: null,
   goal: null,
   budget: null,
-  timeline: null,
+  deadline: null,
   description: null,
   file: null,
 });
@@ -170,8 +169,6 @@ export default function useContact() {
 
     const currentStep = tadiSteps[currentStepId.value];
     const targetStep = tadiSteps[stepId];
-    console.log('currentStep',currentStep, targetStep, actionsRef[currentStep.cta]);
-
     // Leave animation for actions
     if (currentStep.cta) {
       // Buttons leave animation
@@ -210,10 +207,9 @@ export default function useContact() {
           );
       }
       // Text field leave animation
-      if (currentStep.type === 'textField') {
-        console.log('event.currentTarget', event.currentTarget);
+      if (currentStep.type === 'textField') {        
         const button = event.currentTarget.querySelector('.name-form__button');
-        const fields = event.currentTarget.querySelectorAll('.name-form__inner .text-field');
+        const fields = event.currentTarget.querySelectorAll('.name-form__inner > *, .description-form__inner > *');        
         
         timeline          
           .to(
@@ -238,11 +234,10 @@ export default function useContact() {
     }
 
     // Confirm message animation
-    if (currentStep.confirmMessages) {
-      console.log('currentStep.confirmMessages', currentStep.confirmMessages, currentMessage.value);
-      currentStep.confirmMessages.forEach((message, index, array) => {
+    if (currentStep.confirmMessages) {      
+      currentStep.confirmMessages.forEach((message, index) => {
 
-        const confirmMessage = getRandomMessage(message.variations).replace('[Name]', userData.name);        
+        const confirmMessage = getRandomMessage(message.variations).replace('[Name]', userData.name);
         const delay = index === 0 ? `-=0.5` : `+=${MESSAGE_DELAY}`;
         
         timeline.to(
@@ -291,7 +286,8 @@ export default function useContact() {
     // Update current step
     timeline.add(() => {
       sceneRef.value.nextShape(targetStep.sceneShape);
-    });
+    });   
+    
 
     targetStep.messages.forEach((message, index, array) => {
       const delay = index === 0 ? `-=0.5` : `+=${MESSAGE_DELAY}`;
@@ -320,7 +316,7 @@ export default function useContact() {
         )
         .add(() => {
           previousMessage.value = currentMessage.value;
-          currentMessage.value = getRandomMessage(message.variations);
+          currentMessage.value = getRandomMessage(message.variations).replace('[Name]', userData.name);
           gsap.set(
             [
               currentSectionRef.value,
@@ -355,9 +351,7 @@ export default function useContact() {
       // Update current step id
       timeline.add(() => {
         currentStepId.value = stepId;
-      });
-
-      console.log('message', getRandomMessage(message.variations));
+      });      
     });
   };
 

@@ -8,7 +8,6 @@ import LinkButton from '../ui/LinkButton.vue';
 
 const { userData, currentStepId, handleNextStep } = useContact();
 
-// Налаштування форми та валідації
 const { handleSubmit } = useForm();
 
 const { value: company, errorMessage: companyErrorMessage } = useField(
@@ -20,7 +19,7 @@ const { value: company, errorMessage: companyErrorMessage } = useField(
     return true;
   },
   {
-    initialValue: userData.company, // Ініціалізуємо поточним значенням, якщо воно є
+    initialValue: userData.company,
   }
 );
 
@@ -34,17 +33,14 @@ const { value: role, errorMessage: roleErrorMessage } = useField(
     return true;
   },
   {
-    initialValue: userData.role, // Ініціалізуємо поточним значенням, якщо воно є
+    initialValue: userData.role,
   }
 );
-// Обробка відправки тільки якщо валідація пройшла успішно
-const onSubmit = handleSubmit((values, event) => {
-  console.log('userData.name', userData.name, values, event.evt);
+
+const onSubmit = handleSubmit((values, event) => {  
   userData.company = values.company;
   userData.role = values.role;  
-  const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
-  console.log('nextStepId', nextStepId);
-  
+  const nextStepId = tadiSteps[currentStepId.value]?.nextStep; 
   handleNextStep(nextStepId, event.evt);
 });
 </script>

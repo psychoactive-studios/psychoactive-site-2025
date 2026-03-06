@@ -8,7 +8,6 @@ import LinkButton from '../ui/LinkButton.vue';
 
 const { userData, currentStepId, handleNextStep } = useContact();
 
-// Налаштування форми та валідації
 const { handleSubmit } = useForm();
 
 const { value: date, errorMessage } = useField(
@@ -20,14 +19,12 @@ const { value: date, errorMessage } = useField(
     return true;
   },
   {
-    initialValue: userData.deadline, // Ініціалізуємо поточним значенням, якщо воно є
+    initialValue: userData.deadline,
   }
 );
 
-// Обробка відправки тільки якщо валідація пройшла успішно
-const onSubmit = handleSubmit((values, event) => {
-  console.log('userData.name', userData.name, values, event.evt);
-  userData.name = values.name;
+const onSubmit = handleSubmit((values, event) => {  
+  userData.date = values;
   const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
   handleNextStep(nextStepId, event.evt);
 });

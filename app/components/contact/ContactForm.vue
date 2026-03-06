@@ -373,6 +373,9 @@ watch(isLoading, (newVal) => {
       &.-role-form {
         visibility: hidden;
       }
+      &.-description-form {
+        visibility: hidden;
+      }
     }
   }
 }

@@ -23,7 +23,7 @@ onMounted(async () => {
 
 <template>
   <main class="contact">
-    <div class="container">
+    <div class="container">      
       <div class="contact__grid">
         <section class="contact__media">
           <div class="contact__media_circle-wrapper">
@@ -34,6 +34,7 @@ onMounted(async () => {
             class="contact__media_scene"
             :auto-play="false"
             :svg-urls="[
+              '/img/contact/step_00.svg',
               '/img/contact/step_01.svg',
               '/img/contact/step_02.svg',
               '/img/contact/step_03.svg',

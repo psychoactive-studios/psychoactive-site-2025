@@ -127,8 +127,8 @@ export const tadiSteps = {
     ],    
     cta: 'timelineButtons',
     type: 'buttons',
-    sceneShape: 4,
-    nextStep: 'finish',
+    sceneShape: 5,
+    nextStep: 'ask_description',
   },
 
   ask_date: {
@@ -142,7 +142,42 @@ export const tadiSteps = {
     ],    
     cta: 'dateForm',
     type: 'textField',
-    sceneShape: 4,
-    nextStep: 'finish',
+    sceneShape: 5,
+    nextStep: 'ask_description',
+  },
+
+  ask_description: {
+    id: 'ask_description',
+    messages: [
+      {        
+        variations: [
+          'Give me the short version. What are we creating together?',
+        ],
+      },
+    ],
+    cta: 'descriptionForm',
+    type: 'textField',        
+    sceneShape: 6,
+    nextStep: 'sey_thanks',
+  },
+
+  sey_thanks: {
+    id: 'sey_thanks',
+    messages: [
+      {        
+        variations: [
+          'Thanks, [Name]. I’ll ripple your details through the Psychoactive pond — the humans will be in touch soon.',
+        ],
+      },
+      {        
+        variations: [
+          'Consider your metamorphosis officially underway.',
+        ],
+      },
+    ],
+    // cta: 'descriptionForm',
+    // type: 'textField',        
+    sceneShape: 7,
+    // nextStep: 'finish',
   },
 };

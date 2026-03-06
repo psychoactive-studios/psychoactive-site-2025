@@ -5,9 +5,6 @@ import LinkButton from '../ui/LinkButton.vue';
 
 const { userData, currentStepId, handleNextStep } = useContact();
 
-
-
-// Обробка відправки тільки якщо валідація пройшла успішно
 const onSubmit = (event, value) => {   
   userData.budget = value;
   const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
