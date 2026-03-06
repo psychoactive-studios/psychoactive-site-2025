@@ -11,6 +11,12 @@ import ButtonOutline from '../ui/ButtonOutline.vue';
 
 import { tadiSteps } from '~/data/contactData';
 import ContactRoleForm from './ContactRoleForm.vue';
+import ContactGoalButtons from './ContactGoalButtons.vue';
+import ContactBudgetButtons from './ContactBudgetButtons.vue';
+import ContactTimelineButtons from './ContactTimelineButtons.vue';
+import ContactDateForm from './ContactDateForm.vue';
+import ContactDescriptionForm from './ContactDescriptionForm.vue';
+
 
 
 
@@ -145,6 +151,45 @@ watch(isLoading, (newVal) => {
         >
           <ContactRoleForm />
         </div>
+        <div
+          :ref="(el) => (actionsRef.goalButtons = el)"
+          class="contact-form__action_item -buttons"
+        >
+          <ContactGoalButtons />
+        </div>
+        <div
+          :ref="(el) => (actionsRef.budgetButtons = el)"
+          class="contact-form__action_item -buttons"
+        >
+          <ContactBudgetButtons />
+        </div>
+        <div
+          :ref="(el) => (actionsRef.timelineButtons = el)"
+          class="contact-form__action_item -buttons"
+        >
+          <ContactTimelineButtons />
+        </div>
+        <div
+          :ref="(el) => (actionsRef.dateForm = el)"
+          class="contact-form__action_item -date-form"
+        >
+          <ContactDateForm />
+        </div>
+        <div
+          :ref="(el) => (actionsRef.descriptionForm = el)"
+          class="contact-form__action_item -description-form"
+        >
+          <ContactDescriptionForm />
+        </div>
+
+        
+
+        
+
+        
+
+        
+        
       </div>
     </div>
   </div>
@@ -315,11 +360,14 @@ watch(isLoading, (newVal) => {
       display: flex;
       gap: getRem(12);
       position: absolute;
-      width: 100%;
+      width: 100%;      
       &.-buttons {
         visibility: hidden;
       }
       &.-name-form {
+        visibility: hidden;
+      }
+      &.-date-form {
         visibility: hidden;
       }
       &.-role-form {

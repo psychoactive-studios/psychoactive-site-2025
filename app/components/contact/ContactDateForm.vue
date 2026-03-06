@@ -11,40 +11,24 @@ const { userData, currentStepId, handleNextStep } = useContact();
 // Налаштування форми та валідації
 const { handleSubmit } = useForm();
 
-const { value: company, errorMessage: companyErrorMessage } = useField(
-  'company',
+const { value: date, errorMessage } = useField(
+  'name',
   (value) => {
     if (!value || !value.trim()) {
-      return 'Fill your company name please';
+      return 'Fill your deadline date';
     }
     return true;
   },
   {
-    initialValue: userData.company, // Ініціалізуємо поточним значенням, якщо воно є
+    initialValue: userData.deadline, // Ініціалізуємо поточним значенням, якщо воно є
   }
 );
 
-
-const { value: role, errorMessage: roleErrorMessage } = useField(
-  'role',
-  (value) => {
-    if (!value || !value.trim()) {
-      return 'Fill your role please';
-    }
-    return true;
-  },
-  {
-    initialValue: userData.role, // Ініціалізуємо поточним значенням, якщо воно є
-  }
-);
 // Обробка відправки тільки якщо валідація пройшла успішно
 const onSubmit = handleSubmit((values, event) => {
   console.log('userData.name', userData.name, values, event.evt);
-  userData.company = values.company;
-  userData.role = values.role;  
+  userData.name = values.name;
   const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
-  console.log('nextStepId', nextStepId);
-  
   handleNextStep(nextStepId, event.evt);
 });
 </script>
@@ -53,18 +37,13 @@ const onSubmit = handleSubmit((values, event) => {
   <form class="name-form" @submit="onSubmit">
     <div class="name-form__inner">
       <TextField
-        v-model="company"
-        placeholder="Type your company"
+        v-model="date"
+        type="month"
+        placeholder="Type your name"
         class="name-form__input"
-        :error-message="companyErrorMessage"
-      />  
-      <TextField
-        v-model="role"
-        placeholder="Type your role"
-        class="name-form__input"
-        :error-message="roleErrorMessage"
-      />    
-    </div>    
+        :error-message="errorMessage"
+      />
+    </div>
     <LinkButton class="name-form__button" size="small">submit</LinkButton>
     <!-- <ButtonDotsArrow direction="right" class="name-form__button" /> -->
   </form>
@@ -82,7 +61,6 @@ const onSubmit = handleSubmit((values, event) => {
     display: flex;
     flex-direction: column;
     position: relative;
-    gap: getRem(24);
   }
 
   &__input {

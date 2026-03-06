@@ -67,11 +67,82 @@ export const tadiSteps = {
       },
     ],
     cta: 'roleForm',
+    type: 'textField',        
+    sceneShape: 2,    
+    nextStep: 'ask_project_goal',
+  },
+
+  ask_project_goal: {
+    id: 'ask_project_goal',
+    messages: [
+      {        
+        variations: [
+          'Got it. What kind of transformation are you after?',
+        ],
+      },
+    ],
+    confirmMessages: [
+      {
+        variations: [
+          'A classic metamorphosis. I like your style.',
+        ],
+      },      
+    ],
+    cta: 'goalButtons',
+    type: 'buttons',        
+    sceneShape: 3,    
+    nextStep: 'ask_budget',
+  },
+
+  ask_budget: {
+    id: 'ask_budget',
+    messages: [
+      {        
+        variations: [
+          'Let’s talk resources — every good metamorphosis needs the right nutrients.',
+        ],
+      },
+    ],
+    confirmMessages: [
+      {
+        variations: [
+          'Perfect. That’s enough energy to evolve something extraordinary.',
+        ],
+      },      
+    ],
+    cta: 'budgetButtons',
+    type: 'buttons',
+    sceneShape: 4,
+    nextStep: 'ask_deadline',
+  },
+
+  ask_deadline: {
+    id: 'ask_deadline',
+    messages: [
+      {        
+        variations: [
+          'When are you hoping this transformation begins?',
+        ],
+      },
+    ],    
+    cta: 'timelineButtons',
+    type: 'buttons',
+    sceneShape: 4,
+    nextStep: 'finish',
+  },
+
+  ask_date: {
+    id: 'ask_date',
+    messages: [
+      {        
+        variations: [
+          'What’s the big day?',
+        ],
+      },
+    ],    
+    cta: 'dateForm',
     type: 'textField',
-    inputType: 'email',
-    model: 'email',
-    sceneShape: 2,
-    placeholder: 'name@company.com',
-    next: 'finish',
+    sceneShape: 4,
+    nextStep: 'finish',
   },
 };

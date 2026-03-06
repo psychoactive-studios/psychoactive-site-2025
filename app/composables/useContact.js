@@ -17,12 +17,22 @@ const actionsRef = reactive({
   introButtons: null,
   nameForm: null,
   roleForm: null,
+  goalButtons: null,
+  budgetButtons: null,
+  timelineButtons: null,
+  dateForm: null,
+  descriptionForm: null,
 });
 
 const userData = reactive({
   name: null,
   company: null,
   role: null,
+  goal: null,
+  budget: null,
+  timeline: null,
+  description: null,
+  file: null,
 });
 
 const currentStepId = ref('intro');
@@ -192,18 +202,18 @@ export default function useContact() {
               duration: 0.8,
               ease: 'power4.out',
               stagger: {
-                each: 0.25,
+                each: 0.15,
                 from: 'random',
               },
             },
-            '<+0.25'
+            '<+0.15'
           );
       }
       // Text field leave animation
       if (currentStep.type === 'textField') {
         console.log('event.currentTarget', event.currentTarget);
         const button = event.currentTarget.querySelector('.name-form__button');
-        const fields = event.currentTarget.querySelectorAll('.name-form__inner');
+        const fields = event.currentTarget.querySelectorAll('.name-form__inner .text-field');
         
         timeline          
           .to(
@@ -221,7 +231,7 @@ export default function useContact() {
               yPercent: -50,              
               duration: 0.5,
               ease: 'power3.in',
-              stagger: 0.25,
+              stagger: 0.1,
             }, '<');
       }
       timeline.set(actionsRef[currentStep.cta], { autoAlpha: 0 });
@@ -232,11 +242,9 @@ export default function useContact() {
       console.log('currentStep.confirmMessages', currentStep.confirmMessages, currentMessage.value);
       currentStep.confirmMessages.forEach((message, index, array) => {
 
-        const confirmMessage = getRandomMessage(message.variations).replace('[Name]', userData.name);
-
-        console.log('confirmMessage', confirmMessage);
+        const confirmMessage = getRandomMessage(message.variations).replace('[Name]', userData.name);        
         const delay = index === 0 ? `-=0.5` : `+=${MESSAGE_DELAY}`;
-        const isLastMessage = index === array.length - 1;        
+        
         timeline.to(
           previousSectionRef.value,
           {

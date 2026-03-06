@@ -22,11 +22,22 @@ defineProps({
     type: String,
     default: '',
   },
+  rows: {
+    type: Number,
+    default: 1,
+  },
 });
 </script>
 <template>
   <label class="text-field" :class="{ 'has-error': hasError || errorMessage }">
-    <input
+    <textarea v-if="type === 'textarea'"
+      v-model="model"
+      class="text-field__input textarea"
+      :placeholder="placeholder"
+      :name="name"
+      :rows="rows"
+    />
+    <input v-else    
       v-model="model"
       class="text-field__input"
       :type="type"
@@ -65,6 +76,13 @@ defineProps({
     font-weight: 500;
     line-height: 1;
     color: white;
+    color-scheme: dark;
+    width: 100%;
+    &.textarea {
+      height: auto;
+      padding: 16px 0;
+      resize: vertical;
+    }
     &::placeholder {
       color: white;
       opacity: 0.4;
