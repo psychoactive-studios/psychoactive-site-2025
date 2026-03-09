@@ -1,3 +1,4 @@
+import { useThrottleFn } from '@vueuse/core';
 import gsap from 'gsap';
 import { tadiSteps } from '~/data/contactData';
 
@@ -162,9 +163,9 @@ export default function useContact() {
         '<'
       )
       .add(() => dotsTimeline.value.repeat(-1).restart());
-  }
+  } 
 
-  const handleNextStep = (stepId, event) => {
+  const handleNextStepFn = (stepId, event) => {
     const timeline = gsap.timeline();
 
     const currentStep = tadiSteps[currentStepId.value];
@@ -358,6 +359,8 @@ export default function useContact() {
       });      
     }    
   };
+
+  const handleNextStep = useThrottleFn(handleNextStepFn, 2000);
 
   return {
     sceneRef,
