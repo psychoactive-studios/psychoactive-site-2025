@@ -9,7 +9,7 @@ import LinkWithHover from '~/components/ui/LinkWithHover.vue';
 import Circle from '~/components/ui/Circle.vue';
 import LetsTalkSceneGL from '~/components/ui/LetsTalkSceneGL.vue';
 
-const { enableScroll, scrollSmoother } = useScrollSmoother();
+const { enableScroll } = useScrollSmoother();
 
 const { sceneRef } = useContact();
 
@@ -43,7 +43,7 @@ onMounted(async () => {
               '/img/contact/step_06.svg',
               '/img/contact/step_07.svg',
             ]"
-            :scale="1"
+            :scale="1.2"
           />          
         </section>
         <section class="contact__conversation">

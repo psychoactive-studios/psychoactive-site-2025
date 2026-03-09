@@ -59,7 +59,7 @@ onMounted(() => {
       duration: 0.8,
       width: '0%',
       ease: 'power1.in',
-      overwrite: 'auto',
+      // overwrite: 'auto',
     })
     .set(dotsLeft, {
       left: '50%',
@@ -71,10 +71,13 @@ onMounted(() => {
       duration: 0.8,
       width: '50%',
       ease: 'power1.out',
-      overwrite: 'auto',
+      // overwrite: 'auto',
     });
 
-  dotsTimeline.value.restart();
+  // dotsTimeline.value.play();
+
+  console.log('dotsTimeline', dotsTimeline);
+  
 });
 
 watch(isLoading, (newVal) => {
@@ -85,8 +88,6 @@ watch(isLoading, (newVal) => {
 
 
 </script>
-
-<!-- Oh look, a visitor! I should start charging admission. Need anything? -->
 
 <template>
   <div class="contact-form">

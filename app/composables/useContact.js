@@ -347,12 +347,16 @@ export default function useContact() {
           }
         );
       }
-
       // Update current step id
       timeline.add(() => {
         currentStepId.value = stepId;
       });      
     });
+    if(!targetStep.nextStep) {
+      timeline.add(() => {
+        dotsTimeline.value.repeat(0).play();
+      });      
+    }    
   };
 
   return {
