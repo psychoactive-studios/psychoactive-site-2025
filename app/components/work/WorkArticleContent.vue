@@ -191,7 +191,7 @@ const getSrcSet = (image) => {
       <!-- CTA section -->
       <WorkCTAButton
         v-if="block.__component === 'work.launch-website'"
-        :href="block.showButton && websiteLink ? websiteLink : false"
+        :href="block.showButton && websiteLink ? (block.customLink ? block.customLink : websiteLink) : false"
       >
         {{ block.text }}
       </WorkCTAButton>
