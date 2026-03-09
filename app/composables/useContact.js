@@ -338,9 +338,10 @@ export default function useContact() {
       if (isLastMessage && targetStep.cta) {
         timeline.fromTo(
           actionsRef[targetStep.cta],
-          { autoAlpha: 0, scaleY: 0.8, yPercent: 50 },
+          { opacity: 0.3, scaleY: 0.8, yPercent: 50, visibility: 'hidden' },
           {
-            autoAlpha: 1,
+            opacity: 1,
+            visibility: 'visible',
             yPercent: 0,
             scaleY: 1,
             duration: 1,
