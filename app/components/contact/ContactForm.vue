@@ -16,6 +16,7 @@ import ContactBudgetButtons from './ContactBudgetButtons.vue';
 import ContactTimelineButtons from './ContactTimelineButtons.vue';
 import ContactDateForm from './ContactDateForm.vue';
 import ContactDescriptionForm from './ContactDescriptionForm.vue';
+import ContactJoinButtons from './ContactJoinButtons.vue';
 
 
 
@@ -102,11 +103,9 @@ watch(isLoading, (newVal) => {
     >
 
     <div class="contact-form__content">
-      <div ref="previousSectionRef" class="contact-form__previous">
-        {{ previousMessage }}
-      </div>
+      <div ref="previousSectionRef" class="contact-form__previous" v-html="previousMessage"></div>
       <div ref="currentSectionRef" class="contact-form__step">
-        <span ref="currentSectionTextRef">{{ currentMessage }}</span>
+        <span ref="currentSectionTextRef" v-html="currentMessage"></span>
       </div>
       <div class="contact-form__action">
         <div
@@ -126,7 +125,7 @@ watch(isLoading, (newVal) => {
             size="small"
             data-index="1"
             @mouseenter="playRandomSound('text-hover')"
-            @click="handleTestClick"
+            @click="(e) => handleNextStep('join_intro', e)"
           >
             Join the team
           </LinkButton>
@@ -182,6 +181,15 @@ watch(isLoading, (newVal) => {
         >
           <ContactDescriptionForm />
         </div>
+
+        <div
+          :ref="(el) => (actionsRef.joinTeamButtons = el)"
+          class="contact-form__action_item -join-team-buttons"
+        >
+          <ContactJoinButtons />
+        </div>
+
+        
 
         
 
@@ -331,7 +339,10 @@ watch(isLoading, (newVal) => {
     font-weight: 400;
     line-height: 100%;
     letter-spacing: -0.8px;
-    position: relative;
+    position: relative;    
+    :deep(a) {      
+      text-decoration: underline;
+    }
   }
 
   &__step {
@@ -375,6 +386,9 @@ watch(isLoading, (newVal) => {
         visibility: hidden;
       }
       &.-description-form {
+        visibility: hidden;
+      }
+      &.-join-team-buttons {
         visibility: hidden;
       }
     }

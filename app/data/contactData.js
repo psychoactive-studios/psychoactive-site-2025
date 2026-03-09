@@ -30,6 +30,7 @@ export const tadiSteps = {
     sceneShape: 0,
   },
 
+  // Start a Project Flow
   ask_name: {
     id: 'ask_name',
     messages: [
@@ -180,4 +181,49 @@ export const tadiSteps = {
     sceneShape: 7,
     // nextStep: 'finish',
   },
+
+  // Join the Team Flow
+  join_intro: {
+    id: 'join_intro',
+    messages: [
+      {        
+        variations: [
+          'Ah, a fellow creative creature. Just so you know, all our roles are freelance and project-based.',
+        ],
+      },
+      {        
+        variations: [
+          'What’s your discipline?',
+        ],
+      },
+    ],
+    cta: 'joinTeamButtons',
+    type: 'buttons',        
+    sceneShape: 4,
+    nextStep: 'join_action',
+  },
+  join_action: {
+    id: 'join_action',
+    messages: [
+      {        
+        variations: [
+          `Perfect. Send your portfolio and a short intro to [email].\n
+          If we vibe, we’ll be in touch faster than a frog catches a fly.
+          `,
+        ],
+      },
+      {        
+        variations: [
+          'Thanks for reaching out — I’ll let the team know another talent is emerging from the pond.',
+        ],
+      },
+    ],
+    sceneShape: 7,
+    // nextStep: '',
+  },
 };
+
+
+
+
+

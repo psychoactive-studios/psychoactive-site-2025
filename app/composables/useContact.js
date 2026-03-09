@@ -22,6 +22,7 @@ const actionsRef = reactive({
   timelineButtons: null,
   dateForm: null,
   descriptionForm: null,
+  joinTeamButtons: null,
 });
 
 const userData = reactive({
@@ -166,6 +167,9 @@ export default function useContact() {
   } 
 
   const handleNextStepFn = (stepId, event) => {
+
+    console.log('event', event.currentTarget);
+
     const timeline = gsap.timeline();
 
     const currentStep = tadiSteps[currentStepId.value];
@@ -176,10 +180,12 @@ export default function useContact() {
       if (currentStep.type === 'buttons') {
         const index = parseInt(event.currentTarget.dataset.index);
         const buttons = event.currentTarget
-          .closest('.-buttons')
+          .closest('.contact-form__action_item')
           .querySelectorAll(
             `.contact-form__action_button:not([data-index="${index}"])`
           );
+
+          console.log('buttons', buttons);
 
         timeline
           .to(
@@ -317,7 +323,9 @@ export default function useContact() {
         )
         .add(() => {
           previousMessage.value = currentMessage.value;
-          currentMessage.value = getRandomMessage(message.variations).replace('[Name]', userData.name);
+          currentMessage.value = getRandomMessage(message.variations)
+            .replace('[email]', '<a href="mailto:careers@psychoactive.co">careers@psychoactive.co</a>')
+            .replace(/\n/g, '<br>');
           gsap.set(
             [
               currentSectionRef.value,
