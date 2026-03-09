@@ -11,9 +11,14 @@ const props = defineProps({
     required: false,
     default: '',
   },
+  buttonText: {
+    type: String,
+    required: false,
+    default: 'Launch Website',
+  },
 });
 
-const { href } = props;
+const { href, buttonText } = props;
 
 onMounted(() => {
   ctx = gsap.context(() => {
@@ -96,7 +101,7 @@ onUnmounted(() => {
           <span class="line" />
         </div>
         <LinkButton :href="href" mode="dark" class="work__cta_button">
-          Launch Website
+          {{ buttonText }}
         </LinkButton>
         <div class="work__cta_line">
           <span class="line" />
