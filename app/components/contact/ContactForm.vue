@@ -27,13 +27,16 @@ const {
   dotsRef,
   previousSectionRef,
   currentSectionRef,
+  historyMessageRef,
   currentSectionTextRef,
   enterAnimation,
   currentMessage,
   previousMessage,
+  historyMessage,
   actionsRef,
   handleTestClick,
   handleNextStep,
+  handlePrevStep,
   getRandomMessage,
   currentStepId,
   dotsTimeline,
@@ -87,6 +90,11 @@ watch(isLoading, (newVal) => {
   }
 });
 
+const handleBackClick = () => {
+  playRandomSound('click')
+  handlePrevStep();
+}
+
 
 </script>
 
@@ -98,11 +106,12 @@ watch(isLoading, (newVal) => {
       <span class="dot-right" />
     </div>
 
-    <ButtonOutline class="contact-back-button" @click="playRandomSound('click')"
+    <ButtonOutline class="contact-back-button" @click="handleBackClick"
       >Back</ButtonOutline
     >
 
     <div class="contact-form__content">
+      <div ref="historyMessageRef" class="contact-form__history" v-html="historyMessage"></div>
       <div ref="previousSectionRef" class="contact-form__previous" v-html="previousMessage"></div>
       <div ref="currentSectionRef" class="contact-form__step">
         <span ref="currentSectionTextRef" v-html="currentMessage"></span>
@@ -356,6 +365,15 @@ watch(isLoading, (newVal) => {
       color: transparent;
       background-clip: text;
     }
+  }
+
+  &__history {
+    position: absolute;
+    transform: translateY(calc(-100% - 48px - 0.65em));
+    opacity: 0;
+    scale: 0.8;
+    width: 100%;
+    visibility: hidden;
   }
 
   &__previous {

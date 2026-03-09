@@ -2,17 +2,21 @@ import { useThrottleFn } from '@vueuse/core';
 import gsap from 'gsap';
 import { tadiSteps } from '~/data/contactData';
 
-const MESSAGE_DELAY = 0.1;
+const MESSAGE_DELAY = 2;
 
+let mainTimeline = null;
+let historyTimeline = null;
 let dotsTimeline  = ref(null);
 const sceneRef = ref(null);
 const dotsRef = ref(null);
 
 const previousSectionRef = ref(null);
 const currentSectionRef = ref(null);
+const historyMessageRef = ref(null);
 const currentSectionTextRef = ref(null);
 const currentMessage = ref('Hi I’m Psycho AI Agent. This is default message');
 const previousMessage = ref(null);
+const historyMessage = ref(null);
 const actionsRef = reactive({
   introButtons: null,
   nameForm: null,
@@ -37,6 +41,7 @@ const userData = reactive({
 });
 
 const currentStepId = ref('intro');
+const historySteps = ref([]);
 
 const getRandomMessage = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -112,6 +117,13 @@ export default function useContact() {
         '+=1'
       )
       .add(() => {
+        historySteps.value.push({
+          message: null,
+          nextMessage: nextMessage,
+          cta: 'introButtons',
+          sceneShape: null,
+          stepId: 'intro'
+        });
         previousMessage.value = currentMessage.value;
         currentMessage.value = nextMessage;
         gsap.set([currentSectionRef.value, currentSectionTextRef.value], {
@@ -164,13 +176,10 @@ export default function useContact() {
         '<'
       )
       .add(() => dotsTimeline.value.repeat(-1).restart());
-  } 
+  }
 
   const handleNextStepFn = (stepId, event) => {
-
-    console.log('event', event.currentTarget);
-
-    const timeline = gsap.timeline();
+    mainTimeline = gsap.timeline();
 
     const currentStep = tadiSteps[currentStepId.value];
     const targetStep = tadiSteps[stepId];
@@ -185,9 +194,7 @@ export default function useContact() {
             `.contact-form__action_button:not([data-index="${index}"])`
           );
 
-          console.log('buttons', buttons);
-
-        timeline
+        mainTimeline
           .to(
             event.currentTarget,
             {
@@ -218,7 +225,7 @@ export default function useContact() {
         const button = event.currentTarget.querySelector('.name-form__button');
         const fields = event.currentTarget.querySelectorAll('.name-form__inner > *, .description-form__inner > *');        
         
-        timeline          
+        mainTimeline          
           .to(
             button,
             {
@@ -237,7 +244,7 @@ export default function useContact() {
               stagger: 0.1,
             }, '<');
       }
-      timeline.set(actionsRef[currentStep.cta], { autoAlpha: 0 });
+      mainTimeline.set(actionsRef[currentStep.cta], { autoAlpha: 0 });
     }
 
     // Confirm message animation
@@ -247,7 +254,7 @@ export default function useContact() {
         const confirmMessage = getRandomMessage(message.variations).replace('[Name]', userData.name);
         const delay = index === 0 ? `-=0.5` : `+=${MESSAGE_DELAY}`;
         
-        timeline.to(
+        mainTimeline.to(
           previousSectionRef.value,
           {
             opacity: 0,
@@ -291,7 +298,7 @@ export default function useContact() {
     }
 
     // Update current step
-    timeline.add(() => {
+    mainTimeline.add(() => {
       sceneRef.value.nextShape(targetStep.sceneShape);
     });   
     
@@ -300,7 +307,11 @@ export default function useContact() {
       const delay = index === 0 ? `-=0.5` : `+=${MESSAGE_DELAY}`;
       const isLastMessage = index === array.length - 1;
 
-      timeline
+      const nextMessage = getRandomMessage(message.variations)
+            .replace('[email]', '<a href="mailto:careers@psychoactive.co">careers@psychoactive.co</a>')
+            .replace(/\n/g, '<br>');
+
+      mainTimeline
         .to(
           previousSectionRef.value,
           {
@@ -322,10 +333,19 @@ export default function useContact() {
           '<'
         )
         .add(() => {
+          // Add to history steps
+          historySteps.value.push({
+            message: previousMessage.value,
+            nextMessage: nextMessage,
+            cta: isLastMessage && targetStep.cta ? targetStep.cta : null,
+            sceneShape: targetStep.sceneShape,
+            stepId: currentStepId.value
+          });
+
+          historyMessage.value = previousMessage.value;
+          
           previousMessage.value = currentMessage.value;
-          currentMessage.value = getRandomMessage(message.variations)
-            .replace('[email]', '<a href="mailto:careers@psychoactive.co">careers@psychoactive.co</a>')
-            .replace(/\n/g, '<br>');
+          currentMessage.value = nextMessage;
           gsap.set(
             [
               currentSectionRef.value,
@@ -344,7 +364,7 @@ export default function useContact() {
         });
 
       if (isLastMessage && targetStep.cta) {
-        timeline.fromTo(
+        mainTimeline.fromTo(
           actionsRef[targetStep.cta],
           { opacity: 0.3, scaleY: 0.8, yPercent: 50, visibility: 'hidden' },
           {
@@ -358,15 +378,152 @@ export default function useContact() {
         );
       }
       // Update current step id
-      timeline.add(() => {
+      mainTimeline.add(() => {
         currentStepId.value = stepId;
       });      
     });
     if(!targetStep.nextStep) {
-      timeline.add(() => {
+      mainTimeline.add(() => {
         dotsTimeline.value.repeat(0).play();
       });      
     }    
+  };
+
+  console.log('historySteps', historySteps);
+  const handlePrevStep = () => {
+    // const lastStep = historySteps.value.at(-1);
+    const rawStep = historySteps.value.pop();
+    const lastStep = JSON.parse(JSON.stringify(rawStep));
+    // const lastStep = structuredClone(historySteps.value.pop());
+    console.log('lastStep!!!!!', lastStep.stepId);
+    // currentStepId.value = lastStep.stepId;
+    
+    if(!lastStep) return;
+
+    
+
+    mainTimeline?.kill();
+    historyTimeline?.kill();
+
+    const currentStep = tadiSteps[currentStepId.value];
+
+    console.log('currentStep', currentStep);
+
+    historyTimeline = gsap.timeline();
+
+    historyTimeline
+    .to(
+        currentSectionRef.value,
+        {
+          opacity: 0,
+          scale: 0.9,
+          duration: 0.5,
+          ease: 'power3.out',
+        }        
+      )
+    .to(
+      previousSectionRef.value,
+      {
+        y: 0,
+        duration: 0.5,
+        opacity: 1,
+        ease: 'power3.out',
+      },
+      '<'
+    )
+    .to(historyMessageRef.value, {
+      scale: 1,
+      opacity: 0.2,
+      yPercent: -100,
+      y: -74,
+      visibility: 'visible',
+      duration: 0.5,
+      ease: 'power3.out',
+    }, '<');   
+    
+    if (currentStep.cta) {
+      historyTimeline.to(actionsRef[currentStep.cta], {
+        opacity: 0,
+        scale: 0.9,
+        duration: 0.5,
+        visibility: 'hidden',
+        ease: 'power3.out',
+      }, '<')
+      .set(actionsRef[currentStep.cta], { clearProps: 'all' });
+    }
+    historyTimeline.add(() => {
+      currentMessage.value = previousMessage.value;
+      previousMessage.value = lastStep.message;
+      gsap.set(
+        [
+          currentSectionRef.value,
+          currentSectionTextRef.value,
+          previousSectionRef.value,
+          historyMessageRef.value,
+        ],
+        {
+          clearProps: 'all',
+        }
+      );
+      gsap.set(currentSectionTextRef.value, {
+        backgroundPositionX: '-100%',        
+      })
+    });
+
+    historyTimeline.to(
+      currentSectionRef.value,
+      {
+        transform: 'translateY(calc(-100% - 48px - 0.65em))',
+        duration: 0.8,
+        opacity: 0.2,
+        ease: 'power4.out',
+      },
+      '+=2'
+    )
+    .to(
+      previousSectionRef.value,
+      {
+        opacity: 0,
+        scale: 0.9,
+        duration: 0.8,
+        ease: 'power3.out',
+      },
+      '<'
+    )
+    .add(() => {
+      console.log('lastStep.nextMessage', lastStep.nextMessage, lastStep);
+      
+      previousMessage.value = currentMessage.value;
+      currentMessage.value = lastStep.nextMessage;
+      gsap.set([currentSectionRef.value, currentSectionTextRef.value, previousSectionRef.value], {
+        clearProps: 'all',
+      });
+    })
+    .to(currentSectionTextRef.value, {
+      backgroundPositionX: '-100%',
+      duration: 1,
+      ease: 'power2.inOut',
+    });
+
+    console.log('lastStep.cta!!!!', lastStep.cta, lastStep);
+    if (lastStep.cta) {
+      historyTimeline.fromTo(
+        actionsRef[lastStep.cta],
+        { opacity: 0.3, scaleY: 0.8, yPercent: 50, visibility: 'hidden' },
+        {
+          opacity: 1,
+          visibility: 'visible',
+          yPercent: 0,
+          scaleY: 1,
+          duration: 1,
+          ease: 'power3.out',
+        }
+      );
+    }
+
+    historyTimeline.add(() => {
+      historySteps.value.push(lastStep);
+    });
   };
 
   const handleNextStep = useThrottleFn(handleNextStepFn, 2000);
@@ -376,13 +533,16 @@ export default function useContact() {
     dotsRef,
     previousSectionRef,
     currentSectionRef,
+    historyMessageRef,
     currentSectionTextRef,
     currentMessage,
     previousMessage,
+    historyMessage,
     currentStepId,
     actionsRef,
     enterAnimation,
     handleNextStep,
+    handlePrevStep,
     userData,
     getRandomMessage,
     dotsTimeline,
