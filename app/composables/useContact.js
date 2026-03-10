@@ -502,6 +502,10 @@ export default function useContact() {
         gsap.set([currentSectionRef.value, currentSectionTextRef.value, previousSectionRef.value], {
           clearProps: 'all',
         });
+        if(lastStep.nextMessage) {          
+        console.log('PUSHED LAST STEP', lastStep);
+          historySteps.value.push(lastStep);          
+        }
       })
       .to(currentSectionTextRef.value, {
         backgroundPositionX: '-100%',
@@ -525,11 +529,12 @@ export default function useContact() {
       );
     }
 
-    if(lastStep.nextMessage) {
-      historyTimeline.add(() => {
-        historySteps.value.push(lastStep);
-      });
-    }
+    // if(lastStep.nextMessage) {
+    //   historyTimeline.add(() => {
+    //     console.log('PUSHED LAST STEP', lastStep);
+    //     historySteps.value.push(lastStep);
+    //   });
+    // }
     
   };
 
