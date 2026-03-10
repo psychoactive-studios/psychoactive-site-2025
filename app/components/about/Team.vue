@@ -97,13 +97,13 @@ const { playContinuousSound, stopContinuousSound } = useAudioManager();
     flex-direction: column;
     min-width: 0;
     .item__img {
-      aspect-ratio: 0.69;
-      border-radius: 10px;
-      overflow: hidden;
+      aspect-ratio: 0.69;      
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        border-radius: 10px;
+        overflow: hidden;
       }
     }
     .item__name {
