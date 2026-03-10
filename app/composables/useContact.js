@@ -398,17 +398,11 @@ export default function useContact() {
     }    
   };
 
-  
-console.log('historySteps', historySteps);
-
-
   const handlePrevStep = () => {
     const beforeMessage = historySteps.value.at(-2)?.message;
     const rawStep = historySteps.value.pop();
     const lastStep = JSON.parse(JSON.stringify(rawStep));
-    // const lastStep = structuredClone(historySteps.value.pop());
-    console.log('lastStep!!!!!', lastStep, currentStepId.value);
-    console.log('beforeMessage!!!!!', beforeMessage);    
+    // const lastStep = structuredClone(historySteps.value.pop());    
     
     if(!lastStep) return;
 
@@ -417,9 +411,7 @@ console.log('historySteps', historySteps);
     mainTimeline?.kill();
     historyTimeline?.kill();
 
-    const currentStep = tadiSteps[currentStepId.value];
-
-    console.log('currentStep', currentStep);
+    const currentStep = tadiSteps[currentStepId.value];    
 
     historyTimeline = gsap.timeline();
 
@@ -503,9 +495,7 @@ console.log('historySteps', historySteps);
         },
         '<'
       )
-      .add(() => {
-        console.log('lastStep.nextMessage', lastStep.nextMessage, lastStep);
-        
+      .add(() => {        
         previousMessage.value = currentMessage.value;
         currentMessage.value = lastStep.nextMessage;
         historyMessage.value = lastStep.message;
@@ -520,8 +510,7 @@ console.log('historySteps', historySteps);
       });
     }
     
-    if (lastStep.cta) {
-      console.log('lastStep.cta!!!!', lastStep.cta);
+    if (lastStep.cta) {      
       historyTimeline.fromTo(
         actionsRef[lastStep.cta],
         { opacity: 0.3, scaleY: 0.8, yPercent: 50, visibility: 'hidden' },
@@ -546,6 +535,57 @@ console.log('historySteps', historySteps);
 
   const handleNextStep = useThrottleFn(handleNextStepFn, 2000);
 
+
+  const handleSendEmail = async () => {
+    console.log('handleSendEmail', );
+
+    const userTestData = {
+      name: 'Test Name',
+      company: 'Test Company',
+      role: 'Test Role',
+      goal: 'Test Goal',
+      budget: 'Test Budget',
+      deadline: 'Test Deadline',
+      description: 'Test Description',
+      // file: 'Test File',
+    };
+
+    try {
+      const formData = new FormData();
+      
+      // Додаємо всі ключі з userData у FormData
+      Object.keys(userTestData).forEach((key) => {
+        console.log(key, userTestData[key]);
+        
+        if (userTestData[key]) {
+          formData.append(key, userTestData[key]);
+        }
+      });     
+
+      
+      
+
+      const response = await $fetch('https://formspree.io/f/xeeranzd', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'          
+        }        
+      });
+
+      console.log('Лист успішно відправлено!', response);
+      
+      // Тут можна викликати логіку переходу на фінальний крок 'sey_thanks'
+      
+    } catch (error) {
+      console.error('Помилка відправки форми:', error);
+      // Тут можна показати повідомлення про помилку користувачу
+    } finally {
+      // Зупиняємо лоадер після завершення циклу
+      // dotsTimeline.value.repeat(0);
+    }
+  };
+
   return {
     sceneRef,
     dotsRef,
@@ -564,5 +604,6 @@ console.log('historySteps', historySteps);
     userData,
     getRandomMessage,
     dotsTimeline,
+    handleSendEmail,
   };
 }

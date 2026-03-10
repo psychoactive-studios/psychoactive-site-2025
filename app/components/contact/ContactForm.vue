@@ -40,6 +40,7 @@ const {
   getRandomMessage,
   currentStepId,
   dotsTimeline,
+  handleSendEmail
 } = useContact();
 
 const { isLoading } = useLoader();
@@ -138,7 +139,7 @@ const handleBackClick = () => {
             size="small"
             data-index="2"
             @mouseenter="playRandomSound('text-hover')"
-            @click="handleTestClick"
+            @click="handleSendEmail"
           >
             Contacts
           </LinkButton>
