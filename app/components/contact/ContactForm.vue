@@ -76,12 +76,7 @@ onMounted(() => {
       width: '50%',
       ease: 'power1.out',
       // overwrite: 'auto',
-    });
-
-  // dotsTimeline.value.play();
-
-  console.log('dotsTimeline', dotsTimeline);
-  
+    });  
 });
 
 watch(isLoading, (newVal) => {
@@ -373,7 +368,7 @@ const handleBackClick = () => {
     opacity: 0;
     scale: 0.8;
     width: 100%;
-    visibility: hidden;
+    visibility: hidden;    
   }
 
   &__previous {

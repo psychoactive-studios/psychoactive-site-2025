@@ -184,7 +184,7 @@ export default function useContact() {
     const currentStep = tadiSteps[currentStepId.value];
     const targetStep = tadiSteps[stepId];
     // Leave animation for actions
-    if (currentStep.cta) {
+    if (currentStep?.cta) {
       // Buttons leave animation
       if (currentStep.type === 'buttons') {
         const index = parseInt(event.currentTarget.dataset.index);
@@ -218,7 +218,8 @@ export default function useContact() {
               },
             },
             '<+0.15'
-          );
+          )
+          .set([event.currentTarget, buttons], { clearProps: 'all' });
       }
       // Text field leave animation
       if (currentStep.type === 'textField') {        
@@ -242,17 +243,18 @@ export default function useContact() {
               duration: 0.5,
               ease: 'power3.in',
               stagger: 0.1,
-            }, '<');
+            }, '<')
+            .set([button, fields], { clearProps: 'all' });;
       }
       mainTimeline.set(actionsRef[currentStep.cta], { autoAlpha: 0 });
     }
 
     // Confirm message animation
     if (currentStep.confirmMessages) {      
-      currentStep.confirmMessages.forEach((message, index) => {
+      currentStep.confirmMessages.forEach((message, index, array) => {
 
         const confirmMessage = getRandomMessage(message.variations).replace('[Name]', userData.name);
-        const delay = index === 0 ? `-=0.5` : `+=${MESSAGE_DELAY}`;
+        const delay = index === 0 ? `-=0.5` : `+=${MESSAGE_DELAY}`;        
         
         mainTimeline.to(
           previousSectionRef.value,
@@ -300,12 +302,19 @@ export default function useContact() {
     // Update current step
     mainTimeline.add(() => {
       sceneRef.value.nextShape(targetStep.sceneShape);
-    });   
+    });
+
+    
     
 
     targetStep.messages.forEach((message, index, array) => {
       const delay = index === 0 ? `-=0.5` : `+=${MESSAGE_DELAY}`;
+      const isFirstMessage = index === 0;
       const isLastMessage = index === array.length - 1;
+
+      let historyCTA;
+      if(isFirstMessage && currentStep.cta) historyCTA = currentStep.cta;
+      if(isLastMessage && targetStep.cta) historyCTA = targetStep.cta;
 
       const nextMessage = getRandomMessage(message.variations)
             .replace('[email]', '<a href="mailto:careers@psychoactive.co">careers@psychoactive.co</a>')
@@ -336,8 +345,8 @@ export default function useContact() {
           // Add to history steps
           historySteps.value.push({
             message: previousMessage.value,
-            nextMessage: nextMessage,
-            cta: isLastMessage && targetStep.cta ? targetStep.cta : null,
+            nextMessage: index > 0 ? nextMessage : null,
+            cta: historyCTA,
             sceneShape: targetStep.sceneShape,
             stepId: currentStepId.value
           });
@@ -389,18 +398,21 @@ export default function useContact() {
     }    
   };
 
-  console.log('historySteps', historySteps);
+  
+console.log('historySteps', historySteps);
+
+
   const handlePrevStep = () => {
-    // const lastStep = historySteps.value.at(-1);
+    const beforeMessage = historySteps.value.at(-2)?.message;
     const rawStep = historySteps.value.pop();
     const lastStep = JSON.parse(JSON.stringify(rawStep));
     // const lastStep = structuredClone(historySteps.value.pop());
-    console.log('lastStep!!!!!', lastStep.stepId);
-    // currentStepId.value = lastStep.stepId;
+    console.log('lastStep!!!!!', lastStep, currentStepId.value);
+    console.log('beforeMessage!!!!!', beforeMessage);    
     
     if(!lastStep) return;
 
-    
+    currentStepId.value = lastStep.stepId;
 
     mainTimeline?.kill();
     historyTimeline?.kill();
@@ -450,10 +462,11 @@ export default function useContact() {
         ease: 'power3.out',
       }, '<')
       .set(actionsRef[currentStep.cta], { clearProps: 'all' });
-    }
+    }        
     historyTimeline.add(() => {
       currentMessage.value = previousMessage.value;
       previousMessage.value = lastStep.message;
+      historyMessage.value = beforeMessage;
       gsap.set(
         [
           currentSectionRef.value,
@@ -470,43 +483,45 @@ export default function useContact() {
       })
     });
 
-    historyTimeline.to(
-      currentSectionRef.value,
-      {
-        transform: 'translateY(calc(-100% - 48px - 0.65em))',
-        duration: 0.8,
-        opacity: 0.2,
-        ease: 'power4.out',
-      },
-      '+=2'
-    )
-    .to(
-      previousSectionRef.value,
-      {
-        opacity: 0,
-        scale: 0.9,
-        duration: 0.8,
-        ease: 'power3.out',
-      },
-      '<'
-    )
-    .add(() => {
-      console.log('lastStep.nextMessage', lastStep.nextMessage, lastStep);
-      
-      previousMessage.value = currentMessage.value;
-      currentMessage.value = lastStep.nextMessage;
-      gsap.set([currentSectionRef.value, currentSectionTextRef.value, previousSectionRef.value], {
-        clearProps: 'all',
+    if(lastStep.nextMessage) {
+      historyTimeline.to(
+        currentSectionRef.value,
+        {
+          transform: 'translateY(calc(-100% - 48px - 0.65em))',
+          duration: 0.8,
+          opacity: 0.2,
+          ease: 'power4.out',
+        }, '+=2'
+      )
+      .to(
+        previousSectionRef.value,
+        {
+          opacity: 0,
+          scale: 0.9,
+          duration: 0.8,
+          ease: 'power3.out',
+        },
+        '<'
+      )
+      .add(() => {
+        console.log('lastStep.nextMessage', lastStep.nextMessage, lastStep);
+        
+        previousMessage.value = currentMessage.value;
+        currentMessage.value = lastStep.nextMessage;
+        historyMessage.value = lastStep.message;
+        gsap.set([currentSectionRef.value, currentSectionTextRef.value, previousSectionRef.value], {
+          clearProps: 'all',
+        });
+      })
+      .to(currentSectionTextRef.value, {
+        backgroundPositionX: '-100%',
+        duration: 1,
+        ease: 'power2.inOut',
       });
-    })
-    .to(currentSectionTextRef.value, {
-      backgroundPositionX: '-100%',
-      duration: 1,
-      ease: 'power2.inOut',
-    });
-
-    console.log('lastStep.cta!!!!', lastStep.cta, lastStep);
+    }
+    
     if (lastStep.cta) {
+      console.log('lastStep.cta!!!!', lastStep.cta);
       historyTimeline.fromTo(
         actionsRef[lastStep.cta],
         { opacity: 0.3, scaleY: 0.8, yPercent: 50, visibility: 'hidden' },
@@ -521,9 +536,12 @@ export default function useContact() {
       );
     }
 
-    historyTimeline.add(() => {
-      historySteps.value.push(lastStep);
-    });
+    if(lastStep.nextMessage) {
+      historyTimeline.add(() => {
+        historySteps.value.push(lastStep);
+      });
+    }
+    
   };
 
   const handleNextStep = useThrottleFn(handleNextStepFn, 2000);

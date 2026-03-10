@@ -43,13 +43,13 @@ export const tadiSteps = {
         variations: ['Let’s start simple — what should I call you?'],
       },
     ],
-    confirmMessages: [
-      {
-        variations: [
-          'Nice to meet you, [Name]. You look like someone ready for transformation.',
-        ],
-      },      
-    ],
+    // confirmMessages: [
+    //   {
+    //     variations: [
+    //       'Nice to meet you, [Name]. You look like someone ready for transformation.',
+    //     ],
+    //   },      
+    // ],
     cta: 'nameForm',
     type: 'textField',
     sceneShape: 1,
@@ -60,6 +60,11 @@ export const tadiSteps = {
   ask_company_role: {
     id: 'ask_company_role',
     messages: [
+      {
+        variations: [
+          'Nice to meet you, [Name]. You look like someone ready for transformation.',
+        ],
+      },
       {
         // Можна передавати функцію, яка повертає масив варіацій
         variations: [
