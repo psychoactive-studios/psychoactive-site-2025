@@ -7,8 +7,9 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 import useContact from '~/composables/useContact';
 import LinkWithHover from '~/components/ui/LinkWithHover.vue';
 import Circle from '~/components/ui/Circle.vue';
+import LetsTalkSceneGL from '~/components/ui/LetsTalkSceneGL.vue';
 
-const { enableScroll, scrollSmoother } = useScrollSmoother();
+const { enableScroll } = useScrollSmoother();
 
 const { sceneRef } = useContact();
 
@@ -22,17 +23,18 @@ onMounted(async () => {
 
 <template>
   <main class="contact">
-    <div class="container">
+    <div class="container">      
       <div class="contact__grid">
         <section class="contact__media">
           <div class="contact__media_circle-wrapper">
             <Circle class="circle" />
           </div>
-          <LetsTalkScene
+          <LetsTalkSceneGL
             ref="sceneRef"
             class="contact__media_scene"
             :auto-play="false"
             :svg-urls="[
+              '/img/contact/step_00.svg',
               '/img/contact/step_01.svg',
               '/img/contact/step_02.svg',
               '/img/contact/step_03.svg',
@@ -41,7 +43,8 @@ onMounted(async () => {
               '/img/contact/step_06.svg',
               '/img/contact/step_07.svg',
             ]"
-          />
+            :scale="1.2"
+          />          
         </section>
         <section class="contact__conversation">
           <ContactForm :scene-ref="sceneRef" />

@@ -10,21 +10,21 @@ const { userData, currentStepId, handleNextStep } = useContact();
 
 const { handleSubmit } = useForm();
 
-const { value: name, errorMessage } = useField(
+const { value: date, errorMessage } = useField(
   'name',
   (value) => {
     if (!value || !value.trim()) {
-      return 'Fill your name please';
+      return 'Fill your deadline date';
     }
     return true;
   },
   {
-    initialValue: userData.name,
+    initialValue: userData.deadline,
   }
 );
 
 const onSubmit = handleSubmit((values, event) => {  
-  userData.name = values.name;
+  userData.date = values;
   const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
   handleNextStep(nextStepId, event.evt);
 });
@@ -34,7 +34,8 @@ const onSubmit = handleSubmit((values, event) => {
   <form class="name-form" @submit="onSubmit">
     <div class="name-form__inner">
       <TextField
-        v-model="name"
+        v-model="date"
+        type="month"
         placeholder="Type your name"
         class="name-form__input"
         :error-message="errorMessage"

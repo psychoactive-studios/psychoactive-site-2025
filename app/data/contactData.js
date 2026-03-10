@@ -30,6 +30,7 @@ export const tadiSteps = {
     sceneShape: 0,
   },
 
+  // Start a Project Flow
   ask_name: {
     id: 'ask_name',
     messages: [
@@ -42,13 +43,13 @@ export const tadiSteps = {
         variations: ['Let’s start simple — what should I call you?'],
       },
     ],
-    confirmMessages: [
-      {
-        variations: [
-          'Nice to meet you, [Name]. You look like someone ready for transformation.',
-        ],
-      },      
-    ],
+    // confirmMessages: [
+    //   {
+    //     variations: [
+    //       'Nice to meet you, [Name]. You look like someone ready for transformation.',
+    //     ],
+    //   },      
+    // ],
     cta: 'nameForm',
     type: 'textField',
     sceneShape: 1,
@@ -60,6 +61,11 @@ export const tadiSteps = {
     id: 'ask_company_role',
     messages: [
       {
+        variations: [
+          'Nice to meet you, [Name]. You look like someone ready for transformation.',
+        ],
+      },
+      {
         // Можна передавати функцію, яка повертає масив варіацій
         variations: [
           'Who are you with, and what role do you play in your ecosystem?',
@@ -67,11 +73,162 @@ export const tadiSteps = {
       },
     ],
     cta: 'roleForm',
+    type: 'textField',        
+    sceneShape: 2,    
+    nextStep: 'ask_project_goal',
+  },
+
+  ask_project_goal: {
+    id: 'ask_project_goal',
+    messages: [
+      {        
+        variations: [
+          'Got it. What kind of transformation are you after?',
+        ],
+      },
+    ],
+    confirmMessages: [
+      {
+        variations: [
+          'A classic metamorphosis. I like your style.',
+        ],
+      },      
+    ],
+    cta: 'goalButtons',
+    type: 'buttons',        
+    sceneShape: 3,    
+    nextStep: 'ask_budget',
+  },
+
+  ask_budget: {
+    id: 'ask_budget',
+    messages: [
+      {        
+        variations: [
+          'Let’s talk resources — every good metamorphosis needs the right nutrients.',
+        ],
+      },
+    ],
+    confirmMessages: [
+      {
+        variations: [
+          'Perfect. That’s enough energy to evolve something extraordinary.',
+        ],
+      },      
+    ],
+    cta: 'budgetButtons',
+    type: 'buttons',
+    sceneShape: 4,
+    nextStep: 'ask_deadline',
+  },
+
+  ask_deadline: {
+    id: 'ask_deadline',
+    messages: [
+      {        
+        variations: [
+          'When are you hoping this transformation begins?',
+        ],
+      },
+    ],    
+    cta: 'timelineButtons',
+    type: 'buttons',
+    sceneShape: 5,
+    nextStep: 'ask_description',
+  },
+
+  ask_date: {
+    id: 'ask_date',
+    messages: [
+      {        
+        variations: [
+          'What’s the big day?',
+        ],
+      },
+    ],    
+    cta: 'dateForm',
     type: 'textField',
-    inputType: 'email',
-    model: 'email',
-    sceneShape: 2,
-    placeholder: 'name@company.com',
-    next: 'finish',
+    sceneShape: 5,
+    nextStep: 'ask_description',
+  },
+
+  ask_description: {
+    id: 'ask_description',
+    messages: [
+      {        
+        variations: [
+          'Give me the short version. What are we creating together?',
+        ],
+      },
+    ],
+    cta: 'descriptionForm',
+    type: 'textField',        
+    sceneShape: 6,
+    nextStep: 'sey_thanks',
+  },
+
+  sey_thanks: {
+    id: 'sey_thanks',
+    messages: [
+      {        
+        variations: [
+          'Thanks, [Name]. I’ll ripple your details through the Psychoactive pond — the humans will be in touch soon.',
+        ],
+      },
+      {        
+        variations: [
+          'Consider your metamorphosis officially underway.',
+        ],
+      },
+    ],
+    // cta: 'descriptionForm',
+    // type: 'textField',        
+    sceneShape: 7,
+    // nextStep: 'finish',
+  },
+
+  // Join the Team Flow
+  join_intro: {
+    id: 'join_intro',
+    messages: [
+      {        
+        variations: [
+          'Ah, a fellow creative creature. Just so you know, all our roles are freelance and project-based.',
+        ],
+      },
+      {        
+        variations: [
+          'What’s your discipline?',
+        ],
+      },
+    ],
+    cta: 'joinTeamButtons',
+    type: 'buttons',        
+    sceneShape: 4,
+    nextStep: 'join_action',
+  },
+  join_action: {
+    id: 'join_action',
+    messages: [
+      {        
+        variations: [
+          `Perfect. Send your portfolio and a short intro to [email].\n
+          If we vibe, we’ll be in touch faster than a frog catches a fly.
+          `,
+        ],
+      },
+      {        
+        variations: [
+          'Thanks for reaching out — I’ll let the team know another talent is emerging from the pond.',
+        ],
+      },
+    ],
+    sceneShape: 7,
+    // nextStep: '',
   },
 };
+
+
+
+
+
