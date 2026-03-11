@@ -107,13 +107,27 @@ definePageMeta({
 </template>
 
 <style scoped lang="scss">
+@use '~/assets/styles/mixins' as *;
+@use '~/assets/styles/breakpoints' as *;
 .contact {
-  position: relative;
+  // position: relative;
+  // @include respond(laptop-small) {
+  //   position: initial;
+  // }
   .container {
     display: flex;
     flex-direction: column;
     padding-left: 0;
     min-height: 100dvh;
+    @include respond(laptop-small) {
+      padding-left: 160px;      
+      @include respond(portrait) {
+        padding-left: 48px;        
+      }
+    }
+    @include respond(mobile) {
+      padding-left: 1rem;      
+    }
   }
   &__grid {
     display: grid;
@@ -122,6 +136,12 @@ definePageMeta({
     flex-grow: 1;
     padding-top: 96px;
     padding-bottom: 96px;
+    @include respond(laptop-small) {
+      display: flex;
+      flex-direction: column;
+      padding-top: 106px;
+      padding-bottom: 48px;
+    }
     & > * {
       min-width: 0;
       min-height: 0;
@@ -129,12 +149,16 @@ definePageMeta({
   }
   &__media {
     margin: 0 48px;
-    position: relative;
+    position: relative;    
+    @include respond(laptop-small) {
+      width: auto;
+      height: 35vh;
+    }
     &_circle-wrapper {
       position: absolute;
       width: 100%;
       overflow: hidden;
-      max-width: 80vh;
+      max-width: 80vh;      
       .circle {
         animation: rotate 90s linear infinite;
       }
@@ -149,6 +173,10 @@ definePageMeta({
   &__conversation {
     height: 100%;
     padding-top: calc(45dvh - 96px - 48px);
+    @include respond(laptop-small) {
+      padding-top: 24px;
+      width: 100%;
+    }
   }
   &__footer {
     display: flex;
@@ -156,10 +184,23 @@ definePageMeta({
     position: absolute;
     width: 100%;
     bottom: 48px;
+    @include respond(laptop-small) {
+      left: 48px;
+      right: 48px;
+      width: auto;
+    }
+    @include respond(mobile) {
+      bottom: 72px;
+      left: 16px;
+      right: 16px;
+    }
     &_email {
       font-size: 1.5rem;
       line-height: 1.16;
       color: rgba(255, 255, 255, 0.5);
+      @include respond(laptop-small) {
+        font-size: 1rem;
+      }
       a {
         color: white;
         display: inline-block;

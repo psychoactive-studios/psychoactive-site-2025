@@ -47,6 +47,13 @@ const getRandomMessage = (arr) => {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
+/**
+ * Returns section opacity based on viewport: 0.2 when > 1024px, 0 when <= 1024px.
+ * Uses matchMedia for performant responsive behavior.
+ */
+const getSectionOpacity = () =>
+  typeof window !== 'undefined' && window.matchMedia('(min-width: 1025px)').matches ? 0.2 : 0;
+
 
 export default function useContact() {
   function enterAnimation() {
@@ -111,7 +118,7 @@ export default function useContact() {
         {
           transform: 'translateY(calc(-100% - 48px - 0.65em))',
           duration: 0.8,
-          opacity: 0.2,
+          opacity: getSectionOpacity(),
           ease: 'power4.out',
         },
         '+=1'
@@ -272,7 +279,7 @@ export default function useContact() {
           {
             transform: 'translateY(calc(-100% - 48px - 0.65em))',
             duration: 0.8,
-            opacity: 0.2,
+            opacity: getSectionOpacity(),
             ease: 'power3.out',
           },
           '<'
@@ -356,7 +363,7 @@ export default function useContact() {
           {
             transform: 'translateY(calc(-100% - 48px - 0.65em))',
             duration: 0.8,
-            opacity: 0.2,
+            opacity: getSectionOpacity(),
             ease: 'power3.out',
           },
           '<'

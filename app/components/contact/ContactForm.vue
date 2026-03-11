@@ -102,9 +102,9 @@ const handleBackClick = () => {
       <span class="dot-right" />
     </div>
 
-    <ButtonOutline class="contact-back-button" @click="handleBackClick"
-      >Back</ButtonOutline
-    >
+    <div class="contact-back-wrapper">
+      <ButtonOutline class="contact-back-button" @click="handleBackClick">Back</ButtonOutline>
+    </div>    
 
     <div class="contact-form__content">
       <div ref="historyMessageRef" class="contact-form__history" v-html="historyMessage"></div>
@@ -215,11 +215,18 @@ const handleBackClick = () => {
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/mixins' as *;
 .contact-form {
-  .contact-back-button {
+  .contact-back-wrapper {
     position: absolute;
     top: 46px;
     left: 50%;
     transform: translateX(-50%);
+    @include respond(mobile) {
+      top: 1rem;
+      left: 1rem;
+      transform: translateX(0);
+    }
+  }
+  .contact-back-button {
     opacity: 0;
     scale: 0;
   }
@@ -228,6 +235,10 @@ const handleBackClick = () => {
     width: 15%;
     height: 1px;
     opacity: 0;
+    @include respond(laptop-small) {
+      width: 25%;
+      max-width: 100px;
+    }
     &::before {
       content: '';
       display: block;
@@ -340,14 +351,17 @@ const handleBackClick = () => {
   }
   &__content {
     margin-top: 48px;
-    font-size: 40px;
+    font-size: clamp(20px, 2.5vw, 40px);
     font-style: normal;
     font-weight: 400;
     line-height: 100%;
-    letter-spacing: -0.8px;
+    letter-spacing: -0.02em;
     position: relative;    
     :deep(a) {      
       text-decoration: underline;
+    }
+    @include respond(laptop-small) {
+      margin-top: 24px;
     }
   }
 
@@ -370,7 +384,10 @@ const handleBackClick = () => {
     opacity: 0;
     scale: 0.8;
     width: 100%;
-    visibility: hidden;    
+    visibility: hidden;
+    @include respond(laptop-small) {
+      display: none;
+    }
   }
 
   &__previous {
@@ -378,18 +395,29 @@ const handleBackClick = () => {
     transform: translateY(calc(-100% - 48px - 0.65em));
     opacity: 0.2;
     width: 100%;
+    @include respond(laptop-small) {
+      display: none;
+    }
   }
 
   &__action {
     margin-top: 48px;
     position: relative;
+    @include respond(laptop-small) {
+      margin-top: 24px;
+    }
     &_item {
       display: flex;
       gap: getRem(12);
       position: absolute;
-      width: 100%;      
+      width: 100%;
+      padding-bottom: 106px;
+      @include respond(laptop-small) {
+        padding-bottom: 106px;
+      }
       &.-buttons {
         visibility: hidden;
+        flex-wrap: wrap;
       }
       &.-name-form {
         visibility: hidden;

@@ -88,7 +88,7 @@ function validateAndSubmit(event) {
 <style scoped lang="scss">
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/functions' as *;
-
+@use '~/assets/styles/mixins' as *;
 .description-form {
   width: 100%;
   &__inner {
@@ -102,7 +102,10 @@ function validateAndSubmit(event) {
     width: 100%;
   }
   &__button {
-    margin-top: 42px;    
+    margin-top: 42px;
+    @include respond(laptop-small) {
+      margin-top: 24px;
+    }
   }
 }
 </style>

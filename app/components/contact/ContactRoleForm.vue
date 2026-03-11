@@ -69,6 +69,7 @@ const onSubmit = handleSubmit((values, event) => {
 <style scoped lang="scss">
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 
 .name-form {
   width: 100%;
@@ -87,6 +88,9 @@ const onSubmit = handleSubmit((values, event) => {
 
   &__button {
     margin-top: 42px;
+    @include respond(laptop-small) {
+      margin-top: 24px;
+    }
     // width: 96px;
     // height: 100%;
     // border-radius: 48px;
