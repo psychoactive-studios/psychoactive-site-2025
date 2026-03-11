@@ -44,6 +44,13 @@ const clickOnLinkHandler = (e) => {
   document.querySelector('#header-navigation-button').click();
   // scrollSmoother.value.stop();
 };
+
+const clickOnContactHandler = (e) => {  
+  transitionFromNavigation.value = true;
+  playInteractionSound('click-3');
+  document.querySelector('#header-navigation-button').click();
+  // scrollSmoother.value.stop();
+};
 </script>
 
 <template>
@@ -88,13 +95,14 @@ const clickOnLinkHandler = (e) => {
           <div class="navigation__talk_line">
             <span />
           </div>
-          <button
+          <NuxtLink 
+            :to="navigationData.find(el => el.id === 'contact').url"
             class="navigation__talk_button body-button"
             @mouseenter="talkButtonHoverHandler"
-            @click="playInteractionSound('click-3')"
+            @click.capture="clickOnContactHandler"
           >
             Let’s talk
-          </button>
+          </NuxtLink>
           <div class="navigation__talk_line">
             <span />
           </div>
@@ -342,6 +350,9 @@ const clickOnLinkHandler = (e) => {
       height: 64px;
       text-transform: uppercase;
       width: 212px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
       @include respond(mobile) {
         width: 180px;
         height: 36px;

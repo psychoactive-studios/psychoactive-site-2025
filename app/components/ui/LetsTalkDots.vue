@@ -551,7 +551,7 @@ onUnmounted(() => {
         :style="{ transform: `scale(${scale})` }"
       />
     </div>
-    <LinkButton :href="href" :mode="props.mode === 'light' ? 'dark' : 'light'" class="lets-talk__link" size="small">
+    <LinkButton :href="href" :mode="props.mode === 'light' ? 'dark' : 'light'" class="lets-talk__link" size="small" target="_self">
       {{ text }}
     </LinkButton>    
   </section>

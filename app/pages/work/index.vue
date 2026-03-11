@@ -12,6 +12,7 @@ import Footer from '~/components/layout/Footer.vue';
 import useNavigation from '~/composables/useNavigation';
 import useAudioManager from '~/composables/useAudioManager';
 import { useMediaQuery } from '@vueuse/core';
+import { navigationData } from '~/data/navigationData';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -259,7 +260,7 @@ function enterAnimation(el) {
       </div>
       <div class="works__grid">
         <template v-for="work in displayedWorks" :key="work.id">
-          <LetsTalkDots v-if="work.id === 'letstalk'" :scale="1.2" />
+          <LetsTalkDots :href="navigationData.find(el => el.id === 'contact').url" v-if="work.id === 'letstalk'" :scale="1.2" />
           <CaseStadyPreview v-else :data="work" />
         </template>
       </div>

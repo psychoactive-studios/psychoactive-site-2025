@@ -11,7 +11,7 @@ export const footerData = {
     { title: 'Services', url: '/services' },
     { title: 'Webflow', url: '/webflow' },
     { title: 'Content Hub', url: '/content-hub' },
-    { title: 'let’s talk', url: '/' },
+    { title: 'let’s talk', url: '/contact' },
   ],
   awards: [
     {

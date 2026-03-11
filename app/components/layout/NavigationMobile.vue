@@ -246,7 +246,7 @@ onClickOutside(navigationMobileRef, () => {
     </div>
     <div class="navigation-mobile__wrapper">
       <div class="navigation-mobile__talk">
-        <button class="navigation-mobile__talk-button">let's talk</button>
+        <NuxtLink href="/contact" class="navigation-mobile__talk-button" @click="onToggleNavigation">let's talk</NuxtLink>
       </div>
       <ul class="navigation-mobile__list">
         <li class="navigation-mobile__item heading-h2--mobile-menu">
@@ -395,6 +395,9 @@ onClickOutside(navigationMobileRef, () => {
   &__talk {
     text-align: right;
     &-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
       pointer-events: all;
       font-family: 'RoobertMono', sans-serif;
       font-size: 1rem;
