@@ -10,4 +10,5 @@ export const navigationData = [
     loader: false,
     sup: 'Hub',
   },
+  { id: 'contact', title: 'let’s talk', url: '/contact', loader: true, hidden: true },
 ];

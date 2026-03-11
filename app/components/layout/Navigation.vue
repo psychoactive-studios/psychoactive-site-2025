@@ -68,7 +68,7 @@ const clickOnLinkHandler = (e) => {
         <div class="navigation__menu">
           <ul class="navigation__list">
             <li
-              v-for="item in navigationData"
+              v-for="item in navigationData.filter(item => !item.hidden)"
               :key="item.id"
               class="navigation__item heading-h2"
             >

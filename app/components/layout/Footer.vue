@@ -6,6 +6,7 @@ import WebflowLabel from '../ui/WebflowLabel.vue';
 import Brief from './Brief.vue';
 import AnalogClock from '../ui/AnalogClock.vue';
 import LinkButton from '../ui/LinkButton.vue';
+import { navigationData } from '~/data/navigationData';
 
 const { playInteractionSound, playRandomSound } = useAudioManager();
 
@@ -37,7 +38,7 @@ const handleClick = () => {
     <div class="container mobile-cta">
       <section class="mobile-cta__wrapper">
         <h2 class="mobile-cta__title">Have an idea?</h2>
-        <LinkButton href="https://superai.com" size="small">
+        <LinkButton :href="navigationData.find(el => el.id === 'contact').url" size="small">
           let’s talk
         </LinkButton>
       </section>

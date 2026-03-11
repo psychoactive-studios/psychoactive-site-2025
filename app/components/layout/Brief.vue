@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import BriefOurAIAgent from '~/assets/img/brief-our-AI-agent.svg';
 import useCursor from '~/composables/useCursor';
 import { useClipboard } from '@vueuse/core';
+import { navigationData } from '~/data/navigationData';
 
 const { playInteractionSound, playRandomSound } = useAudioManager();
 const { pointerX, pointerY, cursorRef, cursorText } = useCursor();
@@ -125,7 +126,7 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
         @mouseleave="briefMouseLeaveHandler"
         @click="() => playInteractionSound('sound-btn-hover-1')"
       >
-        <NuxtLink href="/" class="brief__title_text">
+        <NuxtLink :href="navigationData.find(el => el.id === 'contact').url" class="brief__title_text">
           <BriefOurAIAgent class="brief__title_text--original" />
           <BriefOurAIAgent class="brief__title_text--mask" />
           <div class="brief__title_dots">

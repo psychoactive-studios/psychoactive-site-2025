@@ -620,6 +620,51 @@ export default function useContact() {
     }
   };
 
+  const resetContactState = () => {
+    // Kill active timelines
+    mainTimeline?.kill();
+    mainTimeline = null;
+    
+    historyTimeline?.kill();
+    historyTimeline = null;
+
+    if (dotsTimeline.value) {
+      dotsTimeline.value.kill();
+      dotsTimeline.value = null;
+    }
+
+    // Reset primitives and refs
+    currentStepId.value = 'intro';
+    historySteps.value = [];
+    currentMessage.value = 'Hi I’m Psycho AI Agent. This is default message';
+    previousMessage.value = null;
+    historyMessage.value = null;
+
+    // Reset user data
+    Object.keys(userData).forEach((key) => {
+      userData[key] = null;
+    });
+
+    // Reset actions refs (DOM elements)
+    Object.keys(actionsRef).forEach((key) => {
+      actionsRef[key] = null;
+    });
+
+    // Clear GSAP props from main refs if they exist
+    const elementsToClear = [
+      sceneRef.value,
+      dotsRef.value,
+      previousSectionRef.value,
+      currentSectionRef.value,
+      historyMessageRef.value,
+      currentSectionTextRef.value,
+    ];
+
+    elementsToClear.forEach((el) => {
+      if (el) gsap.set(el, { clearProps: 'all' });
+    });
+  };
+
   return {
     sceneRef,
     dotsRef,
@@ -639,5 +684,6 @@ export default function useContact() {
     getRandomMessage,
     dotsTimeline,
     handleSendEmail,
+    resetContactState,
   };
 }

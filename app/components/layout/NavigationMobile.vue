@@ -259,7 +259,7 @@ onClickOutside(navigationMobileRef, () => {
         </li>
 
         <li
-          v-for="item in navigationData"
+          v-for="item in navigationData.filter(item => !item.hidden)"
           :key="item.id"
           class="navigation-mobile__item heading-h2--mobile-menu"
         >

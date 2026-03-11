@@ -8,10 +8,17 @@ import useContact from '~/composables/useContact';
 import LinkWithHover from '~/components/ui/LinkWithHover.vue';
 import Circle from '~/components/ui/Circle.vue';
 import LetsTalkSceneGL from '~/components/ui/LetsTalkSceneGL.vue';
+import useLoader from '~/composables/useLoader';
+import useNavigation from '~/composables/useNavigation';
+import { leaveAnimation } from '~/utils/animations/transitions';
+
 
 const { enableScroll } = useScrollSmoother();
 
-const { sceneRef } = useContact();
+const { sceneRef, resetContactState } = useContact();
+
+const { startLoading } = useLoader();
+const { scrollSmoother } = useScrollSmoother();
 
 onMounted(async () => {
   await nextTick();
@@ -19,6 +26,43 @@ onMounted(async () => {
     enableScroll();
   }, 100);
 });
+
+onUnmounted(() => {
+  resetContactState();
+});
+
+
+definePageMeta({
+  scrollToTop: true,
+  pageTransition: {
+    css: false,
+    mode: 'out-in',
+    onEnter: (_, done) => {
+      startLoading();
+      scrollSmoother.value.scrollTo(0, {
+        immediate: true,
+        lock: true,
+        force: true,
+      });
+      done();
+    },
+    onLeave: (el, done) => {
+      const { transitionFromNavigation } = useNavigation();
+      if (transitionFromNavigation.value) {
+        gsap
+          .timeline()
+          .set(el, { opacity: 0 })
+          .add(() => {
+            transitionFromNavigation.value = false;
+            done();
+          }, '+=1');
+        return;
+      }
+      leaveAnimation(el, done);
+    },
+  },
+});
+
 </script>
 
 <template>
