@@ -120,7 +120,8 @@ export default function useContact() {
         historySteps.value.push({
           message: null,
           nextMessage: nextMessage,
-          cta: 'introButtons',
+          ctaIn: 'introButtons',
+          ctaOut: 'introButtons',
           sceneShape: null,
           stepId: 'intro'
         });
@@ -175,7 +176,7 @@ export default function useContact() {
         },
         '<'
       )
-      .add(() => dotsTimeline.value.repeat(-1).restart());
+      .add(() => dotsTimeline.value.repeat(-1).play());
   }
 
   const handleNextStepFn = (stepId, event) => {
@@ -223,7 +224,7 @@ export default function useContact() {
       }
       // Text field leave animation
       if (currentStep.type === 'textField') {        
-        const button = event.currentTarget.querySelector('.name-form__button');
+        const button = event.currentTarget.querySelector('.name-form__button, .description-form__button');
         const fields = event.currentTarget.querySelectorAll('.name-form__inner > *, .description-form__inner > *');        
         
         mainTimeline          
@@ -311,13 +312,28 @@ export default function useContact() {
       const delay = index === 0 ? `-=0.5` : `+=${MESSAGE_DELAY}`;
       const isFirstMessage = index === 0;
       const isLastMessage = index === array.length - 1;
-
-      let historyCTA;
-      if(isFirstMessage && currentStep.cta) historyCTA = currentStep.cta;
-      if(isLastMessage && targetStep.cta) historyCTA = targetStep.cta;
+      
+      let historyCtaIn;
+      let historyCtaOut;
+      
+      if(array.length === 1) {
+        historyCtaIn = currentStep.cta;
+        historyCtaOut = targetStep.cta;
+      }else{
+        if(isLastMessage && targetStep.cta) {
+          historyCtaIn = targetStep.cta;
+          historyCtaOut = targetStep.cta;
+        };
+        if(isFirstMessage && currentStep.cta) {
+          historyCtaIn = currentStep.cta;
+          historyCtaOut = currentStep.cta;
+        };
+      }
+      
 
       const nextMessage = getRandomMessage(message.variations)
             .replace('[email]', '<a href="mailto:careers@psychoactive.co">careers@psychoactive.co</a>')
+            .replace('[Name]', userData.name)
             .replace(/\n/g, '<br>');
 
       mainTimeline
@@ -346,7 +362,8 @@ export default function useContact() {
           historySteps.value.push({
             message: previousMessage.value,
             nextMessage: index > 0 ? nextMessage : null,
-            cta: historyCTA,
+            ctaIn: historyCtaIn,
+            ctaOut: historyCtaOut,
             sceneShape: targetStep.sceneShape,
             stepId: currentStepId.value
           });
@@ -392,16 +409,25 @@ export default function useContact() {
       });      
     });
     if(!targetStep.nextStep) {
+      if(targetStep.callback === 'submit') {
+        handleSendEmail();
+      }
       mainTimeline.add(() => {
-        dotsTimeline.value.repeat(0).play();
-      });      
+        dotsTimeline.value.tweenTo(dotsTimeline.value.duration());
+      })
+      .to('.contact-back-button', {
+        scale: 0,
+        opacity: 0,
+        duration: 0.75,
+        ease: 'power3.in',
+      });
     }    
   };
 
-  const handlePrevStep = () => {
+  const handlePrevStepFn = () => {
     const beforeMessage = historySteps.value.at(-2)?.message;
     const rawStep = historySteps.value.pop();
-    const lastStep = JSON.parse(JSON.stringify(rawStep));
+    const lastStep = rawStep ? JSON.parse(JSON.stringify(rawStep)) : null;
     // const lastStep = structuredClone(historySteps.value.pop());    
     
     if(!lastStep) return;
@@ -443,17 +469,18 @@ export default function useContact() {
       visibility: 'visible',
       duration: 0.5,
       ease: 'power3.out',
-    }, '<');   
+    }, '<');
     
-    if (currentStep.cta) {
-      historyTimeline.to(actionsRef[currentStep.cta], {
+
+    if (lastStep.ctaOut) {
+      historyTimeline.to(actionsRef[lastStep.ctaOut], {
         opacity: 0,
         scale: 0.9,
         duration: 0.5,
         visibility: 'hidden',
         ease: 'power3.out',
       }, '<')
-      .set(actionsRef[currentStep.cta], { clearProps: 'all' });
+      .set(actionsRef[lastStep.ctaOut], { clearProps: 'all' });
     }        
     historyTimeline.add(() => {
       currentMessage.value = previousMessage.value;
@@ -502,9 +529,8 @@ export default function useContact() {
         gsap.set([currentSectionRef.value, currentSectionTextRef.value, previousSectionRef.value], {
           clearProps: 'all',
         });
-        if(lastStep.nextMessage) {          
-        console.log('PUSHED LAST STEP', lastStep);
-          historySteps.value.push(lastStep);          
+        if(lastStep.nextMessage) {
+          historySteps.value.push(lastStep);
         }
       })
       .to(currentSectionTextRef.value, {
@@ -512,11 +538,11 @@ export default function useContact() {
         duration: 1,
         ease: 'power2.inOut',
       });
-    }
-    
-    if (lastStep.cta) {      
+    }    
+
+    if (lastStep.ctaIn) {
       historyTimeline.fromTo(
-        actionsRef[lastStep.cta],
+        actionsRef[lastStep.ctaIn],
         { opacity: 0.3, scaleY: 0.8, yPercent: 50, visibility: 'hidden' },
         {
           opacity: 1,
@@ -539,11 +565,10 @@ export default function useContact() {
   };
 
   const handleNextStep = useThrottleFn(handleNextStepFn, 2000);
+  const handlePrevStep = useThrottleFn(handlePrevStepFn, 1000);
 
 
   const handleSendEmail = async () => {
-    console.log('handleSendEmail', );
-
     const userTestData = {
       name: 'Test Name',
       company: 'Test Company',
@@ -568,7 +593,7 @@ export default function useContact() {
       });     
 
       
-      
+      return;
 
       const response = await $fetch('https://formspree.io/f/xeeranzd', {
         method: 'POST',
@@ -587,7 +612,7 @@ export default function useContact() {
       // Тут можна показати повідомлення про помилку користувачу
     } finally {
       // Зупиняємо лоадер після завершення циклу
-      // dotsTimeline.value.repeat(0);
+      // dotsTimeline.value.tweenTo(dotsTimeline.value.duration());
     }
   };
 

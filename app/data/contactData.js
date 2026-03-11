@@ -87,13 +87,13 @@ export const tadiSteps = {
         ],
       },
     ],
-    confirmMessages: [
-      {
-        variations: [
-          'A classic metamorphosis. I like your style.',
-        ],
-      },      
-    ],
+    // confirmMessages: [
+    //   {
+    //     variations: [
+    //       'A classic metamorphosis. I like your style.',
+    //     ],
+    //   },
+    // ],
     cta: 'goalButtons',
     type: 'buttons',        
     sceneShape: 3,    
@@ -103,19 +103,24 @@ export const tadiSteps = {
   ask_budget: {
     id: 'ask_budget',
     messages: [
+      {
+        variations: [
+          'A classic metamorphosis. I like your style.',
+        ],
+      },
       {        
         variations: [
           'Let’s talk resources — every good metamorphosis needs the right nutrients.',
         ],
       },
     ],
-    confirmMessages: [
-      {
-        variations: [
-          'Perfect. That’s enough energy to evolve something extraordinary.',
-        ],
-      },      
-    ],
+    // confirmMessages: [
+    //   {
+    //     variations: [
+    //       'Perfect. That’s enough energy to evolve something extraordinary.',
+    //     ],
+    //   },
+    // ],
     cta: 'budgetButtons',
     type: 'buttons',
     sceneShape: 4,
@@ -125,6 +130,11 @@ export const tadiSteps = {
   ask_deadline: {
     id: 'ask_deadline',
     messages: [
+      {
+        variations: [
+          'Perfect. That’s enough energy to evolve something extraordinary.',
+        ],
+      },
       {        
         variations: [
           'When are you hoping this transformation begins?',
@@ -182,9 +192,10 @@ export const tadiSteps = {
       },
     ],
     // cta: 'descriptionForm',
-    // type: 'textField',        
+    // type: 'textField',
+    callback: 'submit',
     sceneShape: 7,
-    // nextStep: 'finish',
+    // nextStep: '',
   },
 
   // Join the Team Flow

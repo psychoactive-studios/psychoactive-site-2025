@@ -77,7 +77,7 @@ onMounted(() => {
       width: '50%',
       ease: 'power1.out',
       // overwrite: 'auto',
-    });  
+    });    
 });
 
 watch(isLoading, (newVal) => {
@@ -139,7 +139,7 @@ const handleBackClick = () => {
             size="small"
             data-index="2"
             @mouseenter="playRandomSound('text-hover')"
-            @click="handleSendEmail"
+            @click="(e) => handleNextStep('ask_description', e)"            
           >
             Contacts
           </LinkButton>
