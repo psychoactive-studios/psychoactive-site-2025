@@ -122,7 +122,7 @@ export default function useContact() {
           nextMessage: nextMessage,
           ctaIn: 'introButtons',
           ctaOut: 'introButtons',
-          sceneShape: null,
+          sceneShape: 0,
           stepId: 'intro'
         });
         previousMessage.value = currentMessage.value;
@@ -315,18 +315,22 @@ export default function useContact() {
       
       let historyCtaIn;
       let historyCtaOut;
+      let historySceneShape;
       
       if(array.length === 1) {
         historyCtaIn = currentStep.cta;
         historyCtaOut = targetStep.cta;
+        historySceneShape = currentStep.sceneShape;
       }else{
         if(isLastMessage && targetStep.cta) {
           historyCtaIn = targetStep.cta;
           historyCtaOut = targetStep.cta;
+          historySceneShape = targetStep.sceneShape;
         };
         if(isFirstMessage && currentStep.cta) {
           historyCtaIn = currentStep.cta;
           historyCtaOut = currentStep.cta;
+          historySceneShape = currentStep.sceneShape;
         };
       }
       
@@ -364,7 +368,7 @@ export default function useContact() {
             nextMessage: index > 0 ? nextMessage : null,
             ctaIn: historyCtaIn,
             ctaOut: historyCtaOut,
-            sceneShape: targetStep.sceneShape,
+            sceneShape: historySceneShape,
             stepId: currentStepId.value
           });
 
@@ -422,7 +426,7 @@ export default function useContact() {
         ease: 'power3.in',
       });
     }    
-  };
+  };  
 
   const handlePrevStepFn = () => {
     const beforeMessage = historySteps.value.at(-2)?.message;
@@ -435,11 +439,11 @@ export default function useContact() {
     currentStepId.value = lastStep.stepId;
 
     mainTimeline?.kill();
-    historyTimeline?.kill();
+    historyTimeline?.kill();    
 
-    const currentStep = tadiSteps[currentStepId.value];    
-
-    historyTimeline = gsap.timeline();
+    historyTimeline = gsap.timeline();    
+    
+    sceneRef.value.nextShape(lastStep.sceneShape);
 
     historyTimeline
     .to(
