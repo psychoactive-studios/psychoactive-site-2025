@@ -135,11 +135,12 @@ const handleBackClick = () => {
             Join the team
           </LinkButton>
           <LinkButton
+            href="mailto:hello@psychoactive.co.nz"
+            rel="noopener noreferrer"
             class="contact-form__action_button"
             size="small"
             data-index="2"
-            @mouseenter="playRandomSound('text-hover')"
-            @click="(e) => handleNextStep('ask_description', e)"            
+            @mouseenter="playRandomSound('text-hover')"            
           >
             Contacts
           </LinkButton>
