@@ -8,6 +8,7 @@ import useLoader from '~/composables/useLoader';
 import useAudioManager from '~/composables/useAudioManager';
 import { leaveAnimation } from '~/utils/animations/transitions';
 import { useMediaQuery } from '@vueuse/core';
+import HomeNewsCard from '~/components/homepage/HomeNewsCard.vue';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -17,6 +18,7 @@ const { playInteractionSound, isSoundApproved, hasInteracted } = useAudioManager
 const { scrollSmoother } = useScrollSmoother();
 const { isLoading, isFirstLoad } = useLoader();
 const { showLayoutElementsRequired } = useNavigation();
+const isMobile = useMediaQuery('(max-width: 768px)');
 
 const { data: articlesData, error } = await useFetch(`/api/articles`, {
   baseURL: config.public.strapiBaseUrl,
@@ -137,6 +139,17 @@ function enterAnimation(el) {
     .add(() => scrollSmoother.value.start(), '<')
     .add(() => (showLayoutElementsRequired.value = false));
 }
+
+const getHref = (news) => {
+  if (news.externalLink) {
+    return news.externalLink;
+  }
+  if (news.work && news.work.slug) {
+    return `/work/${news.work.slug}`;
+  }
+  return `/content-hub/${news.slug}`;
+};
+
 </script>
 <template>
   <main class="content-hub">
@@ -144,9 +157,20 @@ function enterAnimation(el) {
       <h1 class="content-hub__title">Content <sup>HUB</sup></h1>
       <div v-if="articlesData?.data" class="content-hub__grid">
         <NewsCard
+          v-if="!isMobile"
           v-for="news in articlesData?.data"
           :key="news.documentId"
           :data="news"
+        />
+        <HomeNewsCard
+          v-if="isMobile"
+          v-for="news in articlesData?.data"
+          :key="news.documentId"
+          :title="news.title"
+          :category="news.category?.name"
+          :date="news.updatedAt"
+          :src="news.preview?.formats?.medium?.url || news.preview?.url"
+          :href="getHref(news)"
         />
       </div>
       <div v-else class="no-data">
