@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import ServicesAccordion from '../ui/ServicesAccordion.vue';
 import { SplitText } from 'gsap/SplitText';
 import LetsTalkSceneGL from '../ui/LetsTalkSceneGL.vue';
+import { useMediaQuery } from '@vueuse/core';
 
 defineProps({
   data: {
@@ -16,11 +17,13 @@ const accordionRef = ref(null);
 const sceneRef = ref(null);
 let ctx = null;
 
+const isMobile = useMediaQuery('(max-width: 768px)');
+
 onMounted(async () => {
   const { chars } = SplitText.create(containerRef.value.querySelector('h2'), {
     type: 'words,chars',
     charsClass: 'char-center',
-  });
+  });  
   await nextTick();
   ctx = gsap.context(() => {
     gsap
@@ -58,7 +61,7 @@ onMounted(async () => {
       )
       .add(() => {
         accordionRef.value.toggle(0);
-      }, 'firstPart+=0.8');
+      }, `firstPart+=${isMobile.value ? 0 : 0.8}`);
   }, containerRef.value);
 });
 

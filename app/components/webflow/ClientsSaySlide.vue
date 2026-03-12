@@ -7,8 +7,6 @@ const props = defineProps({
 });
 
 const { feedback } = props;
-
-console.log('feedback',feedback);
 </script>
 
 <template>

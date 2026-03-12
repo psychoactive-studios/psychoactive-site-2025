@@ -55,8 +55,7 @@ watch(
         duration: 0.8,
         ease: 'power4.in',
       })
-    } else {
-      console.log('NOisTargetWithLoader', isTargetWithLoader);
+    } else {      
       showLayoutElementsRequired.value = true;
     }
   }
