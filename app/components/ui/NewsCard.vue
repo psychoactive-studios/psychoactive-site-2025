@@ -115,6 +115,7 @@ const handleSoundClick = () => {
   padding: 1rem;
   display: flex;
   gap: 1rem;
+  transition: background-color 0.3s ease;
   &__description {
     display: flex;
     flex-direction: column;
@@ -176,9 +177,10 @@ const handleSoundClick = () => {
     }
   }
   &:hover {
-    .news-card__image img {
-      transform: scale(1.25);
-    }
+    // .news-card__image img {
+    //   transform: scale(1.25);
+    // }
+    background-color: white(20);
     .news-card__description_info::before {
       animation: flicker-effect-5 0.5s forwards;
     }

@@ -180,7 +180,7 @@ const onMouseEnterHandler = (e) => {
     // .news-card__image img {
     //   transform: scale(1.25);
     // }
-    background-color: white(5);
+    background-color: white(20);
     .news-card__description_info::before {
       animation: flicker-effect-5 0.5s forwards;
     }
