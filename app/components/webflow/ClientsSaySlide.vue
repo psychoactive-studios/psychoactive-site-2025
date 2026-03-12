@@ -7,6 +7,8 @@ const props = defineProps({
 });
 
 const { feedback } = props;
+
+console.log('feedback',feedback);
 </script>
 
 <template>
@@ -20,9 +22,7 @@ const { feedback } = props;
     </div>
     <div class="slide__body">
       <h3 class="subheader--mobile">CLIENT SAY</h3>
-      <div class="slide__body-text body--mobile">
-        {{ feedback.feedback }}
-      </div>
+      <div class="slide__body-text body-small" v-html="feedback.feedback.replace(/\n/g, '<br>')" />
       <div class="slide__body-author">
         <div class="slide__body-author-name body-large--mobile">
           {{ feedback.client?.name }}
@@ -56,6 +56,9 @@ const { feedback } = props;
   }
   &__photo {
     aspect-ratio: 0.53;
+    @include respond(laptop) {
+      aspect-ratio: 0.73;
+    }
     @include respond(mobile) {
       aspect-ratio: 1;
       overflow: hidden;

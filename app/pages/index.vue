@@ -335,7 +335,8 @@ definePageMeta({
 }
 
 .filled-text {
-  margin-top: 150px;
+  margin-top: 160px;
+  margin-bottom: 160px;
   @include respond(mobile) {
     margin-top: 120px;
     margin-bottom: 110px;

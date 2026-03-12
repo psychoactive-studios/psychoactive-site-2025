@@ -63,6 +63,9 @@ if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
 
+console.log('webflowPageData',webflowPageData.value);
+
+
 const { works, feedbacks, services, whatSetsUsApart } =
   webflowPageData.value?.data || {};
 

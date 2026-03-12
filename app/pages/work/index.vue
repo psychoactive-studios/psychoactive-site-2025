@@ -296,6 +296,7 @@ function enterAnimation(el) {
     direction: rtl;
     position: relative;
     z-index: 2;
+    margin-bottom: 160px;
     @include respond('mobile') {
       grid-template-columns: 1fr;
       direction: ltr;
