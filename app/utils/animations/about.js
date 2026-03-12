@@ -91,39 +91,52 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
 };
 
 export const heroScrollAnimation = (ctx, root) => {
+  const matchMedia = gsap.matchMedia();
+
   ctx.add(() => {
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: root,
-          start: 'top top',
-          end: 'bottom top',
-          pin: true,
-          pinType: 'transform',
-          scrub: 0.5,
-          pinSpacing: false,
-        },
-      })
-      .to('.hero__center-line', { scaleY: 0, opacity: 0, duration: 1 })
-      .fromTo(
-        '.hero__title .grey',
-        { xPercent: 0 },
-        {
-          xPercent: -175,
-          duration: 1,
-        },
-        '<'
-      )
-      .fromTo(
-        '.hero__title .white',
-        { xPercent: 0 },
-        {
-          xPercent: 175,
-          duration: 1,
-        },
-        '<'
-      )
-      .to('.hero__video', { opacity: 0, duration: 1 }, '<');
+    matchMedia.add(
+      {
+        isDesktop: `(min-width: 768px)`,
+        isMobile: `(max-width: 767px)`,
+      },
+      (context) => {
+        const { isDesktop, isMobile } = context.conditions;
+
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: root,
+              start: 'top top',
+              end: 'bottom top',
+              pin: true,
+              pinType: isMobile ? 'fixed' : 'transform',
+              scrub: 0.5,
+              pinSpacing: false,
+            },
+          })
+          .to('.hero__center-line', { scaleY: 0, opacity: 0, duration: 1 })
+          .fromTo(
+            '.hero__title .grey',
+            { xPercent: 0 },
+            {
+              xPercent: -175,
+              duration: 1,
+            },
+            '<'
+          )
+          .fromTo(
+            '.hero__title .white',
+            { xPercent: 0 },
+            {
+              xPercent: 175,
+              duration: 1,
+            },
+            '<'
+          )
+          .to('.hero__video', { opacity: 0, duration: 1 }, '<');
+      }
+    );
+    return () => matchMedia.revert();
   });
 };
 
