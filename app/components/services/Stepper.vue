@@ -92,7 +92,19 @@ onUnmounted(() => {
     &_label {
       margin-bottom: 24px;
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
+      :deep(.label-border) {
+        border-color: rgba(0, 0, 0, 0.2);
+      }
+      :deep(.label-background) {
+        fill: rgba(0, 0, 0, 0.1);
+      }
+      :deep(.char) {
+        fill: $color-background;
+      }
+      :deep(.shape) {
+        fill: $color-background;
+      }
     }
     &_video {
       margin: 0 32px;
