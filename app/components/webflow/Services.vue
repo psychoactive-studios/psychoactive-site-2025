@@ -125,6 +125,7 @@ const handleToggle = (index) => {
     padding-right: 15%;
     @include respond(mobile) {
       order: 2;
+      padding-right: 0;
     }
     h2 {
       color: white(50);

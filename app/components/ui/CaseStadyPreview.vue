@@ -97,12 +97,12 @@ const handleClick = () => {
   position: relative;
   cursor: pointer;
 
-  &__media {
-    overflow: hidden;
-    border-radius: 10px;
+  &__media {    
+    backface-visibility: hidden;
     aspect-ratio: 1.95;
     @include respond(mobile) {
-      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 2;
     }
   }
 

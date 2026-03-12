@@ -462,6 +462,9 @@ function removeEventListeners() {
   background-position: center;
   z-index: 1;
   border-radius: 10px;
+  @include respond(mobile) {
+    border-radius: 6px;
+  }
   canvas {
     width: 100%;
     height: 100%;

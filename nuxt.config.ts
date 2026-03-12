@@ -66,7 +66,8 @@ export default defineNuxtConfig({
       title: 'Psychoactive Studios | Web Design Agency | Webflow Partner',
       meta: [
         { name: 'description', content: 'Award-Winning Multidisciplinary Digital Experience Agency | We design and develop websites, web apps & motion graphics for brands who want to push boundaries' },
-      ],
+        { name: 'viewport', content: 'width=device-width,minimum-scale=1.0,maximum-scale=1.0' },
+      ],      
       link: [
         {
           rel: 'shortcut icon',
