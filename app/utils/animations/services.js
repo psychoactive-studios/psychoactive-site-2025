@@ -32,6 +32,13 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
     '#header-sound-button',
   ]);
 
+  // Ensure nav mobile starts visible for GSAP context.
+  const navMobileEl = document.querySelector('#header-navigation-mobile');
+  if (navMobileEl) {
+    gsap.killTweensOf(navMobileEl);
+    gsap.set(navMobileEl, { y: 0, opacity: 1 });
+  }
+
   const ease1 = 'power3.out';
   const duration1 = 2;
   const easeCircle = 'power3.inOut';

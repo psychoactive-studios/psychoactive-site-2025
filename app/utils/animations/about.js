@@ -7,6 +7,14 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
     '#header-navigation-button',
     '#header-sound-button',
   ]);
+
+  // Ensure nav mobile starts visible for GSAP context.
+  const navMobileEl = document.querySelector('#header-navigation-mobile');
+  if (navMobileEl) {
+    gsap.killTweensOf(navMobileEl);
+    gsap.set(navMobileEl, { y: 0, opacity: 1 });
+  }
+
   const matchMedia = gsap.matchMedia();
   ctx.add(() => {
     matchMedia.add(

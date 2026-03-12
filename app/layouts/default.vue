@@ -34,9 +34,9 @@ watch(
   (newPath) => {
     const isTargetWithLoader =
       newPath === '/' ||
-      navigationData?.find((item) => item.url === newPath)?.loader;
+      navigationData?.find((item) => item.url === newPath)?.loader;      
 
-    if (isTargetWithLoader) {
+    if (isTargetWithLoader) {      
       const layoutElements = gsap.utils.toArray([
         '#header-logo',
         '#header-navigation-button',
@@ -56,6 +56,7 @@ watch(
         ease: 'power4.in',
       })
     } else {
+      console.log('NOisTargetWithLoader', isTargetWithLoader);
       showLayoutElementsRequired.value = true;
     }
   }
