@@ -63,7 +63,7 @@ const onClickHandler = async () => {
       <!-- Awards Title -->
       <div class="awards__title">
         <div class="awards__title_count">
-          <h2 class="display-4xl">50+</h2>
+          <h2 class="display-4xl--strong">50+</h2>
           <div class="awards__title_count-sub subheader">
             Recognition & Awards
           </div>
