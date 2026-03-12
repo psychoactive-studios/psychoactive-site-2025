@@ -776,6 +776,10 @@ const onClickHandler = (e) => {
       }
     }
   }
+
+  :deep(.pin-spacer) {
+    background-color: $color-background;
+  }
 }
 .no-data {
   @include flex-center;

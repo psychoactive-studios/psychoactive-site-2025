@@ -772,6 +772,9 @@ function footerTextAnimationInit() {
       }
     }
   }
+  :deep(.pin-spacer) {
+    background-color: $color-background;
+  }
 }
 .no-data {
   @include flex-center;
