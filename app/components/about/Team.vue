@@ -53,31 +53,7 @@ const { playContinuousSound, stopContinuousSound } = useAudioManager();
               <img :src="person.photo" :alt="person.name" />
             </div>
             <h3 class="item__name">{{ person.name }}</h3>
-          </SplideSlide>
-          <SplideSlide>
-            <div class="item__img">
-              <img src="/img/team-Sheridan.jpg" alt="" />
-            </div>
-            <h3 class="item__name">Sheridan</h3>
-          </SplideSlide>
-          <SplideSlide>
-            <div class="item__img">
-              <img src="/img/team-Alex.jpg" alt="" />
-            </div>
-            <h3 class="item__name">Alex</h3>
-          </SplideSlide>
-          <SplideSlide>
-            <div class="item__img">
-              <img src="/img/team-Andrew.jpg" alt="" />
-            </div>
-            <h3 class="item__name">Andrew</h3>
-          </SplideSlide>
-          <SplideSlide>
-            <div class="item__img">
-              <img src="/img/team-Luca.jpg" alt="" />
-            </div>
-            <h3 class="item__name">Alex</h3>
-          </SplideSlide>
+          </SplideSlide>          
         </SplideTrack>
       </Splide>
     </ClientOnly>
