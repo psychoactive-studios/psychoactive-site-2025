@@ -250,12 +250,13 @@ function enterAnimation(el) {
 function footerTextAnimationInit() {  
   const footer = footerRef.value;
 
+  let tween = null;
   ctx.add(() => {
-    gsap.to(footer.querySelectorAll('.article__footer_scroll--progress img'), {
+    tween = gsap.to(footer.querySelectorAll('.article__footer_scroll--progress img'), {
       scrollTrigger: {
         trigger: footer,
         start: 'top top',
-        end: 'bottom top',
+        end: 'bottom 1%',
         pin: true,
         scrub: true,
         invalidateOnRefresh: true,
@@ -269,8 +270,8 @@ function footerTextAnimationInit() {
       opacity: 1,
       duration: 0.1,
       stagger: 0.05,
-      onComplete: () => {
-        router.push('/content-hub');
+      onUpdate: () => {
+        if(tween?.progress() > 0.95) router.push('/content-hub');
       },
     });
   });

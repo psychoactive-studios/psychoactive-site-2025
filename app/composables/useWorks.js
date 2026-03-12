@@ -101,16 +101,16 @@ export default function useWorks() {
 
   function footerTextAnimationInit(ctx, footer) {
     const { mode } = useHeader();
-
+    let tween = null;
     ctx.add(() => {
-      gsap.to(footer.querySelectorAll('.work__footer_scroll--progress img'), {
+      tween = gsap.to(footer.querySelectorAll('.work__footer_scroll--progress img'), {
         scrollTrigger: {
           trigger: footer,
           start: 'top top',
-          end: 'bottom top',
+          end: 'bottom 1%',
           pin: true,
           scrub: true,
-          invalidateOnRefresh: true,
+          invalidateOnRefresh: true,          
           onEnter: () => {
             mode.value = 'light';
           },
@@ -121,8 +121,8 @@ export default function useWorks() {
         opacity: 1,
         duration: 0.1,
         stagger: 0.05,
-        onComplete: () => {
-          router.push('/work');
+        onUpdate: () => {
+          if(tween?.progress() > 0.95) router.push('/work');
         },
       });
     });
