@@ -58,7 +58,7 @@ const getHref = (news) => {
 .news-list {
   margin-top: 160px;
   @include respond('mobile') {
-    margin-top: 0;
+    margin-top: 60px;
   }
   &__title {
     display: none;
