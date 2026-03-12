@@ -346,7 +346,7 @@ const onClickHandler = (e) => {
       .work__illustration {
         position: relative;
         width: 100%;
-        height: 100dvh;
+        height: 100svh;
         overflow: hidden;
         z-index: 2;
         img {
@@ -590,7 +590,7 @@ const onClickHandler = (e) => {
     flex-direction: column;
     gap: 23dvh;
     background-color: $color-background;
-    min-height: 100dvh;
+    min-height: 100svh;
     justify-content: center;
     position: relative;
     z-index: 1;

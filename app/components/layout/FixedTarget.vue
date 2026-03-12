@@ -171,7 +171,7 @@ section.services {
     display: none;
     transform-origin: center;
     background-color: $color-foreground;
-    min-height: 100dvh;
+    min-height: 100svh;
     position: fixed;
     inset: 0;
     -webkit-mask-image: radial-gradient(

@@ -210,7 +210,7 @@ onUnmounted(() => {
 .what-sets-us {
   background-color: $color-foreground;
   color: $color-background;
-  min-height: 100dvh;
+  min-height: 100svh;
   padding: 160px 0;
   @include respond(mobile) {
     min-height: auto;

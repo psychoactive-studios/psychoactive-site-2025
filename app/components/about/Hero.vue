@@ -77,7 +77,7 @@ watch(isLoading, (newVal) => {
   &__wrapper {
     @include flex-center;
     flex-direction: column;
-    height: 100dvh;
+    height: 100svh;
     position: relative;
     @include respond(portrait) {
       padding-top: 160px;

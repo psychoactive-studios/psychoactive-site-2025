@@ -151,7 +151,7 @@ const onClickHandler = (e) => {
   .container {
     @include flex-center;
     flex-direction: column;
-    height: 100dvh;
+    height: 100svh;
     @include respond(portrait) {
       padding-top: 160px;
       padding-bottom: 48px;

@@ -19,6 +19,6 @@
 @use 'assets/styles/mixins' as *;
 .scooterok {
   @include flex-center;
-  height: 100dvh;
+  height: 100svh;
 }
 </style>

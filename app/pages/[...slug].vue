@@ -47,7 +47,7 @@ onMounted(async () => {
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/mixins' as *;
 .not-found {
-  min-height: 100dvh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   padding: 56px 0 48px 0;

@@ -81,7 +81,7 @@
     margin-top: 0;
   }
   &__title {
-    height: 100dvh;
+    height: 100svh;
     display: flex;
     flex-direction: column;
     position: relative;

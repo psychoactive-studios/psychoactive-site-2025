@@ -187,7 +187,7 @@ definePageMeta({
   &__onscroll-text {
     display: flex;
     align-items: center;
-    min-height: 100dvh;
+    min-height: 100svh;
     max-width: 56vw;
     margin: 0 auto;
     text-align: center;
@@ -204,7 +204,7 @@ definePageMeta({
   }
   &__services {
     @include flex-center;
-    min-height: 100dvh;
+    min-height: 100svh;
     @include respond(mobile) {
       margin-top: 120px;
       min-height: auto;
@@ -230,7 +230,7 @@ definePageMeta({
   &__cases {
     margin-top: 160px;
     @include flex-center;
-    min-height: 100dvh;
+    min-height: 100svh;
     @include respond(mobile) {
       min-height: auto;
       margin-top: 120px;

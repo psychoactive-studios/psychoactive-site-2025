@@ -233,7 +233,7 @@ const onScrollDownHandler = (e) => {
     display: none;
   }
   &__intro {
-    height: 100dvh;
+    height: 100svh;
     display: flex;
     flex-direction: column;
     padding: 0;

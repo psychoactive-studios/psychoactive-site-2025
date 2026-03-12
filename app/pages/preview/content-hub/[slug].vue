@@ -743,7 +743,7 @@ function footerTextAnimationInit() {
     flex-direction: column;
     gap: 23dvh;
     background-color: $color-background;
-    min-height: 100dvh;
+    min-height: 100svh;
     justify-content: center;
     position: relative;
     z-index: 1;

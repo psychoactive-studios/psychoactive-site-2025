@@ -104,12 +104,12 @@ watch(isLoading, (newVal) => {
 .hero {
   &__wrapper {
     position: relative;
-    // height: 100dvh;
+    // height: 100svh;
   }
   .container {
     @include flex-center;
     flex-direction: column;
-    height: 100dvh;
+    height: 100svh;
     @include respond(portrait) {
       padding-top: 160px;
       padding-bottom: 48px;
@@ -126,7 +126,7 @@ watch(isLoading, (newVal) => {
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
-    height: 100dvh;
+    height: 100svh;
     @include respond(portrait) {
       inset: 160px 48px 48px 48px;
       transform: translate(0);

@@ -105,7 +105,7 @@ onMounted(() => {
 .services {
   &__onscroll-text {
     @include flex-center;
-    // min-height: 100dvh;
+    // min-height: 100svh;
     padding: 15dvh 0 0 0;
     max-width: 57vw;
     margin: auto;

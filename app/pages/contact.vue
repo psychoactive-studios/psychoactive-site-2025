@@ -118,7 +118,7 @@ definePageMeta({
     display: flex;
     flex-direction: column;
     padding-left: 0;
-    min-height: 100dvh;
+    min-height: 100svh;
     @include respond(laptop-small) {
       padding-left: 160px;      
       @include respond(portrait) {

@@ -143,7 +143,7 @@ $range: $max - $min + 1;
 
 .timeline {
   &__inner {
-    height: 100dvh;
+    height: 100svh;
     display: flex;
     flex-direction: column;
     justify-content: center;
