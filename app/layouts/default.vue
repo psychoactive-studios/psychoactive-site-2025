@@ -40,7 +40,7 @@ watch(
       const layoutElements = gsap.utils.toArray([
         '#header-logo',
         '#header-navigation-button',
-        '#header-navigation-mobile',
+        // '#header-navigation-mobile',
         '#header-sound-button',
       ]);
 
@@ -49,6 +49,12 @@ watch(
         duration: 0.8,
         ease: 'power4.in',
       });
+      gsap.to('#header-navigation-mobile', {
+        y: 64,
+        opacity: 0,
+        duration: 0.8,
+        ease: 'power4.in',
+      })
     } else {
       showLayoutElementsRequired.value = true;
     }

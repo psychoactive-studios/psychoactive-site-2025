@@ -183,6 +183,17 @@ export default function useContact() {
         },
         '<'
       )
+      .fromTo(
+        document.querySelector('.navigation-mobile'),
+        { y: 64, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power3.out',
+        },
+        '<'
+      )
       .add(() => dotsTimeline.value.repeat(-1).play());
   }
 
