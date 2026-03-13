@@ -100,7 +100,7 @@ export const heroScrollAnimation = (ctx, root) => {
         isMobile: `(max-width: 767px)`,
       },
       (context) => {
-        const { isDesktop, isMobile } = context.conditions;
+        const { isMobile } = context.conditions;
 
         gsap
           .timeline({

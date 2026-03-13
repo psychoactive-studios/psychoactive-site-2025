@@ -52,8 +52,6 @@ const onFocusHandler = () => {
 const onClickHandler = async () => {
   playRandomSound('click');
   offSetRef.value += showOffset.value;
-  await nextTick();
-  scrollSmoother.value.refresh();
 };
 </script>
 
