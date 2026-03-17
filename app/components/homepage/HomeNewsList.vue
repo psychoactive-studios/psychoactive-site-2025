@@ -1,26 +1,49 @@
 <script setup>
-import { newsData } from '~/data/newsData';
 import HomeNewsCard from './HomeNewsCard.vue';
 import LinkWithHover from '../ui/LinkWithHover.vue';
+import useAudioManager from '~/composables/useAudioManager';
+
+const { playRandomSound } = useAudioManager();
+
+defineProps({
+  data: {
+    type: Array,
+    required: true,
+  },
+});
+
+const getHref = (news) => {
+  if (news.externalLink) {
+    return news.externalLink;
+  }
+  if (news.work && news.work.slug) {
+    return `/work/${news.work.slug}`;
+  }
+  return `/content-hub/${news.slug}`;
+};
 </script>
 
 <template>
   <section class="news-list">
     <div class="container">
+      <h2 class="news-list__title">From the feed</h2>
       <div class="news-list__grid">
         <HomeNewsCard
-          v-for="news in newsData"
+          v-for="news in data"
           :key="news.id"
           :title="news.title"
-          :category="news.category"
-          :date="news.date"
-          :src="news.src"
-          :href="news.href"
+          :category="news.category?.name"
+          :date="news.updatedAt"
+          :src="news.preview?.formats?.medium?.url || news.preview?.url"
+          :href="getHref(news)"
         />
       </div>
-      <div class="news-list__more">
+      <div class="news-list__more body-button">
         <div class="news-list__more_line" />
-        <LinkWithHover href="/content-hub">
+        <LinkWithHover
+          href="/content-hub"
+          @click="() => playRandomSound('click')"
+        >
           Explore Our Content Hub
         </LinkWithHover>
         <div class="news-list__more_line" />
@@ -34,9 +57,24 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
 @use '~/assets/styles/mixins' as *;
 .news-list {
   margin-top: 160px;
+  @include respond('mobile') {
+    margin-top: 60px;
+  }
+  &__title {
+    display: none;
+    @include respond('mobile') {
+      display: block;
+      font-size: 9.6vw;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 88%;
+      letter-spacing: -0.06em;
+      margin-bottom: 9.6vw;
+    }
+  }
   &__grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: getRem(16);
     @media screen and (max-width: 1400px) {
       grid-template-columns: repeat(2, 1fr);
@@ -50,12 +88,7 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
     display: flex;
     align-items: center;
     gap: 1rem;
-    font-size: 1rem;
-    font-family: 'RoobertMono';
-    font-style: normal;
-    font-weight: 500;
     line-height: 27px; /* 168.75% */
-    text-transform: uppercase;
     @include respond(mobile) {
       margin-top: getRem(64);
     }

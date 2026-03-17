@@ -43,7 +43,7 @@ defineProps({
   place-items: center;
   gap: 4px;
   transition: color 0.3s ease;
-  transition-delay: 0.3s;
+  //transition-delay: 0.3s;
   &::before {
     content: '';
     position: absolute;
@@ -52,7 +52,9 @@ defineProps({
     background-color: $color-foreground;
     transition: opacity 0.3s ease;
     z-index: 0;
-    transition: scale 0.3s cubic-bezier(0.33, 1, 0.68, 1), background-color 0.2s;
+    transition:
+      scale 0.3s cubic-bezier(0.33, 1, 0.68, 1),
+      background-color 0.2s;
   }
   .dot {
     width: 6px;

@@ -6,18 +6,16 @@ import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import gsap from 'gsap';
 import { navigationData } from '~/data/navigationData';
+import useVideoPlayer from '~/composables/useVideoPlayer';
 
 const { navigationRef, initNavigation, transitionFromNavigation } =
   useNavigation();
 const { playInteractionSound } = useAudioManager();
+const { previewVideoData } = useVideoPlayer();
 
 let talkButtonHoverTween;
 
 onMounted(() => {
-  SplitText.create('#main-navigation .navigation__item a', {
-    type: 'chars',
-    charsClass: 'char-center',
-  });
   initNavigation();
   talkButtonHoverTween = gsap.to('.navigation__talk_button', {
     duration: 0.5,
@@ -31,14 +29,27 @@ onMounted(() => {
 });
 
 const talkButtonHoverHandler = () => {
-  playInteractionSound();
+  playInteractionSound('talk-btn-hover');
   if (gsap.isTweening('.navigation__talk_button')) return;
   talkButtonHoverTween.restart();
 };
 
-const clickOnLinkHandler = () => {
+const clickOnLinkHandler = (e) => {
+  const isAnimating = gsap.getById('open-timeline-main')?.isActive();
+  if (isAnimating) {
+    e.preventDefault();
+    return;
+  }
   transitionFromNavigation.value = true;
   document.querySelector('#header-navigation-button').click();
+  // scrollSmoother.value.stop();
+};
+
+const clickOnContactHandler = (e) => {  
+  transitionFromNavigation.value = true;
+  playInteractionSound('click-3');
+  document.querySelector('#header-navigation-button').click();
+  // scrollSmoother.value.stop();
 };
 </script>
 
@@ -55,7 +66,7 @@ const clickOnLinkHandler = () => {
         <div class="navigation__video">
           <VideoPreview
             class="video-player"
-            preview="/video/preview_reel.mp4"
+            :preview="previewVideoData || '/video/preview_reel.mp4'"
             src="https://vjs.zencdn.net/v/oceans.mp4"
             :dots="false"
             :autoplay="false"
@@ -64,13 +75,16 @@ const clickOnLinkHandler = () => {
         <div class="navigation__menu">
           <ul class="navigation__list">
             <li
-              v-for="item in navigationData"
+              v-for="item in navigationData.filter(item => !item.hidden)"
               :key="item.id"
-              class="navigation__item"
+              class="navigation__item heading-h2"
             >
-              <LinkWithHover :href="item.url" @click="clickOnLinkHandler">{{
-                item.title
-              }}</LinkWithHover>
+              <LinkWithHover
+                :href="item.url"
+                :data-sup="item.sup || null"
+                @click.capture="clickOnLinkHandler"
+                >{{ item.title }}
+              </LinkWithHover>
               <div class="navigation__item-line">
                 <span class="line" />
               </div>
@@ -81,13 +95,14 @@ const clickOnLinkHandler = () => {
           <div class="navigation__talk_line">
             <span />
           </div>
-          <button
-            class="navigation__talk_button"
+          <NuxtLink 
+            :to="navigationData.find(el => el.id === 'contact').url"
+            class="navigation__talk_button body-button"
             @mouseenter="talkButtonHoverHandler"
-            @focus="talkButtonHoverHandler"
+            @click.capture="clickOnContactHandler"
           >
             Let’s talk
-          </button>
+          </NuxtLink>
           <div class="navigation__talk_line">
             <span />
           </div>
@@ -204,13 +219,33 @@ const clickOnLinkHandler = () => {
     }
   }
   &__item {
-    font-size: clamp(48px, 3.646vw, 70px);
+    // font-size: clamp(48px, 3.646vw, 70px);
     line-height: 74%;
     display: flex;
     gap: 1.5vw;
     align-items: center;
+    a[data-sup] {
+      position: relative;
+      margin-right: 24px;
+      &::after {
+        content: attr(data-sup);
+        display: inline-block;
+        font-family: 'RoobertMono';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 100%; /* 16px */
+        text-transform: uppercase;
+        color: $color-background;
+        letter-spacing: 1px;
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 0;
+        opacity: 0.5;
+      }
+    }
     @include respond(mobile) {
-      font-size: getRem(36);
+      // font-size: getRem(36);
       line-height: 1;
       gap: getRem(12);
       margin-right: 8px;
@@ -306,8 +341,6 @@ const clickOnLinkHandler = () => {
 
     &_button {
       pointer-events: all;
-      font-family: 'RoobertMono', sans-serif;
-      font-size: 1rem;
       color: $color-foreground;
       cursor: pointer;
       padding: 0 24px;
@@ -317,6 +350,9 @@ const clickOnLinkHandler = () => {
       height: 64px;
       text-transform: uppercase;
       width: 212px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
       @include respond(mobile) {
         width: 180px;
         height: 36px;

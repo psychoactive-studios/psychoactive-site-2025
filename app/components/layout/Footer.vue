@@ -1,113 +1,48 @@
 <script setup>
 import { footerData } from '~/data/footerData';
-import PlusIcon from '~/assets/icons/icon-plus.svg';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 import useAudioManager from '~/composables/useAudioManager';
-import gsap from 'gsap';
 import WebflowLabel from '../ui/WebflowLabel.vue';
-import BriefOurAIAgent from '~/assets/img/brief-our-AI-agent.svg';
+import Brief from './Brief.vue';
+import AnalogClock from '../ui/AnalogClock.vue';
+import LinkButton from '../ui/LinkButton.vue';
+import { navigationData } from '~/data/navigationData';
 
-let footerBriefTimeline;
-const briefRef = ref(null);
+const { playInteractionSound, playRandomSound } = useAudioManager();
 
-const { playInteractionSound } = useAudioManager();
-
-onMounted(() => {
-  const dotsLeft = briefRef.value.querySelector('.brief__title_dots .dot-left');
-  const dotsRight = briefRef.value.querySelector(
-    '.brief__title_dots .dot-right'
-  );
-  footerBriefTimeline = gsap
-    .timeline({ paused: true })
-    .to(gsap.utils.toArray([dotsLeft, dotsRight]), {
-      duration: 0.8,
-      width: '0%',
-      ease: 'power1.in',
-      overwrite: 'auto',
-    })
-    .set(dotsLeft, {
-      left: '50%',
-    })
-    .set(dotsRight, {
-      right: '50%',
-    })
-    .to(gsap.utils.toArray([dotsLeft, dotsRight]), {
-      duration: 0.8,
-      width: '50%',
-      ease: 'power1.out',
-      overwrite: 'auto',
-    });
+defineProps({
+  transparent: {
+    type: Boolean,
+    default: false,
+  },
 });
-
-const briefMouseEnterHandler = () => {
-  gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
-    duration: 0.8,
-    clipPath: 'polygon(0% 0, 100% 0, 100% 100%, 0% 100%)',
-    ease: 'power3.out',
-    overwrite: 'auto',
-  });
-  footerBriefTimeline.repeat(-1).restart();
-};
-const briefMouseLeaveHandler = () => {
-  gsap.to(briefRef.value.querySelector('.brief__title_text--mask'), {
-    duration: 0.8,
-    clipPath: 'polygon(55% 0, 55% 0, 55% 100%, 55% 100%)',
-    ease: 'power3.out',
-    overwrite: 'auto',
-  });
-  footerBriefTimeline.repeat(0).reverse();
+const handleClick = () => {
+  playRandomSound('click');
 };
 </script>
 
 <template>
-  <footer class="footer">
+  <footer :class="['footer', { 'footer--transparent': transparent }]">
     <section class="navigation">
       <ul class="links">
         <template v-for="(link, index) in footerData.links" :key="link.title">
-          <li class="link">
+          <li class="link body-button" @click="handleClick">
             <LinkWithHover :href="link.url">{{ link.title }}</LinkWithHover>
           </li>
           <li v-if="index < footerData.links.length - 1" class="separator" />
         </template>
       </ul>
     </section>
-    <section class="brief">
-      <div class="container">
-        <div class="brief__idea">
-          <div class="brief__idea_plus">
-            <PlusIcon />
-            <PlusIcon />
-          </div>
-          <div class="brief__idea_text">Have an idea?</div>
-          <div class="brief__idea_plus">
-            <PlusIcon />
-            <PlusIcon />
-          </div>
-        </div>
-        <div
-          ref="briefRef"
-          class="brief__title"
-          @mouseenter="briefMouseEnterHandler"
-          @mouseleave="briefMouseLeaveHandler"
-        >
-          <NuxtLink href="/" class="brief__title_text">
-            <BriefOurAIAgent class="brief__title_text--original" />
-            <BriefOurAIAgent class="brief__title_text--mask" />
-            <div class="brief__title_dots">
-              <span class="dot-left" />
-              <span class="dot-center" />
-              <span class="dot-right" />
-            </div>
-          </NuxtLink>
-        </div>
-        <div class="brief__email">
-          Or email the old fashioned way:
-          <LinkWithHover href="mailto:hello@psychoactive.co.nz">
-            hello@psychoactive.co.nz
-          </LinkWithHover>
-        </div>
-      </div>
-    </section>
+    <Brief class="brief" />
+
+    <div class="container mobile-cta">
+      <section class="mobile-cta__wrapper">
+        <h2 class="mobile-cta__title">Have an idea?</h2>
+        <LinkButton :href="navigationData.find(el => el.id === 'contact').url" size="small" target="_self">
+          let’s talk
+        </LinkButton>
+      </section>
+    </div>
 
     <section class="awards">
       <ul class="awards__list">
@@ -115,19 +50,25 @@ const briefMouseLeaveHandler = () => {
           <a
             :href="award.url"
             target="_blank"
-            @mouseenter="playInteractionSound"
-            @focus="playInteractionSound"
+            @mouseenter="() => playRandomSound('awards-footer-hover')"
+            @click="playRandomSound('click')"
           >
             <NuxtImg :src="award.icon" :alt="award.name" />
           </a>
         </li>
       </ul>
+      <div class="awards__clocks">
+        <AnalogClock city="WLG" />
+        <AnalogClock city="MELB" />
+        <AnalogClock city="SING" />
+        <AnalogClock city="CALI" />
+      </div>
       <div class="awards__label">
         <a
           href="https://webflow.com/@Psychoactive-Studios"
           target="_blank"
-          @mouseenter="playInteractionSound"
-          @focus="playInteractionSound"
+          @mouseenter="() => playInteractionSound('text-hover-short', 100)"
+          @click="playInteractionSound('click-1')"
         >
           <WebflowLabel />
         </a>
@@ -150,12 +91,16 @@ const briefMouseLeaveHandler = () => {
   position: relative;
   z-index: 1;
   background-color: $color-background;
+  &--transparent {
+    background-color: transparent;
+  }
   @include respond(portrait) {
     padding-top: 160px;
   }
   @include respond(mobile) {
-    padding-top: 80px;
-    justify-content: space-around;
+    padding-top: 24px;
+    padding-bottom: 116px;
+    gap: 48px;
   }
   .navigation {
     @include respond(mobile) {
@@ -191,8 +136,6 @@ const briefMouseLeaveHandler = () => {
       }
 
       .link {
-        font-family: 'RoobertMono', sans-serif;
-        text-transform: uppercase;
         @include respond(mobile) {
           font-size: getRem(14);
         }
@@ -230,202 +173,54 @@ const briefMouseLeaveHandler = () => {
   }
 
   .brief {
-    font-size: getRem(24);
-    line-height: 1.16;
-    color: white(50);
-    &__idea {
+    @include respond(mobile) {
+      display: none;
+    }
+  }
+
+  .mobile-cta {
+    flex-grow: 1;
+    display: none;
+    @include respond(mobile) {
+      display: block;
+    }
+    &__wrapper {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin-bottom: 60px;
-      @include respond(mobile) {
-        font-size: getRem(14);
-        margin-bottom: 48px;
-      }
-      &_plus {
-        display: flex;
-        align-items: center;
-        width: getRem(140);
-        justify-content: space-between;
-        @include respond(mobile) {
-          display: none;
-        }
-        & > svg {
-          width: getRem(7);
-          height: getRem(7);
-        }
-      }
-      &_text {
-        margin: 0 getRem(84);
-      }
+      gap: getRem(32);
+      background-color: #1b1b1b;
+      border-radius: getRem(12);
+      height: 100%;
     }
-
     &__title {
+      font-family: 'RoobertMono';
+      font-size: 1rem;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 120%;
+      text-transform: uppercase;
       position: relative;
-      &_text {
-        color: white(100);
-        margin: 0 0 getRem(80) 0;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 getRem(32);
+      position: relative;
+      &::before,
+      &::after {
+        content: '';
         display: block;
-        position: relative;
-        svg {
-          // color: #ffffff;
-          width: 100%;
-          height: auto;
-        }
-        @include respond(mobile) {
-          font-size: clamp(getRem(48), 12.448vw, getRem(76));
-        }
-        .text-ai {
-          display: inline-block;
-          color: white(100);
-          position: relative;
-          &::after {
-            content: '';
-            position: absolute;
-            bottom: getRem(24);
-            left: 0;
-            width: 100%;
-          }
-        }
-        &--mask {
-          position: absolute;
-          inset: 0;
-          color: white(100);
-          clip-path: polygon(55% 0, 55% 0, 55% 100%, 55% 100%);
-          * {
-            fill-opacity: 1;
-          }
-        }
-      }
-      &_dots {
+        width: 8px;
+        height: 8px;
         position: absolute;
-        left: 50.8%;
-        right: 38%;
-        bottom: 7%;
-        &::before {
-          content: '';
-          display: block;
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background-color: $color-dots;
-          position: absolute;
-          top: 0;
-          left: calc(0% - 3px);
-          z-index: 1;
-          @include respond(mobile) {
-            width: 4px;
-            height: 4px;
-          }
-        }
-        &::after {
-          content: '';
-          display: block;
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background-color: $color-dots;
-          position: absolute;
-          top: 0;
-          right: calc(0% - 4px);
-          z-index: 1;
-          @include respond(mobile) {
-            width: 4px;
-            height: 4px;
-          }
-        }
-        .dot-center {
-          display: block;
-          width: 7px;
-          height: 7px;
-          border-radius: 50%;
-          background-color: $color-dots;
-          position: absolute;
-          top: 0;
-          left: calc(50% - 2px);
-          @include respond(mobile) {
-            width: 4px;
-            height: 4px;
-          }
-        }
-        .dot-left,
-        .dot-right {
-          display: block;
-          width: 50%;
-          height: 1px;
-          background-color: white(20);
-          position: absolute;
-          &::before {
-            content: '';
-            position: absolute;
-            width: 7px;
-            height: 7px;
-            background: $color-dots;
-            border-radius: 50%;
-            top: -3px;
-            left: -3px;
-            @include respond(mobile) {
-              width: 4px;
-              height: 4px;
-              top: -2px;
-            }
-          }
-          &::after {
-            content: '';
-            position: absolute;
-            width: 7px;
-            height: 7px;
-            background: $color-dots;
-            border-radius: 50%;
-            top: -3px;
-            right: -4px;
-            @include respond(mobile) {
-              width: 4px;
-              height: 4px;
-              top: -2px;
-            }
-          }
-          &.dot-left {
-            left: 0px;
-            top: 3px;
-            @include respond(mobile) {
-              &::after {
-                right: -2px;
-              }
-              top: 2px;
-            }
-            // background-color: red;
-          }
-          &.dot-right {
-            right: 0px;
-            top: 3px;
-            @include respond(mobile) {
-              &::before {
-                left: -2px;
-              }
-              &::after {
-                left: -2px;
-              }
-              top: 2px;
-            }
-            // background-color: green;
-          }
-        }
+        background: url('/img/icon-plus.svg') no-repeat center center;
+        opacity: 0.5;
       }
-    }
-
-    &__email {
-      text-align: center;
-      @include respond(mobile) {
-        font-size: getRem(14);
+      &::before {
+        left: 100%;
       }
-      a {
-        color: white(100);
-        display: inline-block;
-        @include respond(mobile) {
-          margin-top: getRem(8);
-          display: block;
-        }
+      &::after {
+        right: 100%;
       }
     }
   }
@@ -439,6 +234,11 @@ const briefMouseLeaveHandler = () => {
       align-items: center;
       gap: getRem(32);
     }
+    @include respond(desktop) {
+      flex-direction: column;
+      align-items: center;
+      gap: getRem(32);
+    }
     @include respond(mobile) {
       padding: 0 getRem(24);
     }
@@ -446,9 +246,9 @@ const briefMouseLeaveHandler = () => {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: getRem(106);
+      gap: 2.5vw;
       @include respond(mobile) {
-        width: 280px;
+        width: 100%;
         justify-content: space-around;
         gap: initial;
       }
@@ -468,10 +268,20 @@ const briefMouseLeaveHandler = () => {
         }
       }
     }
+    &__clocks {
+      display: flex;
+      gap: 2.5vw;
+      @include respond(mobile) {
+        display: none;
+      }
+    }
     &__label {
+      @include respond(mobile) {
+        display: none;
+      }
       img,
       svg {
-        height: 48px;
+        height: clamp(36px, 2.5vw, 48px);
         width: auto;
         @include respond(mobile) {
           height: 36px;

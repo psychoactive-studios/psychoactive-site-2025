@@ -1,35 +1,37 @@
 <script setup>
-import { usePointer } from '@vueuse/core';
+import { useDateFormat, usePointer } from '@vueuse/core';
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, playRandomSound } = useAudioManager();
 const { pointerType } = usePointer();
 
-defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  category: {
-    type: String,
-    required: true,
-  },
-  date: {
-    type: String,
-    required: true,
-  },
-  src: {
-    type: String,
-    required: true,
-  },
-  href: {
-    type: String,
+const props = defineProps({
+  data: {
+    type: Object,
     required: true,
   },
 });
 
+const { data } = props;
+
 const titleRef = ref(null);
+
+const formatter = shallowRef('MMM YY');
+const lang = shallowRef('en-US');
+const publishedAt = useDateFormat(data.publishedAt, formatter, {
+  locales: lang,
+});
+
+const href = computed(() => {
+  if (data.externalLink) {
+    return data.externalLink;
+  }
+  if (data.work && data.work.slug) {
+    return `/work/${data.work.slug}`;
+  }
+  return `/content-hub/${data.slug}`;
+});
 
 const handleHoverEffect = () => {
   // Stop any ongoing animations on this element
@@ -39,8 +41,6 @@ const handleHoverEffect = () => {
   const width = titleRef.value.offsetWidth;
   const height = titleRef.value.offsetHeight;
   gsap.set(titleRef.value, { width, height });
-
-  playInteractionSound();
 
   // Store the original text
   gsap.to(titleRef.value, {
@@ -59,32 +59,50 @@ const handleHoverEffect = () => {
 };
 
 const onMouseEnterHandler = (e) => {
+  playRandomSound('text-hover');
   handleHoverEffect(e.target);
 };
 
 const onFocusHandler = (e) => {
   handleHoverEffect(e.target);
 };
+
+const handleSoundClick = () => {
+  playRandomSound('click');
+};
 </script>
 
 <template>
   <NuxtLink
     :to="href"
+    :target="data.externalLink ? '_blank' : '_self'"
     class="news-card"
     @mouseenter="onMouseEnterHandler"
     @focus="onFocusHandler"
+    @click="handleSoundClick"
   >
     <div class="news-card__description">
       <div class="news-card__description_info">
-        <div class="news-card__description_info--category">{{ category }}</div>
-        <div class="news-card__description_info--date">{{ date }}</div>
+        <div class="news-card__description_info--category">
+          {{ data.category?.name }}
+        </div>
+        <div class="news-card__description_info--date">
+          {{ publishedAt }}
+        </div>
       </div>
       <h3 ref="titleRef" class="news-card__description_title">
-        {{ title }}
+        {{ data.title }}
       </h3>
     </div>
     <div class="news-card__image">
-      <NuxtImg :src="src" :alt="title" width="200" height="200" />
+      <div class="news-card__image_wrapper">
+        <NuxtImg
+          :src="data?.preview?.url"
+          :alt="data.title"
+          width="230"
+          height="230"
+        />
+      </div>
     </div>
   </NuxtLink>
 </template>
@@ -97,6 +115,7 @@ const onFocusHandler = (e) => {
   padding: 1rem;
   display: flex;
   gap: 1rem;
+  transition: background-color 0.3s ease;
   &__description {
     display: flex;
     flex-direction: column;
@@ -130,21 +149,24 @@ const onFocusHandler = (e) => {
       }
     }
     &_title {
-      font-size: getRem(16);
+      font-size: clamp(24px, 1.67vw, 32px);
       font-style: normal;
       font-weight: 400;
-      line-height: getRem(21);
+      line-height: 1.12;
       margin-top: auto;
       margin-right: 6px;
       overflow: hidden;
     }
   }
   &__image {
-    width: 115px;
-    height: 115px;
+    width: 30.3%;
     flex-shrink: 0;
-    overflow: hidden;
-    border-radius: 8px;
+    &_wrapper {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      border-radius: 8px;
+    }
     img {
       width: 100%;
       height: 100%;
@@ -155,9 +177,10 @@ const onFocusHandler = (e) => {
     }
   }
   &:hover {
-    .news-card__image img {
-      transform: scale(1.25);
-    }
+    // .news-card__image img {
+    //   transform: scale(1.25);
+    // }
+    background-color: white(20);
     .news-card__description_info::before {
       animation: flicker-effect-5 0.5s forwards;
     }

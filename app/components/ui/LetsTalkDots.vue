@@ -1,121 +1,275 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { gsap } from 'gsap';
-import { InertiaPlugin } from 'gsap/InertiaPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { gsap } from 'gsap';
 import { usePointer } from '@vueuse/core';
 import useScrollSmoother from '@/composables/useScrollSmoother';
-import useAudioManager from '~/composables/useAudioManager';
+import LinkButton from './LinkButton.vue';
 
-const { playInteractionSound } = useAudioManager();
+const props = defineProps({
+  mode: {
+    type: String,
+    default: 'dark', // 'dark' or 'light'
+  },
+  text: {
+    type: String,
+    default: "let's talk",
+  },
+  href: {
+    type: String,
+    default: '/',
+  },
+  scale: {
+    type: Number,
+    default: 1.0,
+  },
+});
 
-const letsTalkButtonRef = ref(null);
+gsap.registerPlugin(ScrollTrigger);
 
-// Register GSAP plugins
-gsap.registerPlugin(InertiaPlugin, ScrollTrigger);
-
-const { pointerType: _pointerType, x: eventX, y: eventY } = usePointer();
+const { x: eventX, y: eventY } = usePointer();
 const { scrollSmoother } = useScrollSmoother();
 
-const dotsContainerRef = ref(null);
+const canvasRef = ref(null);
+let gl = null;
+let program = null;
+let animationFrameId = null;
+let scrollTriggerInstance = null;
 
-let dots = [];
-let dotCenters = [];
+// Dot grid data
+let dotCount = 0;
+let dotSize = 8;
+let dotGap = 16;
+
+// Buffers and attributes
+let positionBuffer = null;
+let offsetBuffer = null;
+let basePositions = null; // Float32Array [x, y, x, y, ...]
+let currentPositions = null; // Float32Array for final combined offsets [x, y, x, y, ...]
+let interactionOffsets = null; // Float32Array for mouse interaction offsets
+let opacityBuffer = null;
+let opacities = null; // Float32Array for mouse proximity
+let velocities = null; // Float32Array for physics
+
+// Mouse tracking
 let lastTime = 0;
 let lastX = 0;
 let lastY = 0;
-const lastMousePosition = { x: 0, y: 0 }; // Last known global mouse position
-let scrollTriggerInstance = null;
+const lastMousePosition = { x: 0, y: 0 };
 
-const opacity = { base: 0.1, active: 1 };
-const threshold = 150;
+// Constants
+const baseOpacity = props.mode === 'light' ? 0.15 : 0.3;
+const activeOpacity = props.mode === 'light' ? 0.7 : 1;
+const opacity = { base: baseOpacity, active: activeOpacity };
+let threshold = 70; // Will be calculated as 25% of canvas width
 const speedThreshold = 150;
-const shockRadius = 250;
+let shockRadius = 150; // Will be calculated based on canvas width
 const shockPower = 5;
 const maxSpeed = 5000;
-const centerHole = false;
 
-function buildGrid() {
-  if (!dotsContainerRef.value) return;
+// Shaders
+const vertexShaderSource = `
+  attribute vec2 a_basePosition;
+  attribute vec2 a_offset;
+  attribute float a_opacity;
 
-  const container = dotsContainerRef.value;
-  container.innerHTML = '';
-  dots = [];
-  dotCenters = [];
+  uniform vec2 u_resolution;
+  uniform float u_pointSize;
 
-  const style = getComputedStyle(container);
-  const dotPx = parseFloat(style.fontSize);
-  const gapPx = dotPx * 2;
-  const contW = container.clientWidth;
-  const contH = container.clientHeight;
+  varying float v_alpha;
 
-  const cols = Math.floor((contW + gapPx) / (dotPx + gapPx));
-  const rows = Math.floor((contH + gapPx) / (dotPx + gapPx));
-  const total = cols * rows;
+  void main() {
+    vec2 position = a_basePosition + a_offset;
 
-  const holeCols = centerHole ? (cols % 2 === 0 ? 4 : 5) : 0;
-  const holeRows = centerHole ? (rows % 2 === 0 ? 4 : 5) : 0;
-  const startCol = (cols - holeCols) / 2;
-  const startRow = (rows - holeRows) / 2;
+    // Convert to clip space (-1 to 1)
+    vec2 clipSpace = (position / u_resolution) * 2.0 - 1.0;
+    clipSpace.y = -clipSpace.y; // Flip Y
 
-  for (let i = 0; i < total; i++) {
-    const row = Math.floor(i / cols);
-    const col = i % cols;
-    const isHole =
-      centerHole &&
-      row >= startRow &&
-      row < startRow + holeRows &&
-      col >= startCol &&
-      col < startCol + holeCols;
+    gl_Position = vec4(clipSpace, 0.0, 1.0);
+    gl_PointSize = u_pointSize;
 
-    const d = document.createElement('div');
-    d.classList.add('dot');
+    v_alpha = a_opacity;
+  }
+`;
 
-    if (isHole) {
-      d.style.visibility = 'hidden';
-      d._isHole = true;
-    } else {
-      gsap.set(d, { x: 0, y: 0, opacity: opacity.base });
-      d._inertiaApplied = false;
+const fragmentShaderSource = `
+  precision mediump float;
+
+  uniform vec3 u_color;
+
+  varying float v_alpha;
+
+  void main() {
+    // Create circular point
+    vec2 coord = gl_PointCoord - vec2(0.5);
+    float dist = length(coord);
+
+    if (dist > 0.5) {
+      discard;
     }
 
-    container.appendChild(d);
-    dots.push(d);
+    gl_FragColor = vec4(u_color, v_alpha);
+  }
+`;
+
+function createShader(type, source) {
+  const shader = gl.createShader(type);
+  gl.shaderSource(shader, source);
+  gl.compileShader(shader);
+
+  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+    console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+    gl.deleteShader(shader);
+    return null;
+  }
+  return shader;
+}
+
+function createProgram(vertexShader, fragmentShader) {
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vertexShader);
+  gl.attachShader(prog, fragmentShader);
+  gl.linkProgram(prog);
+
+  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+    console.error('Program link error:', gl.getProgramInfoLog(prog));
+    return null;
+  }
+  return prog;
+}
+
+function initWebGL() {
+  if (!canvasRef.value) {
+    return false;
   }
 
-  gsap.ticker.add(() => {
-    dotCenters = dots
-      .filter((d) => !d._isHole)
-      .map((d) => {
-        const r = d.getBoundingClientRect();
-        // Use current animated scroll position
-        const currentScrollY = scrollSmoother.value
-          ? scrollSmoother.value.scrollTop()
-          : window.scrollY;
-        const currentScrollX = window.scrollX;
-        return {
-          el: d,
-          x: r.left + currentScrollX + r.width / 2,
-          y: r.top + currentScrollY + r.height / 2,
-        };
-      });
-  }, true);
+  gl = canvasRef.value.getContext('webgl', {
+    alpha: true,
+    antialias: true,
+    premultipliedAlpha: true,
+  });
+
+  if (!gl) {
+    console.error('WebGL not supported');
+    return false;
+  }
+
+  const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
+  const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
+
+  if (!vertexShader || !fragmentShader) return false;
+
+  program = createProgram(vertexShader, fragmentShader);
+  if (!program) return false;
+
+  // Create buffers
+  positionBuffer = gl.createBuffer();
+  offsetBuffer = gl.createBuffer();
+  opacityBuffer = gl.createBuffer();
+
+  return true;
+}
+
+function buildGrid() {
+  if (!canvasRef.value || !gl) {
+    return;
+  }
+
+  const width = window.innerWidth;
+  if (width < 768) {
+    dotSize = 4;
+    dotGap = 8;
+  } else if (width < 1600) {
+    dotSize = 4;
+    dotGap = 12;
+  } else {
+    dotSize = 6;
+    dotGap = 16;
+  }
+
+  const canvas = canvasRef.value;
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+
+  gl.viewport(0, 0, canvas.width, canvas.height);
+
+  const contW = rect.width;
+  const contH = rect.height;
+
+  // Calculate usable area for dots (original size before scale)
+  const usableW = contW / props.scale;
+  const usableH = contH / props.scale;
+
+  // Calculate threshold as 10% of usable width
+  threshold = usableW * 0.1;
+  // Calculate shockRadius as 15% of usable width
+  shockRadius = usableW * 0.15;
+
+  const cols = Math.floor((usableW + dotGap) / (dotSize + dotGap));
+  const rows = Math.floor((usableH + dotGap) / (dotSize + dotGap));
+  dotCount = cols * rows;
+
+  const totalGridWidth = cols * dotSize + (cols - 1) * dotGap;
+  const totalGridHeight = rows * dotSize + (rows - 1) * dotGap;
+  const offsetX = (contW - totalGridWidth) / 2;
+  const offsetY = (contH - totalGridHeight) / 2;
+
+  // Initialize arrays
+  basePositions = new Float32Array(dotCount * 2);
+  currentPositions = new Float32Array(dotCount * 2);
+  interactionOffsets = new Float32Array(dotCount * 2);
+  opacities = new Float32Array(dotCount);
+  velocities = new Float32Array(dotCount * 2);
+
+  for (let i = 0; i < dotCount; i++) {
+    const row = Math.floor(i / cols);
+    const col = i % cols;
+
+    const baseX = offsetX + col * (dotSize + dotGap) + dotSize / 2;
+    const baseY = offsetY + row * (dotSize + dotGap) + dotSize / 2;
+
+    basePositions[i * 2] = baseX;
+    basePositions[i * 2 + 1] = baseY;
+    currentPositions[i * 2] = 0;
+    currentPositions[i * 2 + 1] = 0;
+    interactionOffsets[i * 2] = 0;
+    interactionOffsets[i * 2 + 1] = 0;
+    opacities[i] = opacity.base;
+    velocities[i * 2] = 0;
+    velocities[i * 2 + 1] = 0;
+  }
+
+  // Upload base positions (static)
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, basePositions, gl.STATIC_DRAW);
+
+  startRenderLoop();
 }
 
 function handleMouseMove() {
-  // Get current smooth scroll position
-  const currentScrollY = scrollSmoother.value
-    ? scrollSmoother.value.scrollTop()
-    : window.scrollY;
-  const currentScrollX = window.scrollX; // Usually X doesn't animate
+  if (!canvasRef.value || !basePositions) return;
 
-  // Convert viewport coordinates to page coordinates using current animated scroll
+  const canvas = canvasRef.value;
+  const rect = canvas.getBoundingClientRect();
+
+  const currentScrollY = scrollSmoother.value
+    ? scrollSmoother.value.scroll
+    : window.scrollY;
+  const currentScrollX = window.scrollX;
+
   const pageX = eventX.value + currentScrollX;
   const pageY = eventY.value + currentScrollY;
 
-  // Store global mouse position
-  lastMousePosition.x = pageX;
-  lastMousePosition.y = pageY;
+  const canvasPageX = rect.left + currentScrollX;
+  const canvasPageY = rect.top + currentScrollY;
+  const localX = pageX - canvasPageX;
+  const localY = pageY - canvasPageY;
+
+  lastMousePosition.x = localX;
+  lastMousePosition.y = localY;
 
   const now = performance.now();
   const dt = now - lastTime || 16;
@@ -136,94 +290,205 @@ function handleMouseMove() {
   lastX = pageX;
   lastY = pageY;
 
-  dotCenters.forEach(({ el, x, y }) => {
-    const dist = Math.hypot(x - pageX, y - pageY);
+  // Update opacities based on mouse proximity
+  for (let i = 0; i < dotCount; i++) {
+    const dotX = basePositions[i * 2] + interactionOffsets[i * 2];
+    const dotY = basePositions[i * 2 + 1] + interactionOffsets[i * 2 + 1];
+    const dist = Math.hypot(dotX - localX, dotY - localY);
     const t = Math.max(0, 1 - dist / threshold);
-    const opacityValue = gsap.utils.interpolate(
-      opacity.base,
-      opacity.active,
-      t
-    );
-    gsap.set(el, { opacity: opacityValue });
+    opacities[i] = opacity.base + (opacity.active - opacity.base) * t;
 
-    if (speed > speedThreshold && dist < threshold && !el._inertiaApplied) {
-      el._inertiaApplied = true;
-      const pushX = x - pageX + vx * 0.005;
-      const pushY = y - pageY + vy * 0.005;
-
-      gsap.to(el, {
-        inertia: { x: pushX, y: pushY, resistance: 750 },
-        onComplete() {
-          gsap.to(el, {
-            x: 0,
-            y: 0,
-            duration: 1.5,
-            ease: 'elastic.out(1,0.75)',
-          });
-          el._inertiaApplied = false;
-        },
-      });
+    // Push dots on fast mouse movement
+    if (speed > speedThreshold && dist < threshold) {
+      const pushX = (dotX - localX + vx * 0.005) * 0.1;
+      const pushY = (dotY - localY + vy * 0.005) * 0.1;
+      interactionOffsets[i * 2] += pushX;
+      interactionOffsets[i * 2 + 1] += pushY;
     }
-  });
+  }
 }
 
 function handleScroll() {
-  // Get current smooth scroll position (the animated position, not target)
+  if (!canvasRef.value || !basePositions) return;
+
+  const canvas = canvasRef.value;
+  const rect = canvas.getBoundingClientRect();
+
   const currentScrollY = scrollSmoother.value
-    ? scrollSmoother.value.scrollTop()
+    ? scrollSmoother.value.scroll
     : window.scrollY;
   const currentScrollX = window.scrollX;
 
-  // Update lastMousePosition with current pointer position during scroll
   const pageX = eventX.value + currentScrollX;
   const pageY = eventY.value + currentScrollY;
 
-  lastMousePosition.x = pageX;
-  lastMousePosition.y = pageY;
+  const canvasPageX = rect.left + currentScrollX;
+  const canvasPageY = rect.top + currentScrollY;
+  const localX = pageX - canvasPageX;
+  const localY = pageY - canvasPageY;
 
-  // Update effect during scroll using current mouse position
-  dotCenters.forEach(({ el, x, y }) => {
-    const dist = Math.hypot(x - pageX, y - pageY);
+  lastMousePosition.x = localX;
+  lastMousePosition.y = localY;
+
+  for (let i = 0; i < dotCount; i++) {
+    const dotX = basePositions[i * 2] + interactionOffsets[i * 2];
+    const dotY = basePositions[i * 2 + 1] + interactionOffsets[i * 2 + 1];
+    const dist = Math.hypot(dotX - localX, dotY - localY);
     const t = Math.max(0, 1 - dist / threshold);
-    const opacityValue = gsap.utils.interpolate(
-      opacity.base,
-      opacity.active,
-      t
-    );
-    gsap.set(el, { opacity: opacityValue });
-  });
+    opacities[i] = opacity.base + (opacity.active - opacity.base) * t;
+  }
 }
 
 function handleClick(e) {
-  dotCenters.forEach(({ el, x, y }) => {
-    const dist = Math.hypot(x - e.pageX, y - e.pageY);
-    if (dist < shockRadius && !el._inertiaApplied) {
-      el._inertiaApplied = true;
-      const falloff = Math.max(0, 1 - dist / shockRadius);
-      const pushX = (x - e.pageX) * shockPower * falloff;
-      const pushY = (y - e.pageY) * shockPower * falloff;
+  if (!canvasRef.value || !basePositions) return;
 
-      gsap.to(el, {
-        inertia: { x: pushX, y: pushY, resistance: 750 },
-        onComplete() {
-          gsap.to(el, {
-            x: 0,
-            y: 0,
-            duration: 1.5,
-            ease: 'elastic.out(1,0.75)',
-          });
-          el._inertiaApplied = false;
-        },
-      });
+  const canvas = canvasRef.value;
+  const rect = canvas.getBoundingClientRect();
+
+  const currentScrollY = scrollSmoother.value
+    ? scrollSmoother.value.scroll
+    : window.scrollY;
+  const currentScrollX = window.scrollX;
+
+  const canvasPageX = rect.left + currentScrollX;
+  const canvasPageY = rect.top + currentScrollY;
+  const localX = e.pageX - canvasPageX;
+  const localY = e.pageY - canvasPageY;
+
+  for (let i = 0; i < dotCount; i++) {
+    const dotX = basePositions[i * 2] + interactionOffsets[i * 2];
+    const dotY = basePositions[i * 2 + 1] + interactionOffsets[i * 2 + 1];
+    const dist = Math.hypot(dotX - localX, dotY - localY);
+
+    if (dist < shockRadius) {
+      const falloff = Math.max(0, 1 - dist / shockRadius);
+      // Apply impulse to velocity instead of position for smooth acceleration
+      const pushX = (dotX - localX) * shockPower * falloff * 0.1;
+      const pushY = (dotY - localY) * shockPower * falloff * 0.1;
+      velocities[i * 2] += pushX;
+      velocities[i * 2 + 1] += pushY;
     }
-  });
+  }
+}
+
+// Spring back animation with physics (velocity + friction)
+function updateSpringBack() {
+  const springStrength = 0.01; // Stiffness (Lower = slower return, e.g. 0.01)
+  const friction = 0.9; // Damping (Higher = more slippery/floaty, e.g. 0.9)
+
+  for (let i = 0; i < dotCount; i++) {
+    const idxX = i * 2;
+    const idxY = i * 2 + 1;
+
+    // Force towards center (0,0) - Hooke's Law: F = -kx
+    const dx = -interactionOffsets[idxX];
+    const dy = -interactionOffsets[idxY];
+
+    // Apply spring force to velocity
+    velocities[idxX] += dx * springStrength;
+    velocities[idxY] += dy * springStrength;
+
+    // Apply friction
+    velocities[idxX] *= friction;
+    velocities[idxY] *= friction;
+
+    // Apply velocity to interaction offset
+    interactionOffsets[idxX] += velocities[idxX];
+    interactionOffsets[idxY] += velocities[idxY];
+  }
+}
+
+function render() {
+  if (!gl || !program || !basePositions) return;
+
+  const canvas = canvasRef.value;
+  if (!canvas) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+
+  // Update physics
+  updateSpringBack();
+
+  // Copy interaction offsets to current positions
+  for (let i = 0; i < dotCount; i++) {
+    currentPositions[i * 2] = interactionOffsets[i * 2];
+    currentPositions[i * 2 + 1] = interactionOffsets[i * 2 + 1];
+  }
+
+  // Clear
+  gl.clearColor(0, 0, 0, 0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  gl.enable(gl.BLEND);
+  gl.blendFuncSeparate(
+    gl.SRC_ALPHA,
+    gl.ONE_MINUS_SRC_ALPHA,
+    gl.ONE,
+    gl.ONE_MINUS_SRC_ALPHA
+  );
+
+  gl.useProgram(program);
+
+  // Set uniforms
+  const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+  gl.uniform2f(resolutionLocation, rect.width, rect.height);
+
+  const pointSizeLocation = gl.getUniformLocation(program, 'u_pointSize');
+  gl.uniform1f(pointSizeLocation, dotSize * dpr);
+
+  const colorLocation = gl.getUniformLocation(program, 'u_color');
+  if (props.mode === 'light') {
+    gl.uniform3f(colorLocation, 0, 0, 0);
+  } else {
+    gl.uniform3f(colorLocation, 1, 1, 1);
+  }
+
+  // Base positions
+  const basePositionLocation = gl.getAttribLocation(program, 'a_basePosition');
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  gl.enableVertexAttribArray(basePositionLocation);
+  gl.vertexAttribPointer(basePositionLocation, 2, gl.FLOAT, false, 0, 0);
+
+  // Offsets (current positions)
+  const offsetLocation = gl.getAttribLocation(program, 'a_offset');
+  gl.bindBuffer(gl.ARRAY_BUFFER, offsetBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, currentPositions, gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(offsetLocation);
+  gl.vertexAttribPointer(offsetLocation, 2, gl.FLOAT, false, 0, 0);
+
+  // Opacity
+  const opacityLocation = gl.getAttribLocation(program, 'a_opacity');
+  gl.bindBuffer(gl.ARRAY_BUFFER, opacityBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, opacities, gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(opacityLocation);
+  gl.vertexAttribPointer(opacityLocation, 1, gl.FLOAT, false, 0, 0);
+
+  // Draw
+  gl.drawArrays(gl.POINTS, 0, dotCount);
+
+  animationFrameId = requestAnimationFrame(render);
+}
+
+function startRenderLoop() {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+  }
+  render();
+}
+
+function stopRenderLoop() {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
 }
 
 function initScrollTrigger() {
-  if (!dotsContainerRef.value) return;
+  if (!canvasRef.value) return;
 
   scrollTriggerInstance = ScrollTrigger.create({
-    trigger: dotsContainerRef.value,
+    trigger: canvasRef.value,
     start: 'top bottom',
     end: 'bottom top',
     onUpdate: () => {
@@ -240,61 +505,55 @@ function cleanupScrollTrigger() {
 }
 
 onMounted(() => {
-  // Initialize lastMousePosition with current pointer position
-  const currentScrollY = scrollSmoother.value
-    ? scrollSmoother.value.scrollTop()
-    : window.scrollY;
-  const currentScrollX = window.scrollX;
-  lastMousePosition.x = eventX.value + currentScrollX;
-  lastMousePosition.y = eventY.value + currentScrollY;
-
-  buildGrid();
-
-  // Initialize ScrollTrigger after a small delay to ensure grid is built
   setTimeout(() => {
-    initScrollTrigger();
+    if (initWebGL()) {
+      buildGrid();
+      initScrollTrigger();
+    }
   }, 100);
 
-  window.addEventListener('resize', buildGrid);
+  window.addEventListener('resize', () => {
+    stopRenderLoop();
+    buildGrid();
+  });
   window.addEventListener('mousemove', handleMouseMove);
   window.addEventListener('click', handleClick);
 });
 
 onUnmounted(() => {
+  stopRenderLoop();
   cleanupScrollTrigger();
   window.removeEventListener('resize', buildGrid);
   window.removeEventListener('mousemove', handleMouseMove);
   window.removeEventListener('click', handleClick);
-});
 
-const talkButtonHoverHandler = () => {
-  playInteractionSound();
-  if (gsap.isTweening(letsTalkButtonRef.value)) return;
-  gsap.to(letsTalkButtonRef.value, {
-    duration: 0.5,
-    ease: 'none',
-    scrambleText: {
-      text: '{original}',
-      chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
-      tweenLength: false,
-    },
-  });
-};
+  // Cleanup WebGL
+  if (gl) {
+    if (positionBuffer) gl.deleteBuffer(positionBuffer);
+    if (offsetBuffer) gl.deleteBuffer(offsetBuffer);
+    if (opacityBuffer) gl.deleteBuffer(opacityBuffer);
+    if (program) gl.deleteProgram(program);
+  }
+});
 </script>
 
 <template>
-  <section class="lets-talk">
+  <section
+    :class="[
+      'lets-talk',
+      mode === 'light' ? 'lets-talk--light' : 'lets-talk--dark',
+    ]"
+  >
     <div class="dots-wrap">
-      <div ref="dotsContainerRef" class="dots-container" />
+      <canvas
+        ref="canvasRef"
+        class="dots-canvas"
+        :style="{ transform: `scale(${scale})` }"
+      />
     </div>
-    <a
-      ref="letsTalkButtonRef"
-      href="/"
-      class="lets-talk__link"
-      @mouseenter="talkButtonHoverHandler"
-      @focus="talkButtonHoverHandler"
-      >let's talk</a
-    >
+    <LinkButton :href="href" :mode="props.mode === 'light' ? 'dark' : 'light'" class="lets-talk__link" size="small" target="_self">
+      {{ text }}
+    </LinkButton>    
   </section>
 </template>
 
@@ -302,79 +561,32 @@ const talkButtonHoverHandler = () => {
 @use '~/assets/styles/mixins' as *;
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/functions' as *;
+
 .lets-talk {
   justify-content: center;
   align-items: center;
-  // aspect-ratio: 1.85;
   display: flex;
   position: relative;
-  &__link {
-    width: 214px;
-    color: currentColor;
+
+  a.lets-talk__link, button.lets-talk__link {
+    // width: 214px;    
     text-decoration: none;
     position: absolute;
-    @include flex-center;
-    height: 64px;
-    color: $color-background;
-    padding: 0 getRem(56);
-    border-radius: 32px;
-    font-family: 'RoobertMono';
-    font-size: 1rem;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 1.68; /* 168.75% */
-    text-transform: uppercase;
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: $color-foreground;
-      border-radius: 48px;
-      z-index: -1;
-      transition: scale 0.3s cubic-bezier(0.33, 1, 0.68, 1);
-    }
-    &:hover {
-      &::before {
-        scale: 0.85;
-      }
-    }
-  }
+    z-index: 0;    
+  }  
 }
 
 .dots-wrap {
   width: 100%;
   aspect-ratio: 1.85;
-  // height: 100%;
   position: relative;
 }
 
-.dots-container {
-  grid-column-gap: 2em;
-  grid-row-gap: 2em;
+.dots-canvas {
   pointer-events: none;
-  flex-flow: wrap;
-  grid-template-rows: auto;
-  grid-template-columns: 1fr;
-  grid-auto-columns: 1fr;
-  justify-content: center;
-  align-items: center;
-  display: flex;
   position: absolute;
-  inset: 0em;
-  font-size: 0.5rem;
-}
-
-:deep(.dot) {
-  will-change: transform, opacity;
-  transform-origin: center;
-  background-color: #ffffff;
-  border-radius: 50%;
-  width: 1em;
-  height: 1em;
-  position: relative;
-  transform: translate3d(0);
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>

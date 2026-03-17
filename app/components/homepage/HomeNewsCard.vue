@@ -1,12 +1,12 @@
 <script setup>
-import { usePointer } from '@vueuse/core';
+import { useDateFormat, usePointer } from '@vueuse/core';
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 
-const { playInteractionSound } = useAudioManager();
+const { playRandomSound } = useAudioManager();
 const { pointerType } = usePointer();
 
-defineProps({
+const props = defineProps({
   title: {
     type: String,
     required: true,
@@ -29,6 +29,12 @@ defineProps({
   },
 });
 
+const formatter = shallowRef('MMM YY');
+const lang = shallowRef('en-US');
+const publishedAt = useDateFormat(props.date, formatter, {
+  locales: lang,
+});
+
 const titleRef = ref(null);
 
 const handleHoverEffect = () => {
@@ -36,15 +42,13 @@ const handleHoverEffect = () => {
   if (gsap.isTweening(titleRef.value) || pointerType.value === 'touch') return;
 
   // Set the width to prevent layout shift
-  const width = titleRef.value.offsetWidth;
+  const width = titleRef.value.offsetWidth -1;
   const height = titleRef.value.offsetHeight;
   gsap.set(titleRef.value, { width, height });
 
-  playInteractionSound();
-
   // Store the original text
   gsap.to(titleRef.value, {
-    duration: 1.5,
+    duration: 0.5,
     ease: 'none',
     scrambleText: {
       text: '{original}',
@@ -59,12 +63,10 @@ const handleHoverEffect = () => {
 };
 
 const onMouseEnterHandler = (e) => {
+  playRandomSound('text-hover');
   handleHoverEffect(e.target);
 };
 
-const onFocusHandler = (e) => {
-  handleHoverEffect(e.target);
-};
 </script>
 
 <template>
@@ -72,14 +74,19 @@ const onFocusHandler = (e) => {
     :to="href"
     class="news-card"
     @mouseenter="onMouseEnterHandler"
-    @focus="onFocusHandler"
+    @mousedown="onMouseDownHandler"    
+    @click="() => playRandomSound('click')"
   >
     <div class="news-card__description">
       <div class="news-card__description_info">
-        <div class="news-card__description_info--category">{{ category }}</div>
-        <div class="news-card__description_info--date">{{ date }}</div>
+        <div class="news-card__description_info--category subheader-small">
+          {{ category }}
+        </div>
+        <div class="news-card__description_info--date subheader-small">
+          {{ publishedAt }}
+        </div>
       </div>
-      <h3 ref="titleRef" class="news-card__description_title">
+      <h3 ref="titleRef" class="news-card__description_title body--mobile">
         {{ title }}
       </h3>
     </div>
@@ -93,12 +100,14 @@ const onFocusHandler = (e) => {
 
 <style scoped lang="scss">
 @use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
 .news-card {
   border-radius: 8px;
-  background: #1b1b1b;
+  background-color: #1b1b1b;
   padding: clamp(0.625rem, 0.833vw, 1rem);
   display: flex;
   gap: 1rem;
+  transition: background-color 0.3s ease;
   @media screen and (max-width: 1400px) {
     padding: 1rem;
   }
@@ -111,13 +120,7 @@ const onFocusHandler = (e) => {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-family: 'RoobertMono';
-      font-size: clamp(0.625rem, 0.64vw, 0.75rem);
-      font-style: normal;
-      font-weight: 500;
-      line-height: 1;
-      text-transform: uppercase;
-      color: white(70);
+      color: white(50);
       padding-left: 14px;
       position: relative;
       white-space: nowrap;
@@ -138,22 +141,25 @@ const onFocusHandler = (e) => {
       }
     }
     &_title {
-      font-size: min(1rem, 0.833vw);
-      font-style: normal;
-      font-weight: 400;
-      line-height: 131%;
+      // font-size: min(1rem, 0.833vw);
+      // font-style: normal;
+      // font-weight: 400;
+      // line-height: 131%;
       margin-top: auto;
       overflow: hidden;
       @media screen and (max-width: 1400px) {
-        font-size: 1rem;
+        // font-size: 1rem;
       }
     }
   }
   &__image {
-    width: 30%;
+    width: 33.515%;
     flex-shrink: 0;
     @media screen and (max-width: 1400px) {
-      width: 115px;
+      width: 120px;
+    }
+    @include respond(mobile) {
+      width: 33%;
     }
     &_wrapper {
       overflow: hidden;
@@ -171,9 +177,10 @@ const onFocusHandler = (e) => {
     }
   }
   &:hover {
-    .news-card__image img {
-      transform: scale(1.25);
-    }
+    // .news-card__image img {
+    //   transform: scale(1.25);
+    // }
+    background-color: white(20);
     .news-card__description_info::before {
       animation: flicker-effect-5 0.5s forwards;
     }

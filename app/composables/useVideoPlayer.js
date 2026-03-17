@@ -5,17 +5,19 @@ import { ref } from 'vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { enableScroll } = useScrollSmoother();
+const { playInteractionSound } = useAudioManager();
 
 const currentPreview = ref(null);
 const videoPlayerModalRef = ref(null);
 const videoElementRef = ref(null);
-const PLAYBACK_ID = ref('n9m52aLXTjJ9bPUp7fGCWtD7fDBJflXuv7o8wvlaOIA');
+const PLAYBACK_ID = ref('DGN9W75V8nDh4aERGzkYEbj4VOptDviiaNfPY6gA6Is');
 const isOpen = ref(false);
 const isPlaying = ref(false);
 const isMuted = ref(false);
 const currentTime = ref(0);
 const duration = ref(0);
 const progress = ref(0);
+const previewVideoData = ref(null);
 
 export default function () {
   const onPlayerOpen = async (previewId) => {
@@ -122,6 +124,7 @@ export default function () {
         isPlaying.value = true;
         videoPlayer.currentTime = 0;
         videoPlayer.play();
+        gsap.set('#header-navigation-button', { mixBlendMode: 'normal' });
       }, '<')
       .fromTo(
         playerButtons,
@@ -195,6 +198,7 @@ export default function () {
     videoPlayer.pause();
     isPlaying.value = false;
     isOpen.value = false;
+    gsap.set('#header-navigation-button', { clearProps: 'mix-blend-mode' });
 
     gsap
       .timeline({ id: 'close-video-modal-timeline' })
@@ -285,6 +289,7 @@ export default function () {
   };
 
   const playHandler = () => {
+    playInteractionSound('click-1');
     isPlaying.value = !isPlaying.value;
   };
 
@@ -337,5 +342,6 @@ export default function () {
     playHandler,
     formatTime,
     setupVideoListeners,
+    previewVideoData,
   };
 }

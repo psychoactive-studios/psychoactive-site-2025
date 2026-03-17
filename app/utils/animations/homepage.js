@@ -433,7 +433,7 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
     )
     // The '-=1' offset ensures heroScrollAnimation and scrollSmoother resume 1 second before the timeline ends for a smoother transition.
     .add(() => {
-      scrollSmoother.value.paused(false);
+      scrollSmoother.value.start();
     }, '-=1');
   // });
 };
@@ -492,11 +492,15 @@ export const heroInitAnimationMobile = (ctx, scrollSmoother) => {
         },
         '<'
       )
-      .from(
+      .fromTo(
         document.querySelector('.navigation-mobile'),
         {
           y: 64,
           opacity: 0,
+        },
+        {
+          y: 0,
+          opacity: 1,
           duration: 1,
           ease: 'power3.out',
         },
@@ -504,7 +508,7 @@ export const heroInitAnimationMobile = (ctx, scrollSmoother) => {
       )
       .add(() => {
         stopLoading();
-        scrollSmoother.value.paused(false);
+        scrollSmoother.value.start();
       });
   });
 };
@@ -531,8 +535,8 @@ const getDotsPercent = () => {
 };
 
 const outputTime = 1.3;
-export const heroScrollAnimation = (ctx) => {
-  let matchMedia = gsap.matchMedia();
+export const heroScrollAnimation = (ctx, isPlaying) => {
+  const matchMedia = gsap.matchMedia();
   ctx.add(() => {
     matchMedia.add(
       {
@@ -551,10 +555,18 @@ export const heroScrollAnimation = (ctx) => {
                 id: 'homepage-hero-scrolltrigger',
                 trigger: '.hero__intro',
                 pin: true, // pin the trigger element while active
+                pinType: 'transform',
                 start: 'top top', // when the top of the trigger hits the top of the viewport
                 end: 'bottom top', // end after scrolling 500px beyond the start
                 scrub: 0.5, // smooth scrubbing, takes 1 second to "catch up" to the scrollbar
                 invalidateOnRefresh: true,
+                onUpdate: (self) => {
+                  if (self.progress > 0.45) {
+                    isPlaying.value = false;
+                  } else {
+                    isPlaying.value = true;
+                  }
+                },
                 // markers: true,
               },
             })
@@ -617,7 +629,8 @@ export const heroScrollAnimation = (ctx) => {
                 duration: 0.01,
               },
               'output-of-elements+=0.15'
-            ) /* ======= Dots arrow part ========= */
+            )
+            /* ======= Dots arrow part ========= */
             .fromTo(
               gsap.utils.toArray([dotsArrowIcon, dotsArrowPlusIcons]),
               { autoAlpha: 1 },
@@ -629,6 +642,7 @@ export const heroScrollAnimation = (ctx) => {
               },
               'output-of-elements'
             )
+            .set(dotsArrowBox, { visibility: 'hidden' })
             /* ======= Canvas part ========= */
             .fromTo(
               canvas,
@@ -802,5 +816,6 @@ export const heroScrollAnimation = (ctx) => {
         }
       }
     );
+    return () => matchMedia.revert();
   });
 };

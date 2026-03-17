@@ -1,7 +1,7 @@
 <script setup>
 import PlusIcon from '~/assets/icons/icon-plus.svg';
 import PlayIcon from '~/assets/icons/icon-play.svg';
-
+import useAudioManager from '~/composables/useAudioManager';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 import { SplitText } from 'gsap/SplitText';
 
@@ -37,6 +37,7 @@ const props = defineProps({
 });
 
 const playerContainerRef = ref(null);
+const { playInteractionSound } = useAudioManager();
 
 onMounted(() => {
   SplitText.create(
@@ -71,6 +72,16 @@ const currentAspectRatio = computed(() => {
 const uniqueId = `player-preview-${useId()}`;
 
 const { currentPreview, onPlayerOpen } = useVideoPlayer();
+
+const handleVideoClick = () => {
+  playInteractionSound('click-1');
+  playInteractionSound('showreel-open-1', 100);
+  if (props.customHandler) {
+    props.customHandler(uniqueId);
+  } else {
+    onPlayerOpen(uniqueId);
+  }
+};
 </script>
 <template>
   <div class="player">
@@ -107,20 +118,19 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
           <div class="player__preview_controls">
             <PlusIcon class="plus" />
             <PlusIcon class="plus" />
-            <div class="play-reel-text">PLAY REEL</div>
+            <div class="play-reel-text subheader--mobile">PLAY REEL</div>
             <button
               :class="[
                 'play-button',
                 { 'play-button--transparent': transparentButton },
               ]"
               aria-label="Play video"
-              @click="
-                customHandler ? customHandler(uniqueId) : onPlayerOpen(uniqueId)
-              "
+              @click="handleVideoClick"
+              @mouseenter="playInteractionSound('play-hover-menu', 200)"
             >
               <PlayIcon />
             </button>
-            <div class="play-time-text">00:47 sec</div>
+            <div class="play-time-text subheader--mobile">00:47 sec</div>
             <PlusIcon class="plus" />
             <PlusIcon class="plus" />
           </div>
@@ -363,8 +373,8 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
       position: absolute;
       inset: 50% 0 auto 0;
       transform: translateY(-50%);
-      font-family: 'RoobertMono', sans-serif;
-      text-transform: uppercase;
+      // font-family: 'RoobertMono', sans-serif;
+      // text-transform: uppercase;
       .play-reel-text,
       .play-time-text {
         color: white(80);
@@ -381,6 +391,7 @@ const { currentPreview, onPlayerOpen } = useVideoPlayer();
         border: 1px solid white(20);
         position: relative;
         overflow: hidden;
+        pointer-events: all;
         @include respond(mobile) {
           width: 70px;
           height: 36px;

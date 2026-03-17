@@ -22,7 +22,6 @@ export default function useLoader() {
     isLoading.value = true;
     await nextTick();
     const loaderElement = document.querySelector('#loader-logo');
-    console.log('startLoading', loaderElement);
 
     gsap.fromTo(
       loaderElement,
@@ -37,6 +36,12 @@ export default function useLoader() {
 
   function stopLoading() {
     isLoading.value = false;
+
+    if (isFirstLoad.value) {
+      setTimeout(() => {
+        isFirstLoad.value = false;
+      }, 100);
+    }
   }
 
   // watch(loadedResources, (val) => {

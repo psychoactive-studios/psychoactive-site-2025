@@ -1,7 +1,7 @@
 <script setup>
 import Circle from '../ui/Circle.vue';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
-import HomeHero3DScene from '../ui/HomeHero3DScene.vue';
+import ServicesHero3DScene from '../ui/ServicesHero3DScene.vue';
 import gsap from 'gsap';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 import useLoader from '~/composables/useLoader';
@@ -15,14 +15,16 @@ import VideoPreview from '../ui/VideoPreview.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useAudioManager from '~/composables/useAudioManager';
-import WebflowLabel from '../ui/WebflowLabel.vue';
+import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
-const { onPlayerOpen } = useVideoPlayer();
-const { playInteractionSound } = useAudioManager();
+const { onPlayerOpen, previewVideoData } = useVideoPlayer();
+const { playInteractionSound, isSoundApproved, hasInteracted } =
+  useAudioManager();
 const { isLoading } = useLoader();
 
 const container = ref(null);
+const isPlaying = ref(true);
 let ctx;
 
 onMounted(() => {
@@ -30,7 +32,7 @@ onMounted(() => {
     ctx = gsap.context(() => {}, container.value);
 
     heroInitSplitText();
-    heroScrollAnimation(ctx);
+    heroScrollAnimation(ctx, isPlaying);
 
     // heroInitAnimation(ctx, scrollSmoother);
   }
@@ -43,6 +45,8 @@ onUnmounted(() => {
 watch(isLoading, (newVal) => {
   if (!newVal) {
     heroInitAnimation(ctx, scrollSmoother);
+    if (isSoundApproved.value && hasInteracted.value)
+      playInteractionSound('home-load');
   }
 });
 
@@ -62,7 +66,11 @@ const onPlayVideoHandler = (playerContainerRef) => {
       onPlayerOpen(playerContainerRef);
     })
     .add(() => {
-      scrollSmoother.value.scrollTop(y);
+      scrollSmoother.value.scrollTo(y, {
+        immediate: true,
+        lock: true,
+        force: true,
+      });
     }, '+=2');
 
   //
@@ -82,18 +90,24 @@ const onPlayVideoHandler = (playerContainerRef) => {
   //   .add(() => onPlayerOpen(playerContainerRef));
 };
 
-const onScrollDownHandler = () => {
+const onScrollDownHandler = (e) => {
+  playInteractionSound('click-1');
+  playInteractionSound('menu-close', 100);
   // Get ScrollTrigger by ID
   const trigger = ScrollTrigger.getById('homepage-hero-scrolltrigger');
   if (!scrollSmoother.value || !trigger) return;
   // Check if scrollSmoother and trigger exist
   const y = trigger?.end;
+  gsap
+    .timeline()
+    .set(e.currentTarget, { pointerEvents: 'none' })
+    .set(e.currentTarget, { clearProps: 'pointerEvents' }, '+=1.5');
 
-  // Smoothly scroll to the target position
-  gsap.to(scrollSmoother.value, {
-    scrollTop: y,
-    duration: 1.25,
-    ease: 'power3.inOut',
+  scrollSmoother.value.scrollTo(y, {
+    duration: 1.5,
+    force: true,
+    easing: (x) =>
+      x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2,
   });
 };
 </script>
@@ -102,12 +116,19 @@ const onScrollDownHandler = () => {
   <div ref="container" class="hero">
     <div class="hero__intro">
       <section class="hero__intro_wrapper">
+        <div class="homehero-3d-scene--wrapper">
+          <ServicesHero3DScene
+            :is-playing="isPlaying"
+            class="homehero-3d-scene"
+          />
+          <!-- <HomeHero3DScene class="homehero-3d-scene" /> -->
+        </div>
         <div class="scene">
           <div class="circle--wrapper">
             <Circle class="circle" />
           </div>
           <div class="psychoactive">
-            <div class="psychoactive__text">psychoactive®</div>
+            <div class="psychoactive__text subheader">psychoactive®</div>
             <div class="psychoactive__horizontal">
               <PlusIcon class="psychoactive__icon" />
             </div>
@@ -116,41 +137,44 @@ const onScrollDownHandler = () => {
             </div>
           </div>
           <div class="top-text">
+            <div class="top-text__agency subheader">
+              Digital-First design agency
+            </div>
+            <div class="top-text__innovation display-large grey-text">
+              innovate
+            </div>
             <a
               href="https://webflow.com/@Psychoactive-Studios"
               target="_blank"
-              @mouseenter="playInteractionSound"
-              @focus="playInteractionSound"
+              @mouseenter="() => playInteractionSound('text-hover-short', 100)"
+              @click="() => playInteractionSound('click-1')"
             >
-              <WebflowLabel class="top-text__label" />
-              <!-- <img
-                class="top-text__label"
-                src="/img/Webflow_label.svg"
-                alt=""
-              /> -->
+              <!-- <WebflowLabel class="top-text__label" /> -->
+              <WebflowBlackLabel class="top-text__label" />
             </a>
-            <div class="top-text__agency">Digital First design agency</div>
-            <div class="top-text__innovation grey-text">Innovate</div>
           </div>
           <div class="center">
             <div class="center__line" />
             <div class="center__part center__part--left">
               <div class="center__part_dot" />
-              <div class="center__text">-41.2925°</div>
+              <div class="center__text subheader-small">-41.2925°</div>
             </div>
             <div class="center__part center__part--right">
               <div class="center__part_dot" />
-              <div class="center__text">174.7783°</div>
+              <div class="center__text subheader-small">174.7783°</div>
             </div>
-            <div class="center__text center__text--play">PLAY REEL</div>
-            <div class="center__text center__text--time">01:16 SEC</div>
+            <div class="center__text center__text--play subheader-small">
+              PLAY REEL
+            </div>
+            <div class="center__text center__text--time subheader-small">
+              01:16 SEC
+            </div>
           </div>
           <button
             class="dots-arrow"
             aria-label="Scroll down"
             @click="onScrollDownHandler"
-            @mouseenter="playInteractionSound"
-            @focus="playInteractionSound"
+            @mouseenter="() => playInteractionSound('scroll-btn-hover', 100)"
           >
             <div class="dots-arrow__icon">
               <span class="dots-arrow__icon_dot dots-arrow__icon_dot--1" />
@@ -166,21 +190,21 @@ const onScrollDownHandler = () => {
             <PlusIcon class="dots-arrow__plus dots-arrow__plus--br" />
           </button>
 
-          <div class="homehero-3d-scene--wrapper">
-            <HomeHero3DScene class="homehero-3d-scene" />
-          </div>
-
           <VideoPreview
             class="video-player homehero-prepared"
-            preview="/video/preview_reel.mp4"
+            :preview="previewVideoData || '/video/preview_reel.mp4'"
             src="https://vjs.zencdn.net/v/oceans.mp4"
             transparent-button
             :custom-handler="onPlayVideoHandler"
             aspect-ratio="2.22"
+            @mouseenter="playInteractionSound('showreel-hover-3', 200)"
+            @focus="playInteractionSound('showreel-hover-3', 200)"
           />
           <div class="bottom-text">
-            <div class="bottom-text__imagine grey-text">Imagine</div>
-            <div class="bottom-text__scale">
+            <div class="bottom-text__imagine display-large grey-text">
+              Imagine
+            </div>
+            <div class="bottom-text__scale display-3xl">
               scale
               <div class="bottom-text__scale-arrows">
                 <span>&larr;</span><span>&rarr;</span>
@@ -209,13 +233,14 @@ const onScrollDownHandler = () => {
     display: none;
   }
   &__intro {
-    height: 100dvh;
+    height: 100svh;
     display: flex;
     flex-direction: column;
     padding: 0;
     // padding: 0 0 48px 0;
     &_wrapper {
       flex-grow: 1;
+      position: relative;
       @include flex-center;
       // padding-left: clamp(88px, 8vw, 160px);
       // padding-right: clamp(88px, 8vw, 160px);
@@ -231,11 +256,34 @@ const onScrollDownHandler = () => {
         padding-top: 27px;
         padding-bottom: 24px;
       }
+      .homehero-3d-scene--wrapper {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        @include respond(portrait) {
+          height: auto;
+          aspect-ratio: 1;
+        }
+        @include respond(mobile) {
+          display: none;
+        }
+        .homehero-3d-scene {
+          width: 100%;
+          height: 100%;
+          will-change: transform;
+        }
+      }
       .scene {
         aspect-ratio: 2;
         width: 100%;
         position: relative;
+        z-index: 1;
         will-change: transform;
+        pointer-events: none;
         @include respond(portrait) {
           aspect-ratio: auto;
           height: 100%;
@@ -251,12 +299,7 @@ const onScrollDownHandler = () => {
           z-index: 2;
           top: 0;
           left: 0;
-          font-family: 'RoobertMono', sans-serif;
           color: white(50);
-          font-size: clamp(16px, 0.938vw, 18px);
-          font-style: normal;
-          line-height: 1;
-          text-transform: uppercase;
           padding: 0 48px 48px 0;
           @include respond(mobile) {
             right: 0;
@@ -300,11 +343,6 @@ const onScrollDownHandler = () => {
         }
         .grey-text {
           color: $color-grey;
-          font-size: clamp(48px, 4.79vw, 92px);
-          font-style: normal;
-          font-weight: 400;
-          line-height: 88%;
-          letter-spacing: -0.2874vw;
           will-change: transform;
           @include respond(mobile) {
             font-size: clamp(36px, 9.6vw, 48px);
@@ -335,26 +373,23 @@ const onScrollDownHandler = () => {
           @include respond(mobile) {
             position: static;
           }
-          &__label {
-            width: auto;
-            height: clamp(36px, 2.5vw, 48px);
-            margin-left: auto;
-          }
           &__agency {
-            font-family: 'RoobertMono', sans-serif;
-            color: white(80);
-            font-size: clamp(14px, 0.938vw, 18px);
-            font-style: normal;
-            line-height: 1;
             text-transform: uppercase;
-            margin: 1.25vw 0 1.667vw 0;
+            opacity: 0.5;
             @include respond(mobile) {
               font-size: 14px;
               margin: 20px 0 16px 0;
             }
           }
           &__innovation {
-            line-height: 65%;
+            margin-bottom: 24px;
+          }
+          &__label {
+            width: auto;
+            // height: clamp(36px, 2.5vw, 48px);
+            height: 48px;
+            margin-left: auto;
+            pointer-events: all;
           }
         }
         .bottom-text {
@@ -371,11 +406,7 @@ const onScrollDownHandler = () => {
           }
           &__scale {
             color: $color-foreground;
-            font-size: clamp(128px, 12.6vw, 242px);
-            font-style: normal;
-            font-weight: 400;
             line-height: 77%;
-            letter-spacing: -0.756vw;
             @include respond(mobile) {
               font-size: clamp(84px, 22vw, 112px);
             }
@@ -448,11 +479,7 @@ const onScrollDownHandler = () => {
 
           &__text {
             color: white(80);
-            font-family: 'RoobertMono', sans-serif;
-            font-size: 12px;
-            font-style: normal;
             line-height: 1;
-            text-transform: uppercase;
             opacity: 0.5;
             position: absolute;
             @include respond(portrait) {
@@ -482,6 +509,7 @@ const onScrollDownHandler = () => {
           height: 62px;
           @include flex-center;
           visibility: hidden;
+          pointer-events: all;
           @include respond(mobile) {
             display: none;
           }
@@ -570,27 +598,6 @@ const onScrollDownHandler = () => {
             top: 0 !important;
             left: 0;
             transform: none;
-          }
-        }
-        .homehero-3d-scene--wrapper {
-          position: absolute;
-          z-index: 1;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 100%;
-          height: 100%;
-          @include respond(portrait) {
-            height: auto;
-            aspect-ratio: 1;
-          }
-          @include respond(mobile) {
-            display: none;
-          }
-          .homehero-3d-scene {
-            width: 100%;
-            height: 100%;
-            will-change: transform;
           }
         }
       }

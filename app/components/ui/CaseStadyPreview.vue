@@ -1,27 +1,23 @@
 <script setup>
 import BulgeImage from '@/components/ui/BulgeImage.vue';
 import useAudioManager from '~/composables/useAudioManager';
+import useHeader from '~/composables/useHeader';
 import gsap from 'gsap';
 
-const { playInteractionSound } = useAudioManager();
-
+const { playInteractionSound, playRandomSound } = useAudioManager();
+const { mode } = useHeader();
+const containerRef = ref(null);
 const titleRef = ref(null);
+const imageRef = ref(null);
 
-defineProps({
-  src: {
-    type: String,
+const props = defineProps({
+  data: {
+    type: Object,
     required: true,
-  },
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: false,
-    default: '',
   },
 });
+
+const { mainImage, slug, mainTitle, hero } = props?.data || {};
 
 const handleMouseEnter = () => {
   // Stop any ongoing animations on this element
@@ -31,7 +27,7 @@ const handleMouseEnter = () => {
   const width = titleRef.value.offsetWidth;
   gsap.set(titleRef.value, { width });
 
-  playInteractionSound();
+  playRandomSound('text-hover');
 
   // Store the original text
   gsap.to(titleRef.value, {
@@ -48,17 +44,40 @@ const handleMouseEnter = () => {
     },
   });
 };
+
+const handleClick = () => {
+  playRandomSound('click');
+  playInteractionSound('menu-close', 150);
+  if (imageRef.value && imageRef.value.handleClick) {
+    gsap.set(containerRef.value, { zIndex: 2 });
+    imageRef.value.handleClick(`/work/${slug}`);
+  }
+  mode.value = 'light';
+};
 </script>
 
 <template>
-  <div class="case-study-preview" @mouseenter="handleMouseEnter">
+  <div
+    ref="containerRef"
+    class="case-study-preview"
+    @mouseenter="handleMouseEnter"
+    @click="handleClick"
+  >
     <div ref="mediaElement" class="case-study-preview__media">
-      <BulgeImage :src="src" />
+      <!-- <img :src="mainImage?.url" alt="" /> -->
+      <BulgeImage ref="imageRef" :src="mainImage?.url" />
     </div>
     <div class="case-study-preview__content">
       <div class="case-study-preview__title">
-        <h3 ref="titleRef">{{ title }}</h3>
-        <p>{{ description }}</p>
+        <div class="case-study-preview__title-wapper">
+          <div class="case-study-preview__title-text">{{ mainTitle }}</div>
+          <h3 ref="titleRef" class="body-large--mobile">
+            <NuxtLink :to="`/work/${slug}`" @click.prevent.stop="handleClick">{{
+              mainTitle
+            }}</NuxtLink>
+          </h3>
+        </div>
+        <p class="subheader--mobile">{{ hero?.subTitle }}</p>
       </div>
       <div class="case-study-preview__dots">
         <span />
@@ -78,12 +97,12 @@ const handleMouseEnter = () => {
   position: relative;
   cursor: pointer;
 
-  &__media {
-    overflow: hidden;
-    border-radius: 10px;
-    aspect-ratio: 1.85;
+  &__media {    
+    backface-visibility: hidden;
+    aspect-ratio: 1.95;
     @include respond(mobile) {
-      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 2;
     }
   }
 
@@ -109,22 +128,22 @@ const handleMouseEnter = () => {
   &__title {
     color: $color-foreground;
     margin-top: getRem(-7);
-    h3 {
-      font-size: getRem(20);
-      line-height: 1.4;
-      font-weight: 400;
+    flex-grow: 1;
+    &-wapper {
+      position: relative;
+      h3 {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+    }
+    &-text {
+      visibility: hidden;
     }
     p {
-      font-family: 'RoobertMono';
-      font-size: getRem(16);
-      font-weight: 500;
-      line-height: 1.5;
-      text-transform: uppercase;
+      margin-top: getRem(8);
       opacity: 0.5;
       mix-blend-mode: difference;
-      @include respond(mobile) {
-        font-size: getRem(14);
-      }
     }
   }
 

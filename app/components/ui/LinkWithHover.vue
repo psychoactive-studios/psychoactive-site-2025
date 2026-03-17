@@ -2,9 +2,9 @@
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, playRandomSound } = useAudioManager();
 
-defineProps({
+const props = defineProps({
   href: {
     type: String,
     default: null,
@@ -18,8 +18,6 @@ const handleHoverEffect = (el) => {
   // Set the width to prevent layout shift
   const width = el.offsetWidth;
   gsap.set(el, { width });
-
-  playInteractionSound();
 
   // Store the original text
   gsap.to(el, {
@@ -38,22 +36,31 @@ const handleHoverEffect = (el) => {
 };
 
 const onMouseEnterHandler = (e) => {
+  if (gsap.isTweening(e.target)) return;
+  if (props.href && props.href.includes('hello@psychoactive.co.nz')) {
+    playInteractionSound('scroll-btn-hover');
+  } else {
+    playRandomSound('text-hover');
+  }
   handleHoverEffect(e.target);
 };
 
-const onFocusHandler = (e) => {
-  handleHoverEffect(e.target);
-};
+// const onFocusHandler = (e) => {
+//   handleHoverEffect(e.target);
+// };
 </script>
 <template>
   <NuxtLink
+    v-if="href"
     :to="href"
     class="link-with-hover"
     @mouseenter="onMouseEnterHandler"
-    @focus="onFocusHandler"
   >
     <slot />
   </NuxtLink>
+  <span v-else class="link-with-hover" @mouseenter="onMouseEnterHandler">
+    <slot />
+  </span>
 </template>
 
 <style lang="scss" scoped>

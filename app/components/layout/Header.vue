@@ -9,38 +9,74 @@ import useHomeVideoPlayerMobile from '~/composables/useHomeVideoPlayerMobile';
 import MainAnimatedLogo from '../ui/MainAnimatedLogo.vue';
 import NavigationMobile from './NavigationMobile.vue';
 import { useMediaQuery } from '@vueuse/core';
+import useHeader from '~/composables/useHeader';
+import gsap from 'gsap';
 
 const mainLogoRef = ref(null);
-const { isOpen } = useNavigation();
-const { playInteractionSound, isMuted } = useAudioManager();
+const { mode } = useHeader();
+const { isOpen, transitionFromNavigation, showLayoutElementsRequired } =
+  useNavigation();
+const {
+  playInteractionSound,
+  playContinuousSound,
+  stopContinuousSound,
+  isMuted,
+} = useAudioManager();
 const { clickVideoCloseHandler } = useHomeVideoPlayerMobile();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
+const isReady = ref(false);
+
+onMounted(() => {
+  isReady.value = true;
+});
 
 const onSoundChangeHandler = () => {
   isMuted.value = !isMuted.value;
+};
+
+const onLogoClickHandler = (e) => {
+  const isHomePage = e.currentTarget.classList.contains(
+    'router-link-exact-active'
+  );
+  if (!isOpen.value && !isHomePage) {
+    playInteractionSound('click-3');
+    playInteractionSound('menu-close', 250);
+  }
+  const isAnimating = gsap.getById('open-timeline-main')?.isActive();
+  if (isAnimating) {
+    e.preventDefault();
+    return;
+  }
+  if (isOpen.value) {
+    transitionFromNavigation.value = true;
+    document.querySelector('#header-navigation-button').click();
+  }
 };
 
 const onLogoHoverHandler = (e) => {
   if (mainLogoRef.value && e.type === 'mouseenter') {
     mainLogoRef.value.animationInstance.loop = true;
     mainLogoRef.value.animationInstance.play();
+    playContinuousSound('logo-hover');
   }
   if (mainLogoRef.value && e.type === 'mouseleave') {
     mainLogoRef.value.animationInstance.loop = false;
+    stopContinuousSound();
   }
 };
 </script>
 
 <template>
-  <header class="header">
+  <header
+    :class="['header', { 'required-elements': showLayoutElementsRequired }]"
+  >
     <NuxtLink
       to="/"
-      :class="['logo', { dark: isOpen }]"
+      :class="['logo', `logo--${mode}`]"
       aria-label="Go to homepage"
       aria-describedby="main-logo"
-      @mouseenter="playInteractionSound"
-      @focus="playInteractionSound"
+      @click.capture="onLogoClickHandler"
     >
       <MainAnimatedLogo
         id="header-logo"
@@ -52,12 +88,12 @@ const onLogoHoverHandler = (e) => {
     </NuxtLink>
     <HeaderNavigationButton />
     <SoundButton
+      v-if="isReady && !isMobile"
       id="header-sound-button"
-      :class="['header__sound-button', { dark: isOpen }]"
+      :class="['header__sound-button', `header__sound-button--${mode}`]"
       :muted="isMuted"
       @click="onSoundChangeHandler"
-      @mouseenter="playInteractionSound"
-      @focus="playInteractionSound"
+      @mouseenter="() => playInteractionSound('btn-hover-simple', 200)"
     />
     <ClientOnly>
       <Navigation v-if="!isMobile" />
@@ -88,12 +124,20 @@ const onLogoHoverHandler = (e) => {
     left: 48px;
     z-index: 100;
     & * {
-      transition: fill 0.3s ease;
-      transition-delay: 0.3s;
+      transition: fill $transition-easeOutCubic;
+      // transition-delay: 0.3s;
     }
-    &.dark {
+    &--mixed {
+      mix-blend-mode: exclusion;
+    }
+    &--dark {
       & * {
         fill: $color-background;
+      }
+    }
+    &--light {
+      & * {
+        fill: $color-foreground;
       }
     }
     .nuxt-icon {
@@ -108,30 +152,18 @@ const onLogoHoverHandler = (e) => {
     }
   }
   &__sound-button {
-    position: fixed;
+    position: fixed !important;
     top: 110px;
     right: 48px;
     z-index: 100;
-    &::after {
-      transition: background-color 0.3s ease;
-      transition-delay: 0.3s;
+    &--mixed {
+      mix-blend-mode: exclusion;
     }
     :deep(span) {
       &::before,
       &::after {
         transition: border-color 0.3s ease;
-        transition-delay: 0.3s;
-      }
-    }
-    &.dark {
-      &::after {
-        background-color: $color-background;
-      }
-      :deep(span) {
-        &::before,
-        &::after {
-          border-color: $color-background;
-        }
+        // transition-delay: 0.3s;
       }
     }
     @include respond(portrait) {
@@ -139,6 +171,22 @@ const onLogoHoverHandler = (e) => {
     }
     @include respond(mobile) {
       display: none;
+    }
+  }
+  // &.mix-mode {
+  //   .logo,
+  //   #header-navigation-button,
+  //   #header-sound-button {
+  //     mix-blend-mode: exclusion !important;
+  //   }
+  // }
+  &.required-elements {
+    #header-logo,
+    #header-navigation-button,
+    #header-sound-button {
+      transform: scale(1) !important;
+      scale: 1 !important;
+      opacity: 1 !important;
     }
   }
 }

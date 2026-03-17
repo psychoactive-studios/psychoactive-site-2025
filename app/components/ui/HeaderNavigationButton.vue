@@ -3,12 +3,14 @@ import gsap from 'gsap';
 import useNavigation from '~/composables/useNavigation';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 import useAudioManager from '~/composables/useAudioManager';
+import useHeader from '~/composables/useHeader';
 import { useMediaQuery } from '@vueuse/core';
 
 const buttonRef = ref(null);
 const { isOpen: isNavOpen, openNavigation, closeNavigation } = useNavigation();
 const { isOpen: isVideoOpen, onPlayerClose } = useVideoPlayer();
 const { playInteractionSound } = useAudioManager();
+const { mode } = useHeader();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -192,6 +194,7 @@ watch(isVideoOpen, (newVal) => {
 });
 
 const onClickHandler = () => {
+  playInteractionSound('click-1');
   // Prevent multiple clicks during animation
   const isAnimating =
     gsap.getById('open-timeline-main')?.isActive() ||
@@ -202,6 +205,7 @@ const onClickHandler = () => {
 
   if (isVideoOpen.value) {
     onPlayerClose();
+    playInteractionSound('menu-close', 100);
     return;
   }
 
@@ -209,18 +213,21 @@ const onClickHandler = () => {
   if (isNavOpen.value) {
     transitionTimelineOut.restart();
     closeNavigation();
+    playInteractionSound('menu-close', 100);
   } else {
     transitionTimelineIn.restart();
     openNavigation();
+    playInteractionSound('menu-open', 100);
   }
 };
 
 const onMouseEnterHandler = () => {
-  playInteractionSound();
   if (isNavOpen.value || isVideoOpen.value) {
     hoverTimelineCloseIn.restart();
+    playInteractionSound('menu-hover-close', 250);
   } else {
     hoverTimelineIn.restart();
+    playInteractionSound('menu-hover-1', 250);
   }
 };
 
@@ -236,7 +243,10 @@ const onMouseLeaveHandler = () => {
   <button
     id="header-navigation-button"
     ref="buttonRef"
-    :class="['header__navigation-button', { dark: isNavOpen && !isVideoOpen }]"
+    :class="[
+      'header__navigation-button',
+      mode && `header__navigation-button--${mode}`,
+    ]"
     @click="onClickHandler"
     @mouseenter="onMouseEnterHandler"
     @mouseleave="onMouseLeaveHandler"
@@ -271,16 +281,7 @@ $flicker-ease: ease;
   gap: 4px;
   z-index: 102;
   transition: color 0.3s ease;
-  transition-delay: 0.3s;
-  &.dark {
-    color: $color-foreground;
-    &::before {
-      background-color: $color-background;
-    }
-    .line {
-      background-color: white(50);
-    }
-  }
+  // transition-delay: 0.3s;
   &::before {
     content: '';
     position: absolute;
@@ -289,7 +290,12 @@ $flicker-ease: ease;
     background-color: $color-foreground;
     transition: opacity 0.3s ease;
     z-index: 0;
-    transition: scale 0.3s ease-in-out, background-color 0.3s ease 0.3s;
+    transition:
+      scale 0.3s ease-in-out,
+      background-color 0.3s ease;
+  }
+  &--mixed {
+    mix-blend-mode: exclusion;
   }
   .dot {
     width: 6px;
@@ -331,6 +337,15 @@ $flicker-ease: ease;
   &:hover {
     &::before {
       scale: 0.85;
+    }
+  }
+  &--dark {
+    color: $color-foreground;
+    &::before {
+      background-color: $color-background;
+    }
+    .line {
+      background-color: white(50);
     }
   }
   @include respond(portrait) {

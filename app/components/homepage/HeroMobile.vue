@@ -24,11 +24,6 @@ onMounted(async () => {
     heroInitAnimationMobile(ctx, scrollSmoother);
     initializeElements(containerRef.value);
   }
-  nextTick(() => {
-    if (scrollSmoother.value) {
-      scrollSmoother.value.effects('[data-speed]', {});
-    }
-  });
 
   // Initialize Video.js with Mux
   if (import.meta.client && mainVideoRef.value) {
@@ -41,7 +36,7 @@ onMounted(async () => {
     });
 
     player.value.src({
-      src: 'n9m52aLXTjJ9bPUp7fGCWtD7fDBJflXuv7o8wvlaOIA',
+      src: 'DGN9W75V8nDh4aERGzkYEbj4VOptDviiaNfPY6gA6Is',
       type: 'video/mux',
     });
   }

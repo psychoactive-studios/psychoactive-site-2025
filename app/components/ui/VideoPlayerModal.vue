@@ -20,6 +20,8 @@ const {
   setupVideoListeners,
 } = useVideoPlayer();
 
+const { playInteractionSound } = useAudioManager();
+
 const formattedTime = computed(() => {
   const time = formatTime(currentTime.value);
   return {
@@ -29,6 +31,7 @@ const formattedTime = computed(() => {
 });
 
 const soundHandler = () => {
+  playInteractionSound('click-2');
   isMuted.value = !isMuted.value;
 };
 
@@ -59,9 +62,13 @@ onMounted(async () => {
     if (videoElementRef.value) {
       player = videojs(videoElementRef.value, {
         controls: false,
-        responsive: true,
-        fluid: true,
+        // responsive: true,
+        // fluid: true,
         preload: 'auto',
+      });
+
+      player.ready(() => {
+        player.volume(0.4); // showreel volume adjuster
       });
 
       // const qualityLevels = player.qualityLevels();
@@ -132,11 +139,17 @@ const handleCliclProgressBar = (event) => {
           <button
             :class="['control-button', isPlaying ? 'played' : 'paused']"
             @click="playHandler"
+            @mouseenter="playInteractionSound('btn-hover-down', 200)"
           >
             <PlayIcon class="icon-play" />
             <PauseIcon class="icon-pause" />
           </button>
-          <SoundButton mode="filled" :muted="isMuted" @click="soundHandler" />
+          <SoundButton
+            mode="filled"
+            :muted="isMuted"
+            @click="soundHandler"
+            @mouseenter="() => playInteractionSound('btn-hover-simple', 200)"
+          />
           <div class="play-time-text">
             <div class="char-center">{{ formattedTime.minutes[0] }}</div>
             <div class="char-center">{{ formattedTime.minutes[1] }}</div>
@@ -180,7 +193,7 @@ const handleCliclProgressBar = (event) => {
 
   .player__main_video {
     width: 100%;
-    // height: 100%;
+    height: 100%;
     object-fit: cover;
   }
 

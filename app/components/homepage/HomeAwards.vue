@@ -5,11 +5,12 @@ import useAudioManager from '~/composables/useAudioManager';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import gsap from 'gsap';
 
-const { playInteractionSound } = useAudioManager();
+const { playRandomSound } = useAudioManager();
 const { scrollSmoother } = useScrollSmoother();
 
 // Number of awards to show initially and on each "Show More" click
 const showCount = 6;
+const showOffset = computed(() => awardsData.length / 3);
 
 const showMoreRef = ref(null);
 const offSetRef = ref(showCount);
@@ -22,8 +23,6 @@ const handleHoverEffect = () => {
   // Set the width to prevent layout shift
   const width = el.offsetWidth;
   gsap.set(el, { width });
-
-  playInteractionSound();
 
   // Store the original text
   gsap.to(el, {
@@ -42,6 +41,7 @@ const handleHoverEffect = () => {
 };
 
 const onMouseEnterHandler = () => {
+  playRandomSound('text-hover');
   handleHoverEffect();
 };
 
@@ -50,7 +50,8 @@ const onFocusHandler = () => {
 };
 
 const onClickHandler = async () => {
-  offSetRef.value += showCount;
+  playRandomSound('click');
+  offSetRef.value += showOffset.value;
   await nextTick();
   scrollSmoother.value.refresh();
 };
@@ -62,10 +63,12 @@ const onClickHandler = async () => {
       <!-- Awards Title -->
       <div class="awards__title">
         <div class="awards__title_count">
-          <sup>Awards</sup>
-          <h2>48</h2>
+          <h2 class="display-4xl--strong">50+</h2>
+          <div class="awards__title_count-sub subheader">
+            Recognition & Awards
+          </div>
         </div>
-        <div class="awards__title_text">
+        <div class="awards__title_text heading-h5--mobile">
           <OnScrollFilledTextLight>
             Our work doesn’t chase awards; it earns them. Each recognition
             reflects the rigour, imagination, and care we bring to every
@@ -77,12 +80,12 @@ const onClickHandler = async () => {
       <!-- Awards List -->
       <div class="awards__collection">
         <div class="awards__collection_header">
-          <div>Platform</div>
-          <div class="awards__collection_header--center">
+          <div class="subheader-small">Platform</div>
+          <div class="awards__collection_header--center subheader-small">
             <div>Prize</div>
             <div>Project</div>
           </div>
-          <div>Year</div>
+          <div class="subheader-small">Year</div>
         </div>
         <ul class="awards__collection_list">
           <li
@@ -93,11 +96,11 @@ const onClickHandler = async () => {
             <div class="award-platform">
               <img :src="award.platform" :alt="award.project" />
             </div>
-            <div class="award-details">
+            <div class="award-details body--mobile-compact">
               <div class="award-details--prize">{{ award.prize }}</div>
               <div class="award-details--project">{{ award.project }}</div>
             </div>
-            <div class="award-year">{{ award.year }}</div>
+            <div class="award-year body--mobile-compact">{{ award.year }}</div>
           </li>
         </ul>
         <div class="awards__show-more">
@@ -141,31 +144,31 @@ const onClickHandler = async () => {
     }
     &_count {
       position: relative;
-      sup {
-        font-size: getRem(20);
-        font-style: normal;
-        font-weight: 400;
-        line-height: 20px;
+      &-sub {
+        // font-size: getRem(20);
+        // font-style: normal;
+        // font-weight: 400;
+        // line-height: 120%;
         color: white(50);
-        position: absolute;
-        top: 0;
-        left: 0;
+        display: block;
+        margin-top: 32px;
+        // position: absolute;
+        // top: 0;
+        // left: 0;
       }
       h2 {
-        font-size: clamp(270px, 21.88vw, 420px);
-        line-height: 0.645;
-        font-weight: 400;
+        // font-size: max(14.6vw, 196px);
+        line-height: 0.6;
+        // font-weight: 400;
         padding-bottom: 1.8vw;
+        display: inline-block;
+        // letter-spacing: -0.07em;
       }
     }
     &_text {
-      font-size: clamp(30px, 1.875vw, 36px);
-      font-style: normal;
-      font-weight: 400;
       line-height: 120%;
-      letter-spacing: -0.36px;
       @include respond(mobile) {
-        font-size: max(30px, 8vw);
+        // font-size: max(30px, 8vw);
       }
     }
   }
@@ -173,23 +176,17 @@ const onClickHandler = async () => {
     margin-top: 85px;
     &_header {
       display: grid;
-      grid-template-columns: 0.3fr 1fr 0.3fr;
+      grid-template-columns: 0.3fr 1fr 0.15fr;
       gap: getRem(16);
       color: white(50);
-      font-family: 'RoobertMono';
-      font-size: 14px;
-      font-style: normal;
-      font-weight: 500;
-      line-height: 1.92;
-      text-transform: uppercase;
       border-bottom: 1px solid white(10);
-      padding-bottom: getRem(6);
+      padding-bottom: getRem(12);
       @include respond(mobile) {
         display: none;
       }
       &--center {
         display: grid;
-        grid-template-columns: 1fr 0.3fr;
+        grid-template-columns: 1fr 0.5fr;
       }
       & > div:last-child {
         text-align: right;
@@ -197,7 +194,7 @@ const onClickHandler = async () => {
     }
     &_item {
       display: grid;
-      grid-template-columns: 0.3fr 1fr 0.3fr;
+      grid-template-columns: 0.3fr 1fr 0.15fr;
       gap: getRem(16);
       padding-top: getRem(20);
       padding-bottom: getRem(20);
@@ -207,7 +204,6 @@ const onClickHandler = async () => {
         padding-top: getRem(8);
         border-color: white(20);
         align-items: flex-start;
-        font-size: getRem(12);
         &:first-child {
           border-top: 1px solid white(20);
         }
@@ -225,7 +221,8 @@ const onClickHandler = async () => {
       }
       .award-details {
         display: grid;
-        grid-template-columns: 1fr 0.3fr;
+        grid-template-columns: 1fr 0.5fr;
+        align-items: center;
         gap: getRem(16);
         @include respond(mobile) {
           grid-template-columns: 1fr;

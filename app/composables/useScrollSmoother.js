@@ -1,27 +1,69 @@
-// composables/useLoader.js
-import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import Lenis from 'lenis';
 import { ref } from 'vue';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-const scrollSmoother = ref(false); // global state
+const scrollSmoother = ref(null); // global state
 
 export default function () {
   // methods for managing loading state
   const initScrollSmoother = () => {
-    scrollSmoother.value = ScrollSmoother.create({
-      smooth: 2,
-      effects: true,
-      normalizeScroll: true,
-      ignoreMobileResize: true,
+    const lenis = new Lenis({
+      // duration: 1.2,
+      // easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      // direction: 'vertical',
+      // gestureDirection: 'vertical',
+      // smooth: true,
+      // mouseMultiplier: 1,
+      // smoothTouch: false,
+      // touchMultiplier: 2,
     });
-    scrollSmoother.value.scrollTo(0, false);
-    scrollSmoother.value.paused(true);
+
+    // Add compatibility methods for GSAP ScrollSmoother
+    // lenis.scrollTop = function (value, smooth = true) {
+    //   if (arguments.length) {
+    //     this.scrollTo(value, { immediate: !smooth });
+    //   } else {
+    //     return this.scroll;
+    //   }
+    // };
+
+    // lenis.paused = function (isPaused) {
+    //   if (isPaused) this.stop();
+    //   else this.start();
+    // };
+
+    // lenis.refresh = function () {
+    //   this.resize();
+    // };
+
+    lenis.scrollTo(0, {
+      immediate: true,
+      lock: true,
+      force: true,
+    });
+
+    scrollSmoother.value = lenis;
+
+    // Integrate with GSAP ScrollTrigger
+    lenis.on('scroll', ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+
+    gsap.ticker.lagSmoothing(0);
+
+    // Initial state
+    lenis.scrollTo(0, { immediate: true });
+    lenis.stop();
   };
 
   // Disable and enable scrolling
-  const disableScroll = () => scrollSmoother.value.paused(true);
+  const disableScroll = () => scrollSmoother.value?.stop();
 
   // Enable and enable scrolling
-  const enableScroll = () => scrollSmoother.value.paused(false);
+  const enableScroll = () => scrollSmoother.value?.start();
 
   return {
     scrollSmoother,

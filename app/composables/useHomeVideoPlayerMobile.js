@@ -58,6 +58,9 @@ export default function useHomeVideoPlayerMobile() {
       return;
     }
 
+    player.value.currentTime(0);
+    player.value.play();
+
     playTimeline = gsap
       .timeline()
       .set(navigationMobileRef.value, { display: 'none' })
@@ -120,8 +123,8 @@ export default function useHomeVideoPlayerMobile() {
           duration: 1,
           ease: 'power3.inOut',
           onStart: () => {
-            player.value.currentTime(0);
-            player.value.play();
+            //player.value.currentTime(0);
+            // player.value.play();
             gsap.set(controls, { pointerEvents: 'none' });
             gsap.set('.hero-mobile__player_video-handler', {
               pointerEvents: 'all',

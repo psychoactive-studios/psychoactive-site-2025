@@ -19,7 +19,7 @@
   $query: null;
 
   // Визначаємо, що передано — breakpoint чи orientation
-  @if $arg1 == desktop or $arg1 == laptop or $arg1 == tablet or $arg1 == mobile
+  @if $arg1 == desktop or $arg1 == laptop or $arg1 == laptop-small or $arg1 == tablet or $arg1 == mobile
   {
     $breakpoint: $arg1;
   } @else if $arg1 == landscape or $arg1 == portrait {
@@ -31,6 +31,8 @@
       desktop or
       $arg2 ==
       laptop or
+      $arg2 ==
+      laptop-small or
       $arg2 ==
       tablet or
       $arg2 ==
@@ -47,6 +49,8 @@
     $query: '(max-width: #{$bp-desktop})';
   } @else if $breakpoint == laptop {
     $query: '(max-width: #{$bp-laptop})';
+  } @else if $breakpoint == laptop-small {
+    $query: '(max-width: #{$bp-laptop-small})';
   } @else if $breakpoint == tablet {
     $query: '(max-width: #{$bp-tablet})';
   } @else if $breakpoint == mobile {
@@ -65,5 +69,19 @@
 
   @media #{$query} {
     @content;
+  }
+}
+
+@mixin container {
+  padding: 0 160px;
+  margin: 0 auto;
+  width: 100%;
+  @include respond(portrait) {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+  @include respond(mobile) {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }

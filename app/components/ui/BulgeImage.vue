@@ -2,26 +2,37 @@
   <div
     ref="rootEl"
     class="bulge-image-scene"
+    :style="{ backgroundImage: `url(${src})` }"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @mousemove="handleMouseMove"
     @touchmove="handleMouseMove"
   >
-    <canvas ref="canvasEl" />
-    <div ref="cursorRef" class="cursor">Open</div>
+    <canvas v-if="shouldActivate" ref="canvasEl" />
+    <div v-if="shouldActivate && cursor" ref="cursorRef" class="cursor">
+      Open
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch, computed, nextTick } from 'vue';
 import * as THREE from 'three';
+import { Flip } from 'gsap/Flip';
 import vertexShader from '@/utils/glsl/main.vert?raw';
 import fragmentShader from '@/utils/glsl/main.frag?raw';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { usePointer } from '@vueuse/core';
+import { useMediaQuery, usePointer } from '@vueuse/core';
+
+import useWorks from '~/composables/useWorks.js';
+import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { pointerType, x: eventX, y: eventY } = usePointer();
+const isMobile = useMediaQuery('(max-width: 768px)');
+const { currentTransitionImage } = useWorks();
+const { scrollSmoother, disableScroll } = useScrollSmoother();
+const router = useRouter();
 
 const isHovered = ref(false);
 const cursorRef = ref(null);
@@ -34,6 +45,14 @@ const props = defineProps({
   isVisible: {
     type: Boolean,
     default: false,
+  },
+  cursor: {
+    type: Boolean,
+    default: true,
+  },
+  strength: {
+    type: Number,
+    default: 0.7,
   },
 });
 
@@ -53,48 +72,79 @@ let scrollTriggerInstance = null;
 
 const settings = {
   animationDuration: 0.5,
-  maxStrength: 0.7,
+  maxStrength: props.strength,
   lerpFactor: 0.05, // Interpolation factor
 };
 
-onMounted(() => {
-  // Ensure DOM is ready before initializing
-  nextTick(() => {
-    initScene();
-    initScrollTrigger();
-    addEventListeners();
-    gsap.ticker.add(animate);
-  });
-});
+const shouldActivate = computed(
+  () => !isMobile.value && pointerType.value === 'mouse'
+);
 
-onUnmounted(() => {
+function init() {
+  initScene();
+  initScrollTrigger();
+  addEventListeners();
+  gsap.ticker.add(animate);
+}
+
+function destroy() {
   removeEventListeners();
   cleanupScrollTrigger();
   gsap.ticker.remove(animate);
   // Clean up Three.js resources
   if (renderer) {
     renderer.dispose();
+    renderer = null;
   }
   if (material) {
     if (material.uniforms.uTexture.value) {
       material.uniforms.uTexture.value.dispose();
     }
     material.dispose();
+    material = null;
   }
   if (mesh && mesh.geometry) {
     mesh.geometry.dispose();
   }
+  if (scene) {
+    scene.clear();
+    scene = null;
+  }
+}
+
+watch(shouldActivate, (val) => {
+  if (val) {
+    nextTick(() => {
+      init();
+    });
+  } else {
+    destroy();
+  }
+});
+
+onMounted(() => {
+  // Ensure DOM is ready before initializing
+  nextTick(() => {
+    if (shouldActivate.value) {
+      init();
+    }
+  });
+});
+
+onUnmounted(() => {
+  destroy();
 });
 
 const handleMouseEnter = () => {
+  if (!shouldActivate.value) return;
   isHovered.value = true;
 
   // Store global mouse position
   lastMousePosition.x = eventX.value;
   lastMousePosition.y = eventY.value;
 
-  if (pointerType.value !== 'mouse') {
-    return; // Skip cursor animation for non-mouse pointers
+  if (pointerType.value !== 'mouse' || !props.cursor) {
+    return; // Skip cursor animation for non-mouse pointers or when cursor is disabled
   }
 
   // Calculate mouse position relative to the element (0 to 1)
@@ -114,9 +164,10 @@ const handleMouseEnter = () => {
 };
 
 const handleMouseLeave = () => {
+  if (!shouldActivate.value) return;
   isHovered.value = false;
-  if (pointerType.value !== 'mouse') {
-    return; // Skip cursor animation for non-mouse pointers
+  if (pointerType.value !== 'mouse' || !props.cursor) {
+    return; // Skip cursor animation for non-mouse pointers or when cursor is disabled
   }
   gsap.to(cursorRef.value, {
     scale: 0,
@@ -124,6 +175,72 @@ const handleMouseLeave = () => {
     ease: 'power3.out',
   });
 };
+
+const handleClick = (href) => {
+  if (isMobile.value) {
+    router.push(href);
+    return;
+  }
+
+  disableScroll();
+  const target = document.querySelector('.work-transition');
+  const duration = 1.5;
+
+  const timeline = gsap.timeline();
+
+  if (props.cursor && cursorRef.value) {
+    timeline.to(cursorRef.value, {
+      scale: 0,
+      duration: 0.5,
+      ease: 'power4.inOut',
+    });
+  }
+
+  timeline
+    .to(
+      targetStrength,
+      {
+        value: 0,
+        duration: duration,
+        ease: 'power4.inOut',
+      },
+      props.cursor && cursorRef.value ? '<' : undefined
+    )
+    .to(
+      rootEl.value,
+      {
+        borderRadius: 0,
+        duration: duration,
+        ease: 'power4.inOut',
+      },
+      '<'
+    )
+    .add(() => {
+      Flip.fit(rootEl.value, target, {
+        absolute: true,
+        duration: duration,
+        ease: 'power4.inOut',
+        onUpdate: () => {
+          handleResize();
+        },
+      });
+    }, '<')
+    .add(() => {
+      currentTransitionImage.value = props.src;
+    })
+    .add(() => {
+      scrollSmoother.value.scrollTo(0, {
+        immediate: true,
+        lock: true,
+        force: true,
+      });
+      router.push(href);
+    }, '+=0.2');
+};
+
+defineExpose({
+  handleClick,
+});
 
 watch(isHovered, (newValue) => {
   gsap.to(targetStrength, {
@@ -144,25 +261,54 @@ function initScene() {
   handleResize();
 
   const geometry = new THREE.PlaneGeometry(2, 2);
-  const textureLoader = new THREE.TextureLoader();
-  const texture = textureLoader.load(props.src, (tex) => {
-    tex.generateMipmaps = true;
-    tex.minFilter = THREE.LinearMipmapLinearFilter;
-    tex.magFilter = THREE.LinearFilter;
-    tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    tex.needsUpdate = true;
 
+  const loader = new THREE.ImageBitmapLoader();
+  loader.setCrossOrigin('anonymous');
+  let texture;
+  loader.setOptions({ imageOrientation: 'flipY' });
+  loader.load(`${props.src}?${Date.now()}`, (imageBitmap) => {
+    texture = new THREE.CanvasTexture(imageBitmap);
+
+    // Далі ваші налаштування текстури залишаються тими ж
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    texture.needsUpdate = true;
+
+    // Оновлюємо матеріал
     if (material) {
+      material.uniforms.uTexture.value = texture;
       material.uniforms.uTextureResolution.value.set(
-        tex.image.width,
-        tex.image.height
+        imageBitmap.width,
+        imageBitmap.height
       );
     }
+
     // Initial render to avoid black screen
     if (renderer && scene && camera) {
       renderer.render(scene, camera);
     }
   });
+
+  // const textureLoader = new THREE.TextureLoader();
+  // const texture = textureLoader.load(props.src, (tex) => {
+  //   tex.generateMipmaps = true;
+  //   tex.minFilter = THREE.LinearMipmapLinearFilter;
+  //   tex.magFilter = THREE.LinearFilter;
+  //   tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+  //   tex.needsUpdate = true;
+
+  //   if (material) {
+  //     material.uniforms.uTextureResolution.value.set(
+  //       tex.image.width,
+  //       tex.image.height
+  //     );
+  //   }
+  //   // Initial render to avoid black screen
+  //   if (renderer && scene && camera) {
+  //     renderer.render(scene, camera);
+  //   }
+  // });
 
   material = new THREE.ShaderMaterial({
     uniforms: {
@@ -193,13 +339,13 @@ function handleResize() {
   if (renderer && material) {
     const width = rootEl.value.clientWidth;
     const height = rootEl.value.clientHeight;
-    renderer.setSize(width, height);
+    renderer.setSize(width, height, false);
     material.uniforms.uResolution.value.set(width, height);
   }
 }
 
 function handleMouseMove() {
-  if (!rootEl.value) return;
+  if (!rootEl.value || !shouldActivate.value) return;
   const rect = rootEl.value.getBoundingClientRect();
   // const isTouch = e.touches && e.touches.length > 0;
   // const eventX = isTouch ? e.touches[0].clientX : e.clientX;
@@ -213,13 +359,15 @@ function handleMouseMove() {
   const relativeX = eventX.value - rect.left;
   const relativeY = eventY.value - rect.top;
 
-  gsap.to(cursorRef.value, {
-    x: relativeX + 16,
-    y: relativeY + 16,
-    duration: 0.5,
-    ease: 'power2.out',
-    overwrite: 'auto',
-  });
+  if (props.cursor && cursorRef.value) {
+    gsap.to(cursorRef.value, {
+      x: relativeX + 16,
+      y: relativeY + 16,
+      duration: 0.5,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    });
+  }
 
   mouse.x = gsap.utils.clamp(0, 1, relativeX / rect.width);
   mouse.y = gsap.utils.clamp(0, 1, 1.0 - relativeY / rect.height);
@@ -235,13 +383,15 @@ function handleScroll() {
   const relativeY = lastMousePosition.y - rect.top;
 
   // Update cursor position
-  gsap.to(cursorRef.value, {
-    x: relativeX + 16,
-    y: relativeY + 16,
-    duration: 0.3,
-    ease: 'power2.out',
-    overwrite: 'auto',
-  });
+  if (props.cursor && cursorRef.value) {
+    gsap.to(cursorRef.value, {
+      x: relativeX + 16,
+      y: relativeY + 16,
+      duration: 0.3,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    });
+  }
 
   // Update mouse coordinates for shader
   mouse.x = gsap.utils.clamp(0, 1, relativeX / rect.width);
@@ -269,20 +419,21 @@ function cleanupScrollTrigger() {
 }
 
 function animate() {
-  // Interpolate mouse position in each frame
+  const isActive = isHovered.value || targetStrength.value > 0.001;
 
-  lerpedMouse.x = gsap.utils.interpolate(
-    lerpedMouse.x,
-    mouse.x,
-    settings.lerpFactor
-  );
-  lerpedMouse.y = gsap.utils.interpolate(
-    lerpedMouse.y,
-    mouse.y,
-    settings.lerpFactor
-  );
+  if (renderer && scene && camera && material && isActive) {
+    // Interpolate mouse position in each frame
+    lerpedMouse.x = gsap.utils.interpolate(
+      lerpedMouse.x,
+      mouse.x,
+      settings.lerpFactor
+    );
+    lerpedMouse.y = gsap.utils.interpolate(
+      lerpedMouse.y,
+      mouse.y,
+      settings.lerpFactor
+    );
 
-  if (renderer && scene && camera && material) {
     material.uniforms.uStrength.value = targetStrength.value;
     material.uniforms.uTime.value += 0.01;
     // The uMouse uniform is already linked to lerpedMouse, so no change needed here
@@ -306,9 +457,18 @@ function removeEventListeners() {
   width: 100%;
   height: 100%;
   position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+  border-radius: 10px;
+  @include respond(mobile) {
+    border-radius: 6px;
+  }
   canvas {
     width: 100%;
     height: 100%;
+    border-radius: inherit;
   }
   .cursor {
     @include flex-center;

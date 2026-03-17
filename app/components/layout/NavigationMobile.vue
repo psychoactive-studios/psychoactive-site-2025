@@ -1,12 +1,12 @@
 <script setup>
 import gsap from 'gsap';
-
-import IconPlus from '~/assets/icons/icon-plus-1.svg';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 import useNavigation from '~/composables/useNavigation';
 import loaderData from '~/assets/lottie/logo-V02.json';
 import lottie from 'lottie-web';
 import { onClickOutside } from '@vueuse/core';
+import { navigationData } from '~/data/navigationData';
+import IconMenuDots from '../ui/IconMenuDots.vue';
 
 // Reactive state to track if the navigation is open
 const isOpen = ref(false);
@@ -53,6 +53,18 @@ const onToggleNavigation = () => {
           scale: 1,
           duration: 1.1,
           ease: 'expo.inOut',
+        },
+        'open'
+      )
+      .to(
+        '.navigation-mobile__button .icon-text',
+        {
+          duration: 1,
+          scrambleText: {
+            text: 'CLOSE',
+            chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%=+<>/?',
+            tweenLength: false,
+          },
         },
         'open'
       )
@@ -174,6 +186,18 @@ const onToggleNavigation = () => {
         'open'
       )
       .to(
+        '.navigation-mobile__button .icon-text',
+        {
+          duration: 1,
+          scrambleText: {
+            text: 'MENU',
+            chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%=+<>/?',
+            tweenLength: false,
+          },
+        },
+        'open'
+      )
+      .to(
         '.navigation-mobile__button .icon',
         { rotate: 0, duration: 1, ease: 'expo.inOut' },
         'open'
@@ -197,53 +221,91 @@ onClickOutside(navigationMobileRef, () => {
 
 <template>
   <div
+    id="header-navigation-mobile"
     ref="navigationMobileRef"
     :class="['navigation-mobile', { opened: isOpen }]"
   >
-    <button class="navigation-mobile__button" @click="onToggleNavigation">
+    <button
+      class="navigation-mobile__button"
+      @pointerup.prevent="onToggleNavigation"
+    >
       <span class="text">psychoactive®</span>
-      <IconPlus class="icon" />
+      <div class="icon-wrapper">
+        <span class="icon-text">MENU</span>
+        <IconMenuDots class="icon" />
+      </div>
     </button>
     <div class="navigation-mobile__background">
-      <NuxtLink to="/" class="navigation-mobile__logo">
+      <NuxtLink
+        to="/"
+        class="navigation-mobile__logo"
+        @click="onToggleNavigation"
+      >
         <span ref="lottieLogoContainerRef" />
       </NuxtLink>
     </div>
     <div class="navigation-mobile__wrapper">
       <div class="navigation-mobile__talk">
-        <button class="navigation-mobile__talk-button">let's talk</button>
+        <NuxtLink href="/contact" class="navigation-mobile__talk-button" @click="onToggleNavigation">let's talk</NuxtLink>
       </div>
       <ul class="navigation-mobile__list">
-        <li class="navigation-mobile__item">
-          <LinkWithHover href="/">About</LinkWithHover>
+        <li class="navigation-mobile__item heading-h2--mobile-menu">
+          <LinkWithHover href="/" @click="onToggleNavigation">
+            Home
+          </LinkWithHover>
+          <div class="navigation-mobile__item-line">
+            <span class="line" />
+          </div>
+        </li>
+
+        <li
+          v-for="item in navigationData.filter(item => !item.hidden)"
+          :key="item.id"
+          class="navigation-mobile__item heading-h2--mobile-menu"
+        >
+          <LinkWithHover
+            :href="item.url"
+            :data-sup="item.sup || null"
+            @click="onToggleNavigation"
+          >
+            {{ item.title }}
+          </LinkWithHover>
+          <div class="navigation-mobile__item-line">
+            <span class="line" />
+          </div>
+        </li>
+        <!-- <li class="navigation-mobile__item">
+          <LinkWithHover href="/work" @click="onToggleNavigation">
+            Work
+          </LinkWithHover>
           <div class="navigation-mobile__item-line">
             <span class="line" />
           </div>
         </li>
         <li class="navigation-mobile__item">
-          <LinkWithHover href="/">Work</LinkWithHover>
+          <LinkWithHover href="/services" @click="onToggleNavigation">
+            Services
+          </LinkWithHover>
           <div class="navigation-mobile__item-line">
             <span class="line" />
           </div>
         </li>
         <li class="navigation-mobile__item">
-          <LinkWithHover href="/">Services</LinkWithHover>
+          <LinkWithHover href="/webflow" @click="onToggleNavigation">
+            Webflow
+          </LinkWithHover>
           <div class="navigation-mobile__item-line">
             <span class="line" />
           </div>
         </li>
         <li class="navigation-mobile__item">
-          <LinkWithHover href="/">Webflow</LinkWithHover>
+          <LinkWithHover href="/content-hub" @click="onToggleNavigation">
+            Content
+          </LinkWithHover>
           <div class="navigation-mobile__item-line">
             <span class="line" />
           </div>
-        </li>
-        <li class="navigation-mobile__item">
-          <LinkWithHover href="/">Content</LinkWithHover>
-          <div class="navigation-mobile__item-line">
-            <span class="line" />
-          </div>
-        </li>
+        </li> -->
       </ul>
     </div>
   </div>
@@ -286,9 +348,22 @@ onClickOutside(navigationMobileRef, () => {
     bottom: 0;
     transform-origin: center;
     pointer-events: all;
+    .icon-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      .icon-text {
+        font-family: 'RoobertMono', sans-serif;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 146%; /* 20.44px */
+        text-transform: uppercase;
+      }
+    }
   }
   &__background {
-    background-color: $color-foreground;
+    background-color: #f1f1f1;
     border-radius: 1rem;
     position: absolute;
     width: 100%;
@@ -320,6 +395,9 @@ onClickOutside(navigationMobileRef, () => {
   &__talk {
     text-align: right;
     &-button {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
       pointer-events: all;
       font-family: 'RoobertMono', sans-serif;
       font-size: 1rem;
@@ -363,13 +441,32 @@ onClickOutside(navigationMobileRef, () => {
     gap: getRem(32);
   }
   &__item {
-    font-size: clamp(48px, 3.646vw, 70px);
+    // font-size: clamp(48px, 3.646vw, 70px);
     line-height: 74%;
     display: flex;
     gap: 1.5vw;
     align-items: center;
+    a[data-sup] {
+      position: relative;
+      &::after {
+        content: attr(data-sup);
+        display: inline-block;
+        font-family: 'RoobertMono';
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 100%;
+        text-transform: uppercase;
+        color: $color-background;
+        letter-spacing: 1px;
+        position: absolute;
+        left: calc(100% + 8px);
+        top: 0;
+        opacity: 0.5;
+      }
+    }
     @include respond(mobile) {
-      font-size: getRem(36);
+      // font-size: getRem(36);
       line-height: 1;
       gap: getRem(12);
       margin-right: 8px;

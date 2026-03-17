@@ -1,19 +1,25 @@
 // composables/useNavigation.js
 import gsap from 'gsap';
+import { SplitText } from 'gsap/SplitText';
 import { ref } from 'vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
+import useHeader from '~/composables/useHeader';
 
 const { enableScroll, disableScroll } = useScrollSmoother();
 
 // Reactive state to track if the navigation is open
 const isOpen = ref(false);
+const savedColorMode = ref(null); // To track the history of color modes for proper restoration
 
 // Ref to the navigation DOM element
 const navigationRef = ref(null);
 const navigationMobileRef = ref(null);
+const backButtonRef = ref(null);
+const backButtonHref = ref(null);
 
 // Reactive state to track if the transition is from navigation
 const transitionFromNavigation = ref(false);
+const showLayoutElementsRequired = ref(false);
 
 // GSAP timelines for animations
 let openTimelineMain, openTimelineItems, closeTimeline;
@@ -31,8 +37,58 @@ let navBackground,
   letsButton,
   letsLines;
 
+// Store SplitText instances for cleanup
+let splitTextInstances = [];
+
 export default function () {
+  /**
+   * Cleans up all animations and GSAP instances to prevent memory leaks
+   */
+  function cleanupNavigation() {
+    // Kill all timelines
+    if (openTimelineMain) {
+      openTimelineMain.kill();
+      openTimelineMain = null;
+    }
+    if (openTimelineItems) {
+      openTimelineItems.kill();
+      openTimelineItems = null;
+    }
+    if (closeTimeline) {
+      closeTimeline.kill();
+      closeTimeline = null;
+    }
+
+    // Revert all SplitText instances
+    splitTextInstances.forEach((instance) => {
+      if (instance && instance.revert) {
+        instance.revert();
+      }
+    });
+    splitTextInstances = [];
+
+    savedColorMode.value = null; // Clear saved color mode
+  }
+
   function initNavigation() {
+    // Clean up existing animations before reinitializing
+    cleanupNavigation();
+
+    const { mode } = useHeader();
+
+    const splitTextInstance = SplitText.create(
+      '#main-navigation .navigation__item a',
+      {
+        type: 'chars',
+        charsClass: 'char-center',
+      }
+    );
+    splitTextInstances.push(splitTextInstance);
+    SplitText.create('#main-navigation .navigation__item a', {
+      type: 'chars',
+      charsClass: 'char-center',
+    });
+
     // Select DOM elements for animations
     navBackground = navigationRef?.value?.querySelector(
       '.navigation__background'
@@ -147,6 +203,9 @@ export default function () {
         { width: '100%', duration: 1.5, ease: 'power2.inOut', stagger: 0.07 },
         'step1'
       )
+      .add(() => {
+        if (mode.value === 'light') mode.value = 'dark'; // Set mode to 'dark' when navigation opens
+      }, 'step1+=0.2')
       .fromTo(
         navPlayerText,
         { opacity: 0 },
@@ -254,9 +313,16 @@ export default function () {
       )
       .add(() => {
         // Enable scrolling
-        enableScroll();
+        if (!transitionFromNavigation.value) enableScroll();
         isOpen.value = false;
-      }, 'init+=0.2');
+      }, 'init+=0.2')
+      .add(() => {
+        if (savedColorMode.value) mode.value = savedColorMode.value; // Restore the previous color mode
+      }, 'init+=0.6')
+      .add(() => {
+        // Clean up and reinitialize navigation to prevent memory leaks
+        initNavigation();
+      });
   }
 
   /**
@@ -268,10 +334,13 @@ export default function () {
     const isAnimating = gsap.getById('close-timeline')?.isActive();
     if (isAnimating) return;
 
+    const { mode } = useHeader();
+
     // Disable page scrolling when navigation is open
     disableScroll();
     // Set navigation state to open
     isOpen.value = true;
+    savedColorMode.value = mode.value; // Save the current color mode
 
     openTimelineMain.restart();
     openTimelineItems.restart();
@@ -294,9 +363,12 @@ export default function () {
     isOpen,
     navigationRef,
     navigationMobileRef,
+    backButtonRef,
+    backButtonHref,
     initNavigation,
     openNavigation,
     closeNavigation,
     transitionFromNavigation,
+    showLayoutElementsRequired,
   };
 }
