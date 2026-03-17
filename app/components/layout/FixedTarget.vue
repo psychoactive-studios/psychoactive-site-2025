@@ -85,7 +85,7 @@ const { currentTransitionImage } = useWorks();
                   {{ item.text }}
                 </div>
               </div>
-              <NuxtLink to="/webflow" class="stepper__label">
+              <NuxtLink to="/webflow-enterprise-agency" class="stepper__label">
                 <WebflowBlackLabel />
               </NuxtLink>
               <HeroCenterLine />

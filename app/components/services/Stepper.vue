@@ -28,7 +28,7 @@ onUnmounted(() => {
         >
           <NuxtLink
             v-if="step.number === '03'"
-            to="/webflow"
+            to="/webflow-enterprise-agency"
             class="stepper__mobile-step_label"
           >
             <WebflowBlackLabel />
