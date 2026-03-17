@@ -13,7 +13,8 @@ const props = defineProps({
   },
   category: {
     type: String,
-    required: true,
+    required: false,
+    default: null,
   },
   date: {
     type: String,
@@ -73,8 +74,7 @@ const onMouseEnterHandler = (e) => {
   <NuxtLink
     :to="href"
     class="news-card"
-    @mouseenter="onMouseEnterHandler"
-    @mousedown="onMouseDownHandler"    
+    @mouseenter="onMouseEnterHandler"    
     @click="() => playRandomSound('click')"
   >
     <div class="news-card__description">

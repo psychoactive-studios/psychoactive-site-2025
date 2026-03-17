@@ -1,5 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
+const SITE_URL = process.env.NUXT_PUBLIC_SITE_URL || 'https://psychoactive.co.nz'
+const DEFAULT_TITLE = 'Psychoactive Studios | Web Design Agency | Webflow Partner'
+const DEFAULT_DESCRIPTION = 'Award-Winning Multidisciplinary Digital Experience Agency | We design and develop websites, web apps & motion graphics for brands who want to push boundaries'
+const OG_IMAGE_URL = `${SITE_URL}/og.png`
+
 /**
  * Nuxt configuration for the Psychoactive Studios website.
  * 
@@ -32,6 +37,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
+      siteUrl: SITE_URL,
       strapiBaseUrl: process.env.NUXT_PUBLIC_STRAPI_BASE_URL || 'http://localhost:1337',
       strapiApiKey: process.env.STRAPI_API_KEY || '',
       strapiPreviewUrl: process.env.STRAPI_PREVIEW_URL || '',
@@ -58,10 +64,26 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'Psychoactive Studios | Web Design Agency | Webflow Partner',
+      title: DEFAULT_TITLE,
       meta: [
-        { name: 'description', content: 'Award-Winning Multidisciplinary Digital Experience Agency | We design and develop websites, web apps & motion graphics for brands who want to push boundaries' },
+        { name: 'description', content: DEFAULT_DESCRIPTION },
         { name: 'viewport', content: 'width=device-width,minimum-scale=1.0,maximum-scale=1.0' },
+
+        // Open Graph
+        { key: 'og:title', property: 'og:title', content: DEFAULT_TITLE },
+        { key: 'og:description', property: 'og:description', content: DEFAULT_DESCRIPTION },
+        { key: 'og:type', property: 'og:type', content: 'website' },
+        { key: 'og:url', property: 'og:url', content: SITE_URL },
+        { key: 'og:image', property: 'og:image', content: OG_IMAGE_URL },
+        { key: 'og:image:secure_url', property: 'og:image:secure_url', content: OG_IMAGE_URL },
+        { key: 'og:image:width', property: 'og:image:width', content: '1200' },
+        { key: 'og:image:height', property: 'og:image:height', content: '631' },
+
+        // Twitter
+        { key: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
+        { key: 'twitter:title', name: 'twitter:title', content: DEFAULT_TITLE },
+        { key: 'twitter:description', name: 'twitter:description', content: DEFAULT_DESCRIPTION },
+        { key: 'twitter:image', name: 'twitter:image', content: OG_IMAGE_URL },
       ],      
       link: [
         {
