@@ -128,7 +128,7 @@ export default defineNuxtConfig({
     '/content-hub/integrating-unity-into-psychoactive-tm-s-web-development-pipeline': { redirect: { to: '/content-hub/from-unity-to-web-gl-building-high-performance-3d-experiences-for-the-modern-web', statusCode: 301 } },
     '/content-hub/how-we-use-ai-to-augment-our-web-design-process': { redirect: { to: '/content-hub/how-we-use-ai-in-web-design-to-increase-speed-quality-and-innovation', statusCode: 301 } },
     '/content-hub/writing-great-website-content-that-matches-website-wireframes': { redirect: { to: '/content-hub/how-to-write-high-converting-website-content', statusCode: 301 } },
-    '/content-hub/psychoactive-nominated-by-awwwards-for-agency-of-the-year-2022': { redirect: { to: '/content-hub/psychoactive-nominated-by-awwwards-for-agency-of-the-year-2022', statusCode: 301 } },
+    // '/content-hub/psychoactive-nominated-by-awwwards-for-agency-of-the-year-2022': { redirect: { to: '/content-hub/psychoactive-nominated-by-awwwards-for-agency-of-the-year-2022', statusCode: 301 } },
     '/content-hub/psychoactive-becomes-new-zealands-first-webflow-enterprise-partner': { redirect: { to: '/content-hub/psychoactive-named-new-zealands-first-webflow-enterprise-partner', statusCode: 301 } },
     '/content-hub/psychoactive-amphibians': { redirect: { to: '/content-hub/psychoactive-amphibians-exploring-nfts-and-digital-ownership', statusCode: 301 } },
     '/content-hub/the-making-of-zendetta': { redirect: { to: '/content-hub/how-zendetta-was-made-psychoactives-most-awarded-project', statusCode: 301 } },
