@@ -63,10 +63,6 @@ const onMouseEnterHandler = (e) => {
   handleHoverEffect(e.target);
 };
 
-const onFocusHandler = (e) => {
-  handleHoverEffect(e.target);
-};
-
 const handleSoundClick = () => {
   playRandomSound('click');
 };
@@ -78,7 +74,6 @@ const handleSoundClick = () => {
     :target="data.externalLink ? '_blank' : '_self'"
     class="news-card"
     @mouseenter="onMouseEnterHandler"
-    @focus="onFocusHandler"
     @click="handleSoundClick"
   >
     <div class="news-card__description">
