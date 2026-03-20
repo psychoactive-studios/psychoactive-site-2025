@@ -18,10 +18,6 @@ import ContactDateForm from './ContactDateForm.vue';
 import ContactDescriptionForm from './ContactDescriptionForm.vue';
 import ContactJoinButtons from './ContactJoinButtons.vue';
 
-
-
-
-
 const {
   sceneRef,
   dotsRef,
@@ -40,7 +36,7 @@ const {
   getRandomMessage,
   currentStepId,
   dotsTimeline,
-  handleSendEmail
+  handleSendEmail,
 } = useContact();
 
 const { isLoading } = useLoader();
@@ -52,7 +48,9 @@ const {
 } = useAudioManager();
 
 onMounted(() => {
-  currentMessage.value = getRandomMessage(tadiSteps[currentStepId.value]?.messages[0]?.variations);
+  currentMessage.value = getRandomMessage(
+    tadiSteps[currentStepId.value]?.messages[0]?.variations
+  );
 
   const dotsLeft = dotsRef.value.querySelector('.contact-form__dots .dot-left');
   const dotsRight = dotsRef.value.querySelector(
@@ -77,21 +75,21 @@ onMounted(() => {
       width: '50%',
       ease: 'power1.out',
       // overwrite: 'auto',
-    });    
+    });
 });
 
 watch(isLoading, (newVal) => {
   if (!newVal) {
     enterAnimation();
+    if (isSoundApproved.value && hasInteracted.value)
+      playInteractionSound('contact-load');
   }
 });
 
 const handleBackClick = () => {
-  playRandomSound('click')
+  playRandomSound('click');
   handlePrevStep();
-}
-
-
+};
 </script>
 
 <template>
@@ -103,12 +101,22 @@ const handleBackClick = () => {
     </div>
 
     <div class="contact-back-wrapper">
-      <ButtonOutline class="contact-back-button" @click="handleBackClick">Back</ButtonOutline>
-    </div>    
+      <ButtonOutline class="contact-back-button" @click="handleBackClick"
+        >Back</ButtonOutline
+      >
+    </div>
 
     <div class="contact-form__content">
-      <div ref="historyMessageRef" class="contact-form__history" v-html="historyMessage"></div>
-      <div ref="previousSectionRef" class="contact-form__previous" v-html="previousMessage"></div>
+      <div
+        ref="historyMessageRef"
+        class="contact-form__history"
+        v-html="historyMessage"
+      ></div>
+      <div
+        ref="previousSectionRef"
+        class="contact-form__previous"
+        v-html="previousMessage"
+      ></div>
       <div ref="currentSectionRef" class="contact-form__step">
         <span ref="currentSectionTextRef" v-html="currentMessage"></span>
       </div>
@@ -195,17 +203,6 @@ const handleBackClick = () => {
         >
           <ContactJoinButtons />
         </div>
-
-        
-
-        
-
-        
-
-        
-
-        
-        
       </div>
     </div>
   </div>
@@ -357,8 +354,8 @@ const handleBackClick = () => {
     font-weight: 400;
     line-height: 100%;
     letter-spacing: -0.02em;
-    position: relative;    
-    :deep(a) {      
+    position: relative;
+    :deep(a) {
       text-decoration: underline;
     }
     @include respond(laptop-small) {

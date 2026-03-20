@@ -21,7 +21,12 @@ let ctx;
 let resizeObserver;
 
 const { scrollSmoother } = useScrollSmoother();
-const { playInteractionSound, playRandomSound, isSoundApproved, hasInteracted } = useAudioManager();
+const {
+  playInteractionSound,
+  playRandomSound,
+  isSoundApproved,
+  hasInteracted,
+} = useAudioManager();
 
 const { isLoading, isFirstLoad } = useLoader();
 const router = useRouter();
@@ -55,7 +60,7 @@ const { data: articleData, error } = await useFetch(
 if (error.value || !articleData.value?.data) {
   throw createError({
     statusCode: 404,
-    statusMessage: 'Article Not Found',    
+    statusMessage: 'Article Not Found',
   });
 }
 
@@ -68,11 +73,11 @@ const seoMeta = computed(() => {
   if (seo.metaDescription) meta.description = seo.metaDescription;
   if (seo.shareImage) {
     const url =
-      typeof seo.shareImage === 'string'
-        ? seo.shareImage
-        : seo.shareImage?.url;
+      typeof seo.shareImage === 'string' ? seo.shareImage : seo.shareImage?.url;
     if (url) {
-      meta.ogImage = url.startsWith('http') ? url : `${config.public.strapiBaseUrl}${url}`;
+      meta.ogImage = url.startsWith('http')
+        ? url
+        : `${config.public.strapiBaseUrl}${url}`;
     }
   }
   return meta;
@@ -157,9 +162,9 @@ definePageMeta({
         return;
       }
       gsap
-        .timeline()                
-        .to('#top-back-button', { scale: 0 })        
-        .add(() => {          
+        .timeline()
+        .to('#top-back-button', { scale: 0 })
+        .add(() => {
           backButtonHref.value = null;
         }, '+=0.1');
       leaveAnimation(el, done);
@@ -247,33 +252,36 @@ function enterAnimation(el) {
     .add(() => (showLayoutElementsRequired.value = false));
 }
 
-function footerTextAnimationInit() {  
+function footerTextAnimationInit() {
   const footer = footerRef.value;
 
   let tween = null;
   ctx.add(() => {
-    tween = gsap.to(footer.querySelectorAll('.article__footer_scroll--progress img'), {
-      scrollTrigger: {
-        trigger: footer,
-        start: 'top top',
-        end: 'bottom 1%',
-        pin: true,
-        scrub: true,
-        invalidateOnRefresh: true,
-        // onEnter: () => {
-        //   mode.value = 'light';
-        // },
-        // onLeaveBack: () => {
-        //   mode.value = 'dark';
-        // },
-      },
-      opacity: 1,
-      duration: 0.1,
-      stagger: 0.05,
-      onUpdate: () => {
-        if(tween?.progress() > 0.95) router.push('/content-hub');
-      },
-    });
+    tween = gsap.to(
+      footer.querySelectorAll('.article__footer_scroll--progress img'),
+      {
+        scrollTrigger: {
+          trigger: footer,
+          start: 'top top',
+          end: 'bottom 1%',
+          pin: true,
+          scrub: true,
+          invalidateOnRefresh: true,
+          // onEnter: () => {
+          //   mode.value = 'light';
+          // },
+          // onLeaveBack: () => {
+          //   mode.value = 'dark';
+          // },
+        },
+        opacity: 1,
+        duration: 0.1,
+        stagger: 0.05,
+        onUpdate: () => {
+          if (tween?.progress() > 0.95) router.push('/content-hub');
+        },
+      }
+    );
   });
 }
 </script>
@@ -289,7 +297,7 @@ function footerTextAnimationInit() {
         >
           Back
         </ButtonOutline>
-        <div class="article__hero_grid">          
+        <div class="article__hero_grid">
           <div class="article__hero_info">
             <ul>
               <li>Author</li>
@@ -298,7 +306,11 @@ function footerTextAnimationInit() {
             <ul>
               <li>Published</li>
               <li>
-                {{ formatDate(articleData?.data?.published || articleData?.data?.createdAt) }}
+                {{
+                  formatDate(
+                    articleData?.data?.published || articleData?.data?.createdAt
+                  )
+                }}
               </li>
             </ul>
             <ul>
@@ -333,7 +345,7 @@ function footerTextAnimationInit() {
             <a
               href="#"
               aria-label="Share on Facebook"
-              @mouseenter="() => playInteractionSound('share-hover')"
+              @mouseenter="() => playInteractionSound('mute-hover')"
               @click="() => playRandomSound('click')"
             >
               <img src="/img/icon-x.svg" alt="" />
@@ -341,7 +353,7 @@ function footerTextAnimationInit() {
             <a
               href="#"
               aria-label="Share on Facebook"
-              @mouseenter="() => playInteractionSound('share-hover')"
+              @mouseenter="() => playInteractionSound('mute-hover')"
               @click="() => playRandomSound('click')"
             >
               <img src="/img/icon-f.svg" alt="" />
@@ -349,13 +361,13 @@ function footerTextAnimationInit() {
             <a
               href="#"
               aria-label="Share on Facebook"
-              @mouseenter="() => playInteractionSound('share-hover')"
+              @mouseenter="() => playInteractionSound('mute-hover')"
               @click="() => playRandomSound('click')"
             >
               <img src="/img/icon-in.svg" alt="" />
             </a>
           </div>
-          <ArticleContent :data="articleData?.data?.article" />          
+          <ArticleContent :data="articleData?.data?.article" />
         </div>
       </div>
     </div>
@@ -397,7 +409,7 @@ function footerTextAnimationInit() {
     display: none;
     margin-bottom: 32px;
     @include respond(mobile) {
-      display: inline-flex;      
+      display: inline-flex;
     }
   }
   &__hero {
