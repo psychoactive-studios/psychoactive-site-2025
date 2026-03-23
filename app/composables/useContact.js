@@ -377,7 +377,7 @@ export default function useContact() {
       const nextMessage = getRandomMessage(message.variations)
         .replace(
           '[email]',
-          '<a href="mailto:careers@psychoactive.co">careers@psychoactive.co</a>'
+          '<a href="mailto:careers@psychoactive.co.nz">careers@psychoactive.co.nz</a>'
         )
         .replace('[Name]', userData.name)
         .replace(/\n/g, '<br>');

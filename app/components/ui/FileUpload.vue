@@ -92,7 +92,7 @@ function formatSize(bytes) {
           <div class="file-upload__item-status">
             <div class="file-upload__item-status-text">
               <span class="file-upload__item-complete body-small">Upload complete</span>
-              <span class="file-upload__item-undo body-small" @click.stop="triggerBrowse">tap to undo</span>
+              <span class="file-upload__item-undo body-small" @click.stop="removeFile(index)">tap to undo</span>
             </div>
             <button
               type="button"
