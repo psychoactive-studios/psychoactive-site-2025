@@ -343,7 +343,8 @@ function footerTextAnimationInit() {
           <div class="article__body_share">
             <h3>Share:</h3>
             <a
-              href="#"
+              href="https://x.com/psychoactiveltd"
+              target="_blank"
               aria-label="Share on Facebook"
               @mouseenter="() => playInteractionSound('mute-hover')"
               @click="() => playRandomSound('click')"
@@ -351,7 +352,8 @@ function footerTextAnimationInit() {
               <img src="/img/icon-x.svg" alt="" />
             </a>
             <a
-              href="#"
+              href="https://www.facebook.com/Psychoactive.Studios.NZ/"
+              target="_blank"
               aria-label="Share on Facebook"
               @mouseenter="() => playInteractionSound('mute-hover')"
               @click="() => playRandomSound('click')"
@@ -359,7 +361,8 @@ function footerTextAnimationInit() {
               <img src="/img/icon-f.svg" alt="" />
             </a>
             <a
-              href="#"
+              href="https://www.linkedin.com/company/psychoactivestudios/"
+              target="_blank"
               aria-label="Share on Facebook"
               @mouseenter="() => playInteractionSound('mute-hover')"
               @click="() => playRandomSound('click')"
