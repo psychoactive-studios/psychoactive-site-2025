@@ -44,15 +44,25 @@ const onSubmit = handleSubmit((values, event) => {
   handleNextStep(nextStepId, event.evt);
 });
 
+const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
+
 function validateAndSubmit(event) {
   hasAttemptedSubmit.value = true;
 
   const hasDescription = !!(description.value?.trim());
-  const hasFile = Array.isArray(file.value) ? file.value.length > 0 : !!file.value;
+  const files = Array.isArray(file.value) ? file.value : (file.value ? [file.value] : []);
+  const hasFile = files.length > 0;
 
   if (!hasDescription && !hasFile) {
     setFieldError('description', 'Describe your project or upload a file');
     setFieldError('file', 'Upload a file or describe your project');
+    return;
+  }
+
+  const oversizedFile = files.find(f => f.size > MAX_FILE_SIZE_BYTES);
+  if (oversizedFile) {
+    setFieldError('file', `File size must not exceed ${MAX_FILE_SIZE_MB}MB`);
     return;
   }
 
