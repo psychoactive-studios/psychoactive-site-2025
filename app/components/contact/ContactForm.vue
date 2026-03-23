@@ -151,7 +151,7 @@ const handleBackClick = () => {
             data-index="2"
             @mouseenter="playRandomSound('text-hover')"
           >
-            Contacts
+            Contact
           </LinkButton>
         </div>
         <div

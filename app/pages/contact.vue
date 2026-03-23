@@ -114,6 +114,7 @@ definePageMeta({
   // @include respond(laptop-small) {
   //   position: initial;
   // }
+  max-height: 100svh;
   .container {
     display: flex;
     flex-direction: column;
@@ -139,7 +140,7 @@ definePageMeta({
     @include respond(laptop-small) {
       display: flex;
       flex-direction: column;
-      padding-top: 106px;
+      padding-top: 60px;
       padding-bottom: 48px;
     }
     & > * {
@@ -183,21 +184,26 @@ definePageMeta({
     justify-content: center;
     position: absolute;
     width: 100%;
-    bottom: 48px;
-    @include respond(laptop-small) {
-      left: 48px;
-      right: 48px;
-      width: auto;
-    }
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 80px 48px 48px 48px;
+    background: linear-gradient(180deg, rgba(16, 16, 18, 0.00) 5.93%, rgba(16, 16, 18, 0.90) 40.46%);
+    z-index: 1;
+    pointer-events: none;
+    // @include respond(laptop-small) {
+    //   left: 48px;
+    //   right: 48px;
+    //   width: auto;
+    // }
     @include respond(mobile) {
-      bottom: 72px;
-      left: 16px;
-      right: 16px;
+      padding: 66px 16px 86px 16px;
     }
     &_email {
       font-size: 1.5rem;
       line-height: 1.16;
       color: rgba(255, 255, 255, 0.5);
+      pointer-events: all;
       @include respond(laptop-small) {
         font-size: 1rem;
       }
