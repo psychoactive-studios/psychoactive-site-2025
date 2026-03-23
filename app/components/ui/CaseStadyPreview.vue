@@ -3,8 +3,10 @@ import BulgeImage from '@/components/ui/BulgeImage.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import useHeader from '~/composables/useHeader';
 import gsap from 'gsap';
+import { usePointer } from '@vueuse/core';
 
 const { playInteractionSound, playRandomSound } = useAudioManager();
+const { pointerType } = usePointer();
 const { mode } = useHeader();
 const containerRef = ref(null);
 const titleRef = ref(null);
@@ -21,7 +23,7 @@ const { mainImage, slug, mainTitle, hero } = props?.data || {};
 
 const handleMouseEnter = () => {
   // Stop any ongoing animations on this element
-  if (gsap.isTweening(titleRef.value)) return;
+  if (gsap.isTweening(titleRef.value) || pointerType.value === 'touch') return;
 
   // Set the width to prevent layout shift
   const width = titleRef.value.offsetWidth;
