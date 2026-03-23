@@ -34,7 +34,7 @@ watch(
   (newPath) => {
     const isTargetWithLoader =
       newPath === '/' ||
-      navigationData?.find((item) => item.url === newPath)?.loader;      
+      navigationData?.find((item) => item.url === newPath)?.loader;
 
     if (isTargetWithLoader) {      
       const layoutElements = gsap.utils.toArray([
