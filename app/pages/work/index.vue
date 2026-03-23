@@ -13,6 +13,7 @@ import useNavigation from '~/composables/useNavigation';
 import useAudioManager from '~/composables/useAudioManager';
 import { useMediaQuery } from '@vueuse/core';
 import { navigationData } from '~/data/navigationData';
+import useHeader from '~/composables/useHeader';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -71,7 +72,7 @@ if (error.value) {
 const { isLoading, isFirstLoad } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
 const { showLayoutElementsRequired } = useNavigation();
-
+const { mode } = useHeader();
 const titleRef = ref(null);
 const displayedCount = ref(4);
 const allWorks = computed(() => {
@@ -128,7 +129,7 @@ definePageMeta({
         '#header-navigation-button',
         '#header-sound-button',
       ]);
-      // Форсувати видимість елементів
+      mode.value = 'mixed';
       gsap.set(layoutElements, { scale: 1, opacity: 1, clearProps: 'all' });
       gsap.set(el, { visibility: 'hidden' });
       done();

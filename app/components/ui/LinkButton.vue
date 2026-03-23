@@ -2,7 +2,7 @@
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 
-const { playInteractionSound } = useAudioManager();
+const { playInteractionSound, playRandomSound } = useAudioManager();
 
 const letsTalkButtonRef = ref(null);
 
@@ -27,7 +27,7 @@ defineProps({
 
 const talkButtonHoverHandler = (e) => {
   // const buttonType = props.mode === 'light' ? 'dark' : 'light';
-  playInteractionSound('talk-btn-hover');
+  playRandomSound('talk-btn-hover');
 
   const el = e.currentTarget?.querySelector('.link-button__visible-text');
   if (!el || gsap.isTweening(el)) return;

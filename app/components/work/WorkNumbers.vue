@@ -142,7 +142,6 @@ onUnmounted(() => {
     column-gap: 48px;
     row-gap: 12.5vw;
     @include respond(mobile) {
-      margin-top: 60px;
       grid-template-columns: 1fr;
     }
     &--small {    

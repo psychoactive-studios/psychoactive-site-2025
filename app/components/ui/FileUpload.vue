@@ -76,7 +76,8 @@ function formatSize(bytes) {
       />
 
       <span v-if="model.length === 0" class="file-upload__label body-small">
-        DRAG AND DROP YOUR FILES OR <span class="file-upload__browse">BROWSE</span>
+        Drop your PDF here, or <span class="file-upload__browse">BROWSE</span>
+        
       </span>
 
       <ul v-else class="file-upload__list">
@@ -92,7 +93,7 @@ function formatSize(bytes) {
           <div class="file-upload__item-status">
             <div class="file-upload__item-status-text">
               <span class="file-upload__item-complete body-small">Upload complete</span>
-              <span class="file-upload__item-undo body-small" @click.stop="triggerBrowse">tap to undo</span>
+              <span class="file-upload__item-undo body-small" @click.stop="removeFile(index)">tap to undo</span>
             </div>
             <button
               type="button"

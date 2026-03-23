@@ -53,6 +53,7 @@ const { playContinuousSound, stopContinuousSound } = useAudioManager();
               <img :src="person.photo" :alt="person.name" />
             </div>
             <h3 class="item__name">{{ person.name }}</h3>
+            <div class="item__role">{{ person.role }}</div>
           </SplideSlide>          
         </SplideTrack>
       </Splide>
@@ -114,6 +115,11 @@ const { playContinuousSound, stopContinuousSound } = useAudioManager();
         font-weight: 400;
         line-height: 130%;
         margin-top: 4.27vw;
+      }
+      .item__role {
+        @extend .subheader-small;
+        color: white(50);
+        margin-top: 0.625vw;
       }
     }
   }

@@ -9,6 +9,7 @@ import useAudioManager from '~/composables/useAudioManager';
 import { leaveAnimation } from '~/utils/animations/transitions';
 import { useMediaQuery } from '@vueuse/core';
 import HomeNewsCard from '~/components/homepage/HomeNewsCard.vue';
+import useHeader from '~/composables/useHeader';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -19,7 +20,7 @@ const { scrollSmoother } = useScrollSmoother();
 const { isLoading, isFirstLoad } = useLoader();
 const { showLayoutElementsRequired } = useNavigation();
 const isMobile = useMediaQuery('(max-width: 768px)');
-
+const { mode } = useHeader();
 const { data: articlesData, error } = await useFetch(`/api/articles`, {
   baseURL: config.public.strapiBaseUrl,
   query: {
@@ -63,6 +64,7 @@ definePageMeta({
       });
       gsap.set(el, { visibility: 'hidden' });
       setTimeout(() => {
+        mode.value = 'mixed';
         enterAnimation(el);
       }, 50);
     },

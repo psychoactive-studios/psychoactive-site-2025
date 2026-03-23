@@ -115,11 +115,11 @@ export default defineNuxtConfig({
   // Redirects for content-hub pages
   routeRules: {
     // Content Hub Redirects
-    '/content-hub/how-we-built-award-worthy-websites-for-global-events': { redirect: { to: '/content-hub/psychoactive-builds-award-winning-websites-for-global-events', statusCode: 301 } },
+    // '/content-hub/how-we-built-award-worthy-websites-for-global-events': { redirect: { to: '/content-hub/how-we-built-award-worthy-websites-for-global-events', statusCode: 301 } },
     '/content-hub/ai-vs-custom-development-when-to-use-what': { redirect: { to: '/content-hub/when-to-build-with-ai-and-when-to-use-webflow-and-custom-code', statusCode: 301 } },
     '/content-hub/zendetta-more-relevant-than-ever-as-syria-enters-a-new-chapter': { redirect: { to: '/content-hub/zendetta-bearing-witness-as-syria-enters-a-new-chapter', statusCode: 301 } },
     '/content-hub/accessible-websites-the-bedrock-of-success-for-health-organizations': { redirect: { to: '/content-hub/why-accessible-healthcare-websites-are-critical-for-patient-trust-and-growth', statusCode: 301 } },
-    '/content-hub/capturing-the-spirit-of-summer-games-fest': { redirect: { to: '/content-hub/designing-a-high-impact-website-for-summer-game-fest-behind-the-build', statusCode: 301 } },
+    // '/content-hub/capturing-the-spirit-of-summer-games-fest': { redirect: { to: '/content-hub/capturing-the-spirit-of-summer-games-fest', statusCode: 301 } },
     '/content-hub/webflow-new-zealand-2024-the-latest-trends-and-partner-insights': { redirect: { to: '/content-hub/the-state-of-webflow-in-new-zealand-2024-industry-report', statusCode: 301 } },
     '/content-hub/leading-the-game-psychoactives-pioneering-role-in-building-gaming-websites': { redirect: { to: '/content-hub/psychoactive-builds-world-class-gaming-websites', statusCode: 301 } },
     '/content-hub/common-reasons-to-move-to-webflow': { redirect: { to: '/content-hub/why-businesses-are-migrating-to-webflow-performance-flexibility-and-scale', statusCode: 301 } },
@@ -130,7 +130,7 @@ export default defineNuxtConfig({
     '/content-hub/writing-great-website-content-that-matches-website-wireframes': { redirect: { to: '/content-hub/how-to-write-high-converting-website-content', statusCode: 301 } },
     // '/content-hub/psychoactive-nominated-by-awwwards-for-agency-of-the-year-2022': { redirect: { to: '/content-hub/psychoactive-nominated-by-awwwards-for-agency-of-the-year-2022', statusCode: 301 } },
     '/content-hub/psychoactive-becomes-new-zealands-first-webflow-enterprise-partner': { redirect: { to: '/content-hub/psychoactive-named-new-zealands-first-webflow-enterprise-partner', statusCode: 301 } },
-    '/content-hub/psychoactive-amphibians': { redirect: { to: '/content-hub/psychoactive-amphibians-exploring-nfts-and-digital-ownership', statusCode: 301 } },
+    '/content-hub/psychoactive-amphibians': { redirect: { to: 'https://psychoactiveamphibians.xyz/', statusCode: 302 } },
     '/content-hub/the-making-of-zendetta': { redirect: { to: '/content-hub/how-zendetta-was-made-psychoactives-most-awarded-project', statusCode: 301 } },
     '/content-hub/how-psychoactive-set-up-crypto-payroll-for-their-employees': { redirect: { to: '/content-hub/psychoactive-leads-early-adoption-of-crypto-payroll-in-new-zealand', statusCode: 301 } },
     '/content-hub/the-state-of-webflow-in-new-zealand-2021': { redirect: { to: '/content-hub/the-state-of-webflow-in-new-zealand-2021-industry-report', statusCode: 301 } },
@@ -139,7 +139,7 @@ export default defineNuxtConfig({
     // Work (Case Studies) Redirects
     '/work/blackbird-vc': { redirect: { to: '/work/blackbird', statusCode: 301 } },
     '/work/good-shepherd': { redirect: { to: '/work/good-shepherd-entertainment', statusCode: 301 } },
-    '/work/aratek-biometric': { redirect: { to: '/work/aratek-biometrics', statusCode: 301 } },
+    '/work/aratek-biometric': { redirect: { to: '/work/aratek', statusCode: 301 } },
 
     // Static Pages Redirects
     '/webflow-enterprise-partners': { redirect: { to: '/webflow-enterprise-agency', statusCode: 301 } },

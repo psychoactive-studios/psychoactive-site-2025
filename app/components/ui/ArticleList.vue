@@ -12,7 +12,10 @@ defineProps({
     <template v-for="(child, index) in item.children || []" :key="index">
       <li v-if="child.type === 'list-item'">
         <template v-for="(textNode, tIndex) in child.children || []" :key="tIndex">
-          {{ textNode.text }}
+          <NuxtLink v-if="textNode.type === 'link'" :to="textNode.url">
+            {{ textNode.children?.map(c => c.text).join('') }}
+          </NuxtLink>
+          <template v-else>{{ textNode.text }}</template>
         </template>
       </li>
       <ArticleList v-else-if="child.type === 'list'" :item="child" />
@@ -22,7 +25,10 @@ defineProps({
     <template v-for="(child, index) in item.children || []" :key="index">
       <li v-if="child.type === 'list-item'">
         <template v-for="(textNode, tIndex) in child.children || []" :key="tIndex">
-          {{ textNode.text }}
+          <NuxtLink v-if="textNode.type === 'link'" :to="textNode.url">
+            {{ textNode.children?.map(c => c.text).join('') }}
+          </NuxtLink>
+          <template v-else>{{ textNode.text }}</template>
         </template>
       </li>
       <ArticleList v-else-if="child.type === 'list'" :item="child" />
@@ -45,6 +51,10 @@ ul {
   list-style-type: disc;
   li {
     margin-bottom: 1.67em;    
+  }
+  a {
+    color: inherit;
+    text-decoration: underline;    
   }
   ul {
     list-style-type: circle;
