@@ -82,9 +82,9 @@ const onMouseEnterHandler = (e) => {
         <div class="news-card__description_info--category subheader-small">
           {{ category }}
         </div>
-        <div class="news-card__description_info--date subheader-small">
+        <!-- <div class="news-card__description_info--date subheader-small">
           {{ publishedAt }}
-        </div>
+        </div> -->
       </div>
       <h3 ref="titleRef" class="news-card__description_title body--mobile">
         {{ title }}

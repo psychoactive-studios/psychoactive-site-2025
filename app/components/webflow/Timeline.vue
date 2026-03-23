@@ -72,7 +72,7 @@ onUnmounted(() => {
             <div class="item__info">
               <h4>Psychoactive began</h4>
               <div class="item__info_text">
-                <p>experimenting with Webflow</p>
+                <p>Experimenting with Webflow</p>
                 <p />
               </div>
             </div>

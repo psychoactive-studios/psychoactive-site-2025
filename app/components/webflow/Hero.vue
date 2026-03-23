@@ -103,7 +103,7 @@ const onClickHandler = (e) => {
             <span class="dots--br" />
           </div>
           <div class="left-text" @click="onClickHandler">
-            <div class="grey-text subheader--mobile">The Bolest</div>
+            <div class="grey-text subheader--mobile">The Boldest</div>
             <h1 class="display-large--mobile">
               <span class="blue">Webflow</span>
               <span>Enterprise</span>
