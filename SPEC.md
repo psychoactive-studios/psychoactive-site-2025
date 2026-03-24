@@ -46,7 +46,7 @@
 | Framework | Nuxt | ^4.1.1 |
 | UI | Vue | ^3.5.21 |
 | Routing | Vue Router | ^4.5.1 |
-| Rendering | SSR + Nitro prerender (SSG hybrid) | — |
+| Rendering | SSG (static generation via `npm run generate`) | — |
 | Styles | SCSS (sass-embedded) | ^1.92.1 |
 | CSS Reset | modern-normalize | ^3.0.1 |
 | Animations | GSAP (+ ScrollTrigger, SplitText) | ^3.13.0 |
@@ -108,9 +108,11 @@
 
 ### Rendering Strategy
 
-- **SSR enabled** (`ssr: true`)
-- **Nitro prerender** with `crawlLinks: true` — automatically generates static HTML for discovered links
-- `failOnError: false` — the build does not fail when individual pages fail to render
+- **Production output is SSG** — static HTML, JS, and assets are produced with **`npm run generate`** (`nuxt generate`).
+- **`ssr: true`** in `nuxt.config.ts` is required so pages can be **fully prerendered** at build time (HTML is generated for each route).
+- **Nitro prerender** uses `crawlLinks: true` — the generator follows `<a>` links and prerenders those routes as well.
+- **`failOnError: false`** — the generate step does not fail the whole build when one route errors.
+- **`npm run build`** (without `generate`) produces a full SSR/Nitro server bundle; use it only if you deploy to a Node server; **static hosting uses the `generate` output** (typically `.output/public` or the configured output dir).
 - Scroll is controlled manually (GSAP/Lenis): `scrollBehavior` returns `false`
 
 ---
@@ -271,8 +273,6 @@ Key components:
 | `HeaderNavigationButton.vue` | Header button (364 lines) |
 | `Accordion.vue` | Accordion |
 | `SoundButton.vue` | Sound toggle |
-| `SoundButton_old.vue` | ⚠️ Legacy file |
-| `ClickCursor copy.vue` | ⚠️ Duplicate cursor |
 
 ---
 
@@ -432,13 +432,13 @@ Each page, case study, and article should override meta via `useHead()` or `useS
 # Start dev server
 npm run dev
 
-# Production build (SSR)
+# SSR / server bundle (Node deploy only; not used for static SSG deploy)
 npm run build
 
-# Static generation (SSG)
+# Static site generation (SSG) — primary production build for static hosting
 npm run generate
 
-# Preview production build
+# Preview the generated static output (after generate or build)
 npm run preview
 
 # Nuxt prepare (postinstall)
