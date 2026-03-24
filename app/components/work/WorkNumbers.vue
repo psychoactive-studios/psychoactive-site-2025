@@ -161,11 +161,17 @@ onUnmounted(() => {
     }
   }  
   &_number {
-    font-size: max(6.25vw, 64px);
+    font-size: max(5.75vw, 64px);
     font-style: normal;
     font-weight: 400;
     line-height: 100%;
     letter-spacing: -0.06em;
+    * {
+      white-space: nowrap;
+    }
+    @include respond(tablet) {
+      font-size: max(6.25vw, 56px);
+    }
     @include respond(mobile) {
       font-size: 11.2vw;
       font-style: normal;
