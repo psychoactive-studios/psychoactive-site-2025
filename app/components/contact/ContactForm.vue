@@ -383,9 +383,9 @@ const handleBackClick = () => {
     scale: 0.8;
     width: 100%;
     visibility: hidden;
-    @include respond(laptop-small) {
-      display: none;
-    }
+    // @include respond(laptop-small) {
+    //   display: none;
+    // }
   }
 
   &__previous {
@@ -393,9 +393,9 @@ const handleBackClick = () => {
     transform: translateY(calc(-100% - 48px - 0.65em));
     opacity: 0.2;
     width: 100%;
-    @include respond(laptop-small) {
-      display: none;
-    }
+    // @include respond(laptop-small) {
+    //   display: none;
+    // }
   }
 
   &__action {

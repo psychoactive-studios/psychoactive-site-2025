@@ -58,7 +58,7 @@ const getSectionOpacity = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(min-width: 1025px)').matches
     ? 0.2
-    : 0;
+    : 0.2;
 
 export default function useContact() {
   function enterAnimation() {
@@ -484,8 +484,6 @@ export default function useContact() {
     const isHideBackButton = lastStep?.stepId === 'intro' && lastStep?.message === null;
     // const lastStep = structuredClone(historySteps.value.pop());
 
-    console.log('isHideBackButton', isHideBackButton);
-
     if (!lastStep) return;
 
     currentStepId.value = lastStep.stepId;
@@ -528,8 +526,9 @@ export default function useContact() {
         {
           scale: 1,
           opacity: 0.2,
-          yPercent: -100,
-          y: -74,
+          transform: 'translateY(calc(-100% - 48px - 0.65em))',
+          // yPercent: -100,
+          // y: -74,
           visibility: 'visible',
           duration: 0.5,
           ease: 'power3.out',
@@ -551,7 +550,7 @@ export default function useContact() {
           '<'
         )
         .set(actionsRef[lastStep.ctaOut], { clearProps: 'all' });
-    }
+    };
     historyTimeline.add(() => {
       currentMessage.value = previousMessage.value;
       previousMessage.value = lastStep.message;
