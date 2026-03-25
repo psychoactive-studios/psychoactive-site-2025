@@ -140,7 +140,7 @@ definePageMeta({
     @include respond(laptop-small) {
       display: flex;
       flex-direction: column;
-      padding-top: 60px;
+      padding-top: 40vh;
       padding-bottom: 48px;
     }
     & > * {
@@ -152,8 +152,9 @@ definePageMeta({
     margin: 0 48px;
     position: relative;    
     @include respond(laptop-small) {
+      display: none;
       width: auto;
-      height: 35vh;
+      height: 40vh;
     }
     &_circle-wrapper {
       position: absolute;

@@ -58,7 +58,7 @@ const getSectionOpacity = () =>
   typeof window !== 'undefined' &&
   window.matchMedia('(min-width: 1025px)').matches
     ? 0.2
-    : 0;
+    : 0.2;
 
 export default function useContact() {
   function enterAnimation() {
@@ -70,7 +70,7 @@ export default function useContact() {
       '#header-logo',
       '#header-navigation-button',
       '#header-sound-button',
-      '.contact-back-button',
+      // '.contact-back-button',
     ]);
 
     const nextMessage = getRandomMessage(
@@ -192,6 +192,12 @@ export default function useContact() {
         },
         '<'
       )
+      .to('.contact-back-button', {
+        scale: 1,
+        opacity: 1,
+        duration: 0.75,
+        ease: 'power3.out',
+      }, '<')
       .fromTo(
         document.querySelector('.navigation-mobile'),
         { y: 64, opacity: 0 },
@@ -475,6 +481,7 @@ export default function useContact() {
     const beforeMessage = historySteps.value.at(-2)?.message;
     const rawStep = historySteps.value.pop();
     const lastStep = rawStep ? JSON.parse(JSON.stringify(rawStep)) : null;
+    const isHideBackButton = lastStep?.stepId === 'intro' && lastStep?.message === null;
     // const lastStep = structuredClone(historySteps.value.pop());
 
     if (!lastStep) return;
@@ -487,6 +494,15 @@ export default function useContact() {
     historyTimeline = gsap.timeline();
 
     sceneRef.value.nextShape(lastStep.sceneShape);
+
+    if (isHideBackButton) {
+      historyTimeline.to('.contact-back-button', {
+        scale: 0,
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.in',
+      });
+    }
 
     historyTimeline
       .to(currentSectionRef.value, {
@@ -510,8 +526,9 @@ export default function useContact() {
         {
           scale: 1,
           opacity: 0.2,
-          yPercent: -100,
-          y: -74,
+          transform: 'translateY(calc(-100% - 48px - 0.65em))',
+          // yPercent: -100,
+          // y: -74,
           visibility: 'visible',
           duration: 0.5,
           ease: 'power3.out',
@@ -533,7 +550,7 @@ export default function useContact() {
           '<'
         )
         .set(actionsRef[lastStep.ctaOut], { clearProps: 'all' });
-    }
+    };
     historyTimeline.add(() => {
       currentMessage.value = previousMessage.value;
       previousMessage.value = lastStep.message;
@@ -614,6 +631,15 @@ export default function useContact() {
           ease: 'power3.out',
         }
       );
+    }
+
+    if (isHideBackButton) {
+      historyTimeline.to('.contact-back-button', {
+        scale: 1,
+        opacity: 1,
+        duration: 0.5,
+        ease: 'power3.out',
+      }, '<');
     }
 
     // if(lastStep.nextMessage) {
