@@ -127,13 +127,13 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
           Psychoactive Metamorphosis Tessellation. Alexandre Bannwarth (2020).
           Custom frame-by-frame animation. Commissioned by Psychoactive.
         </h3>
-        <div class="metamorphosis__video_title-link">
+        <!-- <div class="metamorphosis__video_title-link">
           <div class="line" />
           <LinkWithHover href="/" class="subheader">
             Read more: How we designed the Psychoactive brand identity
           </LinkWithHover>
           <div class="line" />
-        </div>
+        </div> -->
       </div>
     </div>
     <div :class="['metamorphosis__wrapper', { open: isOpen }]">
