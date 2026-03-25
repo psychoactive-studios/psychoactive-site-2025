@@ -140,7 +140,7 @@ definePageMeta({
     @include respond(laptop-small) {
       display: flex;
       flex-direction: column;
-      padding-top: 40vh;
+      padding-top: 30vh;
       padding-bottom: 48px;
     }
     & > * {
