@@ -675,7 +675,7 @@ export default function useContact() {
 
       
 
-      const response = await $fetch('https://formspree.io/f/xeeranzd', {
+      const response = await $fetch('https://formspree.io/f/xnjoqwdb', {
         method: 'POST',
         body: formData,
         headers: {
