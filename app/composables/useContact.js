@@ -654,30 +654,26 @@ export default function useContact() {
   const handlePrevStep = useThrottleFn(handlePrevStepFn, 1000);
 
   const handleSendEmail = async () => {
-    const userTestData = {
-      name: 'Test Name',
-      company: 'Test Company',
-      role: 'Test Role',
-      goal: 'Test Goal',
-      budget: 'Test Budget',
-      deadline: 'Test Deadline',
-      description: 'Test Description',
-      // file: 'Test File',
-    };
-
     try {
       const formData = new FormData();
 
-      // Додаємо всі ключі з userData у FormData
-      Object.keys(userTestData).forEach((key) => {
-        console.log(key, userTestData[key]);
-
-        if (userTestData[key]) {
-          formData.append(key, userTestData[key]);
+      // Append all userData keys to FormData
+      Object.keys(userData).forEach((key) => {
+        if (userData[key]) {
+          if (key === 'file') {
+            // formData.append(key, userData[key][0]);
+          }else{
+            formData.append(key, userData[key]);
+          }          
         }
       });
 
-      return;
+      // formData.forEach((value, key) => {
+      //   console.log('FormData', key, value);
+      // });
+      
+
+      
 
       const response = await $fetch('https://formspree.io/f/xeeranzd', {
         method: 'POST',
@@ -687,14 +683,14 @@ export default function useContact() {
         },
       });
 
-      console.log('Лист успішно відправлено!', response);
+      console.log('Email sent successfully!', response);
 
-      // Тут можна викликати логіку переходу на фінальний крок 'sey_thanks'
+      // Here you can trigger navigation to the final step 'sey_thanks'
     } catch (error) {
-      console.error('Помилка відправки форми:', error);
-      // Тут можна показати повідомлення про помилку користувачу
+      console.error('Error sending email:', error);
+      // Here you can show an error message to the user
     } finally {
-      // Зупиняємо лоадер після завершення циклу
+      // Stop the loader after the request completes
       // dotsTimeline.value.tweenTo(dotsTimeline.value.duration());
     }
   };

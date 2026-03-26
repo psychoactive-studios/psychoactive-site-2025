@@ -23,8 +23,8 @@ const { value: date, errorMessage } = useField(
   }
 );
 
-const onSubmit = handleSubmit((values, event) => {  
-  userData.date = values;
+const onSubmit = handleSubmit((values, event) => {
+  userData.date = values.name;
   const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
   handleNextStep(nextStepId, event.evt);
 });
