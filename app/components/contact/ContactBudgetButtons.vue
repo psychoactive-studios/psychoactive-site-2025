@@ -18,7 +18,7 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="0"
-      @click="(e) => onSubmit(e, 'Branding')"
+      @click="(e) => onSubmit(e, '$50K–$75K')"
     >
       $50K–$75K
     </LinkButton>
@@ -26,7 +26,7 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="1"      
-      @click="(e) => onSubmit(e, 'Website')"
+      @click="(e) => onSubmit(e, '$75K–$100K')"
     >
       $75K–$100K
     </LinkButton>
@@ -34,7 +34,7 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="2"      
-      @click="(e) => onSubmit(e, 'Branding & Website')"
+      @click="(e) => onSubmit(e, '$100K+')"
     >
       $100K+
     </LinkButton>    
