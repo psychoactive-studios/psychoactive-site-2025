@@ -98,6 +98,16 @@ watch(
   { immediate: true, deep: true }
 );
 
+const listGridStyle = computed(() => {
+  const columns = props.data.columns;
+  if (columns == null || columns === '') {
+    return {};
+  }
+  return {
+    gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+  };
+});
+
 // onMounted(() => {
 //   initAnimation();
 // });
@@ -110,7 +120,7 @@ onUnmounted(() => {
 <template>
   <section ref="numbersRef" class="work__numbers">
     <div class="container">      
-      <ul :class="['work__numbers_list', { 'work__numbers_list--small': data.size === 'small' }]">
+      <ul :class="['work__numbers_list', { 'work__numbers_list--small': data.size === 'small' }]" :style="listGridStyle">
         <li v-for="item in displayItems" :key="item.id">
           <div class="work__numbers_number">            
             {{ item.text }}
