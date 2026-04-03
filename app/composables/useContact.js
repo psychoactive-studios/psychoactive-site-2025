@@ -39,6 +39,7 @@ const userData = reactive({
   goal: null,
   budget: null,
   deadline: null,
+  date: null,
   description: null,
   file: null,
 });
@@ -668,7 +669,9 @@ export default function useContact() {
   const handleSendEmail = async () => {
     try {
       const baseUrl = config.public.strapiBaseUrl;
-      const authHeaders = { Authorization: `Bearer ${config.public.strapiApiKey}` };
+      const authHeaders = {
+        Authorization: `Bearer ${config.public.strapiApiKey}`,
+      };
 
       const payload = {
         name: userData.name,
@@ -676,7 +679,7 @@ export default function useContact() {
         role: userData.role,
         goal: userData.goal,
         budget: userData.budget,
-        deadline: userData.deadline,
+        deadline: userData.deadline || userData.date || '',
         description: userData.description,
       };
 
