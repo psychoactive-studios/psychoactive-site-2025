@@ -39,6 +39,7 @@ const userData = reactive({
   goal: null,
   budget: null,
   deadline: null,
+  date: null,
   description: null,
   file: null,
 });
@@ -61,6 +62,9 @@ const getSectionOpacity = () =>
     : 0.2;
 
 export default function useContact() {
+  // Config Strapi variables
+  const config = useRuntimeConfig();
+
   function enterAnimation() {
     const circlePath1 = '.contact__media_circle-wrapper .circle .circle-path-1';
     const circlePath2 = '.contact__media_circle-wrapper .circle .circle-path-2';
@@ -192,12 +196,16 @@ export default function useContact() {
         },
         '<'
       )
-      .to('.contact-back-button', {
-        scale: 1,
-        opacity: 1,
-        duration: 0.75,
-        ease: 'power3.out',
-      }, '<')
+      .to(
+        '.contact-back-button',
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.75,
+          ease: 'power3.out',
+        },
+        '<'
+      )
       .fromTo(
         document.querySelector('.navigation-mobile'),
         { y: 64, opacity: 0 },
@@ -481,7 +489,8 @@ export default function useContact() {
     const beforeMessage = historySteps.value.at(-2)?.message;
     const rawStep = historySteps.value.pop();
     const lastStep = rawStep ? JSON.parse(JSON.stringify(rawStep)) : null;
-    const isHideBackButton = lastStep?.stepId === 'intro' && lastStep?.message === null;
+    const isHideBackButton =
+      lastStep?.stepId === 'intro' && lastStep?.message === null;
     // const lastStep = structuredClone(historySteps.value.pop());
 
     if (!lastStep) return;
@@ -550,7 +559,7 @@ export default function useContact() {
           '<'
         )
         .set(actionsRef[lastStep.ctaOut], { clearProps: 'all' });
-    };
+    }
     historyTimeline.add(() => {
       currentMessage.value = previousMessage.value;
       previousMessage.value = lastStep.message;
@@ -634,12 +643,16 @@ export default function useContact() {
     }
 
     if (isHideBackButton) {
-      historyTimeline.to('.contact-back-button', {
-        scale: 1,
-        opacity: 1,
-        duration: 0.5,
-        ease: 'power3.out',
-      }, '<');
+      historyTimeline.to(
+        '.contact-back-button',
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.5,
+          ease: 'power3.out',
+        },
+        '<'
+      );
     }
 
     // if(lastStep.nextMessage) {
@@ -655,43 +668,48 @@ export default function useContact() {
 
   const handleSendEmail = async () => {
     try {
-      const formData = new FormData();
+      const baseUrl = config.public.strapiBaseUrl;
+      const authHeaders = {
+        Authorization: `Bearer ${config.public.strapiApiKey}`,
+      };
 
-      // Append all userData keys to FormData
-      Object.keys(userData).forEach((key) => {
-        if (userData[key]) {
-          if (key === 'file') {
-            // formData.append(key, userData[key][0]);
-          }else{
-            formData.append(key, userData[key]);
-          }          
+      const payload = {
+        name: userData.name,
+        company: userData.company,
+        role: userData.role,
+        goal: userData.goal,
+        budget: userData.budget,
+        deadline: userData.deadline || userData.date || '',
+        description: userData.description,
+      };
+
+      // Step 1: if a file is attached — upload it first and get the file ID
+      if (userData.file && userData.file[0]) {
+        const uploadForm = new FormData();
+        uploadForm.append('files', userData.file[0]);
+
+        const uploadResponse = await $fetch(`${baseUrl}/api/upload`, {
+          method: 'POST',
+          headers: authHeaders,
+          body: uploadForm,
+        });
+
+        const fileId = uploadResponse?.[0]?.id;
+        if (fileId) {
+          payload.file = fileId;
         }
-      });
+      }
 
-      // formData.forEach((value, key) => {
-      //   console.log('FormData', key, value);
-      // });
-      
-
-      
-
-      const response = await $fetch('https://formspree.io/f/xnjoqwdb', {
+      // Step 2: create the lead with all data (including file ID if present)
+      const leadResponse = await $fetch(`${baseUrl}/api/leads`, {
         method: 'POST',
-        body: formData,
-        headers: {
-          Accept: 'application/json',
-        },
+        headers: { ...authHeaders, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: payload }),
       });
 
-      console.log('Email sent successfully!', response);
-
-      // Here you can trigger navigation to the final step 'sey_thanks'
+      console.log('Success!', leadResponse);
     } catch (error) {
-      console.error('Error sending email:', error);
-      // Here you can show an error message to the user
-    } finally {
-      // Stop the loader after the request completes
-      // dotsTimeline.value.tweenTo(dotsTimeline.value.duration());
+      console.error('Error:', error.data || error);
     }
   };
 
