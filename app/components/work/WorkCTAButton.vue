@@ -1,6 +1,9 @@
 <script setup>
 import gsap from 'gsap';
 import LinkButton from '../ui/LinkButton.vue';
+import { useSlots } from 'vue';
+
+const slots = useSlots();
 
 let ctx;
 const containerRef = ref(null);
@@ -92,7 +95,7 @@ onUnmounted(() => {
   <!-- CTA section -->
   <section ref="containerRef" class="work__cta">
     <div class="container">
-      <h2 class="work__cta_title">
+      <h2 v-if="slots.default" class="work__cta_title">
         <slot />
       </h2>
 

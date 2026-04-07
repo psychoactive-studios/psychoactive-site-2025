@@ -31,7 +31,6 @@ const getSrcSet = (image) => {
 
   return srcSet.join(', ');
 };
-
 </script>
 
 <template>
@@ -189,13 +188,21 @@ const getSrcSet = (image) => {
       </section>
 
       <!-- CTA section -->
-      <WorkCTAButton
-        v-if="block.__component === 'work.launch-website'"
-        :href="block.showButton && websiteLink ? (block.customLink ? block.customLink : websiteLink) : false"
-        :buttonText="block.buttonText || 'Launch Website'"
-      >
-        {{ block.text }}
-      </WorkCTAButton>
+       <div v-if="block.__component === 'work.launch-website'">
+        <WorkCTAButton
+          v-if="block.text"
+          :href="block.showButton && websiteLink ? (block.customLink ? block.customLink : websiteLink) : false"
+          :buttonText="block.buttonText || 'Launch Website'"
+        >
+          {{ block.text }}
+        </WorkCTAButton>
+        <WorkCTAButton
+          v-else
+          :href="block.showButton && websiteLink ? (block.customLink ? block.customLink : websiteLink) : false"
+          :buttonText="block.buttonText || 'Launch Website'"
+        />
+       </div>
+      
     </template>
   </article>
 </template>
