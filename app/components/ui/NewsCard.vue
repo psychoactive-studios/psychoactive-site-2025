@@ -44,7 +44,7 @@ const handleHoverEffect = () => {
 
   // Store the original text
   gsap.to(titleRef.value, {
-    duration: 1.5,
+    duration: 0.5,
     ease: 'none',
     scrambleText: {
       text: '{original}',
