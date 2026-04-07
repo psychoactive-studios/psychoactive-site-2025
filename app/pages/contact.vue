@@ -66,7 +66,7 @@ definePageMeta({
 </script>
 
 <template>
-  <main class="contact">
+  <main class="contact" data-lenis-prevent>
     <div class="container">      
       <div class="contact__grid">
         <section class="contact__media">
