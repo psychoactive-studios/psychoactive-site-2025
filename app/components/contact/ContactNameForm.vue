@@ -10,7 +10,7 @@ const { userData, currentStepId, handleNextStep } = useContact();
 
 const { handleSubmit } = useForm();
 
-const { value: name, errorMessage } = useField(
+const { value: name, errorMessage: nameError } = useField(
   'name',
   (value) => {
     if (!value || !value.trim()) {
@@ -23,8 +23,25 @@ const { value: name, errorMessage } = useField(
   }
 );
 
-const onSubmit = handleSubmit((values, event) => {  
+const { value: email, errorMessage: emailError } = useField(
+  'email',
+  (value) => {
+    if (!value || !value.trim()) {
+      return 'Fill your email please';
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      return 'Enter a valid email';
+    }
+    return true;
+  },
+  {
+    initialValue: userData.email,
+  }
+);
+
+const onSubmit = handleSubmit((values, event) => {
   userData.name = values.name;
+  userData.email = values.email;
   const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
   handleNextStep(nextStepId, event.evt);
 });
@@ -37,7 +54,13 @@ const onSubmit = handleSubmit((values, event) => {
         v-model="name"
         placeholder="Type your name"
         class="name-form__input"
-        :error-message="errorMessage"
+        :error-message="nameError"
+      />
+      <TextField
+        v-model="email"
+        placeholder="Type your email"
+        class="name-form__input"
+        :error-message="emailError"
       />
     </div>
     <LinkButton class="name-form__button" size="small">submit</LinkButton>
@@ -58,6 +81,7 @@ const onSubmit = handleSubmit((values, event) => {
     display: flex;
     flex-direction: column;
     position: relative;
+    gap: getRem(24);
   }
 
   &__input {

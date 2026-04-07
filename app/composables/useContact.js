@@ -30,10 +30,12 @@ const actionsRef = reactive({
   dateForm: null,
   descriptionForm: null,
   joinTeamButtons: null,
+  finishHomeButton: null,
 });
 
 const userData = reactive({
   name: null,
+  email: null,
   company: null,
   role: null,
   goal: null,
@@ -675,6 +677,7 @@ export default function useContact() {
 
       const payload = {
         name: userData.name,
+        email: userData.email,
         company: userData.company,
         role: userData.role,
         goal: userData.goal,
@@ -682,6 +685,8 @@ export default function useContact() {
         deadline: userData.deadline || userData.date || '',
         description: userData.description,
       };
+
+      console.log('payload', payload);
 
       // Step 1: if a file is attached — upload it first and get the file ID
       if (userData.file && userData.file[0]) {
