@@ -191,7 +191,7 @@ export const tadiSteps = {
         ],
       },
     ],
-    // cta: 'descriptionForm',
+    cta: 'finishHomeButton',
     // type: 'textField',
     callback: 'submit',
     sceneShape: 7,

@@ -203,6 +203,20 @@ const handleBackClick = () => {
         >
           <ContactJoinButtons />
         </div>
+
+        <div
+          :ref="(el) => (actionsRef.finishHomeButton = el)"
+          class="contact-form__action_item -buttons"
+        >
+          <LinkButton
+            class="contact-form__action_button"
+            size="small"
+            href="/"
+            target="_self"
+          >
+            Go to home
+          </LinkButton>
+        </div>
       </div>
     </div>
   </div>
