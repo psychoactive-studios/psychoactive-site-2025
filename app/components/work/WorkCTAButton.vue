@@ -118,7 +118,7 @@ onUnmounted(() => {
     padding: 60px 0;
   }
   &_title {
-    width: 50%;
+    width: 75%;
     margin: auto;
     font-size: 2.5vw;
     font-style: normal;
