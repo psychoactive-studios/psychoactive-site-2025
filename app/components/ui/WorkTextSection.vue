@@ -62,7 +62,7 @@ onMounted(async () => {
         {
           backgroundPosition: '0% 0%',
           duration: 2,
-          ease: 'power3.inOut',
+          ease: 'power3.out',
         },
         '<'
       );

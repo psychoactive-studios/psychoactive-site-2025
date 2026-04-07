@@ -39,8 +39,8 @@ onMounted(() => {
       .timeline({
         scrollTrigger: {
           trigger: containerRef.value,
-          start: 'top 30%',
-          end: 'bottom 30%',
+          start: 'top 70%',
+          end: 'bottom 70%',
         },
       })
       .from(
