@@ -31,6 +31,9 @@ const getSrcSet = (image) => {
 
   return srcSet.join(', ');
 };
+
+console.log('data', props.data);
+
 </script>
 
 <template>
@@ -176,7 +179,7 @@ const getSrcSet = (image) => {
         v-if="block.__component === 'shared.media-grid'"
         class="work__media-grid"
       >
-      <div class="container">
+      <div :class="['container', { 'container--mobile': block.oneColumnOnMobile }]">
         <img
           v-for="image in block.mediaGrid"
           :key="image.id"
@@ -368,6 +371,14 @@ const getSrcSet = (image) => {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 32px;
+      @include respond(mobile) {
+        gap: 16px;
+      }
+      &--mobile {
+        @include respond(mobile) {
+          grid-template-columns: 1fr;
+        }
+      }
     }
     &-image {
       width: 100%;
