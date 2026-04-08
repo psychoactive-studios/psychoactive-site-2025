@@ -22,8 +22,8 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch, computed, nextTick } from 'vue';
 import * as THREE from 'three';
-import vertexShader from '@/utils/glsl/main.vert?raw';
-import fragmentShader from '@/utils/glsl/main.frag?raw';
+import vertexShader from '@/utils/glsl/video.vert?raw';
+import fragmentShader from '@/utils/glsl/video.frag?raw';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useMediaQuery, usePointer } from '@vueuse/core';
@@ -321,7 +321,7 @@ function removeEventListeners() {
   video {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
     border-radius: inherit;
   }
