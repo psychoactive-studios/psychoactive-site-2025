@@ -20,9 +20,14 @@ const props = defineProps({
     required: false,
     default: 'Launch Website',
   },
+  textWidth: {
+    type: String,
+    required: false,
+    default: 'small',
+  },
 });
 
-const { href, buttonText } = props;
+const { href, buttonText, textWidth } = props;
 
 onMounted(() => {
   ctx = gsap.context(() => {
@@ -96,10 +101,9 @@ onUnmounted(() => {
   <!-- CTA section -->
   <section ref="containerRef" class="work__cta">
     <div class="container">
-      <h2 v-if="slots.default" class="work__cta_title">
+      <h2 v-if="slots.default" :class="['work__cta_title', `work__cta_title--${textWidth || 'small'}`]">
         <slot />
       </h2>
-
       <div v-if="href" ref="buttonSectionRef" class="work__cta_navigation">
         <div class="work__cta_line">
           <span class="line" />
@@ -131,6 +135,15 @@ onUnmounted(() => {
     letter-spacing: -0.02em;
     text-align: center;
     margin-bottom: 74px;
+    &--small {
+      width: 50%;
+    }
+    &--medium {
+      width: 75%;
+    }
+    &--full {
+      width: 100%;
+    }
     @include respond(mobile) {
       width: auto;
       font-size: max(6.4vw, 24px);

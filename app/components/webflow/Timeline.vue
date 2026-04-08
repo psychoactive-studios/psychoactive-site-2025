@@ -45,9 +45,9 @@ onUnmounted(() => {
     <div class="timeline__inner">
       <div class="timeline__year">{{ Math.floor(currentYear) }}</div>
       <div class="timeline__yearline">
-        <ul class="timeline__yearline_list">
+        <!-- <ul class="timeline__yearline_list">
           <li v-for="year in timelineData.years" :key="year">{{ year }}</li>
-        </ul>
+        </ul> -->
         <div class="timeline__yearline_marquee">
           <PlusIcon v-for="i in 22" :key="i" />
         </div>
@@ -68,7 +68,7 @@ onUnmounted(() => {
               <img src="/img/webflow-logo.svg" alt="" />
               <h3>Early Adopter</h3>
             </div>
-            <div class="item__dot item__dot--white" />
+            <div class="item__dot item__dot--white" data-year="2019" />
             <div class="item__info">
               <h4>Psychoactive began</h4>
               <div class="item__info_text">
@@ -82,7 +82,7 @@ onUnmounted(() => {
               <img src="/img/webflow-logo.svg" alt="" />
               <h3>Certified Partner</h3>
             </div>
-            <div class="item__dot" />
+            <div class="item__dot" data-year="2020" />
             <div class="item__info">
               <h4>Psychoactive becomes</h4>
               <div class="item__info_text">
@@ -97,7 +97,7 @@ onUnmounted(() => {
               <h3>Certified Partner</h3>
               <div class="enterprise">Enterprise</div>
             </div>
-            <div class="item__dot" />
+            <div class="item__dot" data-year="2022" />
             <div class="item__info">
               <h4>Psychoactive becomes</h4>
               <div class="item__info_text">
@@ -113,7 +113,7 @@ onUnmounted(() => {
               <div class="enterprise blue">Enterprise</div>
             </div>
             <div class="item__dots">
-              <div class="item__dot" />
+              <div class="item__dot" data-year="2025" />
               <div class="item__dot" />
             </div>
             <div class="item__info">
@@ -267,6 +267,15 @@ $range: $max - $min + 1;
           background-color: $color-foreground;
           border-radius: 50%;
           opacity: 0.2;
+          position: relative;
+          &::before {
+            content: attr(data-year);
+            position: absolute;
+            top: calc(100% + 0.3em);
+            left: 0;
+            font-size: clamp(14px, 1.04vw, 20px);
+            line-height: 130%;
+          }
           &--white {
             opacity: 1;
           }

@@ -31,7 +31,6 @@ const getSrcSet = (image) => {
 
   return srcSet.join(', ');
 };
-
 console.log('data', props.data);
 
 </script>
@@ -196,6 +195,7 @@ console.log('data', props.data);
           v-if="block.text"
           :href="block.showButton && websiteLink ? (block.customLink ? block.customLink : websiteLink) : false"
           :buttonText="block.buttonText || 'Launch Website'"
+          :textWidth="block.textWidth || 'small'"
         >
           {{ block.text }}
         </WorkCTAButton>
@@ -203,6 +203,7 @@ console.log('data', props.data);
           v-else
           :href="block.showButton && websiteLink ? (block.customLink ? block.customLink : websiteLink) : false"
           :buttonText="block.buttonText || 'Launch Website'"
+          :textWidth="block.textWidth || 'small'"
         />
        </div>
       
