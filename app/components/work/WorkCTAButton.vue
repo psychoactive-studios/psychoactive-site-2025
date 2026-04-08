@@ -7,6 +7,7 @@ const slots = useSlots();
 
 let ctx;
 const containerRef = ref(null);
+const buttonSectionRef = ref(null);
 
 const props = defineProps({
   href: {
@@ -41,9 +42,9 @@ onMounted(() => {
     gsap
       .timeline({
         scrollTrigger: {
-          trigger: containerRef.value,
-          start: 'top 70%',
-          end: 'bottom 70%',
+          trigger: buttonSectionRef.value,
+          start: 'top bottom',
+          end: 'bottom bottom',
         },
       })
       .from(
@@ -99,7 +100,7 @@ onUnmounted(() => {
         <slot />
       </h2>
 
-      <div v-if="href" class="work__cta_navigation">
+      <div v-if="href" ref="buttonSectionRef" class="work__cta_navigation">
         <div class="work__cta_line">
           <span class="line" />
         </div>
