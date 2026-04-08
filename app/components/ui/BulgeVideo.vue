@@ -232,7 +232,8 @@ function handleResize() {
 
 function handleMouseMove() {
   if (!rootEl.value || !shouldActivate.value) return;
-  const rect = rootEl.value.getBoundingClientRect();  
+  if (!isHovered.value) isHovered.value = true;
+  const rect = rootEl.value.getBoundingClientRect();
 
   lastMousePosition.x = eventX.value;
   lastMousePosition.y = eventY.value;
