@@ -32,6 +32,7 @@ const { pointerType, x: eventX, y: eventY } = usePointer();
 const isMobile = useMediaQuery('(max-width: 768px)');
 
 const isHovered = ref(false);
+const isInView = ref(false);
 
 const props = defineProps({
   src: {
@@ -263,6 +264,12 @@ function initScrollTrigger() {
     trigger: rootEl.value,
     start: 'top bottom',
     end: 'bottom top',
+    onToggle: (self) => {
+      isInView.value = self.isActive;
+      if (videoEl.value) {
+        self.isActive ? videoEl.value.play() : videoEl.value.pause();
+      }
+    },
     onUpdate: () => {
       handleScroll();
     },
@@ -277,7 +284,7 @@ function cleanupScrollTrigger() {
 }
 
 function animate() {
-  const isActive = isHovered.value || targetStrength.value > 0.001;
+  const isActive = isInView.value && (isHovered.value || targetStrength.value > 0.001);
 
   if (renderer && scene && camera && material && isActive) {
     lerpedMouse.x = gsap.utils.interpolate(
