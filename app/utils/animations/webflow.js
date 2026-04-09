@@ -671,9 +671,9 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
       })
       .fromTo(
         currentYear,
-        { value: 2015 },
+        { value: 2018 },
         {
-          value: 2018,
+          value: 2020,
           duration: introDuctionTime,
           ease: 'none',
           //ease: 'power1.in',
@@ -742,7 +742,7 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
       )
       .fromTo(
         currentYear,
-        { value: 2018 },
+        { value: 2020 },
         {
           value: 2030,
           duration: mainDuctionTime / 1.3,

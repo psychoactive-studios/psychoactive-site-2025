@@ -2,32 +2,32 @@
 import gsap from 'gsap';
 import PlusIcon from '~/assets/icons/icon-plus.svg';
 import { timelineScrollAnimation } from '~/utils/animations/webflow';
-const timelineData = {
-  years: [
-    '2015',
-    '2016',
-    '2017',
-    '2018',
-    '2019',
-    '2020',
-    '2021',
-    '2022',
-    '2023',
-    '2024',
-    '2025',
-    '2026',
-    '2027',
-    '2028',
-    '2029',
-    '2030',
-    '2031',
-    '2032',
-    '2033',
-  ],
-};
+// const timelineData = {
+//   years: [
+//     '2015',
+//     '2016',
+//     '2017',
+//     '2018',
+//     '2019',
+//     '2020',
+//     '2021',
+//     '2022',
+//     '2023',
+//     '2024',
+//     '2025',
+//     '2026',
+//     '2027',
+//     '2028',
+//     '2029',
+//     '2030',
+//     '2031',
+//     '2032',
+//     '2033',
+//   ],
+// };
 
 const containerRef = ref(null);
-const currentYear = ref(2015);
+const currentYear = ref(2018);
 let ctx = null;
 
 onMounted(() => {
