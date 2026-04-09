@@ -79,8 +79,12 @@ export default function useContact() {
       // '.contact-back-button',
     ]);
 
-    const nextMessage = getRandomMessage(
+    const firstMessage = currentMessage.value;
+    const secondMessage = getRandomMessage(
       tadiSteps[currentStepId.value]?.messages[1]?.variations
+    );
+    const thirdMessage = getRandomMessage(
+      tadiSteps[currentStepId.value]?.messages[2]?.variations
     );
 
     gsap
@@ -127,6 +131,16 @@ export default function useContact() {
       )
       // First message transition
       .to(
+        previousSectionRef.value,
+        {
+          opacity: 0,
+          scale: 0.9,
+          duration: 0.8,
+          ease: 'power3.out',
+        },
+        '+=1'
+      )
+      .to(
         currentSectionRef.value,
         {
           transform: 'translateY(calc(-100% - 48px - 0.65em))',
@@ -134,25 +148,91 @@ export default function useContact() {
           opacity: getSectionOpacity(),
           ease: 'power4.out',
         },
-        '+=1'
+        '<'
       )
       .add(() => {
+        // History: record first message so "back" can restore it
         historySteps.value.push({
           message: null,
-          nextMessage: nextMessage,
+          nextMessage: secondMessage,
+          ctaIn: null,
+          ctaOut: null,
+          sceneShape: 0,
+          stepId: 'intro',
+        });
+
+        historyMessage.value = null;
+
+        previousMessage.value = currentMessage.value;
+        currentMessage.value = secondMessage;
+        gsap.set(
+          [
+            currentSectionRef.value,
+            currentSectionTextRef.value,
+            previousSectionRef.value,
+          ],
+          {
+            clearProps: 'all',
+          }
+        );
+      })
+
+      // Second message appear
+      .to(currentSectionTextRef.value, {
+        backgroundPositionX: '-100%',
+        duration: 1,
+        ease: 'power2.inOut',
+      })
+
+      // Second message transition
+      .to(
+        previousSectionRef.value,
+        {
+          opacity: 0,
+          scale: 0.9,
+          duration: 0.8,
+          ease: 'power3.out',
+        },
+        '+=1'
+      )
+      .to(
+        currentSectionRef.value,
+        {
+          transform: 'translateY(calc(-100% - 48px - 0.65em))',
+          duration: 0.8,
+          opacity: getSectionOpacity(),
+          ease: 'power4.out',
+        },
+        '<'
+      )
+      .add(() => {
+        // History: record second message with intro buttons as target
+        historySteps.value.push({
+          message: firstMessage,
+          nextMessage: thirdMessage,
           ctaIn: 'introButtons',
           ctaOut: 'introButtons',
           sceneShape: 0,
           stepId: 'intro',
         });
+
+        historyMessage.value = firstMessage;
+
         previousMessage.value = currentMessage.value;
-        currentMessage.value = nextMessage;
-        gsap.set([currentSectionRef.value, currentSectionTextRef.value], {
-          clearProps: 'all',
-        });
+        currentMessage.value = thirdMessage;
+        gsap.set(
+          [
+            currentSectionRef.value,
+            currentSectionTextRef.value,
+            previousSectionRef.value,
+          ],
+          {
+            clearProps: 'all',
+          }
+        );
       })
 
-      // Second message transition
+      // Third message appear
       .to(currentSectionTextRef.value, {
         backgroundPositionX: '-100%',
         duration: 1,
@@ -494,6 +574,8 @@ export default function useContact() {
     const isHideBackButton =
       lastStep?.stepId === 'intro' && lastStep?.message === null;
     // const lastStep = structuredClone(historySteps.value.pop());
+    console.log('lastStep', lastStep);
+    console.log('isHideBackButton', isHideBackButton);
 
     if (!lastStep) return;
 

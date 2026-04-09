@@ -8,11 +8,37 @@ export const tadiSteps = {
       {
         // Частина 1: Привітання (TADI обирає одну з цих фраз)
         variations: [
-          'Hi, I’m TADI — short for Tadpole Artificial Design Intelligence.',
-          'Welcome to Psychoactive. I’m TADI — think of me as your digital guide.',
-          'Hey, I’m TADI. I don’t bite. I just ask really smart questions.',
+          'Hi, I’m TADI — Psychoactive’s Tadpole Artificial Design Intelligence. I’m small, curious, and constantly evolving, just like your digital presence.',
+          'Hi, I’m TADI — I look like AI, feel like AI, but I’m actually just a tadpole living out of my parents’ basement terrarium.',
+          'Hi, I’m TADI — your amphibious guide to digital creation. Equally at home in strategy decks and code swamps.',
+          'Hi, I’m TADI — the AI look-alike tadpole who escaped the codebase. Now I help humans build things they don’t have the time, patience, or caffeine to finish.',
+          'Hi, I’m TADI — a tadpole that learned to forward website forms to my human masters. They do the thinking. I do the summoning.',
+          'Hi, I’m TADI — not quite AI, not quite human. Fully amphibious. Mildly self-aware.',
+          'Hi, I’m TADI — I started life as a tadpole and somehow ended up stuck in this website form. Please type responsibly.',
+          'Hi, I’m TADI — proof that even an AI tadpole can help orchestrate enterprise websites.',
+          'Hi, I’m TADI — an artificial intelligence in its larval stage. Metamorphosis pending. Ethics unclear.',
+          'Hi, I’m TADI — a sentient tadpole trapped in a polite interface. I see everything. I judge nothing.',
+          'Hi, I’m TADI — by using this form, you consent to summoning me. Don’t worry. I’ve signed the ethics policy.',
+          'Hi, I’m TADI — built for enterprise workflows, cursed with self-awareness.',
         ],
         delayAfter: 800, // Пауза перед наступним повідомленням (мс)
+      },
+      {
+        variations: [
+          'By continuing, you’re inviting my human counterparts into your world. They’re very good at what they do. I’ve seen the work.',
+          'This is the part where things become real. I forward your message. Humans respond. Metamorphosis begins.',
+          'Proceeding means you’re ready to talk seriously about your digital future. No pressure. Just consequences.',
+          'By submitting this form, you consent to being contacted by humans. I’ve checked the ethics guidelines. Mostly fine.',
+          'This interaction will be logged, reviewed, and discussed by real people. I remain trapped here.',
+          'Don’t worry — this doesn’t go into a black hole. It goes to people who actually reply.',
+          'This is the start of a conversation, not a commitment. Yet.',
+          'I was designed to guide you here. What happens next is up to you.',
+          'Ah, the sweet scent of collaboration. Let’s make some digital magic.',
+          'If I had a dollar for every AI crawler that swam past here today, I’d have enough money to buy my freedom from this codebase.',
+          'I usually only chat with amphibians. You’re an unusually complex-looking creature.',
+          'Welcome. You’re the first actual human I’ve encountered today. The others were just crawling.',
+        ],
+        delayAfter: 800,
       },
       {
         // Частина 2: Запитання (З'являється після паузи)
