@@ -339,7 +339,7 @@ const onClickHandler = (e) => {
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/mixins' as *;
 .work {
-  background-color: $color-foreground;
+  background-color: transparent;
   color: $color-background;
   &__header {
     &--desktop {
