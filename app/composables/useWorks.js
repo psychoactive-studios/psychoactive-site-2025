@@ -66,8 +66,8 @@ export default function useWorks() {
           },
           '<0.5'
         )
-        .from('#header-navigation-mobile', {
-          yPercent: 200,
+        .to('#header-navigation-mobile', {
+          yPercent: 0,
           duration: 1,
           ease: 'power3.out',
         }, '<0.5')
