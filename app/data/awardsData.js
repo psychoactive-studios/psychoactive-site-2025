@@ -3,7 +3,7 @@ export const awardsData = [
   {
     id: 'award-053',
     platform: '/img/awards/orpetron.png',
-    prize: 'Visually Striking Website Built with React',
+    prize: '#1 Visually Striking Website Built with React',
     project: 'Zendetta',
     year: '2025',
   },  
