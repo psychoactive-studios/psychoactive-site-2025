@@ -244,6 +244,14 @@ defineProps({
   }
   a {    
     text-decoration: underline;
+    text-underline-offset: 0.13em;
+    text-decoration-color: currentColor;
+    text-decoration-thickness: 1px;
+    transition: text-decoration 0.3s ease, color 0.3s ease;
+    &:hover {
+      text-decoration-color: transparent;
+      color: rgbaColor($color-background, 50);
+    }
   }
   .image {
     margin-top: 120px;

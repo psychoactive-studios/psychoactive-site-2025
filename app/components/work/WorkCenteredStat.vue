@@ -33,7 +33,7 @@ const initAnimation = () => {
     tl = gsap.timeline({
       scrollTrigger: {
         trigger: numbersRef.value,
-        start: 'top 90%',
+        start: 'top bottom',
         end: 'bottom center',
       },
     });

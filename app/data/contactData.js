@@ -73,15 +73,15 @@ export const tadiSteps = {
       },
     ],
     cta: 'roleForm',
-    type: 'textField',        
-    sceneShape: 2,    
+    type: 'textField',
+    sceneShape: 2,
     nextStep: 'ask_project_goal',
   },
 
   ask_project_goal: {
     id: 'ask_project_goal',
     messages: [
-      {        
+      {
         variations: [
           'Got it. What kind of transformation are you after?',
         ],
@@ -95,8 +95,8 @@ export const tadiSteps = {
     //   },
     // ],
     cta: 'goalButtons',
-    type: 'buttons',        
-    sceneShape: 3,    
+    type: 'buttons',
+    sceneShape: 3,
     nextStep: 'ask_budget',
   },
 
@@ -108,7 +108,7 @@ export const tadiSteps = {
           'A classic metamorphosis. I like your style.',
         ],
       },
-      {        
+      {
         variations: [
           'Let’s talk resources — every good metamorphosis needs the right nutrients.',
         ],
@@ -135,12 +135,12 @@ export const tadiSteps = {
           'Perfect. That’s enough energy to evolve something extraordinary.',
         ],
       },
-      {        
+      {
         variations: [
           'When are you hoping this transformation begins?',
         ],
       },
-    ],    
+    ],
     cta: 'timelineButtons',
     type: 'buttons',
     sceneShape: 5,
@@ -150,12 +150,12 @@ export const tadiSteps = {
   ask_date: {
     id: 'ask_date',
     messages: [
-      {        
+      {
         variations: [
           'What’s the big day?',
         ],
       },
-    ],    
+    ],
     cta: 'dateForm',
     type: 'textField',
     sceneShape: 5,
@@ -165,14 +165,14 @@ export const tadiSteps = {
   ask_description: {
     id: 'ask_description',
     messages: [
-      {        
+      {
         variations: [
           'Give me the short version. What are we creating together?',
         ],
       },
     ],
     cta: 'descriptionForm',
-    type: 'textField',        
+    type: 'textField',
     sceneShape: 6,
     nextStep: 'sey_thanks',
   },
@@ -180,12 +180,12 @@ export const tadiSteps = {
   sey_thanks: {
     id: 'sey_thanks',
     messages: [
-      {        
+      {
         variations: [
           'Thanks, [Name]. I’ll ripple your details through the Psychoactive pond — the humans will be in touch soon.',
         ],
       },
-      {        
+      {
         variations: [
           'Consider your metamorphosis officially underway.',
         ],
@@ -202,33 +202,33 @@ export const tadiSteps = {
   join_intro: {
     id: 'join_intro',
     messages: [
-      {        
+      {
         variations: [
           'Ah, a fellow creative creature. Just so you know, all our roles are freelance and project-based.',
         ],
       },
-      {        
+      {
         variations: [
           'What’s your discipline?',
         ],
       },
     ],
     cta: 'joinTeamButtons',
-    type: 'buttons',        
+    type: 'buttons',
     sceneShape: 4,
     nextStep: 'join_action',
   },
   join_action: {
     id: 'join_action',
     messages: [
-      {        
+      {
         variations: [
           `Perfect. Send your portfolio and a short intro to [email].\n
           If we vibe, we’ll be in touch faster than a frog catches a fly.
           `,
         ],
       },
-      {        
+      {
         variations: [
           'Thanks for reaching out — I’ll let the team know another talent is emerging from the pond.',
         ],
@@ -238,8 +238,3 @@ export const tadiSteps = {
     // nextStep: '',
   },
 };
-
-
-
-
-

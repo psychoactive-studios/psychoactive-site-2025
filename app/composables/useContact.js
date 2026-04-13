@@ -59,7 +59,7 @@ const getRandomMessage = (arr) => {
  */
 const getSectionOpacity = () =>
   typeof window !== 'undefined' &&
-  window.matchMedia('(min-width: 1025px)').matches
+    window.matchMedia('(min-width: 1025px)').matches
     ? 0.2
     : 0.2;
 

@@ -28,8 +28,8 @@ onMounted(async () => {
   gsap.to(elementRef.value.querySelectorAll('.char-center'), {
     scrollTrigger: {
       trigger: elementRef.value,
-      start: '-15% 50%',
-      end: '115% 50%',
+      start: '-15% 75%',
+      end: '115% 70%',
       scrub: true,
     },
     opacity: 1,

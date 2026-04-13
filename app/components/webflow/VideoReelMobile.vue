@@ -59,7 +59,7 @@ onBeforeUnmount(() => {
     <div class="hero-mobile__player">
       <video
         class="hero-mobile__player_preview"
-        src="/video/mobile_preview_reel.mp4"
+        src="/video/psreel_mob_preview.mp4"
         autoplay
         loop
         muted
@@ -112,6 +112,7 @@ onBeforeUnmount(() => {
       height: 100%;
       object-fit: cover;
       z-index: 0;
+      background: url('/img/ps_mob_preview.jpg') no-repeat center / cover;
     }
     &_video {
       position: absolute;

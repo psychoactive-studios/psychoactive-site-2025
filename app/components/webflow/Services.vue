@@ -30,8 +30,8 @@ onMounted(async () => {
       .timeline({
         scrollTrigger: {
           trigger: containerRef.value,
-          start: 'top center',
-          end: 'bottom center',
+          start: 'top bottom',
+          end: 'bottom bottom',
           invalidateOnRefresh: true,
         },
       })

@@ -70,6 +70,11 @@ useSeoMeta(seoMeta.value);
 
 watch(isLoading, (newVal) => {
   if (!newVal) {
+    if(isMobile.value) {
+      gsap.set('#header-navigation-mobile', {
+        yPercent: 200,
+      });
+    }
     workPageInit();
   }
 });
@@ -339,7 +344,7 @@ const onClickHandler = (e) => {
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/mixins' as *;
 .work {
-  background-color: $color-foreground;
+  background-color: transparent;
   color: $color-background;
   &__header {
     &--desktop {
@@ -568,7 +573,7 @@ const onClickHandler = (e) => {
             top: 50%;
             left: -50vw;
             right: -50vw;
-            height: 100vh;
+            height: 200vh;
             background-color: #ffffff;
             z-index: -1;
           }

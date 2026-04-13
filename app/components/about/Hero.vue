@@ -7,17 +7,18 @@ import {
   heroScrollAnimation,
 } from '~/utils/animations/about';
 import useAudioManager from '~/composables/useAudioManager';
+import BulgeVideo from '../ui/BulgeVideo.vue';
+import { useMediaQuery } from '@vueuse/core';
 
-// console.log('heroInitAnimation', heroInitAnimation);
 
 const containerRef = ref(null);
 const heroVideoResource = ref(null);
-const heroVideoplayerRef = ref(null);
 let ctx = null;
 
 const { isLoading, addResourceToLoad, resourceLoaded } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
 const { playInteractionSound, isSoundApproved, hasInteracted } = useAudioManager();
+const isMobile = useMediaQuery('(max-width: 768px)');
 
 // Indicate that this component has a resource to load
 addResourceToLoad(1);
@@ -38,24 +39,26 @@ onUnmounted(() => {
 
 watch(isLoading, (newVal) => {
   if (!newVal) {
-    heroVideoplayerRef.value.play();
+    // heroVideoplayerRef.value.play();
     heroInitAnimation(ctx, scrollSmoother);
     if (isSoundApproved.value && hasInteracted.value) playInteractionSound('about-load');
   }
 });
 </script>
 
-<template>
-  <section ref="containerRef" class="hero">
-    <div class="hero__wrapper">
+<template>  
+  <section ref="containerRef" class="hero">    
+    <div class="hero__wrapper">      
       <video
-        ref="heroVideoplayerRef"
-        class="hero__video"
+        v-if="isMobile"        
         :src="heroVideoResource"
+        class="hero__video"
         loop
         muted
         playsinline
+        autoplay
       />
+      <BulgeVideo v-else :src="heroVideoResource" class="hero__video" />
       <div class="hero__video-overlay" />
       <HeroCenterLine class="hero__center-line" />
       <div class="container">
@@ -72,7 +75,7 @@ watch(isLoading, (newVal) => {
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/variables' as *;
 .hero {
-  pointer-events: none;
+  // pointer-events: none;
   background-color: $color-background;
   &__wrapper {
     @include flex-center;
@@ -89,6 +92,11 @@ watch(isLoading, (newVal) => {
       padding-top: 24px;
       padding-bottom: 74px;
     }
+    .container {
+      pointer-events: none;
+      position: relative;
+      z-index: 2;
+    }
   }
   &__video {
     position: absolute;
@@ -96,14 +104,15 @@ watch(isLoading, (newVal) => {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    z-index: -1;
+    z-index: 0;
     mix-blend-mode: lighten;
     &-overlay {
       position: absolute;
       inset: 0;
-      z-index: -1;
+      z-index: 1;
       inset: 0;
       background: url('/img/video-player-dots-overlay.svg') repeat center;
+      pointer-events: none;
     }
   }
   &__title {
@@ -119,6 +128,7 @@ watch(isLoading, (newVal) => {
   }
   &__center-line {
     top: calc(50% - 1.9vw);
+    pointer-events: none;
   }
 }
 </style>

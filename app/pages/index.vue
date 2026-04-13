@@ -16,6 +16,7 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 import useNavigation from '~/composables/useNavigation';
 import gsap from 'gsap';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
+import WebflowBlackLabel from '~/components/ui/WebflowBlackLabel.vue';
 
 const params = qs.stringify({
   populate: {
@@ -130,9 +131,14 @@ definePageMeta({
         <section v-if="isMobile" class="mobile-digital">
           <div class="container">
             <h2 class="subheader--mobile">Digital First design agency</h2>
-            <a href="https://webflow.com/@Psychoactive-Studios" target="_blank">
-              <WebflowLabel />
-            </a>
+            <NuxtLink
+              href="/webflow-enterprise-agency"              
+              @mouseenter="() => playInteractionSound('text-hover-short', 100)"
+              @click="() => playInteractionSound('click-1')"
+            >
+              <!-- <WebflowLabel class="top-text__label" /> -->
+              <WebflowBlackLabel class="top-text__label" />
+            </NuxtLink>
           </div>
         </section>
 

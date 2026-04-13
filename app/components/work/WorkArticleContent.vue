@@ -31,7 +31,6 @@ const getSrcSet = (image) => {
 
   return srcSet.join(', ');
 };
-
 </script>
 
 <template>
@@ -177,7 +176,7 @@ const getSrcSet = (image) => {
         v-if="block.__component === 'shared.media-grid'"
         class="work__media-grid"
       >
-      <div class="container">
+      <div :class="['container', { 'container--mobile': block.oneColumnOnMobile }]">
         <img
           v-for="image in block.mediaGrid"
           :key="image.id"
@@ -189,13 +188,23 @@ const getSrcSet = (image) => {
       </section>
 
       <!-- CTA section -->
-      <WorkCTAButton
-        v-if="block.__component === 'work.launch-website'"
-        :href="block.showButton && websiteLink ? (block.customLink ? block.customLink : websiteLink) : false"
-        :buttonText="block.buttonText || 'Launch Website'"
-      >
-        {{ block.text }}
-      </WorkCTAButton>
+       <div v-if="block.__component === 'work.launch-website'">
+        <WorkCTAButton
+          v-if="block.text"
+          :href="block.showButton && websiteLink ? (block.customLink ? block.customLink : websiteLink) : false"
+          :buttonText="block.buttonText || 'Launch Website'"
+          :textWidth="block.textWidth || 'small'"
+        >
+          {{ block.text }}
+        </WorkCTAButton>
+        <WorkCTAButton
+          v-else
+          :href="block.showButton && websiteLink ? (block.customLink ? block.customLink : websiteLink) : false"
+          :buttonText="block.buttonText || 'Launch Website'"
+          :textWidth="block.textWidth || 'small'"
+        />
+       </div>
+      
     </template>
   </article>
 </template>
@@ -361,6 +370,14 @@ const getSrcSet = (image) => {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 32px;
+      @include respond(mobile) {
+        gap: 16px;
+      }
+      &--mobile {
+        @include respond(mobile) {
+          grid-template-columns: 1fr;
+        }
+      }
     }
     &-image {
       width: 100%;

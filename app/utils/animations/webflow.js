@@ -671,26 +671,26 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
       })
       .fromTo(
         currentYear,
-        { value: 2015 },
+        { value: 2018 },
         {
-          value: 2018,
+          value: 2020,
           duration: introDuctionTime,
           ease: 'none',
           //ease: 'power1.in',
         },
         'intro'
       )
-      .fromTo(
-        '.timeline__yearline_list',
-        { xPercent: 0 },
-        {
-          xPercent: -18,
-          duration: introDuctionTime,
-          ease: 'none',
-          //ease: 'power1.in',
-        },
-        'intro'
-      )
+      // .fromTo(
+      //   '.timeline__yearline_list',
+      //   { xPercent: 0 },
+      //   {
+      //     xPercent: -18,
+      //     duration: introDuctionTime,
+      //     ease: 'none',
+      //     //ease: 'power1.in',
+      //   },
+      //   'intro'
+      // )
       .fromTo(
         '.timeline__arrow',
         { xPercent: -50 },
@@ -742,7 +742,7 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
       )
       .fromTo(
         currentYear,
-        { value: 2018 },
+        { value: 2020 },
         {
           value: 2030,
           duration: mainDuctionTime / 1.3,
@@ -750,18 +750,18 @@ export const timelineScrollAnimation = (ctx, currentYear) => {
           //ease: 'power1.in',
         },
         'main'
-      )
-      .fromTo(
-        '.timeline__yearline_list',
-        { xPercent: -18 },
-        {
-          xPercent: -100,
-          duration: mainDuctionTime,
-          ease: 'none',
-          //ease: 'power1.in',
-        },
-        'main'
       );
+      // .fromTo(
+      //   '.timeline__yearline_list',
+      //   { xPercent: -18 },
+      //   {
+      //     xPercent: -100,
+      //     duration: mainDuctionTime,
+      //     ease: 'none',
+      //     //ease: 'power1.in',
+      //   },
+      //   'main'
+      // );
     gsap
       .timeline({
         id: 'webflow-timeline-scroll-animation',

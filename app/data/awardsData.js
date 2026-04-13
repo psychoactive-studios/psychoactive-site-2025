@@ -1,6 +1,13 @@
 export const awardsData = [
   // 2025
   {
+    id: 'award-053',
+    platform: '/img/awards/orpetron.png',
+    prize: '#1 Visually Striking Website Built with React',
+    project: 'Zendetta',
+    year: '2025',
+  },  
+  {
     id: 'award-001',
     platform: '/img/awards/awwwards.png',
     prize: 'Honorable Mention',

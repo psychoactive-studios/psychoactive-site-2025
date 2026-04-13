@@ -143,15 +143,14 @@ const onScrollDownHandler = (e) => {
             <div class="top-text__innovation display-large grey-text">
               innovate
             </div>
-            <a
-              href="https://webflow.com/@Psychoactive-Studios"
-              target="_blank"
+            <NuxtLink
+              href="/webflow-enterprise-agency"              
               @mouseenter="() => playInteractionSound('text-hover-short', 100)"
               @click="() => playInteractionSound('click-1')"
             >
               <!-- <WebflowLabel class="top-text__label" /> -->
               <WebflowBlackLabel class="top-text__label" />
-            </a>
+            </NuxtLink>
           </div>
           <div class="center">
             <div class="center__line" />

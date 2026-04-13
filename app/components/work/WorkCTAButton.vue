@@ -1,9 +1,13 @@
 <script setup>
 import gsap from 'gsap';
 import LinkButton from '../ui/LinkButton.vue';
+import { useSlots } from 'vue';
+
+const slots = useSlots();
 
 let ctx;
 const containerRef = ref(null);
+const buttonSectionRef = ref(null);
 
 const props = defineProps({
   href: {
@@ -16,9 +20,14 @@ const props = defineProps({
     required: false,
     default: 'Launch Website',
   },
+  textWidth: {
+    type: String,
+    required: false,
+    default: 'small',
+  },
 });
 
-const { href, buttonText } = props;
+const { href, buttonText, textWidth } = props;
 
 onMounted(() => {
   ctx = gsap.context(() => {
@@ -38,9 +47,9 @@ onMounted(() => {
     gsap
       .timeline({
         scrollTrigger: {
-          trigger: containerRef.value,
-          start: 'top 30%',
-          end: 'bottom 30%',
+          trigger: buttonSectionRef.value,
+          start: 'top bottom',
+          end: 'bottom bottom',
         },
       })
       .from(
@@ -92,11 +101,10 @@ onUnmounted(() => {
   <!-- CTA section -->
   <section ref="containerRef" class="work__cta">
     <div class="container">
-      <h2 class="work__cta_title">
+      <h2 v-if="slots.default" :class="['work__cta_title', `work__cta_title--${textWidth || 'small'}`]">
         <slot />
       </h2>
-
-      <div v-if="href" class="work__cta_navigation">
+      <div v-if="href" ref="buttonSectionRef" class="work__cta_navigation">
         <div class="work__cta_line">
           <span class="line" />
         </div>
@@ -118,7 +126,7 @@ onUnmounted(() => {
     padding: 60px 0;
   }
   &_title {
-    width: 50%;
+    width: 75%;
     margin: auto;
     font-size: 2.5vw;
     font-style: normal;
@@ -127,6 +135,15 @@ onUnmounted(() => {
     letter-spacing: -0.02em;
     text-align: center;
     margin-bottom: 74px;
+    &--small {
+      width: 50%;
+    }
+    &--medium {
+      width: 75%;
+    }
+    &--full {
+      width: 100%;
+    }
     @include respond(mobile) {
       width: auto;
       font-size: max(6.4vw, 24px);
