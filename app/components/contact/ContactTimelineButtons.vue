@@ -3,11 +3,18 @@ import { tadiSteps } from '~/data/contactData';
 import useContact from '~/composables/useContact';
 import LinkButton from '../ui/LinkButton.vue';
 
-const { userData, currentStepId, handleNextStep } = useContact();
+const { userData, confirmMessagesRelations, currentStepId, handleNextStep } = useContact();
 
-const onSubmit = (event, value) => {
-  userData.deadline = value;
-  const nextStepId = tadiSteps[currentStepId.value]?.nextStep;  
+const onSubmit = (event, value, type) => {
+  let nextStepId = null;
+  if(value) {
+    userData.deadline = value;    
+    nextStepId = tadiSteps[currentStepId.value]?.nextStep;
+  }else{
+    nextStepId = 'ask_date';
+  }
+  console.log('nextStepId', nextStepId);
+  confirmMessagesRelations[currentStepId.value] = type;  
   handleNextStep(nextStepId, event);
 };
 </script>
@@ -18,7 +25,7 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="0"
-      @click="(e) => onSubmit(e, 'ASAP')"
+      @click="(e) => onSubmit(e, 'ASAP', 'asap')"
     >
       ASAP
     </LinkButton>
@@ -26,7 +33,7 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="1"
-      @click="(e) => onSubmit(e, 'Within 6 months')"
+      @click="(e) => onSubmit(e, 'Within 6 months', 'within_6_months')"
     >
       Within 6 months
     </LinkButton>
@@ -34,7 +41,7 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="2"
-      @click="(e) => onSubmit(e, 'Flexible')"
+      @click="(e) => onSubmit(e, 'Flexible', 'flexible')"
     >
       Flexible
     </LinkButton>
@@ -42,7 +49,7 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="3"
-      @click="(e) => handleNextStep('ask_date', e)"
+      @click="(e) => onSubmit(e, null, 'ask_date')"
     >
       I have a set date
     </LinkButton>

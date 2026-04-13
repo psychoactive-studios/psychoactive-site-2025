@@ -23,25 +23,25 @@ const { value: name, errorMessage: nameError } = useField(
   }
 );
 
-const { value: email, errorMessage: emailError } = useField(
-  'email',
-  (value) => {
-    if (!value || !value.trim()) {
-      return 'Fill your email please';
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      return 'Enter a valid email';
-    }
-    return true;
-  },
-  {
-    initialValue: userData.email,
-  }
-);
+// const { value: email, errorMessage: emailError } = useField(
+//   'email',
+//   (value) => {
+//     if (!value || !value.trim()) {
+//       return 'Fill your email please';
+//     }
+//     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+//       return 'Enter a valid email';
+//     }
+//     return true;
+//   },
+//   {
+//     initialValue: userData.email,
+//   }
+// );
 
 const onSubmit = handleSubmit((values, event) => {
   userData.name = values.name;
-  userData.email = values.email;
+  // userData.email = values.email;
   const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
   handleNextStep(nextStepId, event.evt);
 });
@@ -56,12 +56,12 @@ const onSubmit = handleSubmit((values, event) => {
         class="name-form__input"
         :error-message="nameError"
       />
-      <TextField
+      <!-- <TextField
         v-model="email"
         placeholder="Type your email"
         class="name-form__input"
         :error-message="emailError"
-      />
+      />  -->
     </div>
     <LinkButton class="name-form__button" size="small">submit</LinkButton>
     <!-- <ButtonDotsArrow direction="right" class="name-form__button" /> -->
