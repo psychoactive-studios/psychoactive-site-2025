@@ -3,10 +3,11 @@ import { tadiSteps } from '~/data/contactData';
 import useContact from '~/composables/useContact';
 import LinkButton from '../ui/LinkButton.vue';
 
-const { userData, currentStepId, handleNextStep } = useContact();
+const { userData, confirmMessagesRelations, currentStepId, handleNextStep } = useContact();
 
-const onSubmit = (event, value) => {  
+const onSubmit = (event, value, type) => {  
   userData.goal = value;
+  confirmMessagesRelations[[currentStepId.value]] = type;
   const nextStepId = tadiSteps[currentStepId.value]?.nextStep;  
   handleNextStep(nextStepId, event);
 };
@@ -18,7 +19,7 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="0"
-      @click="(e) => onSubmit(e, 'Branding')"
+      @click="(e) => onSubmit(e, 'Branding', 'branding')"
     >
       Branding
     </LinkButton>
@@ -26,7 +27,7 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="1"      
-      @click="(e) => onSubmit(e, 'Website')"
+      @click="(e) => onSubmit(e, 'Website', 'website')"
     >
       Website
     </LinkButton>
@@ -34,7 +35,7 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="2"      
-      @click="(e) => onSubmit(e, 'Branding & Website')"
+      @click="(e) => onSubmit(e, 'Branding & Website', 'branding_&_website')"
     >
       Branding & Website
     </LinkButton>
@@ -42,7 +43,7 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="3"      
-      @click="(e) => onSubmit(e, 'I have other needs')"
+      @click="(e) => onSubmit(e, 'I have other needs', 'other')"
     >
       I have other needs
     </LinkButton>

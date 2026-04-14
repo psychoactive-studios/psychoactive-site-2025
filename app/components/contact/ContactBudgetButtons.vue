@@ -3,10 +3,11 @@ import { tadiSteps } from '~/data/contactData';
 import useContact from '~/composables/useContact';
 import LinkButton from '../ui/LinkButton.vue';
 
-const { userData, currentStepId, handleNextStep } = useContact();
+const { userData, confirmMessagesRelations, currentStepId, handleNextStep } = useContact();
 
-const onSubmit = (event, value) => {   
+const onSubmit = (event, value, type) => {     
   userData.budget = value;
+  confirmMessagesRelations[[currentStepId.value]] = type;
   const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
   handleNextStep(nextStepId, event);
 };
@@ -18,23 +19,23 @@ const onSubmit = (event, value) => {
       class="contact-form__action_button"
       size="small"
       data-index="0"
-      @click="(e) => onSubmit(e, '$50K–$75K')"
+      @click="(e) => onSubmit(e, '$40K–$70K', '40k_70k')"
     >
-      $50K–$75K
+      $40K–$70K
     </LinkButton>
     <LinkButton
       class="contact-form__action_button"
       size="small"
       data-index="1"      
-      @click="(e) => onSubmit(e, '$75K–$100K')"
+      @click="(e) => onSubmit(e, '$70K–$100K', '70k_100k')"
     >
-      $75K–$100K
+      $70K–$100K
     </LinkButton>
     <LinkButton
       class="contact-form__action_button"
       size="small"
       data-index="2"      
-      @click="(e) => onSubmit(e, '$100K+')"
+      @click="(e) => onSubmit(e, '$100K+', '100k_plus')"
     >
       $100K+
     </LinkButton>    

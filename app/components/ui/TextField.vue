@@ -26,6 +26,10 @@ defineProps({
     type: Number,
     default: 1,
   },
+  helperText: {
+    type: String,
+    default: '',
+  },
 });
 </script>
 <template>
@@ -45,6 +49,7 @@ defineProps({
       :name="name"
     />
     <div class="text-field__border" />
+    <span v-if="helperText" class="text-field__helper-text body-small">{{ helperText }}</span>
     <span v-if="errorMessage" class="text-field__error body-small">{{
       errorMessage
     }}</span>
@@ -140,6 +145,11 @@ defineProps({
       top: 0.5em;
       left: 0;
     }
+  }
+  &__helper-text {
+    color: $color-foreground;
+    display: block;
+    margin-top: 0.5rem;
   }
 }
 </style>
