@@ -1,13 +1,9 @@
-// config/tadiScript.js
-
 export const tadiSteps = {
   intro: {
     id: 'intro',
-    // Масив повідомлень, які йдуть одне за одним
     messages: [
       {
-        // Частина 1: Привітання (TADI обирає одну з цих фраз)
-        variations: [          
+        variations: [
           'Hi, I’m TADI — Psychoactive’s Tadpole Artificial Design Intelligence. I’m small, curious, and constantly evolving, just like your digital presence.',
           'Hi, I’m TADI — I look like AI, feel like AI, but I’m actually just a tadpole living out of my parents’ basement terrarium.',
           'Hi, I’m TADI — your amphibious guide to digital creation. Equally at home in strategy decks and code swamps.',
@@ -21,10 +17,10 @@ export const tadiSteps = {
           'Hi, I’m TADI — by using this form, you consent to summoning me. Don’t worry. I’ve signed the ethics policy.',
           'Hi, I’m TADI — built for enterprise workflows, cursed with self-awareness.',
         ],
-        delayAfter: 800, // Пауза перед наступним повідомленням (мс)
+        delayAfter: 800,
       },
       {
-        variations: [          
+        variations: [
           'By continuing, you’re inviting my human counterparts into your world. They’re very good at what they do. I’ve seen the work.',
           'This is the part where things become real. I forward your message. Humans respond. Metamorphosis begins.',
           'Proceeding means you’re ready to talk seriously about your digital future. No pressure. Just consequences.',
@@ -41,14 +37,12 @@ export const tadiSteps = {
         delayAfter: 800,
       },
       {
-        // Частина 2: Запитання (З'являється після паузи)
         variations: [
           'What are we doing today ?',
           'What brings you here ?',
           'How would you like to proceed ?',
 
         ],
-        // delayAfter не потрібен, бо далі йдуть кнопки
       },
     ],
     confirmMessages: [
@@ -64,13 +58,11 @@ export const tadiSteps = {
         ],
       },
     ],
-    // Тип інпуту (з'являється після останнього повідомлення)
     cta: 'introButtons',
     type: 'buttons',
     sceneShape: 0,
   },
 
-  // Start a Project Flow
   ask_name: {
     id: 'ask_name',
     messages: [
@@ -86,7 +78,7 @@ export const tadiSteps = {
           'Humans tend to have names. Let\'s test that theory.',
           'Who\'s behind the keyboard today?',
         ],
-      },      
+      },
     ],
     confirmMessages: [
       {
@@ -101,7 +93,7 @@ export const tadiSteps = {
           'Pleasure, [Name]. You sound like someone who builds worlds, not just websites.',
           '[Name] logged. Identity stable.',
         ],
-      },      
+      },
     ],
     cta: 'nameForm',
     type: 'textField',
@@ -109,12 +101,10 @@ export const tadiSteps = {
     nextStep: 'ask_company_role',
   },
 
-  // Приклад кроку з використанням даних користувача в варіаціях
   ask_company_role: {
     id: 'ask_company_role',
     messages: [
       {
-        // Можна передавати функцію, яка повертає масив варіацій
         variations: [
           'Every organism has a habitat. Who are you with, and what\'s your role in its evolution?',
           'No species evolves alone. Who are you with, and what part do you play?',
@@ -431,7 +421,7 @@ export const tadiSteps = {
           'That\'s everything I need for now, [Name]. Add your email and this will move into human hands.',
         ],
       },
-    ],    
+    ],
     cta: 'emailForm',
     type: 'textField',
     sceneShape: 1,
@@ -441,20 +431,17 @@ export const tadiSteps = {
   sey_thanks: {
     id: 'sey_thanks',
     messages: [
-      {        
+      {
         variations: [
           'Consider your metamorphosis officially underway.',
         ],
       },
     ],
     cta: 'finishHomeButton',
-    // type: 'textField',
     callback: 'submit',
     sceneShape: 7,
-    // nextStep: '',
   },
 
-  // Join the Team Flow
   join_intro: {
     id: 'join_intro',
     messages: [
@@ -491,6 +478,5 @@ export const tadiSteps = {
       },
     ],
     sceneShape: 7,
-    // nextStep: '',
   },
 };

@@ -18,12 +18,7 @@ export default function useWorks() {
       charsClass: 'char-center',
     }).chars;
 
-    const isMobile = useMediaQuery('(max-width: 768px)');
-
-    console.log('isMobile', isMobile.value);
-
-
-    //
+    const isMobile = useMediaQuery('(max-width: 768px)');    
 
     backButtonHref.value = 'work';
 

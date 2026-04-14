@@ -5,7 +5,7 @@ import useAudioManager from '~/composables/useAudioManager';
 
 const { playInteractionSound } = useAudioManager();
 
-const MESSAGE_DELAY = 0.5;
+const MESSAGE_DELAY = 2;
 
 let mainTimeline = null;
 let historyTimeline = null;
@@ -35,7 +35,7 @@ const actionsRef = reactive({
   finishHomeButton: null,
 });
 
-const confirmMessagesRelations = reactive({  
+const confirmMessagesRelations = reactive({
   'ask_project_goal': null,
   'ask_budget': null,
   'ask_deadline': null,
@@ -90,8 +90,12 @@ export default function useContact() {
       // '.contact-back-button',
     ]);
 
-    const nextMessage = getRandomMessage(
+    const firstMessage = currentMessage.value;
+    const secondMessage = getRandomMessage(
       tadiSteps[currentStepId.value]?.messages[1]?.variations
+    );
+    const thirdMessage = getRandomMessage(
+      tadiSteps[currentStepId.value]?.messages[2]?.variations
     );
 
     gsap
@@ -138,6 +142,16 @@ export default function useContact() {
       )
       // First message transition
       .to(
+        previousSectionRef.value,
+        {
+          opacity: 0,
+          scale: 0.9,
+          duration: 0.8,
+          ease: 'power3.out',
+        },
+        '+=1'
+      )
+      .to(
         currentSectionRef.value,
         {
           transform: 'translateY(calc(-100% - 48px - 0.65em))',
@@ -150,7 +164,7 @@ export default function useContact() {
       .add(() => {
         // History: record first message so "back" can restore it
         historySteps.value.push({
-          message: firstMessage,          
+          message: firstMessage,
           cta: null,
           sceneShape: 0,
           stepId: 'intro',
@@ -190,13 +204,27 @@ export default function useContact() {
         },
         '+=1'
       )
+      .to(
+        currentSectionRef.value,
+        {
+          transform: 'translateY(calc(-100% - 48px - 0.65em))',
+          duration: 0.8,
+          opacity: getSectionOpacity(),
+          ease: 'power4.out',
+        },
+        '<'
+      )
       .add(() => {
+        // History: record second message with intro buttons as target
         historySteps.value.push({
           message: secondMessage,
           cta: null,
           sceneShape: 0,
           stepId: 'intro',
         });
+
+        historyMessage.value = firstMessage;
+
         previousMessage.value = currentMessage.value;
         currentMessage.value = thirdMessage;
         gsap.set(
@@ -212,7 +240,7 @@ export default function useContact() {
         currentHistoryIndex.value++;
       })
 
-      // Second message transition
+      // Third message appear
       .to(currentSectionTextRef.value, {
         backgroundPositionX: '-100%',
         duration: 1,
@@ -291,7 +319,6 @@ export default function useContact() {
         '<'
       )
       .add(() => dotsTimeline.value.repeat(-1).play());
-    console.log('historySteps', historySteps.value, currentHistoryIndex);
   }
 
   const handleNextStepFn = (stepId, event) => {
@@ -304,7 +331,7 @@ export default function useContact() {
       isShortVersion ? 'contact-response-short' : 'contact-responses',
       300
     );
-    mainTimeline = gsap.timeline();    
+    mainTimeline = gsap.timeline();
 
     const currentStep = tadiSteps[currentStepId.value];
     const targetStep = tadiSteps[stepId];
@@ -314,8 +341,6 @@ export default function useContact() {
     // Leave animation for actions
     if (currentStep?.cta) {
       // Buttons leave animation
-
-      console.log('handleNextStepFn', currentStep.type, currentStep);
       if (currentStep.type === 'buttons') {
         const index = parseInt(event.currentTarget.dataset.index);
         const buttons = event.currentTarget
@@ -350,8 +375,8 @@ export default function useContact() {
             '<+0.15'
           )
           .set([event.currentTarget, buttons], { clearProps: 'all' });
-      }      
-      
+      }
+
       // Text field leave animation
       if (currentStep.type === 'textField') {
         const button = event.currentTarget.querySelector(
@@ -384,16 +409,13 @@ export default function useContact() {
       mainTimeline.set(actionsRef[currentStep.cta], { autoAlpha: 0 });
     }
 
-    console.log('isFormFlow', isFormFlow);
-    
-
     // Confirm message animation
     if (currentStep.confirmMessages && isFormFlow) {
 
       const isArray = Array.isArray(currentStep.confirmMessages);
       let confirmMessages = [];
 
-      if(isArray) {
+      if (isArray) {
         // Define confirm messages
         confirmMessages = currentStep.confirmMessages.map((message) => {
           const randomMessage = getRandomMessage(message.variations).replace(
@@ -412,7 +434,7 @@ export default function useContact() {
           });
           return randomMessage;
         });
-      }else{
+      } else {
         const confirmMessagesId = confirmMessagesRelations?.[currentStepId.value];
         confirmMessages = currentStep.confirmMessages?.[confirmMessagesId].map((message) => {
           const randomMessage = getRandomMessage(message.variations).replace(
@@ -430,15 +452,14 @@ export default function useContact() {
             stepId: currentStep.id,
           });
           return randomMessage;
-        });
-        console.log('confirmMessages', confirmMessages);
+        });        
       }
-      
-
-      
 
 
-      confirmMessages.forEach((message, index) => {        
+
+
+
+      confirmMessages.forEach((message, index) => {
         const delay = index === 0 ? `-=0.5` : `+=${MESSAGE_DELAY}`;
 
         mainTimeline
@@ -522,14 +543,12 @@ export default function useContact() {
       return randomMessage;
     });
 
-    console.log('stepMessages', stepMessages);
-
     stepMessages.forEach((message, index, array) => {
       const delay = index === 0 ? `-=0.5` : `+=${MESSAGE_DELAY}`;
       const isFirstMessage = index === 0;
       const isLastMessage = index === array.length - 1;
-      const isPenultimateMessage = index === array.length - 2;      
-      
+      const isPenultimateMessage = index === array.length - 2;
+
 
       let historyCtaIn;
       let historyCtaOut;
@@ -591,15 +610,15 @@ export default function useContact() {
           //   sceneShape: historySceneShape,
           //   stepId: currentStepId.value,
           // });
-          
-          
+
+
 
           currentHistoryIndex.value++;
           historyMessage.value = null;
 
           historyMessage.value = previousMessage.value;
           previousMessage.value = currentMessage.value;
-          currentMessage.value = message;          
+          currentMessage.value = message;
 
           gsap.set(
             [
@@ -654,32 +673,26 @@ export default function useContact() {
     }
   };
 
-  const handlePrevStepFn = () => {    
+  const handlePrevStepFn = () => {
     const previousStep = historySteps.value?.[currentHistoryIndex.value - 2];
     const currentStep = historySteps.value?.[currentHistoryIndex.value - 1];
-    const activeStep = historySteps.value.at(currentHistoryIndex.value);   
+    const activeStep = historySteps.value.at(currentHistoryIndex.value);
 
     historyMessage.value = previousStep?.message;
     sceneRef.value.nextShape(currentStep.sceneShape);
-
-    console.log('previousStep', previousStep);
-    console.log('currentStep', currentStep);
-    console.log('activeStep', activeStep);
-
-    
 
     mainTimeline?.kill();
     historyTimeline?.kill();
 
     historyTimeline = gsap.timeline();
 
-    if(!previousStep) {      
+    if (!previousStep) {
       historyTimeline.to('.contact-back-button', {
         scale: 0,
         opacity: 0,
         duration: 0.5,
         ease: 'power2.in',
-      });      
+      });
     }
 
     if (activeStep.cta) {
@@ -695,7 +708,7 @@ export default function useContact() {
             onComplete: () => {
               gsap.set(actionsRef[activeStep.cta], { clearProps: 'all' })
             }
-          }          
+          }
         );
     }
 
@@ -705,121 +718,6 @@ export default function useContact() {
       duration: 0.5,
       ease: 'power3.out',
     }, '<')
-    .to(
-      previousSectionRef.value,
-      {
-        y: 0,
-        duration: 0.5,
-        opacity: 1,
-        ease: 'power3.out',
-      },
-      '<'
-    )
-    .to(
-      historyMessageRef.value,
-      {
-        scale: 1,
-        opacity: 0.2,
-        transform: 'translateY(calc(-100% - 48px - 0.65em))',
-        // yPercent: -100,
-        // y: -74,
-        visibility: 'visible',
-        duration: 0.5,
-        ease: 'power3.out',
-      },
-      '<'
-    )
-    .add(() => {
-      currentMessage.value = previousMessage.value;
-      previousMessage.value = historyMessage.value;
-      historyMessage.value = null;
-      gsap.set(
-        [
-          currentSectionRef.value,
-          historyMessageRef.value,
-          previousSectionRef.value,
-        ],
-        {
-          clearProps: 'all',
-        }
-      );
-      gsap.set(currentSectionTextRef.value, {
-        backgroundPositionX: '-100%',
-        duration: 1,
-      });
-      currentHistoryIndex.value--;
-      currentStepId.value = currentStep.stepId;
-    });
-
-    if (currentStep.cta) {      
-      historyTimeline.fromTo(
-        actionsRef[currentStep.cta],
-        { opacity: 0.3, scaleY: 0.8, yPercent: 50, visibility: 'hidden' },
-        {
-          opacity: 1,
-          visibility: 'visible',
-          yPercent: 0,
-          scaleY: 1,
-          duration: 1,
-          ease: 'power3.out',
-        }
-      );
-      historySteps.value.splice(currentHistoryIndex.value);
-    }else{
-      historyTimeline.add(() => {
-        handleNextHistoryStep(historyTimeline);
-        if(!previousStep) {
-          gsap.to(
-            '.contact-back-button',
-            {
-              scale: 1,
-              opacity: 1,
-              duration: 0.5,
-              ease: 'power3.out',
-            }
-          );
-        }
-      }, '+=2')
-    }
-
-    return;
-    const beforeMessage = historySteps.value.at(-2)?.message;
-    const rawStep = historySteps.value.pop();
-    const lastStep = rawStep ? JSON.parse(JSON.stringify(rawStep)) : null;
-    const isHideBackButton =
-      lastStep?.stepId === 'intro' && lastStep?.message === null;
-    // const lastStep = structuredClone(historySteps.value.pop());
-
-    console.log('lastStep', lastStep);
-    console.log('historySteps', historySteps.value);   
-
-    if (!lastStep) return;
-
-    currentStepId.value = lastStep.stepId;
-
-    mainTimeline?.kill();
-    historyTimeline?.kill();
-
-    historyTimeline = gsap.timeline();
-
-    sceneRef.value.nextShape(lastStep.sceneShape);
-
-    if (isHideBackButton) {
-      historyTimeline.to('.contact-back-button', {
-        scale: 0,
-        opacity: 0,
-        duration: 0.5,
-        ease: 'power2.in',
-      });
-    }
-
-    historyTimeline
-      .to(currentSectionRef.value, {
-        opacity: 0,
-        scale: 0.9,
-        duration: 0.5,
-        ease: 'power3.out',
-      })
       .to(
         previousSectionRef.value,
         {
@@ -843,93 +741,32 @@ export default function useContact() {
           ease: 'power3.out',
         },
         '<'
-      );
-
-    if (lastStep.ctaOut) {
-      historyTimeline
-        .to(
-          actionsRef[lastStep.ctaOut],
+      )
+      .add(() => {
+        currentMessage.value = previousMessage.value;
+        previousMessage.value = historyMessage.value;
+        historyMessage.value = null;
+        gsap.set(
+          [
+            currentSectionRef.value,
+            historyMessageRef.value,
+            previousSectionRef.value,
+          ],
           {
-            opacity: 0,
-            scale: 0.9,
-            duration: 0.5,
-            visibility: 'hidden',
-            ease: 'power3.out',
-          },
-          '<'
-        )
-        .set(actionsRef[lastStep.ctaOut], { clearProps: 'all' });
-    }
-    historyTimeline.add(() => {
-      currentMessage.value = previousMessage.value;
-      previousMessage.value = lastStep.message;
-      historyMessage.value = beforeMessage;
-      gsap.set(
-        [
-          currentSectionRef.value,
-          currentSectionTextRef.value,
-          previousSectionRef.value,
-          historyMessageRef.value,
-        ],
-        {
-          clearProps: 'all',
-        }
-      );
-      gsap.set(currentSectionTextRef.value, {
-        backgroundPositionX: '-100%',
-      });
-    });
-
-    if (lastStep.nextMessage) {
-      historyTimeline
-        .to(
-          currentSectionRef.value,
-          {
-            transform: 'translateY(calc(-100% - 48px - 0.65em))',
-            duration: 0.8,
-            opacity: 0.2,
-            ease: 'power4.out',
-          },
-          '+=2'
-        )
-        .to(
-          previousSectionRef.value,
-          {
-            opacity: 0,
-            scale: 0.9,
-            duration: 0.8,
-            ease: 'power3.out',
-          },
-          '<'
-        )
-        .add(() => {
-          previousMessage.value = currentMessage.value;
-          currentMessage.value = lastStep.nextMessage;
-          historyMessage.value = lastStep.message;
-          gsap.set(
-            [
-              currentSectionRef.value,
-              currentSectionTextRef.value,
-              previousSectionRef.value,
-            ],
-            {
-              clearProps: 'all',
-            }
-          );
-          if (lastStep.nextMessage) {
-            historySteps.value.push(lastStep);
+            clearProps: 'all',
           }
-        })
-        .to(currentSectionTextRef.value, {
+        );
+        gsap.set(currentSectionTextRef.value, {
           backgroundPositionX: '-100%',
           duration: 1,
-          ease: 'power2.inOut',
         });
-    }
+        currentHistoryIndex.value--;
+        currentStepId.value = currentStep.stepId;
+      });
 
-    if (lastStep.ctaIn) {
+    if (currentStep.cta) {
       historyTimeline.fromTo(
-        actionsRef[lastStep.ctaIn],
+        actionsRef[currentStep.cta],
         { opacity: 0.3, scaleY: 0.8, yPercent: 50, visibility: 'hidden' },
         {
           opacity: 1,
@@ -940,30 +777,26 @@ export default function useContact() {
           ease: 'power3.out',
         }
       );
+      historySteps.value.splice(currentHistoryIndex.value);
+    } else {
+      historyTimeline.add(() => {
+        handleNextHistoryStep(historyTimeline);
+        if (!previousStep) {
+          gsap.to(
+            '.contact-back-button',
+            {
+              scale: 1,
+              opacity: 1,
+              duration: 0.5,
+              ease: 'power3.out',
+            }
+          );
+        }
+      }, '+=2')
     }
-
-    if (isHideBackButton) {
-      historyTimeline.to(
-        '.contact-back-button',
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.5,
-          ease: 'power3.out',
-        },
-        '<'
-      );
-    }
-
-    // if(lastStep.nextMessage) {
-    //   historyTimeline.add(() => {
-    //     console.log('PUSHED LAST STEP', lastStep);
-    //     historySteps.value.push(lastStep);
-    //   });
-    // }
   };
 
-  const handleNextHistoryStep = (historyTimeline) => {    
+  const handleNextHistoryStep = (historyTimeline) => {
     const steps = historySteps.value?.slice?.(currentHistoryIndex.value + 1) || [];
     for (let i = 0; i < steps.length; i++) {
       const step = steps[i];
@@ -1001,7 +834,7 @@ export default function useContact() {
             }
           );
           currentHistoryIndex.value++;
-          currentStepId.value = step.stepId;          
+          currentStepId.value = step.stepId;
         })
         .to(currentSectionTextRef.value, {
           backgroundPositionX: '-100%',
@@ -1009,10 +842,9 @@ export default function useContact() {
           ease: 'power2.inOut',
         });
 
-      
-        
+
+
       if (step.cta) {
-        console.log('step.cta', step.cta, actionsRef[step.cta]);
         historyTimeline.fromTo(
           actionsRef[step.cta],
           { opacity: 0.3, scaleY: 0.8, yPercent: 50, visibility: 'hidden' },
@@ -1050,8 +882,6 @@ export default function useContact() {
       };
 
       console.log('payload', payload);
-
-      return
 
       // Step 1: if a file is attached — upload it first and get the file ID
       if (userData.file && userData.file[0]) {

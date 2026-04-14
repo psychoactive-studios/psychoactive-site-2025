@@ -13,7 +13,6 @@ const onSubmit = (event, value, type) => {
   }else{
     nextStepId = 'ask_date';
   }
-  console.log('nextStepId', nextStepId);
   confirmMessagesRelations[currentStepId.value] = type;  
   handleNextStep(nextStepId, event);
 };
