@@ -17,6 +17,7 @@ import ContactTimelineButtons from './ContactTimelineButtons.vue';
 import ContactDateForm from './ContactDateForm.vue';
 import ContactDescriptionForm from './ContactDescriptionForm.vue';
 import ContactJoinButtons from './ContactJoinButtons.vue';
+import ContactEmailForm from './ContactEmailForm.vue';
 
 const {
   sceneRef,
@@ -203,6 +204,14 @@ const handleBackClick = () => {
         >
           <ContactJoinButtons />
         </div>
+
+        <div
+          :ref="(el) => (actionsRef.emailForm = el)"
+          class="contact-form__action_item -email-form"
+        >
+          <ContactEmailForm />
+        </div>
+        
 
         <div
           :ref="(el) => (actionsRef.finishHomeButton = el)"
@@ -444,6 +453,9 @@ const handleBackClick = () => {
         visibility: hidden;
       }
       &.-join-team-buttons {
+        visibility: hidden;
+      }
+      &.-email-form {
         visibility: hidden;
       }
     }

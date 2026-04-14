@@ -90,6 +90,7 @@ function validateAndSubmit(event) {
         :error-message="fileErrorMessage"
       />
     </div>
+    <div class="contact-form__subtext body">If you have a brief already written please fire it through — otherwise notes, bullet points, or rough thoughts are all fine.</div>
     <LinkButton class="description-form__button" size="small">submit</LinkButton>
     <!-- <ButtonDotsArrow direction="right" class="name-form__button" /> -->
   </form>
@@ -116,6 +117,11 @@ function validateAndSubmit(event) {
     @include respond(laptop-small) {
       margin-top: 24px;
     }
+  }
+  .contact-form__subtext {
+    color: white(80);
+    display: block;
+    margin-top: getRem(48);
   }
 }
 </style>

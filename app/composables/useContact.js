@@ -31,6 +31,7 @@ const actionsRef = reactive({
   dateForm: null,
   descriptionForm: null,
   joinTeamButtons: null,
+  emailForm: null,
   finishHomeButton: null,
 });
 
@@ -331,13 +332,18 @@ export default function useContact() {
       isShortVersion ? 'contact-response-short' : 'contact-responses',
       300
     );
-    mainTimeline = gsap.timeline();
+    mainTimeline = gsap.timeline();    
 
     const currentStep = tadiSteps[currentStepId.value];
     const targetStep = tadiSteps[stepId];
+
+    const isFormFlow = targetStep.id !== 'join_intro' && targetStep.id !== 'join_action';
+
     // Leave animation for actions
     if (currentStep?.cta) {
       // Buttons leave animation
+
+      console.log('handleNextStepFn', currentStep.type, currentStep);
       if (currentStep.type === 'buttons') {
         const index = parseInt(event.currentTarget.dataset.index);
         const buttons = event.currentTarget
@@ -372,15 +378,15 @@ export default function useContact() {
             '<+0.15'
           )
           .set([event.currentTarget, buttons], { clearProps: 'all' });
-      }
+      }      
       
       // Text field leave animation
       if (currentStep.type === 'textField') {
         const button = event.currentTarget.querySelector(
-          '.name-form__button, .description-form__button'
+          '.name-form__button, .description-form__button, .email-form__button'
         );
         const fields = event.currentTarget.querySelectorAll(
-          '.name-form__inner > *, .description-form__inner > *'
+          '.name-form__inner > *, .description-form__inner > *, .contact-form__subtext'
         );
 
         mainTimeline
@@ -406,13 +412,14 @@ export default function useContact() {
       mainTimeline.set(actionsRef[currentStep.cta], { autoAlpha: 0 });
     }
 
+    console.log('isFormFlow', isFormFlow);
+    
+
     // Confirm message animation
-    if (currentStep.confirmMessages) {
+    if (currentStep.confirmMessages && isFormFlow) {
 
       const isArray = Array.isArray(currentStep.confirmMessages);
       let confirmMessages = [];
-
-      console.log('currentStep.confirmMessages isArray?', isArray, confirmMessagesRelations[currentStepId.value]);
 
       if(isArray) {
         // Define confirm messages
@@ -422,6 +429,8 @@ export default function useContact() {
             '<a href="mailto:careers@psychoactive.co.nz">careers@psychoactive.co.nz</a>'
           )
             .replace('[Name]', userData.name)
+            .replace('[Company]', userData.company)
+            .replace('[Role]', userData.role)
             .replace(/\n/g, '<br>');
           historySteps.value.push({
             message: randomMessage,
@@ -439,6 +448,8 @@ export default function useContact() {
             '<a href="mailto:careers@psychoactive.co.nz">careers@psychoactive.co.nz</a>'
           )
             .replace('[Name]', userData.name)
+            .replace('[Company]', userData.company)
+            .replace('[Role]', userData.role)
             .replace(/\n/g, '<br>');
           historySteps.value.push({
             message: randomMessage,
@@ -526,6 +537,8 @@ export default function useContact() {
         '<a href="mailto:careers@psychoactive.co.nz">careers@psychoactive.co.nz</a>'
       )
         .replace('[Name]', userData.name)
+        .replace('[Company]', userData.company)
+        .replace('[Role]', userData.role)
         .replace(/\n/g, '<br>');
       const isLastMessage = index === array.length - 1;
       historySteps.value.push({
@@ -669,12 +682,7 @@ export default function useContact() {
     }
   };
 
-  const handlePrevStepFn = () => {
-    
-    console.log('historySteps', historySteps.value, currentHistoryIndex.value);
-
-    
-    
+  const handlePrevStepFn = () => {    
     const previousStep = historySteps.value?.[currentHistoryIndex.value - 2];
     const currentStep = historySteps.value?.[currentHistoryIndex.value - 1];
     const activeStep = historySteps.value.at(currentHistoryIndex.value);   
@@ -682,12 +690,25 @@ export default function useContact() {
     historyMessage.value = previousStep?.message;
     sceneRef.value.nextShape(currentStep.sceneShape);
 
+    console.log('previousStep', previousStep);
+    console.log('currentStep', currentStep);
+    console.log('activeStep', activeStep);
+
     
 
     mainTimeline?.kill();
     historyTimeline?.kill();
 
     historyTimeline = gsap.timeline();
+
+    if(!previousStep) {      
+      historyTimeline.to('.contact-back-button', {
+        scale: 0,
+        opacity: 0,
+        duration: 0.5,
+        ease: 'power2.in',
+      });      
+    }
 
     if (activeStep.cta) {
       historyTimeline
@@ -775,6 +796,17 @@ export default function useContact() {
     }else{
       historyTimeline.add(() => {
         handleNextHistoryStep(historyTimeline);
+        if(!previousStep) {
+          gsap.to(
+            '.contact-back-button',
+            {
+              scale: 1,
+              opacity: 1,
+              duration: 0.5,
+              ease: 'power3.out',
+            }
+          );
+        }
       }, '+=2')
     }
 
@@ -997,6 +1029,7 @@ export default function useContact() {
             }
           );
           currentHistoryIndex.value++;
+          currentStepId.value = step.stepId;          
         })
         .to(currentSectionTextRef.value, {
           backgroundPositionX: '-100%',
@@ -1045,6 +1078,8 @@ export default function useContact() {
       };
 
       console.log('payload', payload);
+
+      return
 
       // Step 1: if a file is attached — upload it first and get the file ID
       if (userData.file && userData.file[0]) {

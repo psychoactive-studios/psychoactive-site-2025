@@ -10,38 +10,42 @@ const { userData, currentStepId, handleNextStep } = useContact();
 
 const { handleSubmit } = useForm();
 
-const { value: name, errorMessage: nameError } = useField(
-  'name',
+const { value: email, errorMessage: emailError } = useField(
+  'email',
   (value) => {
     if (!value || !value.trim()) {
-      return 'Fill your name please';
+      return 'Fill your email please';
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      return 'Enter a valid email';
     }
     return true;
   },
   {
-    initialValue: userData.name,
+    initialValue: userData.email,
   }
 );
 
-const onSubmit = handleSubmit((values, event) => {
-  userData.name = values.name;
+const onSubmit = handleSubmit((values, event) => {  
+  userData.email = values.email;
   const nextStepId = tadiSteps[currentStepId.value]?.nextStep;
   handleNextStep(nextStepId, event.evt);
 });
 </script>
 
 <template>
-  <form class="name-form" @submit="onSubmit">
-    <div class="name-form__inner">
+  <form class="email-form" @submit="onSubmit">
+    <div class="email-form__inner">      
       <TextField
-        v-model="name"
-        placeholder="Your name"
-        class="name-form__input"
-        :error-message="nameError"
-        helper-text="Human names preferred."
+        v-model="email"
+        placeholder="Type your email"
+        class="email-form__input"
+        :error-message="emailError"        
       />
     </div>
-    <LinkButton class="name-form__button" size="small">submit</LinkButton>    
+    <div class="contact-form__subtext body">We’ll only use this to follow up on your project. No mailing lists, no automated emails.</div>
+    <LinkButton class="email-form__button" size="small">submit</LinkButton>
+    <!-- <ButtonDotsArrow direction="right" class="name-form__button" /> -->
   </form>
 </template>
 
@@ -50,7 +54,7 @@ const onSubmit = handleSubmit((values, event) => {
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/mixins' as *;
 
-.name-form {
+.email-form {
   width: 100%;
 
   &__inner {
@@ -77,6 +81,11 @@ const onSubmit = handleSubmit((values, event) => {
     // :deep(.dots-arrow__icon_dot) {
     //   background-color: $color-background;
     // }
+  }
+  .contact-form__subtext {
+    color: white(80);
+    display: block;
+    margin-top: getRem(48);
   }
 }
 </style>
