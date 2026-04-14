@@ -155,15 +155,15 @@ export const tadiSteps = {
       },
     ],
     cta: 'roleForm',
-    type: 'textField',        
-    sceneShape: 2,    
+    type: 'textField',
+    sceneShape: 2,
     nextStep: 'ask_project_goal',
   },
 
   ask_project_goal: {
     id: 'ask_project_goal',
     messages: [
-      {        
+      {
         variations: [
           'What kind of work are we talking about?',
           'What are you looking to evolve right now?',
@@ -240,8 +240,8 @@ export const tadiSteps = {
       ],
     },
     cta: 'goalButtons',
-    type: 'buttons',        
-    sceneShape: 3,    
+    type: 'buttons',
+    sceneShape: 3,
     nextStep: 'ask_budget',
   },
 
@@ -388,12 +388,12 @@ export const tadiSteps = {
   ask_date: {
     id: 'ask_date',
     messages: [
-      {        
+      {
         variations: [
           'What’s the big day?',
         ],
       },
-    ],    
+    ],
     cta: 'dateForm',
     type: 'textField',
     sceneShape: 5,
@@ -403,7 +403,7 @@ export const tadiSteps = {
   ask_description: {
     id: 'ask_description',
     messages: [
-      {        
+      {
         variations: [
           'Give me the short version. What are we creating together?',
           'What does this project look like at a high level?',
@@ -414,7 +414,7 @@ export const tadiSteps = {
       },
     ],
     cta: 'descriptionForm',
-    type: 'textField',        
+    type: 'textField',
     sceneShape: 6,
     nextStep: 'ask_email',
   },
@@ -458,33 +458,33 @@ export const tadiSteps = {
   join_intro: {
     id: 'join_intro',
     messages: [
-      {        
+      {
         variations: [
           'Ah, a fellow creative creature. Just so you know, all our roles are freelance and project-based.',
         ],
       },
-      {        
+      {
         variations: [
           'What’s your discipline?',
         ],
       },
     ],
     cta: 'joinTeamButtons',
-    type: 'buttons',        
+    type: 'buttons',
     sceneShape: 4,
     nextStep: 'join_action',
   },
   join_action: {
     id: 'join_action',
     messages: [
-      {        
+      {
         variations: [
           `Perfect. Send your portfolio and a short intro to [email].\n
           If we vibe, we’ll be in touch faster than a frog catches a fly.
           `,
         ],
       },
-      {        
+      {
         variations: [
           'Thanks for reaching out — I’ll let the team know another talent is emerging from the pond.',
         ],
@@ -494,8 +494,3 @@ export const tadiSteps = {
     // nextStep: '',
   },
 };
-
-
-
-
-

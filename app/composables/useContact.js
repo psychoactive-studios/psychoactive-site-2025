@@ -70,7 +70,7 @@ const getRandomMessage = (arr) => {
  */
 const getSectionOpacity = () =>
   typeof window !== 'undefined' &&
-  window.matchMedia('(min-width: 1025px)').matches
+    window.matchMedia('(min-width: 1025px)').matches
     ? 0.2
     : 0.2;
 
@@ -90,12 +90,8 @@ export default function useContact() {
       // '.contact-back-button',
     ]);
 
-    const firstMessage = currentMessage.value;
-    const secondMessage = getRandomMessage(
+    const nextMessage = getRandomMessage(
       tadiSteps[currentStepId.value]?.messages[1]?.variations
-    );
-    const thirdMessage = getRandomMessage(
-      tadiSteps[currentStepId.value]?.messages[2]?.variations
     );
 
     gsap
@@ -141,16 +137,6 @@ export default function useContact() {
         '<'
       )
       // First message transition
-      .to(
-        previousSectionRef.value,
-        {
-          opacity: 0,
-          scale: 0.9,
-          duration: 0.8,
-          ease: 'power3.out',
-        },
-        '+=1'
-      )
       .to(
         currentSectionRef.value,
         {
@@ -204,27 +190,13 @@ export default function useContact() {
         },
         '+=1'
       )
-      .to(
-        currentSectionRef.value,
-        {
-          transform: 'translateY(calc(-100% - 48px - 0.65em))',
-          duration: 0.8,
-          opacity: getSectionOpacity(),
-          ease: 'power4.out',
-        },
-        '<'
-      )
       .add(() => {
-        // History: record second message with intro buttons as target
         historySteps.value.push({
           message: secondMessage,
           cta: null,
           sceneShape: 0,
           stepId: 'intro',
         });
-
-        historyMessage.value = firstMessage;
-
         previousMessage.value = currentMessage.value;
         currentMessage.value = thirdMessage;
         gsap.set(
@@ -240,7 +212,7 @@ export default function useContact() {
         currentHistoryIndex.value++;
       })
 
-      // Third message appear
+      // Second message transition
       .to(currentSectionTextRef.value, {
         backgroundPositionX: '-100%',
         duration: 1,
