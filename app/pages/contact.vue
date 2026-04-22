@@ -32,6 +32,15 @@ onUnmounted(() => {
 });
 
 
+useSeoMeta({
+  title: 'Start a Project | Psychoactive Studios',
+  description:
+    "Start a conversation with New Zealand's leading AI-era Webflow design agency. Global remote team. Premium Webflow Enterprise Partner.",
+  ogTitle: 'Start a Project | Psychoactive Studios',
+  ogDescription:
+    "Start a conversation with New Zealand's leading AI-era Webflow design agency. Global remote team. Premium Webflow Enterprise Partner.",
+});
+
 definePageMeta({
   scrollToTop: true,
   pageTransition: {
@@ -67,7 +76,8 @@ definePageMeta({
 
 <template>
   <main class="contact" data-lenis-prevent>
-    <div class="container">      
+    <h1 class="sr-only">Start a project with Psychoactive Studios</h1>
+    <div class="container">
       <div class="contact__grid">
         <section class="contact__media">
           <div class="contact__media_circle-wrapper">

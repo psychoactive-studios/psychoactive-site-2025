@@ -1,2 +1,5 @@
 User-Agent: *
-Disallow:
+Allow: /
+Disallow: /preview/
+
+Sitemap: https://psychoactive.co.nz/sitemap.xml

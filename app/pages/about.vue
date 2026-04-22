@@ -1,6 +1,7 @@
 <script setup>
 import gsap from 'gsap';
 import Ethos from '~/components/about/Ethos.vue';
+import FeaturedIn from '~/components/about/FeaturedIn.vue';
 import Hero from '~/components/about/Hero.vue';
 import Metamorphosis from '~/components/about/Metamorphosis.vue';
 import OurStory from '~/components/about/OurStory.vue';
@@ -28,6 +29,15 @@ onMounted(() => {
 
 onUnmounted(() => {
   if (ctx) ctx.revert();
+});
+
+useSeoMeta({
+  title: 'About | AI-era Webflow Agency | Psychoactive Studios',
+  description:
+    'Remote-first digital design agency founded 2018 in Wellington, New Zealand. AI-era Webflow Enterprise Partner building for ambitious brands worldwide.',
+  ogTitle: 'About | AI-era Webflow Agency | Psychoactive Studios',
+  ogDescription:
+    'Remote-first digital design agency founded 2018 in Wellington, New Zealand. AI-era Webflow Enterprise Partner building for ambitious brands worldwide.',
 });
 
 definePageMeta({
@@ -78,31 +88,30 @@ definePageMeta({
       <TextWithTitle title="BORN AMPHIBIOUS">
         <p>
           <span class="dark">Psychoactive is a</span> global design agency
-          <span class="dark">shaping</span> digital experiences
+          <span class="dark">building</span> digital experiences
           <span class="dark">for</span> ambitious brands.
-          <span class="dark"
-            >We create immersive, scalable websites that push the boundaries
-            of</span
-          >
-          design <span class="dark">and</span> technology.
-          <span class="dark">Our</span> remote-first
-          <span class="dark"
-            >team spans time zones, with our primary studio based in Wellington,
-            New Zealand.</span
-          >
+          <span class="dark">We’re</span> remote-first, award-winning,
+          <span class="dark">and</span> obsessively focused
+          <span class="dark">on the moment your</span>
+          audience encounters your brand online.
         </p>
         <p>
-          <span class="dark"
-            >Just as frogs breathe both water & air, we breathe design and</span
-          >
-          innovation.
-          <span class="dark"
-            >We’re constantly hatching fresh and beautifully intuitive ways to
-            stimulate the </span
-          >Metamorphosis of <span class="dark">projects & brands.</span>
+          <span class="dark">Just as frogs breathe both</span>
+          water and air,
+          <span class="dark">we breathe</span>
+          design and innovation,
+          <span class="dark">constantly finding</span>
+          fresh, intuitive
+          <span class="dark">ways to drive brand</span>
+          Metamorphosis.
         </p>
       </TextWithTitle>
     </section>
+
+    <section class="about__featured-in">
+      <FeaturedIn />
+    </section>
+
     <section class="about__metamorphosis">
       <Metamorphosis />
     </section>
@@ -232,6 +241,16 @@ definePageMeta({
     @include respond(mobile) {
       margin-top: 120px;
       padding-bottom: 120px;
+    }
+  }
+  &__featured-in {
+    // Matches the homepage Partners section rhythm:
+    //   - no explicit top margin (the section above provides natural space)
+    //   - 160px bottom margin (same as .cases margin-top on homepage)
+    margin-bottom: 160px;
+    @include respond(mobile) {
+      margin-top: 80px;
+      margin-bottom: 30px;
     }
   }
 }

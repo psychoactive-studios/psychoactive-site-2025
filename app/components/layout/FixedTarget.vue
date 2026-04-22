@@ -104,7 +104,6 @@ const { currentTransitionImage } = useWorks();
                         {{ service }}
                       </li>
                     </ul>
-                    <div class="title-number">{{ item.number }}</div>
                   </div>
                 </li>
               </ul>
@@ -288,10 +287,11 @@ section.services {
         }
         .title-right {
           margin-left: 11.5vw;
-          .title-number {
-            margin-top: 3.15vw;
-            margin-bottom: 0;
-          }
+          // Align the services list to the bottom of the title row,
+          // where the duplicate step number used to sit.
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
         }
         .title-services {
           font-size: clamp(16px, 1.044vw, 20px);

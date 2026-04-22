@@ -56,7 +56,21 @@ export default defineNuxtConfig({
       isCustomElement: (tag) => tag === 'mux-player',
     },
   },
-  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo',],
+  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo', '@nuxtjs/sitemap'],
+
+  // Sitemap — auto-generates /sitemap.xml at build time by crawling the
+  // site. Strapi-driven routes (e.g. /work/:slug, /content-hub/:slug)
+  // are picked up because `nitro.prerender.crawlLinks` follows <a>
+  // links across the site at build time. Excludes preview routes so
+  // Strapi drafts never end up in the public sitemap.
+  sitemap: {
+    sources: ['/__sitemap__/urls'],
+    exclude: ['/preview/**'],
+    defaults: {
+      changefreq: 'weekly',
+      priority: 0.7,
+    },
+  },
   css: ['modern-normalize/modern-normalize.css', '~/assets/styles/main.scss'],
   image: {
     // Specify the provider that supports static generation
@@ -64,6 +78,9 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      htmlAttrs: {
+        lang: 'en',
+      },
       title: DEFAULT_TITLE,
       meta: [
         { name: 'description', content: DEFAULT_DESCRIPTION },

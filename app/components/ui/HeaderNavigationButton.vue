@@ -247,6 +247,8 @@ const onMouseLeaveHandler = () => {
       'header__navigation-button',
       mode && `header__navigation-button--${mode}`,
     ]"
+    :aria-label="isNavOpen || isVideoOpen ? 'Close menu' : 'Open menu'"
+    :aria-expanded="isNavOpen"
     @click="onClickHandler"
     @mouseenter="onMouseEnterHandler"
     @mouseleave="onMouseLeaveHandler"

@@ -13,6 +13,15 @@ import gsap from 'gsap';
 const { scrollSmoother } = useScrollSmoother();
 const { startLoading } = useLoader();
 
+useSeoMeta({
+  title: 'Services | Design, AI & Webflow Development | Psychoactive',
+  description:
+    'Brand strategy, UX, Webflow development, custom code, and AI integration. End-to-end digital services for ambitious brands across every phase of growth.',
+  ogTitle: 'Services | Design, AI & Webflow Development | Psychoactive',
+  ogDescription:
+    'Brand strategy, UX, Webflow development, custom code, and AI integration. End-to-end digital services for ambitious brands across every phase of growth.',
+});
+
 definePageMeta({
   scrollToTop: true,
   pageTransition: {
@@ -36,9 +45,16 @@ definePageMeta({
     onLeave: (el, done) => {
       const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
+        // When leaving via the nav menu, the menu overlay handles the
+        // visual transition. We need to hide both the page wrapper (`el`)
+        // AND the pinned stepper content (`#services-fixed-section`) —
+        // otherwise, scrolling past the hero and navigating away leaves
+        // the stepper videos/titles visible behind the folding menu,
+        // causing a flash of the old page before the new one mounts.
         gsap
           .timeline()
           .set(el, { opacity: 0 })
+          .set('#services-fixed-section', { display: 'none' })
           .add(() => {
             transitionFromNavigation.value = false;
             done();
@@ -78,15 +94,28 @@ onMounted(() => {
     <div class="container">
       <section class="services__onscroll-text">
         <OnScrollFilledText>
-          <span class="dark">Our work lives at the intersection of</span> art,
-          technology <span class="dark">and</span> strategy.
           <span class="dark">From world-class</span>
-          creative direction <span class="dark">to</span> custom code
-          <span class="dark">and</span> enterprise-grade Webflow development,
-          <span class="dark"
-            >we help ambitious brands evolve, scale and lead with
-            confidence.</span
-          >
+          creative direction
+          <span class="dark">to</span>
+          custom code,
+          <span class="dark">enterprise</span>
+          Webflow,
+          <span class="dark">and</span>
+          AI-era digital experiences.
+          <span class="dark">We help ambitious brands evolve, scale, and lead with confidence.</span>
+        </OnScrollFilledText>
+      </section>
+
+      <section class="services__ai-layer">
+        <OnScrollFilledText>
+          <span class="dark">AI runs through</span>
+          every phase
+          <span class="dark">of our pipeline. It</span>
+          sharpens research,
+          <span class="dark">accelerates</span>
+          design,
+          <span class="dark">and automates what used to slow us down,</span>
+          without ever replacing the craft.
         </OnScrollFilledText>
       </section>
     </div>
@@ -121,6 +150,23 @@ onMounted(() => {
     }
     @include respond(mobile) {
       max-width: 100%;
+    }
+  }
+  &__ai-layer {
+    // Secondary AI thesis paragraph — sits below the main intro,
+    // slightly smaller and softer so it reads as supporting context
+    // rather than duplicating the primary beat. Width matches the
+    // intro paragraph above so both blocks share the same column.
+    // No leading indent — flush left.
+    @include flex-center;
+    padding: 6dvh 0 10dvh 0;
+    max-width: 57vw;
+    margin: auto;
+    font-size: 0.85em;
+    opacity: 0.9;
+    @include respond(mobile) {
+      max-width: 100%;
+      padding: 4dvh 0 6dvh 0;
     }
   }
 }

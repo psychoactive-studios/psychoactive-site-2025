@@ -255,8 +255,9 @@ function enterAnimation(el) {
       <div ref="titleRef" class="works__title">
         <h1 class="subheader--mobile">OUR Projects</h1>
         <p class="heading-h5--mobile">
-          Where bold ideas become living, breathing digital experiences. Crafted
-          with intention and built to perform.
+          Bold ideas.<br>
+          Meticulous execution.<br>
+          Built to perform.
         </p>
       </div>
       <div class="works__grid">

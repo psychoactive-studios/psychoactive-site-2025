@@ -213,8 +213,11 @@ onUnmounted(() => {
     &_step-3 {
       height: 150dvh;
     }
+    // Taller than the others so the "slow scroll" stepper effect stays
+    // active until the END of Growth & Partnership. Previously ended as
+    // soon as step 4 began, which made the last phase feel rushed.
     &_step-4 {
-      height: 150dvh;
+      height: 300dvh;
     }
   }
 }

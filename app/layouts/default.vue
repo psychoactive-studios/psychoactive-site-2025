@@ -63,11 +63,14 @@ watch(
 </script>
 <template>
   <div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
     <Header />
     <ModalContainer />
     <FixedTarget />
     <ScrollProvider>
-      <slot />
+      <div id="main-content">
+        <slot />
+      </div>
     </ScrollProvider>
   </div>
 </template>

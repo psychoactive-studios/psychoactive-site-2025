@@ -49,3 +49,48 @@ body {
 .container {
   @include container;
 }
+
+/* Skip-to-main-content link.
+ * Hidden off-screen until the user Tabs to it — then drops into view
+ * at the top-left. Lets keyboard/screen-reader users jump past the
+ * header/nav straight into the page's main content.
+ */
+/* Visually hidden — content is still announced by screen readers and
+ * picked up by search engines, but invisible on screen. Used for
+ * landmark headings on pages where a visible h1 would disrupt the
+ * design (e.g. full-bleed animated hero).
+ */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 16px;
+  z-index: 9999;
+  padding: 12px 20px;
+  background-color: $color-foreground;
+  color: $color-background;
+  font-family: 'RoobertMono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: top 0.2s ease;
+  &:focus,
+  &:focus-visible {
+    top: 16px;
+    outline: none;
+  }
+}

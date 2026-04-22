@@ -2,7 +2,9 @@
   <div
     ref="rootEl"
     class="bulge-image-scene"
-    :style="{ backgroundImage: `url(${src})` }"
+    :style="hasEnteredViewport ? { backgroundImage: `url(${src})` } : {}"
+    :role="alt ? 'img' : undefined"
+    :aria-label="alt || undefined"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @mousemove="handleMouseMove"
@@ -23,7 +25,7 @@ import vertexShader from '@/utils/glsl/main.vert?raw';
 import fragmentShader from '@/utils/glsl/main.frag?raw';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useMediaQuery, usePointer } from '@vueuse/core';
+import { useMediaQuery, usePointer, useIntersectionObserver } from '@vueuse/core';
 
 import useWorks from '~/composables/useWorks.js';
 import useScrollSmoother from '~/composables/useScrollSmoother';
@@ -54,6 +56,22 @@ const props = defineProps({
     type: Number,
     default: 0.7,
   },
+  // When true, the Three.js shader is not initialised until the user
+  // first hovers the element. Used for dense grids of BulgeImages (e.g.
+  // the team section) where creating N WebGL contexts eagerly is
+  // expensive. Once hovered, the context is kept alive for the rest of
+  // the component's lifetime so subsequent hovers are instant.
+  initOnHover: {
+    type: Boolean,
+    default: false,
+  },
+  // Text description for screen readers. The background image is a CSS
+  // `background-image` so it has no native alt. When provided, we apply
+  // an aria-label and role="img" on the root so SR users hear the label.
+  alt: {
+    type: String,
+    default: '',
+  },
 });
 
 const rootEl = ref(null);
@@ -76,8 +94,38 @@ const settings = {
   lerpFactor: 0.05, // Interpolation factor
 };
 
+// Lazy-load the background image. We set `hasEnteredViewport` to true
+// once the element gets within 800px of the viewport (preload zone), and
+// then unobserve. Keeps the image loaded if the user scrolls back up.
+// The Three.js canvas also waits on this flag so the shader isn't
+// initialised for off-screen items.
+const hasEnteredViewport = ref(false);
+const { stop: stopViewportObserver } = useIntersectionObserver(
+  rootEl,
+  ([entry]) => {
+    if (entry?.isIntersecting) {
+      hasEnteredViewport.value = true;
+      stopViewportObserver();
+    }
+  },
+  { rootMargin: '800px 0px' }
+);
+
+// `isHoverActive` tracks whether the user is currently hovering (or
+// recently hovered). Combined with `initOnHover`, this defers Three.js
+// setup until a hover happens AND tears it back down after the user
+// leaves — critical for dense grids (e.g. team section) where keeping
+// N shader contexts warm tanks frame rate. A 600ms grace period
+// prevents thrashing from quick hover-in/hover-out.
+const isHoverActive = ref(false);
+let hoverReleaseTimer = null;
+
 const shouldActivate = computed(
-  () => !isMobile.value && pointerType.value === 'mouse'
+  () =>
+    hasEnteredViewport.value &&
+    !isMobile.value &&
+    pointerType.value === 'mouse' &&
+    (!props.initOnHover || isHoverActive.value)
 );
 
 function init() {
@@ -132,10 +180,21 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  if (hoverReleaseTimer) clearTimeout(hoverReleaseTimer);
   destroy();
 });
 
 const handleMouseEnter = () => {
+  // If we're within a release grace period, cancel the pending tear-down
+  // and keep the shader warm. Otherwise this is a fresh hover — flip the
+  // flag which causes shouldActivate to become true and init() to run.
+  if (props.initOnHover) {
+    if (hoverReleaseTimer) {
+      clearTimeout(hoverReleaseTimer);
+      hoverReleaseTimer = null;
+    }
+    isHoverActive.value = true;
+  }
   if (!shouldActivate.value) return;
   isHovered.value = true;
 
@@ -164,6 +223,15 @@ const handleMouseEnter = () => {
 };
 
 const handleMouseLeave = () => {
+  // Schedule shader tear-down after a grace period so the user doesn't
+  // pay the init cost on every accidental flick between photos.
+  if (props.initOnHover) {
+    if (hoverReleaseTimer) clearTimeout(hoverReleaseTimer);
+    hoverReleaseTimer = setTimeout(() => {
+      isHoverActive.value = false;
+      hoverReleaseTimer = null;
+    }, 600);
+  }
   if (!shouldActivate.value) return;
   isHovered.value = false;
   if (pointerType.value !== 'mouse' || !props.cursor) {

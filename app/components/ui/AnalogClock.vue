@@ -140,7 +140,7 @@ const formattedTime = computed(() => {
         stroke: white(60);
       }
       &.minute {
-        stroke: white(40);
+        stroke: white(50);
       }
     }
 

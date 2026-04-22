@@ -108,37 +108,56 @@ onUnmounted(() => {
     <div class="our-story__grid">
       <div class="our-story__text body--mobile">
         <p>
-          Psychoactive was founded in 2018 by Andrew Hillstead, born from his
-          Master’s research which explored how technology could be used to
-          simulate psychedelic therapy. That work paired neurofeedback with
-          augmented and virtual reality, seeking new ways to create meaningful
-          emotional states through digital experience. This deep connection
-          between design and human psychology still shapes how we think about
-          digital experience today.
+          Psychoactive Studios is an award-winning digital design and
+          development agency founded in 2018 by Andrew Hillstead, and based in
+          Wellington, New Zealand. Operating as a remote-first studio with a
+          global team and clients across North America, Europe, Asia, and the
+          Pacific, we specialise in high-performance websites, immersive
+          digital experiences, and AI-era web platforms built for ambitious
+          brands.
         </p>
         <p>
-          In 2019, Psychoactive transitioned from WordPress to Webflow,
-          pioneering the platform’s potential for enterprise-level creativity
-          and performance. The shift marked the beginning of a new chapter in
-          web design, one where motion, micro-interactions, responsiveness, and
-          performance could finally move in harmony.
+          Psychoactive was born from Andrew’s Master’s research exploring how
+          technology could create meaningful emotional states, pairing
+          neurofeedback with augmented and virtual reality to simulate
+          psychedelic therapy. That deep connection between design and human
+          psychology still shapes how we think about digital experience today.
         </p>
         <p>
-          Today, Psychoactive partners with some of the world’s largest and most
-          innovative brands and events, including World of WearableArt, Summer
-          Game Fest, SuperAI, and TOKEN2049. From launching the All Blacks Rugby
-          World Cup 2023 jersey to developing digital infrastructure for global
-          organisations, universities, and fast-moving startups, we’ve delivered
-          hundreds of websites - each one crafted with its own purpose and
-          distinctive flavour.
+          Our services span brand strategy, content, UX, web and interface
+          design, motion and interaction design, Webflow development, custom
+          code, WebGL and 3D experiences, CMS architecture, SEO, and AI
+          integration. We work across the full lifecycle of a digital product,
+          from discovery and strategy through to build, launch, and ongoing
+          partnership.
         </p>
         <p>
-          Having been nominated as Agency of the Year by Awwwards and receiving
-          50+ international awards for our work, our journey has shaped a studio
-          that thinks beyond trends and templates. We approach every project
-          with the curiosity of artists and researchers and the precision of
-          engineers, helping ambitious brands build digital experiences that
-          stand out and stand the test of time.
+          In 2019, we moved to Webflow and pioneered the platform’s potential
+          for enterprise-level creativity and performance. By 2022, we became
+          New Zealand’s first Premium Webflow Enterprise Partner, and today we
+          are recognised globally as one of the leading Webflow agencies in
+          the world.
+        </p>
+        <p>
+          We partner with some of the world’s most innovative brands and
+          events, including World of WearableArt, Summer Game Fest, SuperAI,
+          TOKEN2049, Blackbird VC, Adidas, and the All Blacks, delivering
+          hundreds of websites across the tech, events, gaming, enterprise,
+          and AI sectors, each crafted with its own purpose and distinctive
+          character.
+        </p>
+        <p>
+          As the web enters the AI era, we design and build experiences that
+          integrate intelligence, not just beauty. From AI-native brand
+          platforms to personalised digital products, we help forward-thinking
+          organisations stay ahead.
+        </p>
+        <p>
+          Nominated as Agency of the Year by Awwwards and recognised with 50+
+          international awards, we approach every project with the curiosity
+          of artists, the rigour of researchers, and the precision of
+          engineers. Our work is built to stand out, and to stand the test of
+          time.
         </p>
       </div>
       <div class="our-story__stats">
@@ -261,8 +280,17 @@ onUnmounted(() => {
   }
   &__stats {
     display: flex;
+    // Stick stats to the viewport while the longer body copy scrolls past.
+    // `align-self: start` prevents the grid item stretching to full row
+    // height, which would otherwise disable sticky behaviour.
+    position: sticky;
+    top: 100px;
+    align-self: start;
+    height: fit-content;
     @include respond(mobile) {
       display: block;
+      position: static;
+      top: auto;
     }
     &_list {
       display: flex;

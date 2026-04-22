@@ -143,7 +143,8 @@ defineProps({
           v-for="image in block.mediaGrid"
           :key="image.id"
           :src="image?.url"
-          alt=""
+          :alt="image?.alternativeText || ''"
+          loading="lazy"
         />
       </div>
     </template>

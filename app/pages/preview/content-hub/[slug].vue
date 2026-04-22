@@ -65,11 +65,13 @@ if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
 
-// SEO meta from articleData.data.seo – only set when fields exist
+// SEO meta from articleData.data.seo – only set when fields exist.
+// Preview routes are always noindex/nofollow so crawlers can't pick up
+// draft content.
 const seoMeta = computed(() => {
   const seo = articleData.value?.data?.seo;
-  if (!seo) return {};
-  const meta = {};
+  const meta = { robots: 'noindex, nofollow' };
+  if (!seo) return meta;
   if (seo.metaTitle) meta.title = seo.metaTitle;
   if (seo.metaDescription) meta.description = seo.metaDescription;
   if (seo.shareImage) {

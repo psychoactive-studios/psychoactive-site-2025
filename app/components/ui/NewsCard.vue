@@ -96,6 +96,7 @@ const handleSoundClick = () => {
           :alt="data.title"
           width="230"
           height="230"
+          loading="lazy"
         />
       </div>
     </div>
