@@ -4,10 +4,25 @@
  *
  * Rendered by nuxt-og-image at request time to produce the 1200x630
  * PNG that appears when someone shares a design-audit link on X,
- * LinkedIn, etc. Generic version for this pass — shows Psychoactive
- * branding + "Free design audit" CTA + the audited hostname if the
- * link includes ?url=X. A per-audit version with the actual score
- * would need a shareable audit-id URL (follow-up).
+ * LinkedIn, etc.
+ *
+ * Design intent (notes for future-me so the rationale doesn't get
+ * lost the next time someone "just tweaks" the layout):
+ *
+ * - ONE dominant element — a huge `?/100` as a score placeholder.
+ *   Reads instantly as "a number is about to go here", which creates
+ *   the curiosity gap that drives clicks. Same pattern Vercel / Linear
+ *   use on their generic OG cards.
+ * - Monochrome black + white. A single warm accent on the `?`
+ *   implies the "gold-tier score" outcome without colouring outside
+ *   the brand palette.
+ * - Concrete value row ("Free · 5 categories · 60 seconds") beats
+ *   the previous rhetorical question — people click when they can
+ *   imagine getting a specific result, not when they're asked to
+ *   philosophise.
+ * - CTA pill pushed to the bottom-left as a strong corner anchor,
+ *   domain to the bottom-right so the eye can track both without
+ *   competing with the hook.
  *
  * Notes for Satori compatibility:
  *   - Every non-leaf element needs an explicit display: flex (or block
@@ -43,7 +58,7 @@ const hostname = computed(() => {
       justifyContent: 'space-between',
       width: '100%',
       height: '100%',
-      padding: '80px',
+      padding: '72px 80px',
       background: '#0b0b0b',
       color: '#ffffff',
       fontFamily: 'Inter, sans-serif',
@@ -53,53 +68,96 @@ const hostname = computed(() => {
     <div
       :style="{
         display: 'flex',
+        alignItems: 'center',
         color: '#8a8a8a',
         fontSize: '22px',
-        fontWeight: '500',
-        letterSpacing: '0.1em',
+        fontWeight: '600',
+        letterSpacing: '0.12em',
         textTransform: 'uppercase',
       }"
     >
       Psychoactive Studios · Design Audit
     </div>
 
-    <!-- Middle: big headline / audited hostname -->
+    <!-- Middle: huge "?" / 100 as the curiosity hook, then a specific headline -->
     <div
       :style="{
         display: 'flex',
         flexDirection: 'column',
       }"
     >
+      <!-- The score placeholder. Warm-tinted `?` implies the high-tier
+           outcome people are imagining for their own site. -->
       <div
-        v-if="hostname"
         :style="{
           display: 'flex',
-          color: '#8a8a8a',
-          fontSize: '32px',
-          fontWeight: '500',
-          letterSpacing: '0.04em',
-          textTransform: 'uppercase',
-          marginBottom: '16px',
+          alignItems: 'flex-end',
+          marginBottom: '28px',
         }"
       >
-        {{ hostname }}
+        <div
+          :style="{
+            display: 'flex',
+            color: '#f0d58a',
+            fontSize: '280px',
+            fontWeight: '700',
+            lineHeight: '0.85',
+            letterSpacing: '-0.08em',
+          }"
+        >
+          ?
+        </div>
+        <div
+          :style="{
+            display: 'flex',
+            color: '#6a6a6a',
+            fontSize: '72px',
+            fontWeight: '500',
+            letterSpacing: '-0.04em',
+            marginLeft: '16px',
+            marginBottom: '28px',
+          }"
+        >
+          /100
+        </div>
       </div>
+
+      <!-- Headline — short, concrete, benefit-first. Varies slightly
+           based on whether the link points to a specific audit. -->
       <div
         :style="{
           display: 'flex',
           color: '#ffffff',
-          fontSize: '120px',
+          fontSize: '58px',
           fontWeight: '600',
-          letterSpacing: '-0.04em',
-          lineHeight: '0.95',
-          maxWidth: '1000px',
+          letterSpacing: '-0.02em',
+          lineHeight: '1.08',
+          maxWidth: '820px',
         }"
       >
-        What does your site say in the first five seconds?
+        {{
+          hostname
+            ? `See how ${hostname} scores across five things that actually matter.`
+            : `Get your website's design audit score in 60 seconds.`
+        }}
+      </div>
+
+      <!-- Value-bullet row. Specific, not abstract. -->
+      <div
+        :style="{
+          display: 'flex',
+          marginTop: '20px',
+          color: '#8a8a8a',
+          fontSize: '24px',
+          fontWeight: '500',
+          letterSpacing: '0.01em',
+        }"
+      >
+        Free · 5 categories · Specific findings
       </div>
     </div>
 
-    <!-- Bottom row: CTA + domain sig -->
+    <!-- Bottom row: CTA pill + domain sig -->
     <div
       :style="{
         display: 'flex',
@@ -112,13 +170,13 @@ const hostname = computed(() => {
         :style="{
           display: 'flex',
           alignItems: 'center',
-          color: '#ffffff',
+          color: '#0b0b0b',
+          background: '#ffffff',
           fontSize: '26px',
-          fontWeight: '600',
-          padding: '18px 28px',
-          border: '2px solid #ffffff',
+          fontWeight: '700',
+          padding: '20px 32px',
           borderRadius: '999px',
-          letterSpacing: '0.02em',
+          letterSpacing: '0.01em',
         }"
       >
         Run a free audit →
