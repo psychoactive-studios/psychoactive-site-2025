@@ -19,7 +19,12 @@ const currentZone = computed(
   () => timezoneMap[props.city] || 'Australia/Melbourne'
 );
 
-const currentTime = ref(new Date());
+// Keep `currentTime` null during SSR so the server-rendered markup
+// doesn't lock in a timestamp that's already stale by the time the
+// client hydrates. Populated in onMounted and kept fresh by the timer.
+// Without this, Vue sees different hand rotations / time text between
+// server and client and logs a hydration mismatch on every page load.
+const currentTime = ref(null);
 let timer;
 
 const updateTime = () => {
@@ -47,6 +52,10 @@ const getTimeParts = (date) => {
 };
 
 const rotation = computed(() => {
+  // Pre-mount (SSR + first client paint): show hands at 12 o'clock.
+  // This renders identically on both sides so hydration matches.
+  if (!currentTime.value) return { h: 0, m: 0 };
+
   const parts = getTimeParts(currentTime.value);
   const hPart = parts.find((p) => p.type === 'hour');
   const mPart = parts.find((p) => p.type === 'minute');
@@ -64,6 +73,10 @@ const rotation = computed(() => {
 });
 
 const formattedTime = computed(() => {
+  // Empty during SSR/pre-mount — the real time swaps in on client mount
+  // a few ms later. Invisible flicker, no hydration warning.
+  if (!currentTime.value) return '';
+
   return currentTime.value.toLocaleTimeString('en-US', {
     timeZone: currentZone.value,
     hour: 'numeric',
