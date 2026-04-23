@@ -35,6 +35,12 @@ export interface RateLimitResult {
 }
 
 export function checkRateLimit(key: string): RateLimitResult {
+  // Bypass entirely in dev so local iteration isn't blocked. Production
+  // builds always enforce.
+  if (import.meta.dev) {
+    return { allowed: true, remaining: MAX_REQUESTS, retryAfterSec: 0 };
+  }
+
   maybePrune();
 
   const now = Date.now();
