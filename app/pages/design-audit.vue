@@ -323,7 +323,11 @@ definePageMeta({
     </div>
 
     <div v-if="isUnlocked" ref="fullReportRef">
-      <AuditFullReport v-if="report" :report="report" />
+      <AuditFullReport
+        v-if="report"
+        :report="report"
+        :audited-url="auditedUrl || ''"
+      />
     </div>
 
     <!--

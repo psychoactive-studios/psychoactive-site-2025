@@ -28,6 +28,10 @@ export default function useDesignAudit() {
   const report = ref(null);
   const auditedUrl = ref(null);
   const errorMessage = ref('');
+  // True when the current report came from the 24h cache. Lets the UI
+  // surface a "Run a fresh audit" affordance.
+  const isCached = ref(false);
+  const cachedAgeMs = ref(null);
 
   const leadForm = reactive({
     email: '',
@@ -42,7 +46,7 @@ export default function useDesignAudit() {
   const isUnlocked = computed(() => state.value === STATES.UNLOCKED);
   const hasError = computed(() => state.value === STATES.ERROR);
 
-  async function runAudit(rawUrl) {
+  async function runAudit(rawUrl, options = {}) {
     const trimmed = (rawUrl ?? url.value ?? '').trim();
     if (!trimmed) {
       state.value = STATES.ERROR;
@@ -56,16 +60,24 @@ export default function useDesignAudit() {
     report.value = null;
     auditId.value = null;
     auditedUrl.value = null;
+    isCached.value = false;
+    cachedAgeMs.value = null;
 
     try {
       const res = await $fetch('/api/audit', {
         method: 'POST',
-        body: { url: trimmed },
+        body: {
+          url: trimmed,
+          // Caller can force-bypass the 24h cache for this request.
+          fresh: options.fresh === true,
+        },
       });
 
       report.value = res.report;
       auditId.value = res.auditId;
       auditedUrl.value = res.url;
+      isCached.value = !!res.cached;
+      cachedAgeMs.value = res.cachedAgeMs ?? null;
       state.value = STATES.TEASER;
     } catch (err) {
       state.value = STATES.ERROR;
@@ -123,6 +135,8 @@ export default function useDesignAudit() {
     leadForm.name = '';
     leadForm.company = '';
     leadError.value = '';
+    isCached.value = false;
+    cachedAgeMs.value = null;
   }
 
   return {
@@ -140,6 +154,8 @@ export default function useDesignAudit() {
     isSubmitting,
     isUnlocked,
     hasError,
+    isCached,
+    cachedAgeMs,
     runAudit,
     submitLead,
     reset,

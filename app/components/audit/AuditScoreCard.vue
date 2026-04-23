@@ -49,14 +49,13 @@ const findingCounts = computed(() => {
 <template>
   <section class="score-card">
     <div class="container">
-      <div class="score-card__meta">
-        <p class="score-card__eyebrow subheader--mobile">
-          Audit for
-        </p>
-        <p class="score-card__url body-large--mobile">
-          {{ auditedUrl }}
-        </p>
-      </div>
+      <!--
+        The "Audit for X" block used to live here, but it now duplicates
+        the "Audited: X · Run another?" label in the compressed hero
+        just above. Removed to avoid saying the same thing twice.
+        `auditedUrl` is still passed in as a prop in case we need it
+        elsewhere in the card later.
+      -->
 
       <div class="score-card__headline">
         <div class="score-card__overall">

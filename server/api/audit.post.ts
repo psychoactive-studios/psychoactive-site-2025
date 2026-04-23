@@ -15,6 +15,7 @@ import crypto from 'node:crypto';
 import {
   AuditFetchError,
   fetchAndCleanSite,
+  normaliseUrl,
 } from '../utils/audit-fetch';
 import {
   AUDIT_SYSTEM_PROMPT,
@@ -24,8 +25,16 @@ import {
 import { getAuditSupabaseClient } from '../utils/audit-supabase';
 import { checkRateLimit, getRequestIp } from '../utils/audit-rate-limit';
 
+// If a previous audit of this URL landed in the last 24h, return its
+// report instead of calling Claude again. Same URL rarely changes
+// meaningfully that quickly, and this saves ~$0.05 + 40s per hit.
+const CACHE_WINDOW_MS = 24 * 60 * 60 * 1000;
+
 interface AuditRequestBody {
   url?: string;
+  // Set by the frontend when the user explicitly asks for a fresh
+  // audit (e.g. a "Run a fresh audit" button). Bypasses the cache.
+  fresh?: boolean;
 }
 
 export default defineEventHandler(async (event) => {
@@ -53,10 +62,12 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // 1. Fetch + clean the target site.
-  let site;
+  // Normalise the URL once so we can use it for both cache lookup and
+  // (later) cache-miss fetches. If normalisation fails, surface the
+  // error now — no point doing anything else.
+  let normalisedUrl: string;
   try {
-    site = await fetchAndCleanSite(rawUrl);
+    normalisedUrl = normaliseUrl(rawUrl);
   } catch (err) {
     if (err instanceof AuditFetchError) {
       throw createError({
@@ -68,7 +79,58 @@ export default defineEventHandler(async (event) => {
     throw err;
   }
 
-  // 2. Call Claude.
+  // 1. Cache lookup. If a matching audit ran in the last 24h, reuse
+  // the report. Keeps repeat visits instant and spares the Anthropic
+  // budget. The client can force a fresh audit by sending `fresh: true`.
+  let cachedReport: AuditResponse | null = null;
+  let cachedFromMs: number | null = null;
+  const forceFresh = body?.fresh === true;
+
+  if (!forceFresh) {
+    try {
+      const supabase = getAuditSupabaseClient();
+      const sinceIso = new Date(Date.now() - CACHE_WINDOW_MS).toISOString();
+      const { data } = await supabase
+        .from('design_audit_leads')
+        .select('full_report, created_at')
+        .eq('url', normalisedUrl)
+        .gte('created_at', sinceIso)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (data?.full_report) {
+        cachedReport = data.full_report as AuditResponse;
+        cachedFromMs = data.created_at
+          ? Date.now() - new Date(data.created_at).getTime()
+          : null;
+      }
+    } catch (err) {
+      // Cache lookup is best-effort — if Supabase is unreachable, fall
+      // through to a fresh audit rather than failing.
+      console.warn('Audit cache lookup failed (non-blocking):', err);
+    }
+  }
+
+  // 2. If we hit the cache, skip the fetch + Claude call entirely.
+  // Otherwise fetch and clean the target site.
+  let site: Awaited<ReturnType<typeof fetchAndCleanSite>> | null = null;
+  if (!cachedReport) {
+    try {
+      site = await fetchAndCleanSite(rawUrl);
+    } catch (err) {
+      if (err instanceof AuditFetchError) {
+        throw createError({
+          statusCode: 400,
+          statusMessage: err.message,
+          data: { code: err.code },
+        });
+      }
+      throw err;
+    }
+  }
+
+  // 3. Call Claude (only on cache miss).
   const config = useRuntimeConfig();
   if (!config.anthropicApiKey) {
     throw createError({
@@ -78,48 +140,58 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
   let report: AuditResponse;
 
-  try {
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5',
-      max_tokens: 4000,
-      system: AUDIT_SYSTEM_PROMPT,
-      messages: [
-        {
-          role: 'user',
-          content: buildAuditUserPrompt({
-            url: site.url,
-            title: site.title,
-            description: site.description,
-            html: site.html,
-          }),
-        },
-      ],
-    });
+  if (cachedReport) {
+    // Cache hit — reuse the previous report.
+    report = cachedReport;
+  } else {
+    // Cache miss — call Claude with the freshly-fetched site.
+    const anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
 
-    const textBlock = response.content.find((b) => b.type === 'text');
-    if (!textBlock || textBlock.type !== 'text') {
-      throw new Error('No text response from Claude');
+    try {
+      const response = await anthropic.messages.create({
+        model: 'claude-sonnet-4-5',
+        max_tokens: 4000,
+        system: AUDIT_SYSTEM_PROMPT,
+        messages: [
+          {
+            role: 'user',
+            content: buildAuditUserPrompt({
+              url: site!.url,
+              title: site!.title,
+              description: site!.description,
+              html: site!.html,
+            }),
+          },
+        ],
+      });
+
+      const textBlock = response.content.find((b) => b.type === 'text');
+      if (!textBlock || textBlock.type !== 'text') {
+        throw new Error('No text response from Claude');
+      }
+
+      // Claude sometimes wraps JSON in prose or code fences despite the
+      // prompt — be defensive.
+      const jsonMatch = textBlock.text.match(/\{[\s\S]*\}/);
+      const jsonStr = jsonMatch ? jsonMatch[0] : textBlock.text;
+
+      report = JSON.parse(jsonStr) as AuditResponse;
+    } catch (err) {
+      console.error('Claude audit failed:', err);
+      throw createError({
+        statusCode: 502,
+        statusMessage:
+          'The audit engine couldn\'t process that page. Try again in a moment.',
+      });
     }
-
-    // Claude sometimes wraps JSON in prose or code fences despite the
-    // prompt — be defensive.
-    const jsonMatch = textBlock.text.match(/\{[\s\S]*\}/);
-    const jsonStr = jsonMatch ? jsonMatch[0] : textBlock.text;
-
-    report = JSON.parse(jsonStr) as AuditResponse;
-  } catch (err) {
-    console.error('Claude audit failed:', err);
-    throw createError({
-      statusCode: 502,
-      statusMessage:
-        'The audit engine couldn\'t process that page. Try again in a moment.',
-    });
   }
 
-  // 3. Persist the audit row (teaser state, no email yet).
+  // 4. Persist the audit row (teaser state, no email yet). Always
+  // insert — even on cache hits — so the CRM tracks every visit,
+  // and so the row id we return is specific to *this* session's
+  // email submission.
   let auditId: string | null = null;
   try {
     const supabase = getAuditSupabaseClient();
@@ -144,7 +216,7 @@ export default defineEventHandler(async (event) => {
     const { data, error } = await supabase
       .from('design_audit_leads')
       .insert({
-        url: site.url,
+        url: normalisedUrl,
         overall_score: report.overall_score,
         category_scores: categoryScores,
         full_report: report,
@@ -168,7 +240,11 @@ export default defineEventHandler(async (event) => {
 
   return {
     auditId,
-    url: site.url,
+    url: normalisedUrl,
+    // Let the client know whether this came from cache so it can show
+    // a "Run a fresh audit" affordance if the user wants newer data.
+    cached: !!cachedReport,
+    cachedAgeMs: cachedFromMs,
     report,
   };
 });
