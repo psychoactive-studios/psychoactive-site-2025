@@ -4,6 +4,7 @@ import Footer from '~/components/layout/Footer.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useNavigation from '~/composables/useNavigation';
 import NewsCard from '~/components/ui/NewsCard.vue';
+import DesignAuditPromoCard from '~/components/content-hub/DesignAuditPromoCard.vue';
 import useLoader from '~/composables/useLoader';
 import useAudioManager from '~/composables/useAudioManager';
 import { leaveAnimation } from '~/utils/animations/transitions';
@@ -152,28 +153,59 @@ const getHref = (news) => {
   return `/content-hub/${news.slug}`;
 };
 
+// Insert the Design Audit promo card after a handful of articles so it
+// feels embedded in the content rather than dropped on top. Split the
+// article list into "before" and "after" slices at a fixed index.
+const PROMO_CARD_POSITION = 4;
+
+const articlesBeforePromo = computed(() =>
+  (articlesData.value?.data || []).slice(0, PROMO_CARD_POSITION)
+);
+
+const articlesAfterPromo = computed(() =>
+  (articlesData.value?.data || []).slice(PROMO_CARD_POSITION)
+);
+
 </script>
 <template>
   <main class="content-hub">
     <div class="container">
       <h1 class="content-hub__title">Content <sup>HUB</sup></h1>
       <div v-if="articlesData?.data" class="content-hub__grid">
-        <NewsCard
-          v-if="!isMobile"
-          v-for="news in articlesData?.data"
-          :key="news.documentId"
-          :data="news"
-        />
-        <HomeNewsCard
-          v-if="isMobile"
-          v-for="news in articlesData?.data"
-          :key="news.documentId"
-          :title="news.title"
-          :category="news.category?.name"
-          :date="news.updatedAt"
-          :src="news.preview?.formats?.medium?.url || news.preview?.url"
-          :href="getHref(news)"
-        />
+        <template v-if="!isMobile">
+          <NewsCard
+            v-for="news in articlesBeforePromo"
+            :key="news.documentId"
+            :data="news"
+          />
+          <DesignAuditPromoCard />
+          <NewsCard
+            v-for="news in articlesAfterPromo"
+            :key="news.documentId"
+            :data="news"
+          />
+        </template>
+        <template v-if="isMobile">
+          <HomeNewsCard
+            v-for="news in articlesBeforePromo"
+            :key="news.documentId"
+            :title="news.title"
+            :category="news.category?.name"
+            :date="news.updatedAt"
+            :src="news.preview?.formats?.medium?.url || news.preview?.url"
+            :href="getHref(news)"
+          />
+          <DesignAuditPromoCard />
+          <HomeNewsCard
+            v-for="news in articlesAfterPromo"
+            :key="news.documentId"
+            :title="news.title"
+            :category="news.category?.name"
+            :date="news.updatedAt"
+            :src="news.preview?.formats?.medium?.url || news.preview?.url"
+            :href="getHref(news)"
+          />
+        </template>
       </div>
       <div v-else class="no-data">
         <p>Something went wrong.</p>

@@ -10,13 +10,16 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.0",
     "@mux/videojs-kit": "^0.12.3",
     "@nuxt/eslint": "^1.9.0",
     "@nuxt/image": "^1.11.0",
     "@nuxt/scripts": "^0.11.13",
     "@nuxtjs/sitemap": "^7.0.0",
     "@splidejs/splide-extension-auto-scroll": "^0.5.3",
+    "@supabase/supabase-js": "^2.47.0",
     "@vercel/analytics": "^1.5.0",
+    "cheerio": "^1.0.0",
     "@splidejs/vue-splide": "^0.6.12",
     "@unhead/vue": "^2.0.14",
     "@vueuse/core": "^13.9.0",

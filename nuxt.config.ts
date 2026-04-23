@@ -36,6 +36,12 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
+    // Server-only secrets — never exposed to the client bundle.
+    // Used by the Design Audit API routes (server/api/audit.*).
+    anthropicApiKey: process.env.ANTHROPIC_API_KEY || '',
+    supabaseCrmUrl: process.env.SUPABASE_CRM_URL || '',
+    supabaseCrmServiceKey: process.env.SUPABASE_CRM_SERVICE_KEY || '',
+
     public: {
       siteUrl: SITE_URL,
       strapiBaseUrl: process.env.NUXT_PUBLIC_STRAPI_BASE_URL || 'http://localhost:1337',
