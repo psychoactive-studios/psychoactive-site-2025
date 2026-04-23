@@ -17,6 +17,12 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  // Forwarded to BulgeImage — bypasses lazy loading. Pass `true` when
+  // used inside a Splide/Swiper loop slider (see BulgeImage.vue notes).
+  eager: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const { mainImage, slug, mainTitle, hero } = props?.data || {};
@@ -67,7 +73,7 @@ const handleClick = () => {
   >
     <div ref="mediaElement" class="case-study-preview__media">
       <!-- <img :src="mainImage?.url" alt="" /> -->
-      <BulgeImage ref="imageRef" :src="mainImage?.url" />
+      <BulgeImage ref="imageRef" :src="mainImage?.url" :eager="eager" />
     </div>
     <div class="case-study-preview__content">
       <div class="case-study-preview__title">

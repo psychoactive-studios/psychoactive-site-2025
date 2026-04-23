@@ -72,6 +72,15 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  // Skip lazy-loading and set the background image immediately on mount.
+  // Use this when BulgeImage sits inside a Splide/Swiper loop slider —
+  // those libraries clone DOM nodes for the infinite-scroll effect,
+  // and the clones don't receive Vue's reactive style updates, so any
+  // image that hasn't entered the viewport by mount-time stays blank.
+  eager: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const rootEl = ref(null);
@@ -99,17 +108,22 @@ const settings = {
 // then unobserve. Keeps the image loaded if the user scrolls back up.
 // The Three.js canvas also waits on this flag so the shader isn't
 // initialised for off-screen items.
-const hasEnteredViewport = ref(false);
-const { stop: stopViewportObserver } = useIntersectionObserver(
-  rootEl,
-  ([entry]) => {
-    if (entry?.isIntersecting) {
-      hasEnteredViewport.value = true;
-      stopViewportObserver();
-    }
-  },
-  { rootMargin: '800px 0px' }
-);
+//
+// When `eager` is true (e.g. inside a Splide loop slider) we skip the
+// observer entirely and mark as "entered" immediately.
+const hasEnteredViewport = ref(props.eager);
+if (!props.eager) {
+  const { stop: stopViewportObserver } = useIntersectionObserver(
+    rootEl,
+    ([entry]) => {
+      if (entry?.isIntersecting) {
+        hasEnteredViewport.value = true;
+        stopViewportObserver();
+      }
+    },
+    { rootMargin: '800px 0px' }
+  );
+}
 
 // `isHoverActive` tracks whether the user is currently hovering (or
 // recently hovered). Combined with `initOnHover`, this defers Three.js

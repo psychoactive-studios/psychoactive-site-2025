@@ -58,10 +58,13 @@ onUnmounted(() => {
       </div>
     </div>
     <div class="stepper__trigger stepper__trigger_intro" />
-    <div class="stepper__trigger stepper__trigger_step-1" />
-    <div class="stepper__trigger stepper__trigger_step-2" />
-    <div class="stepper__trigger stepper__trigger_step-3" />
-    <div class="stepper__trigger stepper__trigger_step-4" />
+    <!-- Anchor IDs for phase-link navigation from the Services intro.
+         The trigger elements are where each phase is fully revealed,
+         so linking to `#phase-N` lands the user on that phase's content. -->
+    <div id="phase-1" class="stepper__trigger stepper__trigger_step-1" />
+    <div id="phase-2" class="stepper__trigger stepper__trigger_step-2" />
+    <div id="phase-3" class="stepper__trigger stepper__trigger_step-3" />
+    <div id="phase-4" class="stepper__trigger stepper__trigger_step-4" />
   </div>
 </template>
 

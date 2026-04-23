@@ -61,7 +61,10 @@ onUnmounted(() => {
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/mixins' as *;
 .services-list {
-  padding: 50dvh 0 30dvh 0;
+  // Bottom padding removed on desktop — the phase-navigation below now
+  // handles the spacing with a padding-top of 423px to match the list's
+  // inter-item gap. Mobile keeps its 120px top/bottom padding.
+  padding: 50dvh 0 0 0;
   @include respond(mobile) {
     padding: 120px 0;
   }
