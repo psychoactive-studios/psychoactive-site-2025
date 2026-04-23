@@ -10,6 +10,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  // When true, the hero compresses to just the form. Set as soon as
+  // an audit is kicked off (AUDITING | TEASER | SUBMITTING | UNLOCKED)
+  // and stays true — the focus should stay on the report below, but
+  // the user can still re-prompt via the input.
+  isCompressed: {
+    type: Boolean,
+    default: false,
+  },
   errorMessage: {
     type: String,
     default: '',
@@ -29,7 +37,7 @@ function onSubmit() {
 </script>
 
 <template>
-  <section class="audit-hero">
+  <section class="audit-hero" :class="{ 'audit-hero--compressed': isCompressed }">
     <div class="container">
       <p class="audit-hero__eyebrow subheader--mobile">
         Free design audit
@@ -48,17 +56,24 @@ function onSubmit() {
           Website URL
         </label>
         <div class="audit-hero__field">
+          <!--
+            Using type="text" on purpose. type="url" triggers the
+            browser's strict URL validation which rejects bare domains
+            like 'psychoactive.co.nz' and blocks the form submit with
+            a native tooltip. Our server already normalises + validates
+            the URL (adds https://, rejects bad schemes, etc.), so we
+            let anything through here and let the server handle it.
+          -->
           <input
             id="audit-url"
             v-model="localUrl"
             class="audit-hero__input"
-            type="url"
+            type="text"
             placeholder="yourdomain.com"
             :disabled="isAuditing"
             autocomplete="url"
             inputmode="url"
             spellcheck="false"
-            required
           />
           <div class="audit-hero__underline" />
         </div>
@@ -90,6 +105,11 @@ function onSubmit() {
 
 .audit-hero {
   padding: 18dvh 0 8dvh 0;
+  // Padding collapses in sync with the content collapse so the whole
+  // hero tightens up rather than leaving a big empty strip above the
+  // form when the audit starts.
+  transition:
+    padding 0.7s cubic-bezier(0.76, 0, 0.24, 1);
   @include respond(mobile) {
     padding: 14dvh 0 6dvh 0;
   }
@@ -99,9 +119,27 @@ function onSubmit() {
     max-width: 1280px;
   }
 
+  // Everything above the form (eyebrow + title + lede) and the
+  // fineprint below it share one collapse treatment: fade out, height
+  // collapses to 0, margins collapse, slight translate-up for motion.
+  // The .container is a flex column implicitly via block flow, so we
+  // just animate each individual block.
+  &__eyebrow,
+  &__title,
+  &__lede,
+  &__fineprint {
+    overflow: hidden;
+    transition:
+      max-height 0.7s cubic-bezier(0.76, 0, 0.24, 1),
+      opacity 0.4s ease,
+      margin 0.7s cubic-bezier(0.76, 0, 0.24, 1),
+      transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+
   &__eyebrow {
     color: white(60);
     margin-bottom: 32px;
+    max-height: 80px;
     @include respond(mobile) {
       margin-bottom: 20px;
     }
@@ -111,6 +149,7 @@ function onSubmit() {
     color: $color-foreground;
     max-width: 16ch;
     margin-bottom: 32px;
+    max-height: 400px;
     @include respond(mobile) {
       margin-bottom: 20px;
     }
@@ -120,6 +159,7 @@ function onSubmit() {
     color: white(70);
     max-width: 58ch;
     margin-bottom: 56px;
+    max-height: 400px;
     @include respond(mobile) {
       margin-bottom: 40px;
     }
@@ -205,6 +245,30 @@ function onSubmit() {
     color: white(35);
     margin-top: 24px;
     max-width: 60ch;
+    max-height: 200px;
+  }
+
+  // Compressed state — kicks in as soon as the user hits "Audit my
+  // site". Collapses everything except the form so the score card +
+  // report below become the focus, while still leaving the input
+  // usable for re-prompting a different URL.
+  &--compressed {
+    padding: 10dvh 0 4dvh 0;
+    @include respond(mobile) {
+      padding: 8dvh 0 3dvh 0;
+    }
+
+    .audit-hero__eyebrow,
+    .audit-hero__title,
+    .audit-hero__lede,
+    .audit-hero__fineprint {
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+    }
   }
 }
 </style>

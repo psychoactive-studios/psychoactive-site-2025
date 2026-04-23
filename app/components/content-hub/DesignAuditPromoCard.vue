@@ -139,11 +139,15 @@ async function onSubmit() {
         @click="stopPropagation"
       >
         <label class="sr-only" for="promo-audit-url">Website URL</label>
+        <!--
+          type="text" so the browser doesn't block bare-domain input
+          like 'psychoactive.co.nz'. Server normalises and validates.
+        -->
         <input
           id="promo-audit-url"
           ref="inputRef"
           v-model="urlInput"
-          type="url"
+          type="text"
           class="promo__input"
           placeholder="yourdomain.com"
           autocomplete="url"
@@ -254,14 +258,11 @@ async function onSubmit() {
     flex-direction: column;
     gap: 1rem;
     min-width: 0;
-    // Mirror NewsCard's internal layout: 16px all round, plus a
-    // reserved "phantom image" column on the right so the content
-    // column matches the text column in the NewsCards above/below.
-    padding: 1rem calc(30.3% + 22px) 1rem 1rem;
-
-    @include respond(mobile) {
-      padding: 1rem;
-    }
+    // Content fills the full cell width. The right edge here aligns
+    // with the right edge of the image in the NewsCard above (which is
+    // the right edge of that grid column), not the end of the NewsCard
+    // text column.
+    padding: 1rem;
   }
 
   &__info {
@@ -416,13 +417,10 @@ async function onSubmit() {
     flex-direction: column;
     justify-content: space-between;
     gap: 20px;
-    // Same mirror-layout as the left cell so the score + bars line up
-    // with the right NewsCard's text column.
-    padding: 1rem calc(30.3% + 22px) 1rem 1rem;
-
-    @include respond(mobile) {
-      padding: 1rem;
-    }
+    // Fills the full cell width so the category bars extend to the
+    // right edge of the grid — matching the right edge of the image
+    // in the NewsCard above.
+    padding: 1rem;
   }
 
   &__score {

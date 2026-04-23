@@ -193,6 +193,7 @@ definePageMeta({
     <AuditHero
       v-model="url"
       :is-auditing="isAuditing"
+      :is-compressed="isAuditing || isTeaser || isSubmitting || isUnlocked"
       :error-message="errorMessage"
       @submit="onAuditSubmit"
     />
