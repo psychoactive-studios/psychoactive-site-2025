@@ -94,3 +94,10 @@ body {
     outline: none;
   }
 }
+
+mux-player {
+  border: none;
+  outline: none;
+  background-color: transparent !important;
+  --media-background-color: transparent;
+}
