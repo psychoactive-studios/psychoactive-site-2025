@@ -215,7 +215,18 @@ definePageMeta({
       </div>
     </div>
 
-    <div v-if="isTeaser || isSubmitting || isUnlocked" ref="scoreCardRef">
+    <!--
+      Score card sits below the hero. Its reveal is delayed slightly
+      via CSS transition (see .design-audit__result-slot) so it fades
+      in AFTER the hero finishes compressing — the user's eye tracks
+      the state change top-to-bottom instead of everything moving at
+      once.
+    -->
+    <div
+      v-if="isTeaser || isSubmitting || isUnlocked"
+      ref="scoreCardRef"
+      class="design-audit__result-slot"
+    >
       <AuditScoreCard
         v-if="report"
         :report="report"
@@ -234,6 +245,19 @@ definePageMeta({
 
     <div v-if="isUnlocked" ref="fullReportRef">
       <AuditFullReport v-if="report" :report="report" />
+    </div>
+
+    <!--
+      Visually-hidden live region so screen readers get told when the
+      audit starts + finishes. `polite` doesn't interrupt the user's
+      current reading — just queues the announcement.
+    -->
+    <div class="sr-only" aria-live="polite" aria-atomic="true">
+      <span v-if="isAuditing">Running audit. This usually takes 30 to 60 seconds.</span>
+      <span v-else-if="isTeaser && report">
+        Audit complete. Your site scored {{ report.overall_score }} out of 100.
+      </span>
+      <span v-else-if="isUnlocked">Full report unlocked.</span>
     </div>
 
     <Footer />
@@ -269,6 +293,14 @@ definePageMeta({
     color: white(35);
     margin-top: 24px;
   }
+
+  // Sequences the score card's reveal to happen AFTER the hero
+  // compression animation (~550ms) completes, so the user's eye
+  // tracks the state change top-to-bottom instead of everything
+  // animating at once.
+  &__result-slot {
+    animation: audit-result-reveal 0.5s cubic-bezier(0.32, 0.72, 0, 1) 0.45s backwards;
+  }
 }
 
 @keyframes audit-loading-fade {
@@ -282,8 +314,34 @@ definePageMeta({
   }
 }
 
+@keyframes audit-result-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Visually hidden but still announced by screen readers. Used for the
+// aria-live audit-status region.
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .design-audit__loading-line {
+  .design-audit__loading-line,
+  .design-audit__result-slot {
     animation: none;
     opacity: 1;
     transform: none;

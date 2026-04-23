@@ -31,8 +31,17 @@ const localUrl = computed({
   set: (v) => emit('update:modelValue', v),
 });
 
+// Ref for the URL input so "Run another?" in the compressed state
+// can clear the field and drop focus into it — one click to re-prompt.
+const inputRef = ref(null);
+
 function onSubmit() {
   emit('submit');
+}
+
+function clearAndFocus() {
+  emit('update:modelValue', '');
+  inputRef.value?.focus();
 }
 </script>
 
@@ -51,6 +60,25 @@ function onSubmit() {
         and trust. Takes about a minute.
       </p>
 
+      <!--
+        Only visible in the compressed state. Replaces the role of the
+        title/lede above — tells the user what was just audited and
+        gives them a one-click path to run another. `modelValue` holds
+        the normalised URL after a successful audit.
+      -->
+      <p v-if="isCompressed && modelValue" class="audit-hero__audited-label">
+        <span class="audit-hero__audited-prefix">Audited:</span>
+        <span class="audit-hero__audited-url">{{ modelValue }}</span>
+        <span class="audit-hero__audited-separator">·</span>
+        <button
+          type="button"
+          class="audit-hero__audited-reprompt"
+          @click="clearAndFocus"
+        >
+          Run another?
+        </button>
+      </p>
+
       <form class="audit-hero__form" @submit.prevent="onSubmit">
         <label class="audit-hero__label sr-only" for="audit-url">
           Website URL
@@ -66,6 +94,7 @@ function onSubmit() {
           -->
           <input
             id="audit-url"
+            ref="inputRef"
             v-model="localUrl"
             class="audit-hero__input"
             type="text"
@@ -107,9 +136,9 @@ function onSubmit() {
   padding: 18dvh 0 8dvh 0;
   // Padding collapses in sync with the content collapse so the whole
   // hero tightens up rather than leaving a big empty strip above the
-  // form when the audit starts.
-  transition:
-    padding 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+  // form when the audit starts. `ease-out-quart` curve reads nicer
+  // than a symmetric in-out for a one-way reveal like this.
+  transition: padding 0.55s cubic-bezier(0.32, 0.72, 0, 1);
   @include respond(mobile) {
     padding: 14dvh 0 6dvh 0;
   }
@@ -119,27 +148,26 @@ function onSubmit() {
     max-width: 1280px;
   }
 
-  // Everything above the form (eyebrow + title + lede) and the
-  // fineprint below it share one collapse treatment: fade out, height
-  // collapses to 0, margins collapse, slight translate-up for motion.
-  // The .container is a flex column implicitly via block flow, so we
-  // just animate each individual block.
-  &__eyebrow,
+  // Title + lede + fineprint collapse on state change. The eyebrow is
+  // handled separately — it stays visible in the compressed state as
+  // a persistent page identifier (avoids losing context on reload /
+  // tab-switch). Margin + max-height + opacity + slight translate-up
+  // give the collapse a hint of motion rather than a flat fade.
   &__title,
   &__lede,
   &__fineprint {
     overflow: hidden;
     transition:
-      max-height 0.7s cubic-bezier(0.76, 0, 0.24, 1),
-      opacity 0.4s ease,
-      margin 0.7s cubic-bezier(0.76, 0, 0.24, 1),
-      transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
+      max-height 0.55s cubic-bezier(0.32, 0.72, 0, 1),
+      opacity 0.3s ease,
+      margin 0.55s cubic-bezier(0.32, 0.72, 0, 1),
+      transform 0.55s cubic-bezier(0.32, 0.72, 0, 1);
   }
 
   &__eyebrow {
     color: white(60);
     margin-bottom: 32px;
-    max-height: 80px;
+    transition: margin 0.55s cubic-bezier(0.32, 0.72, 0, 1);
     @include respond(mobile) {
       margin-bottom: 20px;
     }
@@ -162,6 +190,72 @@ function onSubmit() {
     max-height: 400px;
     @include respond(mobile) {
       margin-bottom: 40px;
+    }
+  }
+
+  // "Audited: example.com · Run another?" — only rendered when the
+  // hero is compressed. Slides in (delayed) as the title/lede are
+  // sliding out, so the user's eye tracks the state change.
+  //
+  // Uses a keyframe animation rather than a transition because v-if
+  // creates the element with the --compressed class already present;
+  // transitions don't fire without a "from" paint frame.
+  &__audited-label {
+    font-family: 'RoobertMono';
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: white(55);
+    margin: 0 0 20px 0;
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    animation: audit-audited-fade-in 0.4s cubic-bezier(0.32, 0.72, 0, 1) 0.25s backwards;
+  }
+
+  &__audited-prefix {
+    color: white(40);
+  }
+
+  &__audited-url {
+    color: white(85);
+    text-transform: none;
+    font-family: inherit;
+    letter-spacing: 0;
+  }
+
+  &__audited-separator {
+    color: white(25);
+  }
+
+  &__audited-reprompt {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: $color-foreground;
+    font: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: white(30);
+    text-underline-offset: 3px;
+    transition:
+      color 0.2s ease,
+      text-decoration-color 0.2s ease;
+
+    &:hover {
+      text-decoration-color: $color-foreground;
+    }
+
+    &:focus-visible {
+      outline: 2px solid white(40);
+      outline-offset: 4px;
+      border-radius: 2px;
     }
   }
 
@@ -249,16 +343,23 @@ function onSubmit() {
   }
 
   // Compressed state — kicks in as soon as the user hits "Audit my
-  // site". Collapses everything except the form so the score card +
-  // report below become the focus, while still leaving the input
-  // usable for re-prompting a different URL.
+  // site". Collapses the title / lede / fineprint so the score card +
+  // report below become the focus. The eyebrow stays visible as a
+  // persistent page identifier, the form stays usable, and the
+  // "Audited: X · Run another?" label fades in with a small delay so
+  // the user always knows what's on screen.
   &--compressed {
     padding: 10dvh 0 4dvh 0;
     @include respond(mobile) {
-      padding: 8dvh 0 3dvh 0;
+      // Mobile needs less compression — the hero is already tight on
+      // narrow viewports, so we only shave the bottom padding.
+      padding: 10dvh 0 3dvh 0;
     }
 
-    .audit-hero__eyebrow,
+    .audit-hero__eyebrow {
+      margin-bottom: 16px;
+    }
+
     .audit-hero__title,
     .audit-hero__lede,
     .audit-hero__fineprint {
@@ -266,9 +367,34 @@ function onSubmit() {
       opacity: 0;
       margin-top: 0;
       margin-bottom: 0;
-      transform: translateY(-8px);
+      transform: translateY(-6px);
       pointer-events: none;
     }
+
+  }
+}
+
+@keyframes audit-audited-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .audit-hero__audited-label {
+    animation: none;
+  }
+  .audit-hero,
+  .audit-hero__title,
+  .audit-hero__lede,
+  .audit-hero__fineprint,
+  .audit-hero__eyebrow {
+    transition: none;
   }
 }
 </style>
