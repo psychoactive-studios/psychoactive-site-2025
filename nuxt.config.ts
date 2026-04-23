@@ -41,6 +41,11 @@ export default defineNuxtConfig({
     anthropicApiKey: process.env.ANTHROPIC_API_KEY || '',
     supabaseCrmUrl: process.env.SUPABASE_CRM_URL || '',
     supabaseCrmServiceKey: process.env.SUPABASE_CRM_SERVICE_KEY || '',
+    // Resend — sends the audit report to leads after they unlock it.
+    // If RESEND_API_KEY is blank the email step skips silently (useful
+    // before the Resend account is wired up).
+    resendApiKey: process.env.RESEND_API_KEY || '',
+    auditFromEmail: process.env.AUDIT_FROM_EMAIL || 'audit@psychoactive.co.nz',
 
     public: {
       siteUrl: SITE_URL,

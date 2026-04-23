@@ -12,6 +12,7 @@
  */
 
 import { getAuditSupabaseClient } from '../utils/audit-supabase';
+import { sendAuditReportEmail } from '../utils/audit-email';
 
 interface SubmitLeadBody {
   auditId?: string;
@@ -45,9 +46,19 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  // Figure out the site origin once so the follow-up email can link
+  // back to the live interactive report.
+  const requestOrigin =
+    getRequestHeader(event, 'origin') ||
+    (getRequestHeader(event, 'host')
+      ? `https://${getRequestHeader(event, 'host')}`
+      : 'https://psychoactive.co.nz');
+
   try {
     const supabase = getAuditSupabaseClient();
 
+    // Update the row AND select back the URL + full_report so we can
+    // compose the follow-up email without another round-trip.
     const { data, error } = await supabase
       .from('design_audit_leads')
       .update({
@@ -57,7 +68,7 @@ export default defineEventHandler(async (event) => {
         status: 'full_report_unlocked',
       })
       .eq('id', auditId)
-      .select('id')
+      .select('id, url, full_report')
       .single();
 
     if (error) {
@@ -65,6 +76,22 @@ export default defineEventHandler(async (event) => {
       // that as a soft failure — the user still gets their report.
       console.error('Audit lead update failed:', error);
       return { ok: true, updated: false };
+    }
+
+    // Fire off the audit report email. Non-awaited in terms of the
+    // response path — we don't want a slow SMTP call to delay the
+    // unlock — but we DO await it so serverless doesn't terminate
+    // before the send completes. Failures are swallowed inside the
+    // send function.
+    if (data?.url && data?.full_report) {
+      await sendAuditReportEmail({
+        to: email,
+        name,
+        company,
+        auditedUrl: data.url,
+        report: data.full_report,
+        siteOrigin: requestOrigin,
+      });
     }
 
     return { ok: true, updated: !!data };
