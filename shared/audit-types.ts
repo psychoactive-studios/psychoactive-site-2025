@@ -38,6 +38,23 @@ export const CATEGORY_LABELS: Record<keyof AuditResponse['categories'], string> 
   credibility_trust: 'Credibility & Trust',
 };
 
+// One-liners shown in the category tooltips on the score card + full
+// report. Plain English, not marketing speak — this is the "why is
+// this being scored?" explanation so the user understands the result
+// rather than just reads a number.
+export const CATEGORY_DESCRIPTIONS: Record<keyof AuditResponse['categories'], string> = {
+  value_proposition:
+    "Can a first-time visitor tell what you do, who it's for, and why they should care — within about five seconds?",
+  conversion_architecture:
+    'Does the site guide visitors toward a clear next action? Are CTAs visible, specific, and placed where attention lands?',
+  content_craft:
+    'Does the copy sound like a real person — specific, confident, evidence-backed — or like any other marketing site?',
+  structural_hierarchy:
+    'Is the page organised so the heading structure tells a story? One h1, logical flow, scannable on a quick skim?',
+  credibility_trust:
+    'Are there concrete proof points — case studies, named clients, metrics, press — or just unbacked claims?',
+};
+
 export const CATEGORY_ORDER: Array<keyof AuditResponse['categories']> = [
   'value_proposition',
   'conversion_architecture',

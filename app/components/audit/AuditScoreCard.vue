@@ -1,7 +1,12 @@
 <script setup>
 import gsap from 'gsap';
-import { CATEGORY_LABELS, CATEGORY_ORDER } from '#shared/audit-types';
+import {
+  CATEGORY_LABELS,
+  CATEGORY_ORDER,
+  CATEGORY_DESCRIPTIONS,
+} from '#shared/audit-types';
 import AuditShare from '~/components/audit/AuditShare.vue';
+import CategoryHint from '~/components/audit/CategoryHint.vue';
 
 const props = defineProps({
   report: {
@@ -42,6 +47,7 @@ const categories = computed(() =>
     return {
       key,
       label: CATEGORY_LABELS[key],
+      description: CATEGORY_DESCRIPTIONS[key],
       score: typeof c.score === 'number' ? c.score : 0,
       findings: Array.isArray(c.findings) ? c.findings : [],
     };
@@ -195,6 +201,7 @@ const findingCounts = computed(() => {
           <div class="score-card__category-row">
             <span class="score-card__category-label body-small--mobile">
               {{ cat.label }}
+              <CategoryHint :text="cat.description" />
             </span>
             <span class="score-card__category-score subheader--mobile">
               {{ cat.score }}/20

@@ -1,6 +1,10 @@
 <script setup>
 import gsap from 'gsap';
-import { CATEGORY_LABELS, CATEGORY_ORDER } from '#shared/audit-types';
+import {
+  CATEGORY_LABELS,
+  CATEGORY_ORDER,
+  CATEGORY_DESCRIPTIONS,
+} from '#shared/audit-types';
 import ButtonOutline from '~/components/ui/ButtonOutline.vue';
 import AuditShare from '~/components/audit/AuditShare.vue';
 
@@ -20,6 +24,7 @@ const categories = computed(() =>
   CATEGORY_ORDER.map((key) => ({
     key,
     label: CATEGORY_LABELS[key],
+    description: CATEGORY_DESCRIPTIONS[key],
     data: props.report?.categories?.[key] || {
       score: 0,
       findings: [],
@@ -99,6 +104,15 @@ onMounted(async () => {
               <span class="category__score-total">/20</span>
             </div>
           </header>
+          <!--
+            Short explainer of what the category measures — shown in the
+            full report (not the score card teaser) because there's
+            space here for a real sentence. Turns the score from a
+            mystery number into "here's what this is testing for".
+          -->
+          <p class="category__description body-small--mobile">
+            {{ cat.description }}
+          </p>
 
           <ul v-if="cat.data.findings?.length" class="category__findings">
             <li
@@ -229,13 +243,23 @@ onMounted(async () => {
     justify-content: space-between;
     align-items: baseline;
     gap: 16px;
-    margin-bottom: 32px;
+    margin-bottom: 16px;
     flex-wrap: wrap;
   }
 
   &__label {
     color: $color-foreground;
     max-width: 32ch;
+  }
+
+  // Short explainer below the heading — grounds the score in plain
+  // language so the reader knows what's being measured, not just
+  // the number.
+  &__description {
+    color: white(55);
+    max-width: 70ch;
+    margin: 0 0 32px 0;
+    line-height: 1.5;
   }
 
   &__score {
