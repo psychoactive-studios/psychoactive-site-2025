@@ -42,6 +42,41 @@ const fullReportRef = ref(null);
 // page content once even if both onMounted and onEnter fire.
 let hasEntered = false;
 
+// Progressive loading indicator — steps through 0/1/2 during an audit
+// so the user gets visual feedback that something's happening rather
+// than staring at static text for 30-60s.
+// Tuning: real audit time averages ~40s, so stepping every ~18s means
+// most audits hit "Writing findings" just before resolving.
+const loadingStep = ref(0);
+const LOADING_STEP_INTERVAL_MS = 18000;
+let loadingStepTimer = null;
+
+watch(isAuditing, (auditing) => {
+  if (auditing) {
+    loadingStep.value = 0;
+    if (loadingStepTimer) clearInterval(loadingStepTimer);
+    loadingStepTimer = setInterval(() => {
+      if (loadingStep.value < 2) loadingStep.value += 1;
+    }, LOADING_STEP_INTERVAL_MS);
+  } else {
+    if (loadingStepTimer) {
+      clearInterval(loadingStepTimer);
+      loadingStepTimer = null;
+    }
+    loadingStep.value = 0;
+  }
+});
+
+onUnmounted(() => {
+  if (loadingStepTimer) clearInterval(loadingStepTimer);
+});
+
+function stepState(idx) {
+  if (idx < loadingStep.value) return 'done';
+  if (idx === loadingStep.value) return 'active';
+  return 'pending';
+}
+
 function enterAnimation(el) {
   if (hasEntered) {
     // Still make sure scroll is live in case we re-enter.
@@ -102,16 +137,38 @@ onMounted(async () => {
 // If the page was opened with ?url=…, pre-fill the input and kick off
 // the audit. Gives us one-click entry from the content-hub promo card.
 const route = useRoute();
+
+// Set at setup time (not in onMounted) so the hero renders directly
+// in its compressed form on first paint rather than flashing the
+// expanded layout for a frame before onMounted runs. Cleared after
+// the first beat so subsequent state transitions animate normally.
+const hasQueryUrl = computed(() => !!route.query.url);
+const skipInitialTransition = ref(hasQueryUrl.value);
+
+// Same reason — compress the hero on first render if we're about to
+// auto-run from the query param, even before the state machine flips
+// to AUDITING. State flags still drive compression post-first-render.
+const isHeroCompressed = computed(
+  () =>
+    isAuditing.value ||
+    isTeaser.value ||
+    isSubmitting.value ||
+    isUnlocked.value ||
+    hasQueryUrl.value
+);
+
 function maybeAutoRunFromQuery() {
   const q = route.query.url;
   const initial = Array.isArray(q) ? q[0] : q;
   if (!initial || typeof initial !== 'string') return;
   url.value = initial;
-  // Small delay so the hero is visible briefly before the state flips
-  // to "auditing" — otherwise the transition feels abrupt.
+  runAudit(initial);
+
+  // Re-enable transitions a beat later so *future* state changes
+  // (e.g. "Run another?" → user types → new audit) animate normally.
   setTimeout(() => {
-    runAudit(initial);
-  }, 250);
+    skipInitialTransition.value = false;
+  }, 300);
 }
 
 async function onAuditSubmit() {
@@ -193,22 +250,44 @@ definePageMeta({
     <AuditHero
       v-model="url"
       :is-auditing="isAuditing"
-      :is-compressed="isAuditing || isTeaser || isSubmitting || isUnlocked"
+      :is-compressed="isHeroCompressed"
+      :audited-url="auditedUrl || ''"
+      :skip-initial-transition="skipInitialTransition"
       :error-message="errorMessage"
       @submit="onAuditSubmit"
     />
 
     <div v-if="isAuditing" class="design-audit__loading">
       <div class="container">
-        <p class="design-audit__loading-line subheader--mobile">
-          Reading the page…
-        </p>
-        <p class="design-audit__loading-line subheader--mobile">
-          Scoring it against the rubric…
-        </p>
-        <p class="design-audit__loading-line subheader--mobile">
-          Writing the findings…
-        </p>
+        <ul class="design-audit__steps">
+          <li
+            class="design-audit__step"
+            :data-state="stepState(0)"
+          >
+            <span class="design-audit__step-marker" aria-hidden="true" />
+            <span class="design-audit__step-label subheader--mobile">
+              Reading the page
+            </span>
+          </li>
+          <li
+            class="design-audit__step"
+            :data-state="stepState(1)"
+          >
+            <span class="design-audit__step-marker" aria-hidden="true" />
+            <span class="design-audit__step-label subheader--mobile">
+              Scoring against the rubric
+            </span>
+          </li>
+          <li
+            class="design-audit__step"
+            :data-state="stepState(2)"
+          >
+            <span class="design-audit__step-marker" aria-hidden="true" />
+            <span class="design-audit__step-label subheader--mobile">
+              Writing the findings
+            </span>
+          </li>
+        </ul>
         <p class="design-audit__loading-hint body-small--mobile">
           This takes about 30-60 seconds.
         </p>
@@ -278,15 +357,90 @@ definePageMeta({
     }
   }
 
-  &__loading-line {
-    color: white(50);
-    padding: 12px 0;
+  // Progressive step list — three rows, each with a marker dot that
+  // reflects state (pending / active / done). The active dot pulses
+  // so the user always has something live to look at during the
+  // 30-60s audit window.
+  &__steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__step {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
     border-bottom: 1px solid white(10);
     opacity: 0;
-    animation: audit-loading-fade 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: audit-loading-fade 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    transition:
+      opacity 0.4s ease,
+      color 0.4s ease;
     &:nth-child(1) { animation-delay: 0s; }
-    &:nth-child(2) { animation-delay: 1.5s; }
-    &:nth-child(3) { animation-delay: 3s; }
+    &:nth-child(2) { animation-delay: 0.9s; }
+    &:nth-child(3) { animation-delay: 1.8s; }
+
+    &[data-state='pending'] {
+      color: white(30);
+    }
+    &[data-state='active'] {
+      color: white(85);
+    }
+    &[data-state='done'] {
+      color: white(50);
+    }
+  }
+
+  &__step-marker {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    position: relative;
+    transition:
+      background-color 0.4s ease,
+      border-color 0.4s ease,
+      transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+
+    .design-audit__step[data-state='pending'] & {
+      background: transparent;
+      border: 1px solid white(20);
+    }
+
+    .design-audit__step[data-state='active'] & {
+      background: white(80);
+      border: 1px solid white(80);
+      animation: audit-step-pulse 1.6s ease-in-out infinite;
+    }
+
+    .design-audit__step[data-state='done'] & {
+      background: white(45);
+      border: 1px solid white(45);
+      // Small inner dot indicates "completed" without needing a
+      // checkmark icon — fits the minimal aesthetic.
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: #1b1b1b;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+
+  &__step-label {
+    font-family: 'RoobertMono';
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: getRem(14);
   }
 
   &__loading-hint {
@@ -325,6 +479,20 @@ definePageMeta({
   }
 }
 
+// Active step indicator pulses gently — 1.6s cycle is slow enough to
+// read as "thinking" rather than "error/alert" and fast enough to
+// feel alive.
+@keyframes audit-step-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.35);
+  }
+  50% {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 6px rgba(255, 255, 255, 0);
+  }
+}
+
 // Visually hidden but still announced by screen readers. Used for the
 // aria-live audit-status region.
 .sr-only {
@@ -340,7 +508,8 @@ definePageMeta({
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .design-audit__loading-line,
+  .design-audit__step,
+  .design-audit__step-marker,
   .design-audit__result-slot {
     animation: none;
     opacity: 1;

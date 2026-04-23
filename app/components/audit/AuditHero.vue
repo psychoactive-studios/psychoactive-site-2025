@@ -18,6 +18,21 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  // URL of the last successfully-audited site. Used to detect whether
+  // the user has edited the input since the last audit, which drives
+  // the button label (Audited ✓ vs Audit another).
+  auditedUrl: {
+    type: String,
+    default: '',
+  },
+  // When true, the hero skips its transitions on first paint. Used
+  // for the content-hub → design-audit hand-off where the user
+  // arrives already in "audit in progress" state — animating a
+  // collapse of a hero they never saw is confusing.
+  skipInitialTransition: {
+    type: Boolean,
+    default: false,
+  },
   errorMessage: {
     type: String,
     default: '',
@@ -43,10 +58,46 @@ function clearAndFocus() {
   emit('update:modelValue', '');
   inputRef.value?.focus();
 }
+
+// Button label + state logic — covers four scenarios:
+//   1. Auditing in progress → "Auditing…" (disabled)
+//   2. Completed, user hasn't edited the URL → "Audited ✓" (disabled,
+//      purely visual — re-running the same URL is meaningless)
+//   3. Completed, user edited the URL → "Audit another" (primary)
+//   4. Fresh / never audited → "Audit my site" (primary)
+const hasEditedSinceAudit = computed(() => {
+  if (!props.auditedUrl) return false;
+  const current = (props.modelValue || '').trim();
+  if (!current) return false;
+  return current !== props.auditedUrl;
+});
+
+const isCompletedUnchanged = computed(() => {
+  if (props.isAuditing) return false;
+  if (!props.auditedUrl) return false;
+  return !hasEditedSinceAudit.value;
+});
+
+const submitLabel = computed(() => {
+  if (props.isAuditing) return 'Auditing…';
+  if (isCompletedUnchanged.value) return 'Audited ✓';
+  if (hasEditedSinceAudit.value) return 'Audit another';
+  return 'Audit my site';
+});
+
+const submitDisabled = computed(
+  () => props.isAuditing || isCompletedUnchanged.value
+);
 </script>
 
 <template>
-  <section class="audit-hero" :class="{ 'audit-hero--compressed': isCompressed }">
+  <section
+    class="audit-hero"
+    :class="{
+      'audit-hero--compressed': isCompressed,
+      'audit-hero--instant': skipInitialTransition,
+    }"
+  >
     <div class="container">
       <p class="audit-hero__eyebrow subheader--mobile">
         Free design audit
@@ -108,10 +159,11 @@ function clearAndFocus() {
         </div>
         <ButtonOutline
           class="audit-hero__submit"
-          :disabled="isAuditing"
+          :class="{ 'audit-hero__submit--completed': isCompletedUnchanged }"
+          :disabled="submitDisabled"
           @click="onSubmit"
         >
-          {{ isAuditing ? 'Auditing…' : 'Audit my site' }}
+          {{ submitLabel }}
         </ButtonOutline>
       </form>
 
@@ -325,9 +377,18 @@ function clearAndFocus() {
   &__submit {
     flex: 0 0 auto;
     // Lock the width so the button doesn't resize when the slot text
-    // flips to "Auditing…" — and so the scramble-text hover animation
-    // can't overflow.
+    // flips between "Auditing…" / "Audited ✓" / "Audit another" —
+    // and so the scramble-text hover animation can't overflow.
     min-width: 200px;
+  }
+
+  // "Audited ✓" state — completed and unchanged URL. Distinct from
+  // disabled-during-auditing: this is a purposeful done state, not a
+  // wait state. Softer, low-contrast styling so it doesn't demand
+  // attention, but clearly "handled".
+  &__submit--completed {
+    opacity: 1; // override default disabled dim
+    cursor: default;
   }
 
   &__error {
@@ -340,6 +401,16 @@ function clearAndFocus() {
     margin-top: 24px;
     max-width: 60ch;
     max-height: 200px;
+  }
+
+  // --instant disables every transition + animation in the hero. Used
+  // when arriving from the content-hub promo card with ?url=X so the
+  // page renders directly into compressed form rather than animating
+  // a collapse the user never saw expand.
+  &--instant,
+  &--instant * {
+    transition: none !important;
+    animation: none !important;
   }
 
   // Compressed state — kicks in as soon as the user hits "Audit my
