@@ -180,10 +180,12 @@ const findingCounts = computed(() => {
   }
 
   // Editorial split lockup — image on the left, score + band on the
-  // right. Two-column grid with a generous gap so the elements read
-  // as paired-but-distinct, not glued together. Aligns to the bottom
-  // of both columns so the big score sits on the same baseline as the
-  // image, which creates a strong horizon line.
+  // right. Asymmetric 1.4fr / 1fr ratio pushes the image into the
+  // dominant visual slot while the score floats on the right edge as
+  // a rating "stamp". Aligned to the bottom of both columns so the
+  // big score number sits on the same baseline as the image — creates
+  // a strong horizon line across the composition (Awwwards / FWA
+  // project-header pattern).
   &__lockup {
     margin-bottom: 48px;
     @include respond(mobile) {
@@ -192,7 +194,7 @@ const findingCounts = computed(() => {
 
     &--with-preview {
       display: grid;
-      grid-template-columns: 1.2fr 1fr;
+      grid-template-columns: 1.4fr 1fr;
       gap: 48px;
       align-items: end;
 
@@ -200,6 +202,23 @@ const findingCounts = computed(() => {
         grid-template-columns: 1fr;
         gap: 24px;
         align-items: stretch;
+      }
+
+      // Inside the split lockup, stack the score vertically and push
+      // it to the page edge. Big number + /100 on top, small band
+      // pill below as a caption. Reads like a rating stamp on a
+      // magazine cover.
+      .score-card__headline {
+        flex-direction: column;
+        align-items: flex-end;
+        text-align: right;
+        gap: 14px;
+        margin-bottom: 0;
+
+        @include respond(mobile) {
+          align-items: flex-start;
+          text-align: left;
+        }
       }
     }
   }
