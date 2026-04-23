@@ -312,6 +312,18 @@ const submitDisabled = computed(
     text-transform: none;
     font-family: inherit;
     letter-spacing: 0;
+    // On mobile, long URLs shouldn't push the "Run another?" button
+    // off-screen. Truncate with ellipsis instead — the full URL is
+    // still in the input right below.
+    max-width: 60vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+    @include respond(mobile) {
+      max-width: 50vw;
+    }
   }
 
   &__audited-separator {

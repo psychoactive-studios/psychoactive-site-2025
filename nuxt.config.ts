@@ -67,7 +67,28 @@ export default defineNuxtConfig({
       isCustomElement: (tag) => tag === 'mux-player',
     },
   },
-  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo', '@nuxtjs/sitemap'],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/image',
+    '@nuxt/scripts',
+    'nuxt-svgo',
+    '@nuxtjs/sitemap',
+    // Renders dynamic 1200x630 social share images for pages that
+    // call defineOgImageComponent(). Used by /design-audit so links
+    // shared on X/LinkedIn generate per-audit preview cards.
+    'nuxt-og-image',
+  ],
+
+  // nuxt-og-image config. The site URL is used to build absolute
+  // paths to the generated images.
+  ogImage: {
+    defaults: {
+      component: 'DesignAuditOg',
+      width: 1200,
+      height: 630,
+    },
+    fonts: ['Inter:400', 'Inter:600', 'Inter:700'],
+  },
 
   // Sitemap — auto-generates /sitemap.xml at build time by crawling the
   // site. Strapi-driven routes (e.g. /work/:slug, /content-hub/:slug)

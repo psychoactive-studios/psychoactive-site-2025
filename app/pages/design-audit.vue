@@ -211,13 +211,50 @@ function scrollTo(el) {
   window.scrollTo({ top, behavior: 'smooth' });
 }
 
+// Dynamic SEO meta — when the page is loaded with ?url=X, the title
+// and OG text name that specific site, so shared links read better
+// than a generic "Free Design Audit". The actual score isn't
+// available at SSR time (audit hasn't run yet), so the content stays
+// invitational rather than result-specific.
+const targetHostname = computed(() => {
+  const q = route.query.url;
+  const raw = Array.isArray(q) ? q[0] : q;
+  if (!raw || typeof raw !== 'string') return '';
+  try {
+    return new URL(raw).hostname.replace(/^www\./, '');
+  } catch {
+    return raw.replace(/^https?:\/\//, '').replace(/\/$/, '');
+  }
+});
+
 useSeoMeta({
-  title: 'Free Design Audit | Psychoactive Studios',
-  description:
-    "Get a free design audit of your website in about a minute. We'll score it across clarity, conversion, copy, structure, and trust — with specific findings and the one thing to fix first.",
-  ogTitle: 'Free Design Audit | Psychoactive Studios',
-  ogDescription:
-    "Get a free design audit of your website in about a minute. We'll score it across clarity, conversion, copy, structure, and trust.",
+  title: () =>
+    targetHostname.value
+      ? `Design audit: ${targetHostname.value} | Psychoactive Studios`
+      : 'Free Design Audit | Psychoactive Studios',
+  description: () =>
+    targetHostname.value
+      ? `A free design audit of ${targetHostname.value} — scored across clarity, conversion, copy, structure, and trust. Specific findings, one fix-first per category.`
+      : "Get a free design audit of your website in about a minute. We'll score it across clarity, conversion, copy, structure, and trust — with specific findings and the one thing to fix first.",
+  ogTitle: () =>
+    targetHostname.value
+      ? `Design audit: ${targetHostname.value}`
+      : 'Free Design Audit | Psychoactive Studios',
+  ogDescription: () =>
+    targetHostname.value
+      ? `A free design audit of ${targetHostname.value} — scored across clarity, conversion, copy, structure, and trust.`
+      : "Get a free design audit of your website in about a minute. We'll score it across clarity, conversion, copy, structure, and trust.",
+});
+
+// Tell nuxt-og-image to render the DesignAuditOg component at
+// request time for this page's og:image. Props are scraped into the
+// generator URL so the image varies per shared link.
+defineOgImageComponent('DesignAuditOg', {
+  auditedUrl: computed(() => {
+    const q = route.query.url;
+    const raw = Array.isArray(q) ? q[0] : q;
+    return raw || '';
+  }),
 });
 
 definePageMeta({
