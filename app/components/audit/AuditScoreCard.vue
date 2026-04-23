@@ -66,35 +66,39 @@ const findingCounts = computed(() => {
   <section class="score-card">
     <div class="container">
       <!--
-        Preview of the audited page — uses the og:image / twitter:image
-        / apple-touch-icon scraped during the fetch step. Gives the
-        user a visual anchor for "this is what we audited" instead of
-        just a URL. Hidden cleanly if there's no image or it fails to
-        load. The "Audit for X" text that used to sit here is gone —
-        the compressed hero above already shows the URL.
+        Editorial split lockup: preview image on the left, score + band
+        on the right. Falls back to score-only (full-width) when the
+        audited site has no og:image. Inspired by project-header layouts
+        from award sites — image anchors the page visually, big score
+        typography carries the rating.
       -->
-      <figure v-if="showPreview" class="score-card__preview">
-        <img
-          :src="heroImageUrl"
-          :alt="`Preview of ${auditedUrl}`"
-          class="score-card__preview-img"
-          loading="lazy"
-          decoding="async"
-          referrerpolicy="no-referrer"
-          @error="imageBroken = true"
-        />
-      </figure>
+      <div
+        class="score-card__lockup"
+        :class="{ 'score-card__lockup--with-preview': showPreview }"
+      >
+        <figure v-if="showPreview" class="score-card__preview">
+          <img
+            :src="heroImageUrl"
+            :alt="`Preview of ${auditedUrl}`"
+            class="score-card__preview-img"
+            loading="lazy"
+            decoding="async"
+            referrerpolicy="no-referrer"
+            @error="imageBroken = true"
+          />
+        </figure>
 
-      <div class="score-card__headline">
-        <div class="score-card__overall">
-          <span class="score-card__overall-number">
-            {{ report.overall_score }}
-          </span>
-          <span class="score-card__overall-total">/100</span>
+        <div class="score-card__headline">
+          <div class="score-card__overall">
+            <span class="score-card__overall-number">
+              {{ report.overall_score }}
+            </span>
+            <span class="score-card__overall-total">/100</span>
+          </div>
+          <p class="score-card__band subheader--mobile">
+            {{ overallBand }}
+          </p>
         </div>
-        <p class="score-card__band subheader--mobile">
-          {{ overallBand }}
-        </p>
       </div>
 
       <p class="score-card__summary body-large--mobile">
@@ -175,21 +179,42 @@ const findingCounts = computed(() => {
     word-break: break-all;
   }
 
+  // Editorial split lockup — image on the left, score + band on the
+  // right. Two-column grid with a generous gap so the elements read
+  // as paired-but-distinct, not glued together. Aligns to the bottom
+  // of both columns so the big score sits on the same baseline as the
+  // image, which creates a strong horizon line.
+  &__lockup {
+    margin-bottom: 48px;
+    @include respond(mobile) {
+      margin-bottom: 32px;
+    }
+
+    &--with-preview {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 48px;
+      align-items: end;
+
+      @include respond(mobile) {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        align-items: stretch;
+      }
+    }
+  }
+
   // Preview image of the audited page. Constrained aspect ratio (16:9)
-  // and border so a weird og:image doesn't blow up the layout. Fades in
-  // alongside the rest of the score card (parent's reveal animation).
+  // and border so a weird og:image doesn't blow up the layout. Sits in
+  // the left column of the lockup grid.
   &__preview {
-    margin: 0 0 40px 0;
+    margin: 0;
     aspect-ratio: 16 / 9;
     border: 1px solid white(10);
     border-radius: 8px;
     overflow: hidden;
     background: #1b1b1b;
-    max-width: 640px;
-    @include respond(mobile) {
-      margin-bottom: 32px;
-      max-width: 100%;
-    }
+    width: 100%;
   }
 
   &__preview-img {
