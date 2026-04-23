@@ -1,4 +1,5 @@
 <script setup>
+import gsap from 'gsap';
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '#shared/audit-types';
 
 const props = defineProps({
@@ -15,6 +16,12 @@ const props = defineProps({
   // "this is what was audited" rather than just the URL. Null-safe —
   // the preview hides cleanly when no image is available.
   heroImageUrl: {
+    type: String,
+    default: '',
+  },
+  // <title> of the audited page. Shown as a caption below the preview
+  // so the user sees what the page is actually about, not just a URL.
+  pageTitle: {
     type: String,
     default: '',
   },
@@ -40,14 +47,66 @@ const categories = computed(() =>
   })
 );
 
-// Band for the overall score — a gentle verbal cue alongside the number.
-const overallBand = computed(() => {
+// Verbal band + accent tint for the overall score. Friendlier than
+// "MID" / "EXCELLENT" — reads as an assessment rather than a grade.
+// The accent name maps to a CSS class that tints the band pill.
+const overallAssessment = computed(() => {
   const s = props.report?.overall_score || 0;
-  if (s >= 85) return 'Excellent';
-  if (s >= 70) return 'Strong';
-  if (s >= 55) return 'Mid';
-  if (s >= 35) return 'Rough';
-  return 'Needs work';
+  if (s >= 85) return { label: 'Exceptional', accent: 'gold' };
+  if (s >= 70) return { label: 'Strong foundations', accent: 'warm' };
+  if (s >= 55) return { label: 'Room to grow', accent: 'neutral' };
+  if (s >= 35) return { label: 'Needs work', accent: 'cool' };
+  return { label: 'Struggling', accent: 'cold' };
+});
+
+// Animated mirror of the overall score — GSAP counts this up from 0
+// to the real value on mount, so the reveal feels like a scoreboard
+// flip rather than a static number appearing. Prefers-reduced-motion
+// users skip the tween and see the final number immediately.
+const animatedScore = ref(0);
+const rootRef = ref(null);
+
+onMounted(async () => {
+  await nextTick();
+  const target = props.report?.overall_score ?? 0;
+
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReducedMotion) {
+    animatedScore.value = target;
+    return;
+  }
+
+  // Count-up tween — ease-out-quart so it slows into the final number.
+  const scoreObj = { value: 0 };
+  gsap.to(scoreObj, {
+    value: target,
+    duration: 1.4,
+    ease: 'power4.out',
+    onUpdate: () => {
+      animatedScore.value = Math.round(scoreObj.value);
+    },
+  });
+
+  // Category bars fill in sequence — each scales from 0 to its target
+  // width. Starts ~200ms after the score begins counting so the big
+  // number is the first thing the eye catches.
+  const bars = rootRef.value?.querySelectorAll('.score-card__bar-fill') || [];
+  bars.forEach((bar, i) => {
+    const target = parseFloat(bar.dataset.target) || 0;
+    gsap.fromTo(
+      bar,
+      { scaleX: 0 },
+      {
+        scaleX: target,
+        duration: 1.0,
+        delay: 0.2 + i * 0.1,
+        ease: 'power3.out',
+      }
+    );
+  });
 });
 
 // Counts across all findings for the teaser summary row.
@@ -63,7 +122,7 @@ const findingCounts = computed(() => {
 </script>
 
 <template>
-  <section class="score-card">
+  <section ref="rootRef" class="score-card">
     <div class="container">
       <!--
         Editorial split lockup: preview image on the left, score + band
@@ -77,26 +136,40 @@ const findingCounts = computed(() => {
         :class="{ 'score-card__lockup--with-preview': showPreview }"
       >
         <figure v-if="showPreview" class="score-card__preview">
-          <img
-            :src="heroImageUrl"
-            :alt="`Preview of ${auditedUrl}`"
-            class="score-card__preview-img"
-            loading="lazy"
-            decoding="async"
-            referrerpolicy="no-referrer"
-            @error="imageBroken = true"
-          />
+          <a
+            :href="auditedUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="score-card__preview-link"
+            :title="`Open ${auditedUrl} in a new tab`"
+          >
+            <img
+              :src="heroImageUrl"
+              :alt="`Preview of ${auditedUrl}`"
+              class="score-card__preview-img"
+              loading="lazy"
+              decoding="async"
+              referrerpolicy="no-referrer"
+              @error="imageBroken = true"
+            />
+          </a>
+          <figcaption v-if="pageTitle" class="score-card__preview-caption">
+            {{ pageTitle }}
+          </figcaption>
         </figure>
 
         <div class="score-card__headline">
           <div class="score-card__overall">
             <span class="score-card__overall-number">
-              {{ report.overall_score }}
+              {{ animatedScore }}
             </span>
             <span class="score-card__overall-total">/100</span>
           </div>
-          <p class="score-card__band subheader--mobile">
-            {{ overallBand }}
+          <p
+            class="score-card__band subheader--mobile"
+            :class="`score-card__band--${overallAssessment.accent}`"
+          >
+            {{ overallAssessment.label }}
           </p>
         </div>
       </div>
@@ -122,7 +195,7 @@ const findingCounts = computed(() => {
           <div class="score-card__bar">
             <div
               class="score-card__bar-fill"
-              :style="{ transform: `scaleX(${Math.max(0, Math.min(cat.score, 20)) / 20})` }"
+              :data-target="Math.max(0, Math.min(cat.score, 20)) / 20"
             />
           </div>
         </li>
@@ -223,17 +296,39 @@ const findingCounts = computed(() => {
     }
   }
 
-  // Preview image of the audited page. Constrained aspect ratio (16:9)
-  // and border so a weird og:image doesn't blow up the layout. Sits in
-  // the left column of the lockup grid.
+  // Preview block: thumbnail image + page-title caption. The image
+  // sits in a 16:9 frame so odd og:image dimensions don't blow up the
+  // layout, and it's wrapped in a link so clicking opens the live
+  // site in a new tab — lets the user flick between the audit and
+  // the real thing without losing their place.
   &__preview {
     margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  &__preview-link {
+    display: block;
     aspect-ratio: 16 / 9;
     border: 1px solid white(10);
     border-radius: 8px;
     overflow: hidden;
     background: #1b1b1b;
-    width: 100%;
+    position: relative;
+    text-decoration: none;
+    transition: border-color 0.3s ease, transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+
+    &:hover {
+      border-color: white(30);
+      transform: translateY(-2px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid white(50);
+      outline-offset: 3px;
+    }
   }
 
   &__preview-img {
@@ -241,6 +336,29 @@ const findingCounts = computed(() => {
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  &__preview-link:hover &__preview-img {
+    transform: scale(1.02);
+  }
+
+  // Caption below the preview image — shows the audited page's <title>
+  // so the user sees what the page is actually called, not just the
+  // hostname. Hidden cleanly when the site has no meaningful title.
+  &__preview-caption {
+    color: white(55);
+    font-family: 'RoobertMono';
+    font-size: getRem(12);
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    margin: 0;
+    // Clamp to one line so longer titles don't throw the lockup
+    // baseline out of alignment with the score.
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   &__headline {
@@ -276,6 +394,33 @@ const findingCounts = computed(() => {
     padding: 8px 14px;
     border: 1px solid white(20);
     border-radius: 999px;
+    // Accent tints based on the overall-score band. Kept restrained on
+    // purpose — not a traffic-light, just a gentle hue shift so the
+    // eye registers "good" vs "needs work" without the UI shouting.
+    &--gold {
+      color: #f0d58a;
+      border-color: rgba(240, 213, 138, 0.35);
+      background: rgba(240, 213, 138, 0.06);
+    }
+    &--warm {
+      color: #e5cba0;
+      border-color: rgba(229, 203, 160, 0.25);
+      background: rgba(229, 203, 160, 0.04);
+    }
+    &--neutral {
+      color: white(75);
+      border-color: white(20);
+    }
+    &--cool {
+      color: #b6c4d4;
+      border-color: rgba(182, 196, 212, 0.25);
+      background: rgba(182, 196, 212, 0.04);
+    }
+    &--cold {
+      color: #a9b6c8;
+      border-color: rgba(169, 182, 200, 0.3);
+      background: rgba(169, 182, 200, 0.05);
+    }
   }
 
   &__summary {
@@ -326,7 +471,9 @@ const findingCounts = computed(() => {
     height: 100%;
     background-color: $color-foreground;
     transform-origin: left;
-    transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+    // Start collapsed so GSAP can scale it up on mount. Without this,
+    // the bar flashes to full width before the tween runs.
+    transform: scaleX(0);
   }
 
   &__tally {

@@ -30,6 +30,9 @@ export default function useDesignAudit() {
   // The og:image / twitter:image / apple-touch-icon scraped from the
   // audited page's head. Used in the score card for a visual anchor.
   const heroImageUrl = ref(null);
+  // The <title> from the audited page. Used as a caption next to the
+  // URL to ground the audit in what the page is actually about.
+  const pageTitle = ref(null);
   const errorMessage = ref('');
   // True when the current report came from the 24h cache. Lets the UI
   // surface a "Run a fresh audit" affordance.
@@ -64,6 +67,7 @@ export default function useDesignAudit() {
     auditId.value = null;
     auditedUrl.value = null;
     heroImageUrl.value = null;
+    pageTitle.value = null;
     isCached.value = false;
     cachedAgeMs.value = null;
 
@@ -81,6 +85,7 @@ export default function useDesignAudit() {
       auditId.value = res.auditId;
       auditedUrl.value = res.url;
       heroImageUrl.value = res.heroImageUrl ?? null;
+      pageTitle.value = res.pageTitle ?? null;
       isCached.value = !!res.cached;
       cachedAgeMs.value = res.cachedAgeMs ?? null;
       state.value = STATES.TEASER;
@@ -136,6 +141,7 @@ export default function useDesignAudit() {
     report.value = null;
     auditedUrl.value = null;
     heroImageUrl.value = null;
+    pageTitle.value = null;
     errorMessage.value = '';
     leadForm.email = '';
     leadForm.name = '';
@@ -153,6 +159,7 @@ export default function useDesignAudit() {
     report,
     auditedUrl,
     heroImageUrl,
+    pageTitle,
     errorMessage,
     leadForm,
     leadError,

@@ -18,6 +18,7 @@ const {
   report,
   auditedUrl,
   heroImageUrl,
+  pageTitle,
   errorMessage,
   leadForm,
   leadError,
@@ -315,6 +316,7 @@ definePageMeta({
         :report="report"
         :audited-url="auditedUrl"
         :hero-image-url="heroImageUrl"
+        :page-title="pageTitle"
       />
     </div>
 
