@@ -91,11 +91,15 @@ onMounted(async () => {
     },
   });
 
-  // Category bars fill in sequence — each scales from 0 to its target
-  // width. Starts ~200ms after the score begins counting so the big
-  // number is the first thing the eye catches.
+  // Category bars fill as each one scrolls into view. Per-bar
+  // ScrollTrigger so they reveal individually as the user pans down
+  // the score card rather than staggering together off a single
+  // mount-time timeline. Matches the WatsUs accordion pattern on the
+  // Webflow page — feels more alive and only plays where the user
+  // is looking. Bars already on-screen at mount fire immediately
+  // (GSAP ScrollTrigger default behaviour).
   const bars = rootRef.value?.querySelectorAll('.score-card__bar-fill') || [];
-  bars.forEach((bar, i) => {
+  bars.forEach((bar) => {
     const target = parseFloat(bar.dataset.target) || 0;
     gsap.fromTo(
       bar,
@@ -103,8 +107,11 @@ onMounted(async () => {
       {
         scaleX: target,
         duration: 1.0,
-        delay: 0.2 + i * 0.1,
         ease: 'power3.out',
+        scrollTrigger: {
+          trigger: bar,
+          start: 'top 85%',
+        },
       }
     );
   });
