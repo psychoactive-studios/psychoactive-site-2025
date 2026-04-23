@@ -26,6 +26,7 @@ const {
   isTeaser,
   isSubmitting,
   isUnlocked,
+  hasError,
   runAudit,
   submitLead,
 } = useDesignAudit();
@@ -150,12 +151,16 @@ const skipInitialTransition = ref(hasQueryUrl.value);
 // Same reason — compress the hero on first render if we're about to
 // auto-run from the query param, even before the state machine flips
 // to AUDITING. State flags still drive compression post-first-render.
+// hasError is included so the hero doesn't snap back to its expanded
+// state after a failed audit — smoother visual continuity, error
+// displays in the compressed layout.
 const isHeroCompressed = computed(
   () =>
     isAuditing.value ||
     isTeaser.value ||
     isSubmitting.value ||
     isUnlocked.value ||
+    hasError.value ||
     hasQueryUrl.value
 );
 

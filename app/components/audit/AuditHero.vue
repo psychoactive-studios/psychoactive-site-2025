@@ -112,14 +112,18 @@ const submitDisabled = computed(
       </p>
 
       <!--
-        Only visible in the compressed state. Replaces the role of the
-        title/lede above — tells the user what was just audited and
-        gives them a one-click path to run another. `modelValue` holds
-        the normalised URL after a successful audit.
+        Only visible once a site has actually been audited successfully
+        (`auditedUrl` is set — `modelValue` alone isn't enough because
+        that'd lie on the error state where a URL is typed but no audit
+        completed). Replaces the role of the title/lede above and gives
+        a one-click path to prompt a new audit.
       -->
-      <p v-if="isCompressed && modelValue" class="audit-hero__audited-label">
+      <p
+        v-if="isCompressed && auditedUrl"
+        class="audit-hero__audited-label"
+      >
         <span class="audit-hero__audited-prefix">Audited:</span>
-        <span class="audit-hero__audited-url">{{ modelValue }}</span>
+        <span class="audit-hero__audited-url">{{ auditedUrl }}</span>
         <span class="audit-hero__audited-separator">·</span>
         <button
           type="button"
@@ -167,9 +171,40 @@ const submitDisabled = computed(
         </ButtonOutline>
       </form>
 
-      <p v-if="errorMessage" class="audit-hero__error body-small--mobile">
-        {{ errorMessage }}
-      </p>
+      <!--
+        Designed error state. Warning icon + bordered panel so failures
+        read as "something specific happened, here's what" rather than
+        a generic red stack trace. Visible whenever the API returns an
+        error (rate-limited, fetch failed, Claude failed, etc.).
+      -->
+      <div v-if="errorMessage" class="audit-hero__error" role="alert">
+        <svg
+          class="audit-hero__error-icon"
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.75"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        <p class="audit-hero__error-text body-small--mobile">
+          {{ errorMessage }}
+        </p>
+        <button
+          type="button"
+          class="audit-hero__error-retry"
+          @click="clearAndFocus"
+        >
+          Try a different URL
+        </button>
+      </div>
 
       <p class="audit-hero__fineprint body-small--mobile">
         We audit the pre-rendered HTML — what search engines and social
@@ -391,9 +426,65 @@ const submitDisabled = computed(
     cursor: default;
   }
 
+  // Error panel — shown when the API returns a failure (rate-limited,
+  // fetch error, Claude failure, etc.). Designed as a bordered block
+  // with a warning icon and a "Try a different URL" button so it
+  // reads as something actionable rather than just angry red text.
   &__error {
-    color: #ff6a6a;
-    margin-top: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-top: 20px;
+    padding: 14px 18px;
+    border: 1px solid rgba(255, 140, 140, 0.3);
+    background: rgba(255, 140, 140, 0.06);
+    border-radius: 12px;
+    max-width: 640px;
+    flex-wrap: wrap;
+  }
+
+  &__error-icon {
+    color: #ff9a9a;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  &__error-text {
+    color: #ffc8c8;
+    margin: 0;
+    flex: 1 1 240px;
+    min-width: 0;
+  }
+
+  &__error-retry {
+    background: none;
+    border: 1px solid rgba(255, 200, 200, 0.3);
+    color: #ffd7d7;
+    font-family: 'RoobertMono';
+    font-size: getRem(11);
+    font-weight: 500;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 8px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover {
+      background-color: rgba(255, 200, 200, 0.08);
+      border-color: rgba(255, 200, 200, 0.5);
+      color: #ffffff;
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(255, 200, 200, 0.6);
+      outline-offset: 3px;
+    }
   }
 
   &__fineprint {

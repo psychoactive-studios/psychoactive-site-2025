@@ -2,70 +2,18 @@
 import gsap from 'gsap';
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '#shared/audit-types';
 import ButtonOutline from '~/components/ui/ButtonOutline.vue';
+import AuditShare from '~/components/audit/AuditShare.vue';
 
 const props = defineProps({
   report: {
     type: Object,
     required: true,
   },
-  // The normalised URL that was audited. Used in the share text so
-  // the destination post names the site specifically.
+  // The normalised URL that was audited. Passed to AuditShare.
   auditedUrl: {
     type: String,
     default: '',
   },
-});
-
-// Copy-to-clipboard state for the "Copy link" share action. Flips
-// for ~2s after a successful copy to give visual feedback.
-const copyConfirmed = ref(false);
-let copyResetTimer = null;
-
-const shareUrl = computed(() => {
-  if (typeof window === 'undefined') return '';
-  const u = new URL('/design-audit', window.location.origin);
-  if (props.auditedUrl) u.searchParams.set('url', props.auditedUrl);
-  return u.toString();
-});
-
-const shareText = computed(() => {
-  const score = props.report?.overall_score ?? '';
-  const site = props.auditedUrl
-    ? props.auditedUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
-    : 'my site';
-  return `I audited ${site} with Psychoactive's AI design audit and scored ${score}/100. Run yours →`;
-});
-
-function openTwitter() {
-  const intent = new URL('https://twitter.com/intent/tweet');
-  intent.searchParams.set('text', shareText.value);
-  intent.searchParams.set('url', shareUrl.value);
-  window.open(intent.toString(), '_blank', 'noopener,noreferrer');
-}
-
-function openLinkedIn() {
-  // LinkedIn's share intent takes only the URL — it scrapes OG tags
-  // from the page for the preview.
-  const intent = new URL('https://www.linkedin.com/sharing/share-offsite/');
-  intent.searchParams.set('url', shareUrl.value);
-  window.open(intent.toString(), '_blank', 'noopener,noreferrer');
-}
-
-async function copyShareLink() {
-  try {
-    await navigator.clipboard.writeText(shareUrl.value);
-    copyConfirmed.value = true;
-    if (copyResetTimer) clearTimeout(copyResetTimer);
-    copyResetTimer = setTimeout(() => {
-      copyConfirmed.value = false;
-    }, 2000);
-  } catch (err) {
-    console.warn('Clipboard copy failed:', err);
-  }
-}
-
-onUnmounted(() => {
-  if (copyResetTimer) clearTimeout(copyResetTimer);
 });
 
 const categories = computed(() =>
@@ -185,34 +133,12 @@ onMounted(async () => {
         </article>
       </div>
 
-      <div class="full-report__share">
-        <p class="full-report__share-label subheader-small">
-          Share your score
-        </p>
-        <div class="full-report__share-actions">
-          <button
-            type="button"
-            class="full-report__share-btn"
-            @click="openTwitter"
-          >
-            Post on X
-          </button>
-          <button
-            type="button"
-            class="full-report__share-btn"
-            @click="openLinkedIn"
-          >
-            Share on LinkedIn
-          </button>
-          <button
-            type="button"
-            class="full-report__share-btn"
-            @click="copyShareLink"
-          >
-            {{ copyConfirmed ? 'Link copied ✓' : 'Copy link' }}
-          </button>
-        </div>
-      </div>
+      <AuditShare
+        class="full-report__share"
+        :audited-url="auditedUrl"
+        :score="report?.overall_score ?? null"
+        variant="prominent"
+      />
 
       <div class="full-report__cta">
         <h2 class="full-report__cta-title heading-h2--mobile">
@@ -268,62 +194,10 @@ onMounted(async () => {
     }
   }
 
-  // Share row — sits between the category findings and the main CTA.
-  // Low-key visual weight (not a primary action) but easy reach for
-  // anyone who wants to post their score.
+  // Margin below the share component — AuditShare handles its own
+  // padding + borders as the prominent variant.
   &__share {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 20px 28px;
-    padding: 32px 0;
     margin-bottom: 48px;
-    border-top: 1px solid white(10);
-    border-bottom: 1px solid white(10);
-  }
-
-  &__share-label {
-    color: white(60);
-    font-family: 'RoobertMono';
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    font-size: getRem(12);
-    margin: 0;
-  }
-
-  &__share-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  &__share-btn {
-    background: none;
-    border: 1px solid white(20);
-    color: $color-foreground;
-    font-family: 'RoobertMono';
-    font-size: getRem(12);
-    font-weight: 500;
-    line-height: 1;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: 10px 16px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition:
-      background-color 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease;
-
-    &:hover {
-      background-color: white(5);
-      border-color: white(50);
-    }
-
-    &:focus-visible {
-      outline: 2px solid white(40);
-      outline-offset: 3px;
-    }
   }
 
   &__cta {

@@ -1,6 +1,7 @@
 <script setup>
 import gsap from 'gsap';
 import { CATEGORY_LABELS, CATEGORY_ORDER } from '#shared/audit-types';
+import AuditShare from '~/components/audit/AuditShare.vue';
 
 const props = defineProps({
   report: {
@@ -215,6 +216,20 @@ const findingCounts = computed(() => {
         </span>
         <span class="score-card__tally-suffix">to unlock below.</span>
       </div>
+
+      <!--
+        Inline share row at the end of the teaser. Keeps the social
+        loop available even for people who don't unlock the full
+        report. Subtle variant so it doesn't compete with the teaser's
+        primary job (getting the email).
+      -->
+      <AuditShare
+        v-if="auditedUrl"
+        class="score-card__share"
+        :audited-url="auditedUrl"
+        :score="report?.overall_score ?? null"
+        variant="subtle"
+      />
     </div>
   </section>
 </template>
@@ -502,6 +517,12 @@ const findingCounts = computed(() => {
     font-size: 1rem;
     color: white(50);
     margin-left: 8px;
+  }
+
+  // Subtle share row at the tail of the teaser. Small top margin so
+  // it reads as a quiet follow-on to the tally, not a new section.
+  &__share {
+    margin-top: 32px;
   }
 }
 </style>
