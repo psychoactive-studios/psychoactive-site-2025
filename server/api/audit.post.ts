@@ -22,6 +22,7 @@ import {
   type AuditResponse,
 } from '../utils/audit-prompt';
 import { getAuditSupabaseClient } from '../utils/audit-supabase';
+import { checkRateLimit, getRequestIp } from '../utils/audit-rate-limit';
 
 interface AuditRequestBody {
   url?: string;
@@ -35,6 +36,20 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       statusMessage: 'Missing required field: url',
+    });
+  }
+
+  // Rate limit per IP before we do anything expensive. Auditing a page
+  // burns Anthropic credits, so we want to fail fast for repeat callers.
+  const ip = getRequestIp(event);
+  const rl = checkRateLimit(ip);
+  if (!rl.allowed) {
+    setHeader(event, 'Retry-After', String(rl.retryAfterSec));
+    const minutes = Math.ceil(rl.retryAfterSec / 60);
+    throw createError({
+      statusCode: 429,
+      statusMessage: `Slow down — you've run a few audits recently. Try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`,
+      data: { code: 'RATE_LIMITED', retryAfterSec: rl.retryAfterSec },
     });
   }
 
@@ -110,13 +125,11 @@ export default defineEventHandler(async (event) => {
     const supabase = getAuditSupabaseClient();
 
     // Hash the IP for abuse tracking without storing PII directly.
-    const ip =
-      getRequestHeader(event, 'x-forwarded-for')?.split(',')[0]?.trim() ||
-      getRequestHeader(event, 'x-real-ip') ||
-      '';
-    const ipHash = ip
-      ? crypto.createHash('sha256').update(ip).digest('hex').slice(0, 16)
-      : null;
+    // `ip` is already extracted at the top of the handler for rate limiting.
+    const ipHash =
+      ip && ip !== 'unknown'
+        ? crypto.createHash('sha256').update(ip).digest('hex').slice(0, 16)
+        : null;
 
     const categoryScores = {
       value_proposition: report.categories?.value_proposition?.score ?? null,

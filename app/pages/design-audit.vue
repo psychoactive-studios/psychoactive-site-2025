@@ -73,23 +73,29 @@ function enterAnimation(el) {
 
 // Fire once on first mount — covers the direct-load case where the
 // pageTransition onEnter hook doesn't fire.
+//
+// Auto-start is decoupled from the loader: the audit should kick off
+// as soon as we have a URL to work with, regardless of whether the
+// global mushroom loader has finished its animation cycle. The visual
+// reveal still waits on the loader so the page doesn't flash in
+// behind the spinning logo.
 onMounted(async () => {
   await nextTick();
   const el = document.querySelector('.design-audit');
-  const reveal = () => {
-    enterAnimation(el);
-    maybeAutoRunFromQuery();
-  };
+
+  // Auto-start from ?url= immediately — by the time the audit returns
+  // (~30-60s), the loader will be long gone and the teaser will pop in.
+  maybeAutoRunFromQuery();
 
   if (isLoading.value) {
     const stopWatch = watch(isLoading, (loading) => {
       if (!loading) {
-        reveal();
+        enterAnimation(el);
         stopWatch();
       }
     });
   } else {
-    reveal();
+    enterAnimation(el);
   }
 });
 
