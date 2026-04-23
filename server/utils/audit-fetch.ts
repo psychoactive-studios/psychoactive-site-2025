@@ -20,6 +20,11 @@ export interface FetchedSite {
   title: string;
   description: string;
   html: string; // cleaned body text + structure
+  // og:image / twitter:image / apple-touch-icon from the page's head.
+  // Null if the site doesn't expose any preview image. Used in the UI
+  // to give the user a visual anchor for "this is the page you
+  // audited".
+  heroImageUrl: string | null;
 }
 
 export class AuditFetchError extends Error {
@@ -133,10 +138,14 @@ async function fetchHtml(url: string): Promise<string> {
  * doesn't need scripts, styles, or SVG paths — it needs the text and
  * structure.
  */
-function cleanHtml(rawHtml: string): {
+function cleanHtml(
+  rawHtml: string,
+  pageUrl: string
+): {
   title: string;
   description: string;
   cleaned: string;
+  heroImageUrl: string | null;
 } {
   const $ = cheerio.load(rawHtml);
 
@@ -145,6 +154,27 @@ function cleanHtml(rawHtml: string): {
     ($('meta[name="description"]').attr('content') ||
       $('meta[property="og:description"]').attr('content') ||
       '').trim().slice(0, 500);
+
+  // Try each common "preview image" source in priority order. og:image
+  // is the canonical one; the others are sensible fallbacks when it's
+  // missing.
+  const rawImageCandidate =
+    $('meta[property="og:image"]').attr('content') ||
+    $('meta[property="og:image:secure_url"]').attr('content') ||
+    $('meta[name="twitter:image"]').attr('content') ||
+    $('meta[name="twitter:image:src"]').attr('content') ||
+    $('link[rel="apple-touch-icon"]').attr('href') ||
+    '';
+
+  let heroImageUrl: string | null = null;
+  if (rawImageCandidate) {
+    try {
+      // Resolve against the page URL so relative paths become absolute.
+      heroImageUrl = new URL(rawImageCandidate, pageUrl).toString();
+    } catch {
+      heroImageUrl = null;
+    }
+  }
 
   // Remove noise
   $('script, style, noscript, iframe, svg, link, meta').remove();
@@ -166,7 +196,7 @@ function cleanHtml(rawHtml: string): {
     cleaned = cleaned.slice(0, MAX_CLEANED_CHARS);
   }
 
-  return { title, description, cleaned };
+  return { title, description, cleaned, heroImageUrl };
 }
 
 /**
@@ -175,12 +205,13 @@ function cleanHtml(rawHtml: string): {
 export async function fetchAndCleanSite(rawUrl: string): Promise<FetchedSite> {
   const url = normaliseUrl(rawUrl);
   const rawHtml = await fetchHtml(url);
-  const { title, description, cleaned } = cleanHtml(rawHtml);
+  const { title, description, cleaned, heroImageUrl } = cleanHtml(rawHtml, url);
 
   return {
     url,
     title,
     description,
     html: cleaned,
+    heroImageUrl,
   };
 }

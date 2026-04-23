@@ -10,7 +10,23 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  // og:image / twitter:image / apple-touch-icon from the audited page,
+  // if any. Shown as a preview so the user has a visual anchor for
+  // "this is what was audited" rather than just the URL. Null-safe —
+  // the preview hides cleanly when no image is available.
+  heroImageUrl: {
+    type: String,
+    default: '',
+  },
 });
+
+// If the preview image fails to load (404, CORS block, broken path),
+// hide it rather than showing a broken-image icon.
+const imageBroken = ref(false);
+
+const showPreview = computed(
+  () => !!props.heroImageUrl && !imageBroken.value
+);
 
 const categories = computed(() =>
   CATEGORY_ORDER.map((key) => {
@@ -50,12 +66,24 @@ const findingCounts = computed(() => {
   <section class="score-card">
     <div class="container">
       <!--
-        The "Audit for X" block used to live here, but it now duplicates
-        the "Audited: X · Run another?" label in the compressed hero
-        just above. Removed to avoid saying the same thing twice.
-        `auditedUrl` is still passed in as a prop in case we need it
-        elsewhere in the card later.
+        Preview of the audited page — uses the og:image / twitter:image
+        / apple-touch-icon scraped during the fetch step. Gives the
+        user a visual anchor for "this is what we audited" instead of
+        just a URL. Hidden cleanly if there's no image or it fails to
+        load. The "Audit for X" text that used to sit here is gone —
+        the compressed hero above already shows the URL.
       -->
+      <figure v-if="showPreview" class="score-card__preview">
+        <img
+          :src="heroImageUrl"
+          :alt="`Preview of ${auditedUrl}`"
+          class="score-card__preview-img"
+          loading="lazy"
+          decoding="async"
+          referrerpolicy="no-referrer"
+          @error="imageBroken = true"
+        />
+      </figure>
 
       <div class="score-card__headline">
         <div class="score-card__overall">
@@ -145,6 +173,30 @@ const findingCounts = computed(() => {
   &__url {
     color: white(80);
     word-break: break-all;
+  }
+
+  // Preview image of the audited page. Constrained aspect ratio (16:9)
+  // and border so a weird og:image doesn't blow up the layout. Fades in
+  // alongside the rest of the score card (parent's reveal animation).
+  &__preview {
+    margin: 0 0 40px 0;
+    aspect-ratio: 16 / 9;
+    border: 1px solid white(10);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #1b1b1b;
+    max-width: 640px;
+    @include respond(mobile) {
+      margin-bottom: 32px;
+      max-width: 100%;
+    }
+  }
+
+  &__preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   &__headline {

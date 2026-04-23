@@ -17,6 +17,7 @@ const {
   url,
   report,
   auditedUrl,
+  heroImageUrl,
   errorMessage,
   leadForm,
   leadError,
@@ -175,9 +176,12 @@ async function onAuditSubmit() {
   await runAudit();
   if (!isTeaser.value) return;
   await nextTick();
-  // New content has appeared below the hero — let Lenis recalc page height.
+  // New content has appeared below the hero — let Lenis recalc page
+  // height. We used to force-scroll to the score card here, but the
+  // compressed hero pattern already shifts focus to the results below,
+  // so pushing the scroll on top of that felt heavy-handed. Let the
+  // user scroll at their own pace.
   scrollSmoother.value?.resize?.();
-  scrollTo(scoreCardRef.value);
 }
 
 async function onLeadSubmit() {
@@ -310,6 +314,7 @@ definePageMeta({
         v-if="report"
         :report="report"
         :audited-url="auditedUrl"
+        :hero-image-url="heroImageUrl"
       />
     </div>
 

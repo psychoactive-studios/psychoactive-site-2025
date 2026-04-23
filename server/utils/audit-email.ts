@@ -91,6 +91,20 @@ function buildEmailHtml(payload: AuditEmailPayload): string {
   const viewFullUrl = `${siteOrigin}/design-audit?url=${encodeURIComponent(auditedUrl)}`;
   const greeting = name?.trim() ? `Hi ${escapeHtml(name.trim().split(' ')[0])},` : 'Hi,';
 
+  // Preview image scraped from the audited page (og:image / twitter:image
+  // / apple-touch-icon). Rendered above the score for a visual anchor
+  // in the email. Null-safe — block is omitted entirely if no image.
+  const heroImageUrl = (report as { hero_image_url?: string | null })
+    .hero_image_url;
+  const heroImageBlock = heroImageUrl
+    ? `
+          <tr>
+            <td style="padding-bottom: 32px;">
+              <img src="${escapeHtml(heroImageUrl)}" alt="Preview of ${escapeHtml(hostname)}" width="600" style="display: block; width: 100%; max-width: 600px; height: auto; border-radius: 8px; border: 1px solid #2a2a2a;" />
+            </td>
+          </tr>`
+    : '';
+
   const categoryRows = CATEGORY_ORDER.map((key) => {
     const cat = report.categories?.[key as keyof AuditResponse['categories']];
     if (!cat) return '';
@@ -139,7 +153,7 @@ function buildEmailHtml(payload: AuditEmailPayload): string {
               Here's the audit you ran on <strong style="color: #ffffff;">${escapeHtml(hostname)}</strong>.
             </td>
           </tr>
-
+${heroImageBlock}
           <!-- Score block -->
           <tr>
             <td style="padding: 32px 0; border-top: 1px solid #2a2a2a; border-bottom: 1px solid #2a2a2a;">

@@ -140,11 +140,15 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  let report: AuditResponse;
+  let report: AuditResponse & { hero_image_url?: string | null };
+  let heroImageUrl: string | null = null;
 
   if (cachedReport) {
-    // Cache hit — reuse the previous report.
-    report = cachedReport;
+    // Cache hit — reuse the previous report. If the cached report was
+    // written before we started capturing hero_image_url, this will be
+    // null and the UI just hides the preview.
+    report = cachedReport as typeof report;
+    heroImageUrl = report.hero_image_url ?? null;
   } else {
     // Cache miss — call Claude with the freshly-fetched site.
     const anthropic = new Anthropic({ apiKey: config.anthropicApiKey });
@@ -186,6 +190,12 @@ export default defineEventHandler(async (event) => {
           'The audit engine couldn\'t process that page. Try again in a moment.',
       });
     }
+
+    // Stamp the captured hero image URL onto the report so it gets
+    // persisted alongside the Claude findings. Cache hits can then
+    // read it straight back out.
+    heroImageUrl = site?.heroImageUrl ?? null;
+    report.hero_image_url = heroImageUrl;
   }
 
   // 4. Persist the audit row (teaser state, no email yet). Always
@@ -245,6 +255,7 @@ export default defineEventHandler(async (event) => {
     // a "Run a fresh audit" affordance if the user wants newer data.
     cached: !!cachedReport,
     cachedAgeMs: cachedFromMs,
+    heroImageUrl,
     report,
   };
 });
