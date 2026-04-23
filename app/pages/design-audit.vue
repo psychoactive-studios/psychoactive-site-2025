@@ -6,6 +6,7 @@ import AuditHero from '~/components/audit/AuditHero.vue';
 import AuditScoreCard from '~/components/audit/AuditScoreCard.vue';
 import AuditEmailGate from '~/components/audit/AuditEmailGate.vue';
 import AuditFullReport from '~/components/audit/AuditFullReport.vue';
+import AuditRecentTicker from '~/components/audit/AuditRecentTicker.vue';
 
 import useDesignAudit from '~/composables/useDesignAudit';
 import useScrollSmoother from '~/composables/useScrollSmoother';
@@ -304,6 +305,13 @@ definePageMeta({
       @submit="onAuditSubmit"
     />
 
+    <!--
+      Social-proof ticker — only shown in the idle state (before the
+      user has submitted a URL). Once they've kicked off an audit the
+      focus should be on their own results, not other people's.
+    -->
+    <AuditRecentTicker v-if="!isHeroCompressed" />
+
     <div v-if="isAuditing" class="design-audit__loading">
       <div class="container">
         <ul class="design-audit__steps">
@@ -322,7 +330,7 @@ definePageMeta({
           >
             <span class="design-audit__step-marker" aria-hidden="true" />
             <span class="design-audit__step-label subheader--mobile">
-              Scoring against the rubric
+              Scoring across five categories
             </span>
           </li>
           <li
@@ -336,7 +344,7 @@ definePageMeta({
           </li>
         </ul>
         <p class="design-audit__loading-hint body-small--mobile">
-          This takes about 30-60 seconds.
+          This usually takes 30-60 seconds.
         </p>
       </div>
     </div>

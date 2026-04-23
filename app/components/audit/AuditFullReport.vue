@@ -156,14 +156,14 @@ onMounted(async () => {
 
       <div class="full-report__cta">
         <h2 class="full-report__cta-title heading-h2--mobile">
-          Like what you're reading?
+          Want a hand fixing any of this?
         </h2>
         <p class="full-report__cta-lede body-large--mobile">
-          This is the short version. Give us an hour on a call and we'll
-          walk you through how we'd rebuild your site to fix all of it.
+          You've got the findings. If you'd like to talk through the
+          ones that matter most, we're around — no pitch, no pressure.
         </p>
         <ButtonOutline href="/contact" class="full-report__cta-button">
-          Start a conversation
+          Get in touch
         </ButtonOutline>
       </div>
     </div>
