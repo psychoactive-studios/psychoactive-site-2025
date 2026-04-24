@@ -7,7 +7,7 @@ import AuditScoreCard from '~/components/audit/AuditScoreCard.vue';
 import AuditEmailGate from '~/components/audit/AuditEmailGate.vue';
 import AuditFullReport from '~/components/audit/AuditFullReport.vue';
 import AuditRecentTicker from '~/components/audit/AuditRecentTicker.vue';
-import TadpoleBackground from '~/components/audit/TadpoleBackground.vue';
+import GenerativePainting from '~/components/audit/GenerativePainting.vue';
 
 import useDesignAudit from '~/composables/useDesignAudit';
 import useScrollSmoother from '~/composables/useScrollSmoother';
@@ -47,6 +47,14 @@ const fullReportRef = ref(null);
 // Track whether the entry animation has run — so we only reveal the
 // page content once even if both onMounted and onEnter fire.
 let hasEntered = false;
+
+// Generative painting snapshot — emitted by GenerativePainting once the
+// audit lands. Passed into AuditScoreCard as the "painting your site
+// inspired" thumbnail. Null until the first audit completes.
+const paintingSnapshot = ref(null);
+function onPaintingSnapshot(dataUrl) {
+  paintingSnapshot.value = dataUrl;
+}
 
 // Progressive loading indicator — steps through 0/1/2 during an audit
 // so the user gets visual feedback that something's happening rather
@@ -298,13 +306,16 @@ definePageMeta({
 <template>
   <main class="design-audit">
     <!--
-      Bioluminescent tadpoles drifting behind the audit UI. Flow-
-      field cursor interaction; mood + palette shift with the audit
-      state and the resulting score. Fully decorative, aria-hidden.
+      Generative painting that writes itself across the full viewport
+      while the audit runs. URL-seeded so the same site always produces
+      the same piece; every URL produces a distinct one. Hidden outside
+      the auditing state. On completion it emits a snapshot which we
+      pass down to the score card as a keepsake thumbnail.
     -->
-    <TadpoleBackground
+    <GenerativePainting
       :state="state"
-      :score="report?.overall_score ?? null"
+      :url="auditedUrl || url"
+      @snapshot="onPaintingSnapshot"
     />
 
     <AuditHero
@@ -379,6 +390,7 @@ definePageMeta({
         :audited-url="auditedUrl"
         :hero-image-url="heroImageUrl"
         :page-title="pageTitle"
+        :painting-snapshot="paintingSnapshot"
       />
     </div>
 

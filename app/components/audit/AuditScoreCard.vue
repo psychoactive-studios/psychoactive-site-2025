@@ -31,6 +31,14 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  // PNG data URL of the generative painting that built itself while
+  // the audit ran. Shown as a keepsake thumbnail below the score
+  // lockup. Null-safe — section hides cleanly if the snapshot is
+  // missing (e.g. reduced-motion quirks, canvas errors).
+  paintingSnapshot: {
+    type: String,
+    default: '',
+  },
 });
 
 // If the preview image fails to load (404, CORS block, broken path),
@@ -245,6 +253,23 @@ const findingCounts = computed(() => {
         variant="subtle"
       />
     </div>
+
+    <!--
+      Generative painting keepsake. The URL-seeded piece that painted
+      itself during the audit. Every audit produces a unique artwork —
+      users can screenshot / share the piece alongside their score.
+    -->
+    <figure v-if="paintingSnapshot" class="score-card__painting">
+      <img
+        :src="paintingSnapshot"
+        :alt="`Generative painting inspired by ${auditedUrl}`"
+        class="score-card__painting-img"
+      />
+      <figcaption class="score-card__painting-caption">
+        <span class="score-card__painting-label">The painting your site inspired</span>
+        <span class="score-card__painting-hint">Seeded by the URL, painted while we audited.</span>
+      </figcaption>
+    </figure>
   </section>
 </template>
 
@@ -537,6 +562,44 @@ const findingCounts = computed(() => {
   // it reads as a quiet follow-on to the tally, not a new section.
   &__share {
     margin-top: 32px;
+  }
+
+  // Generative painting keepsake — sits below the main score lockup as
+  // a self-contained "this is the art your site inspired" block.
+  &__painting {
+    margin: getRem(56) 0 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: getRem(12);
+    max-width: 520px;
+  }
+
+  &__painting-img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    border-radius: getRem(6);
+    background: #000;
+  }
+
+  &__painting-caption {
+    display: flex;
+    flex-direction: column;
+    gap: getRem(4);
+  }
+
+  &__painting-label {
+    font-family: 'RoobertMono';
+    font-size: getRem(12);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: white(70);
+  }
+
+  &__painting-hint {
+    font-size: getRem(13);
+    color: white(40);
   }
 }
 </style>
