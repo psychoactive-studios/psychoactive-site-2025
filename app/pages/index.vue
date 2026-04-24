@@ -55,7 +55,12 @@ if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
 
-const { works, articles } = homePageData.value?.data || {};
+// Reactive wrappers around the Strapi response. Using computed refs
+// means the UI re-renders when homePageData.value populates — critical
+// on cold page loads where the external _payload.json is fetched
+// asynchronously and setup runs before the data has landed.
+const works = computed(() => homePageData.value?.data?.works || []);
+const articles = computed(() => homePageData.value?.data?.articles || []);
 
 const { scrollSmoother } = useScrollSmoother();
 
@@ -65,7 +70,7 @@ const { startLoading } = useLoader();
 const worksList = computed(() => {
   const letstalkItem = { id: 'filled-text' };
   const mobileScale = { id: 'mobile-scale' };
-  const result = works ? [...works] : [];
+  const result = works.value.length ? [...works.value] : [];
   if (isMobile.value) {
     result.splice(3, 0, mobileScale);
     result.splice(6, 0, letstalkItem);
