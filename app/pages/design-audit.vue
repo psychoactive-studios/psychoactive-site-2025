@@ -7,6 +7,7 @@ import AuditScoreCard from '~/components/audit/AuditScoreCard.vue';
 import AuditEmailGate from '~/components/audit/AuditEmailGate.vue';
 import AuditFullReport from '~/components/audit/AuditFullReport.vue';
 import AuditRecentTicker from '~/components/audit/AuditRecentTicker.vue';
+import TadpoleBackground from '~/components/audit/TadpoleBackground.vue';
 
 import useDesignAudit from '~/composables/useDesignAudit';
 import useScrollSmoother from '~/composables/useScrollSmoother';
@@ -15,6 +16,7 @@ import useLoader from '~/composables/useLoader';
 import { leaveAnimation } from '~/utils/animations/transitions';
 
 const {
+  state,
   url,
   report,
   auditedUrl,
@@ -295,6 +297,16 @@ definePageMeta({
 
 <template>
   <main class="design-audit">
+    <!--
+      Bioluminescent tadpoles drifting behind the audit UI. Flow-
+      field cursor interaction; mood + palette shift with the audit
+      state and the resulting score. Fully decorative, aria-hidden.
+    -->
+    <TadpoleBackground
+      :state="state"
+      :score="report?.overall_score ?? null"
+    />
+
     <AuditHero
       v-model="url"
       :is-auditing="isAuditing"
@@ -410,6 +422,12 @@ definePageMeta({
 @use '~/assets/styles/variables' as *;
 
 .design-audit {
+  // Make sure all direct children layer above the fixed tadpole canvas
+  // (which sits at z-index: 0). The canvas has pointer-events: none so
+  // this is purely a visual stacking concern.
+  position: relative;
+  z-index: 1;
+
   &__loading {
     padding: 4dvh 0 12dvh 0;
     .container {
