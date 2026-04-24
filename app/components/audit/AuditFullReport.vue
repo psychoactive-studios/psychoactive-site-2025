@@ -1,0 +1,350 @@
+<script setup>
+import gsap from 'gsap';
+import {
+  CATEGORY_LABELS,
+  CATEGORY_ORDER,
+  CATEGORY_DESCRIPTIONS,
+} from '#shared/audit-types';
+import ButtonOutline from '~/components/ui/ButtonOutline.vue';
+import AuditShare from '~/components/audit/AuditShare.vue';
+
+const props = defineProps({
+  report: {
+    type: Object,
+    required: true,
+  },
+  // The normalised URL that was audited. Passed to AuditShare.
+  auditedUrl: {
+    type: String,
+    default: '',
+  },
+});
+
+const categories = computed(() =>
+  CATEGORY_ORDER.map((key) => ({
+    key,
+    label: CATEGORY_LABELS[key],
+    description: CATEGORY_DESCRIPTIONS[key],
+    data: props.report?.categories?.[key] || {
+      score: 0,
+      findings: [],
+      next_action: '',
+    },
+  }))
+);
+
+const FINDING_LABEL = {
+  win: 'Win',
+  issue: 'Issue',
+  opportunity: 'Opportunity',
+};
+
+const rootRef = ref(null);
+
+// Progressive reveal on mount — the full report mounts the moment
+// the email gate unlocks, and we want it to feel like it's being
+// written rather than dropped in all at once. Staggered fade-up of
+// the top-level sections (eyebrow, title, each category, CTA) gives
+// a Claude-streaming feel without actually simulating typing.
+onMounted(async () => {
+  await nextTick();
+  const root = rootRef.value;
+  if (!root) return;
+
+  const items = [
+    root.querySelector('.full-report__eyebrow'),
+    root.querySelector('.full-report__title'),
+    ...Array.from(root.querySelectorAll('.category')),
+    root.querySelector('.full-report__cta'),
+  ].filter(Boolean);
+
+  if (!items.length) return;
+
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (prefersReducedMotion) {
+    gsap.set(items, { opacity: 1, y: 0 });
+    return;
+  }
+
+  gsap.from(items, {
+    opacity: 0,
+    y: 14,
+    duration: 0.45,
+    ease: 'power3.out',
+    stagger: 0.12,
+  });
+});
+</script>
+
+<template>
+  <section ref="rootRef" class="full-report">
+    <div class="container">
+      <p class="full-report__eyebrow subheader--mobile">
+        The full report
+      </p>
+      <h2 class="full-report__title heading-h3--mobile">
+        Every finding, broken down by category.
+      </h2>
+
+      <div class="full-report__categories">
+        <article
+          v-for="cat in categories"
+          :key="cat.key"
+          class="category"
+        >
+          <header class="category__header">
+            <h3 class="category__label heading-h4--mobile">
+              {{ cat.label }}
+            </h3>
+            <div class="category__score">
+              <span class="category__score-num">{{ cat.data.score }}</span>
+              <span class="category__score-total">/20</span>
+            </div>
+          </header>
+          <!--
+            Short explainer of what the category measures — shown in the
+            full report (not the score card teaser) because there's
+            space here for a real sentence. Turns the score from a
+            mystery number into "here's what this is testing for".
+          -->
+          <p class="category__description body-small--mobile">
+            {{ cat.description }}
+          </p>
+
+          <ul v-if="cat.data.findings?.length" class="category__findings">
+            <li
+              v-for="(finding, i) in cat.data.findings"
+              :key="i"
+              class="finding"
+              :class="`finding--${finding.type}`"
+            >
+              <span class="finding__tag subheader-small">
+                {{ FINDING_LABEL[finding.type] || finding.type }}
+              </span>
+              <p class="finding__text body--mobile">
+                {{ finding.text }}
+              </p>
+              <p
+                v-if="finding.quote"
+                class="finding__quote body-small--mobile"
+              >
+                “{{ finding.quote }}”
+              </p>
+            </li>
+          </ul>
+
+          <div v-if="cat.data.next_action" class="category__next">
+            <span class="category__next-label subheader-small">
+              Fix this first
+            </span>
+            <p class="category__next-text body--mobile">
+              {{ cat.data.next_action }}
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <AuditShare
+        class="full-report__share"
+        :audited-url="auditedUrl"
+        :score="report?.overall_score ?? null"
+        variant="prominent"
+      />
+
+      <div class="full-report__cta">
+        <h2 class="full-report__cta-title heading-h2--mobile">
+          Want a hand fixing any of this?
+        </h2>
+        <p class="full-report__cta-lede body-large--mobile">
+          You've got the findings. If you'd like to talk through the
+          ones that matter most, we're around — no pitch, no pressure.
+        </p>
+        <ButtonOutline href="/contact" class="full-report__cta-button">
+          Get in touch
+        </ButtonOutline>
+      </div>
+    </div>
+  </section>
+</template>
+
+<style scoped lang="scss">
+@use '~/assets/styles/functions' as *;
+@use '~/assets/styles/mixins' as *;
+@use '~/assets/styles/variables' as *;
+
+.full-report {
+  padding: 6dvh 0 14dvh 0;
+
+  .container {
+    @include container;
+    max-width: 1280px;
+  }
+
+  &__eyebrow {
+    color: white(50);
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    color: $color-foreground;
+    margin-bottom: 64px;
+    max-width: 28ch;
+    @include respond(mobile) {
+      margin-bottom: 40px;
+    }
+  }
+
+  &__categories {
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+    margin-bottom: 72px;
+    @include respond(mobile) {
+      gap: 56px;
+      margin-bottom: 56px;
+    }
+  }
+
+  // Margin below the share component — AuditShare handles its own
+  // padding + borders as the prominent variant.
+  &__share {
+    margin-bottom: 48px;
+  }
+
+  &__cta {
+    border-top: 1px solid white(10);
+    padding-top: 72px;
+    @include respond(mobile) {
+      padding-top: 48px;
+    }
+  }
+
+  &__cta-title {
+    color: $color-foreground;
+    margin-bottom: 20px;
+  }
+
+  &__cta-lede {
+    color: white(70);
+    max-width: 60ch;
+    margin-bottom: 40px;
+  }
+}
+
+.category {
+  border-top: 1px solid white(10);
+  padding-top: 32px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__label {
+    color: $color-foreground;
+    max-width: 32ch;
+  }
+
+  // Short explainer below the heading — grounds the score in plain
+  // language so the reader knows what's being measured, not just
+  // the number.
+  &__description {
+    color: white(55);
+    max-width: 70ch;
+    margin: 0 0 32px 0;
+    line-height: 1.5;
+  }
+
+  &__score {
+    font-family: 'RoobertMono';
+    color: white(70);
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    align-items: baseline;
+  }
+
+  &__score-num {
+    font-size: 2rem;
+    color: $color-foreground;
+  }
+
+  &__score-total {
+    font-size: 1rem;
+    color: white(40);
+    margin-left: 4px;
+  }
+
+  &__findings {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  &__next {
+    background-color: white(4);
+    border-left: 2px solid $color-foreground;
+    padding: 20px 24px;
+    @include respond(mobile) {
+      padding: 16px 20px;
+    }
+  }
+
+  &__next-label {
+    color: white(50);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  &__next-text {
+    color: white(90);
+    margin: 0;
+  }
+}
+
+.finding {
+  padding-left: 20px;
+  border-left: 2px solid white(20);
+
+  &--win {
+    border-left-color: #7cd99a;
+    .finding__tag { color: #7cd99a; }
+  }
+  &--issue {
+    border-left-color: #ff8a8a;
+    .finding__tag { color: #ff8a8a; }
+  }
+  &--opportunity {
+    border-left-color: $color-blue;
+    .finding__tag { color: #5ea1ff; }
+  }
+
+  &__tag {
+    display: inline-block;
+    margin-bottom: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  &__text {
+    color: white(90);
+    margin: 0 0 12px 0;
+  }
+
+  &__quote {
+    color: white(55);
+    font-style: italic;
+    margin: 0;
+    padding-left: 14px;
+    border-left: 1px solid white(15);
+  }
+}
+</style>

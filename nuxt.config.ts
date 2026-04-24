@@ -36,6 +36,17 @@ export default defineNuxtConfig({
     }
   },
   runtimeConfig: {
+    // Server-only secrets — never exposed to the client bundle.
+    // Used by the Design Audit API routes (server/api/audit.*).
+    anthropicApiKey: process.env.ANTHROPIC_API_KEY || '',
+    supabaseCrmUrl: process.env.SUPABASE_CRM_URL || '',
+    supabaseCrmServiceKey: process.env.SUPABASE_CRM_SERVICE_KEY || '',
+    // Resend — sends the audit report to leads after they unlock it.
+    // If RESEND_API_KEY is blank the email step skips silently (useful
+    // before the Resend account is wired up).
+    resendApiKey: process.env.RESEND_API_KEY || '',
+    auditFromEmail: process.env.AUDIT_FROM_EMAIL || 'audit@psychoactive.co.nz',
+
     public: {
       siteUrl: SITE_URL,
       strapiBaseUrl: process.env.NUXT_PUBLIC_STRAPI_BASE_URL || 'http://localhost:1337',
@@ -56,7 +67,28 @@ export default defineNuxtConfig({
       isCustomElement: (tag) => tag === 'mux-player',
     },
   },
-  modules: ['@nuxt/eslint', '@nuxt/image', '@nuxt/scripts', 'nuxt-svgo', '@nuxtjs/sitemap'],
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/image',
+    '@nuxt/scripts',
+    'nuxt-svgo',
+    '@nuxtjs/sitemap',
+    // Renders dynamic 1200x630 social share images for pages that
+    // call defineOgImageComponent(). Used by /design-audit so links
+    // shared on X/LinkedIn generate per-audit preview cards.
+    'nuxt-og-image',
+  ],
+
+  // nuxt-og-image config. The site URL is used to build absolute
+  // paths to the generated images.
+  ogImage: {
+    defaults: {
+      component: 'DesignAuditOg',
+      width: 1200,
+      height: 630,
+    },
+    fonts: ['Inter:400', 'Inter:600', 'Inter:700'],
+  },
 
   // Sitemap — populates /sitemap.xml from an explicit static-page
   // list plus a Strapi-backed dynamic source (/api/__sitemap__/urls).
