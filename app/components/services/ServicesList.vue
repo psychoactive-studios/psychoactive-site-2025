@@ -25,14 +25,22 @@ onUnmounted(() => {
     <div class="container">
       <ClientOnly>
         <div v-if="isMobile" class="services-list__video">
-          <video
+          <mux-player
+            class="services-list__video_player"
+            playback-id="wri9qmfp01VRcEsGsWtOgWeo4JPHFjOYXPQy1mZ9oNNo"
+            loop
+            muted
+            playsinline
+            autoplay
+          />
+          <!-- <video
             class="services-list__video_player"
             src="/video/services_grid.mp4"
             autoplay
             loop
             muted
             playsinline
-          />
+          /> -->
         </div>
       </ClientOnly>
       <ul class="services-list__items">
@@ -61,17 +69,22 @@ onUnmounted(() => {
 @use '~/assets/styles/variables' as *;
 @use '~/assets/styles/mixins' as *;
 .services-list {
-  padding: 50dvh 0 30dvh 0;
+  // Bottom padding removed on desktop — the phase-navigation below now
+  // handles the spacing with a padding-top of 423px to match the list's
+  // inter-item gap. Mobile keeps its 120px top/bottom padding.
+  padding: 50dvh 0 0 0;
   @include respond(mobile) {
     padding: 120px 0;
   }
   &__video {
     aspect-ratio: 1;
     margin: 0 1rem;
-    video {
+    mux-player {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      --media-object-fit: cover;
+      --controls: none;
+      pointer-events: none;
       clip-path: circle(50% at 50% 50%);
     }
   }

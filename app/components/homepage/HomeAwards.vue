@@ -92,7 +92,7 @@ const onClickHandler = async () => {
             class="awards__collection_item"
           >
             <div class="award-platform">
-              <img :src="award.platform" :alt="award.project" />
+              <img :src="award.platform" :alt="award.project" loading="lazy" />
             </div>
             <div class="award-details body--mobile-compact">
               <div class="award-details--prize">{{ award.prize }}</div>

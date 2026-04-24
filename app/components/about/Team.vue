@@ -23,6 +23,8 @@ const { playContinuousSound, stopContinuousSound } = useAudioManager();
             :src="person.photo"
             :cursor="false"
             :strength="0.3"
+            :init-on-hover="true"
+            :alt="person.name"
             @mouseenter="() => playContinuousSound('warp-hover')"
             @mouseleave="() => stopContinuousSound()"
           />

@@ -15,7 +15,7 @@ const { feedback } = props;
       <img
         v-if="feedback?.client?.photo?.url"
         :src="feedback?.client?.photo?.url"
-        alt=""
+        :alt="feedback?.client?.name ? `Photo of ${feedback.client.name}` : ''"
       />
     </div>
     <div class="slide__body">

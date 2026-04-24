@@ -3,6 +3,7 @@ import { stepperAnimation } from '~/utils/animations/services';
 import gsap from 'gsap';
 import { stepperTitlesData } from '~/data/servicesData';
 import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
+import '@mux/mux-player';
 
 let ctx = null;
 
@@ -34,14 +35,22 @@ onUnmounted(() => {
             <WebflowBlackLabel />
           </NuxtLink>
           <div class="stepper__mobile-step_video">
-            <video
+            <mux-player
+              class="video"
+              :playback-id="step.playbackId"
+              loop
+              muted
+              playsinline
+              autoplay
+            />
+            <!-- <video
               class="video"
               :src="step.src"
               autoplay
               loop
               muted
               playsinline
-            />
+            /> -->
           </div>
           <h2 class="stepper__mobile-step_title" :data-number="step.number">
             {{ step.title }}
@@ -58,10 +67,13 @@ onUnmounted(() => {
       </div>
     </div>
     <div class="stepper__trigger stepper__trigger_intro" />
-    <div class="stepper__trigger stepper__trigger_step-1" />
-    <div class="stepper__trigger stepper__trigger_step-2" />
-    <div class="stepper__trigger stepper__trigger_step-3" />
-    <div class="stepper__trigger stepper__trigger_step-4" />
+    <!-- Anchor IDs for phase-link navigation from the Services intro.
+         The trigger elements are where each phase is fully revealed,
+         so linking to `#phase-N` lands the user on that phase's content. -->
+    <div id="phase-1" class="stepper__trigger stepper__trigger_step-1" />
+    <div id="phase-2" class="stepper__trigger stepper__trigger_step-2" />
+    <div id="phase-3" class="stepper__trigger stepper__trigger_step-3" />
+    <div id="phase-4" class="stepper__trigger stepper__trigger_step-4" />
   </div>
 </template>
 
@@ -123,9 +135,13 @@ onUnmounted(() => {
       }
 
       .video {
+        display: block;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        --media-object-fit: cover;
+        --controls: none;
+        pointer-events: none;
+        opacity: 1;
       }
     }
     &_title {
@@ -213,8 +229,11 @@ onUnmounted(() => {
     &_step-3 {
       height: 150dvh;
     }
+    // Taller than the others so the "slow scroll" stepper effect stays
+    // active until the END of Growth & Partnership. Previously ended as
+    // soon as step 4 began, which made the last phase feel rushed.
     &_step-4 {
-      height: 150dvh;
+      height: 300dvh;
     }
   }
 }

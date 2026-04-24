@@ -44,7 +44,12 @@ onBeforeUnmount(() => {
     >
       <SplideTrack>
         <SplideSlide v-for="(work, index) in data" :key="index">
-          <CaseStadyPreview :data="work" />
+          <!-- Splide clones slides for loop mode, and those clones
+               don't receive Vue reactive updates. `eager` bypasses
+               BulgeImage's IntersectionObserver lazy-load so every
+               slide (including clones) has a background image at
+               mount time. -->
+          <CaseStadyPreview :data="work" :eager="true" />
         </SplideSlide>
       </SplideTrack>
       <div class="splide__arrows">

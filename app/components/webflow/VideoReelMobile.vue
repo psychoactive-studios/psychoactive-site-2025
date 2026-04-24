@@ -79,7 +79,7 @@ onBeforeUnmount(() => {
         <div class="controls-text">PLAY REEL</div>
         <button
           class="controls-button"
-          ria-label="Play video"
+          aria-label="Play video"
           @click="clickVideoPlayHandler"
         >
           <PlayIcon />

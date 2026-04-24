@@ -164,7 +164,7 @@ function formatSize(bytes) {
     }
 
     &:not(.has-files):hover {
-      border-color: white(40);
+      border-color: white(50);
 
       .file-upload__label {
         opacity: 1;
@@ -227,7 +227,7 @@ function formatSize(bytes) {
   }
 
   &__item-size {
-    color: white(40);
+    color: white(50);
   }
 
   &__item-status {
@@ -250,7 +250,7 @@ function formatSize(bytes) {
   }
 
   &__item-undo {
-    color: white(40);
+    color: white(50);
     cursor: pointer;
     white-space: nowrap;
     transition: color 0.2s ease;

@@ -84,6 +84,8 @@ onBeforeUnmount(() => {
       `sound-button--${muted ? 'muted' : 'unmuted'}`,
       `sound-button--${colorMode}`,
     ]"
+    :aria-label="muted ? 'Unmute sound' : 'Mute sound'"
+    :aria-pressed="!muted"
   >
     <span
       v-for="i in 6"

@@ -80,6 +80,15 @@ const worksList = computed(() => {
   return result;
 });
 
+useSeoMeta({
+  title: 'AI-era Webflow Enterprise Agency | Psychoactive Studios',
+  description:
+    'Global digital design agency building AI-era Webflow platforms for ambitious brands. Premium Webflow Enterprise Partner with 50+ international awards.',
+  ogTitle: 'AI-era Webflow Enterprise Agency | Psychoactive Studios',
+  ogDescription:
+    'Global digital design agency building AI-era Webflow platforms for ambitious brands. Premium Webflow Enterprise Partner with 50+ international awards.',
+});
+
 definePageMeta({
   scrollToTop: true,
   pageTransition: {
@@ -114,6 +123,9 @@ definePageMeta({
 
 <template>
   <main class="homepage">
+    <h1 class="sr-only">
+      Psychoactive Studios — AI-era Webflow Enterprise Agency
+    </h1>
     <ClientOnly>
       <!-- Hero Section -->
       <section class="hero">
@@ -153,24 +165,18 @@ definePageMeta({
               <!-- Filled Text Section -->
               <section v-if="work.id === 'filled-text'" class="filled-text">
                 <HomeOnScrollFilledText>
-                  <span class="dark">What sets us apart is our</span>
-                  <img src="/img/text-icon-1.svg" alt="icon1" />obsession
+                  <span class="dark">We work at the intersection of</span>
+                  design, technology, and strategy,
+                  <span class="dark">building</span>
+                  high-performance
                   <span class="dark"
-                    >with the moment your audience first encounters your brand
-                    online. That split second where</span
+                    >websites and digital experiences for some of the world’s most</span
                   >
-                  <img
-                    src="/img/text-icon-2.svg"
-                    class="icon-large"
-                    alt="icon2"
-                  />curiosity
-                  <span class="dark">transforms into</span>
-                  <img src="/img/text-icon-3.svg" alt="icon3" />connection.
+                  ambitious brands.
                   <span class="dark"
-                    >We don't just build websites; we architect</span
+                    >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
                   >
-                  <img src="/img/text-icon-4.svg" alt="icon4" />experiences
-                  <span class="dark">that linger in the mind.</span>
+                  we’re completely obsessed.
                 </HomeOnScrollFilledText>
               </section>
               <CaseStadyPreview v-else :data="work" />
@@ -184,24 +190,18 @@ definePageMeta({
               <!-- Filled Text Section -->
               <section v-if="work.id === 'filled-text'" class="filled-text">
                 <HomeOnScrollFilledText>
-                  <span class="dark">What sets us apart is our</span>
-                  <img src="/img/text-icon-1.svg" alt="icon1" />obsession
+                  <span class="dark">We work at the intersection of</span>
+                  design, technology, and strategy,
+                  <span class="dark">building</span>
+                  high-performance
                   <span class="dark"
-                    >with the moment your audience first encounters your brand
-                    online. That split second where</span
+                    >websites and digital experiences for some of the world’s most</span
                   >
-                  <img
-                    src="/img/text-icon-2.svg"
-                    class="icon-large"
-                    alt="icon2"
-                  />curiosity
-                  <span class="dark">transforms into</span>
-                  <img src="/img/text-icon-3.svg" alt="icon3" />connection.
+                  ambitious brands.
                   <span class="dark"
-                    >We don't just build websites; we architect</span
+                    >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
                   >
-                  <img src="/img/text-icon-4.svg" alt="icon4" />experiences
-                  <span class="dark">that linger in the mind.</span>
+                  we’re completely obsessed.
                 </HomeOnScrollFilledText>
               </section>
 

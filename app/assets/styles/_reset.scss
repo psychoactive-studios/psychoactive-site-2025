@@ -18,7 +18,9 @@ body {
   margin: 0;
   padding: 0;
   // scroll-behavior: smooth;
-  overflow-x: hidden;
+  // `clip` instead of `hidden` so that `position: sticky` isn't broken
+  // on descendants. Still prevents horizontal scroll.
+  overflow-x: clip;
 }
 
 /* Make images, videos, svg responsive by default */
@@ -46,8 +48,22 @@ button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  outline: none !important;
   box-sizing: border-box;
+}
+
+/* Keyboard focus styles.
+ * `:focus-visible` only fires for keyboard navigation (not mouse clicks),
+ * so we can give visible focus rings to Tab users without showing an
+ * outline every time a mouse user clicks something.
+ */
+:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* Remove list styles for ul/ol */
@@ -79,13 +95,21 @@ p {
 //   outline-offset: 2px;
 // }
 
-/* Optional: reduce motion for users who prefer it */
+/* Respect users who prefer reduced motion.
+ * This site leans heavily on GSAP, Lenis smooth scroll, and Three.js —
+ * without these overrides, those animations continue even when the OS
+ * reports `prefers-reduced-motion: reduce`. These CSS rules cover
+ * transition/animation-based motion. For GSAP/Three.js, the JS layer
+ * should also check `window.matchMedia('(prefers-reduced-motion: reduce)')`
+ * and skip non-essential timelines.
+ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0s !important;
-    transition-duration: 0s !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }

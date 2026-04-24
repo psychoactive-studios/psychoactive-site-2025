@@ -71,6 +71,15 @@ const { startLoading } = useLoader();
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 
+useSeoMeta({
+  title: 'Webflow Enterprise Agency | Psychoactive Studios',
+  description:
+    "New Zealand's first Premium Webflow Enterprise Partner. AI-era Webflow development for global brands. Performance, animation, and custom code at scale.",
+  ogTitle: 'Webflow Enterprise Agency | Psychoactive Studios',
+  ogDescription:
+    "New Zealand's first Premium Webflow Enterprise Partner. AI-era Webflow development for global brands. Performance, animation, and custom code at scale.",
+});
+
 definePageMeta({
   scrollToTop: true,
   pageTransition: {

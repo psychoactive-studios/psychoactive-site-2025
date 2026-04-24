@@ -47,10 +47,10 @@ const { data: workData, error } = await useFetch(`/api/works/${params.slug}`, {
   },
 });
 
-if (error.value || !workData.value?.data) {  
+if (error.value || !workData.value?.data) {
   throw createError({
     statusCode: 404,
-    statusMessage: 'Case Study Not Found',    
+    statusMessage: 'Case Study Not Found',
   });
 }
 
@@ -58,11 +58,11 @@ const { mainTitle, mainImage, hero, article } = workData?.value?.data || {};
 
 // SEO meta from workData.data.seo – only set when fields exist
 const seoMeta = computed(() => {
-  const seo = workData.value?.data?.seo;  
+  const seo = workData.value?.data?.seo;
   const meta = {};
-  meta.title = seo?.metaTitle || mainTitle;  
-  if (seo?.metaDescription) meta.description = seo?.metaDescription;    
-  meta.ogImage = mainImage?.url; 
+  meta.title = seo?.metaTitle || mainTitle;
+  if (seo?.metaDescription) meta.description = seo?.metaDescription;
+  meta.ogImage = mainImage?.url;
   return meta;
 });
 
@@ -70,7 +70,7 @@ useSeoMeta(seoMeta.value);
 
 watch(isLoading, (newVal) => {
   if (!newVal) {
-    if(isMobile.value) {
+    if (isMobile.value) {
       gsap.set('#header-navigation-mobile', {
         yPercent: 200,
       });
@@ -122,7 +122,7 @@ definePageMeta({
       showLayoutElementsRequired.value = false;
     },
     onLeave: (el, done) => {
-      const { transitionFromNavigation, backButtonHref } = useNavigation();      
+      const { transitionFromNavigation, backButtonHref } = useNavigation();
       const { mode } = useHeader();
       if (transitionFromNavigation.value) {
         gsap
@@ -215,12 +215,10 @@ const onClickHandler = (e) => {
       x < 0.5 ? 8 * x * x * x * x : 1 - Math.pow(-2 * x + 2, 4) / 2,
   });
 };
-
-
 </script>
 <template>
   <main v-if="workData?.data" class="work">
-    <div class="work__header--desktop">
+    <div v-if="!isMobile" class="work__header--desktop">
       <!-- Illustration section -->
       <section ref="illustrationRef" class="work__illustration">
         <img :src="mainImage?.url" alt="SuperAI Conference Illustration" />
@@ -264,7 +262,7 @@ const onClickHandler = (e) => {
       </section>
     </div>
 
-    <div class="work__header--mobile">
+    <div v-if="isMobile" class="work__header--mobile">
       <section class="work__hero">
         <div class="container">
           <ButtonOutline
@@ -289,7 +287,10 @@ const onClickHandler = (e) => {
             </li>
           </ul>
           <div class="work__illustration">
-            <img :src="mainImage?.formats?.medium?.url || mainImage?.url" :alt="mainTitle" />
+            <img
+              :src="mainImage?.formats?.medium?.url || mainImage?.url"
+              :alt="mainTitle"
+            />
             <div class="work__illustration_bg" />
           </div>
         </div>
@@ -455,7 +456,7 @@ const onClickHandler = (e) => {
             &::before {
               content: '';
               display: inline-block;
-              width: 3.9vw;              
+              width: 3.9vw;
             }
           }
           p {
@@ -502,7 +503,7 @@ const onClickHandler = (e) => {
             display: flex;
             flex-direction: column;
             gap: 12px;
-            margin-bottom: 120px;            
+            margin-bottom: 120px;
             & > li {
               display: flex;
               gap: 0.5rem;
