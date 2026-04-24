@@ -7,7 +7,7 @@ import AuditScoreCard from '~/components/audit/AuditScoreCard.vue';
 import AuditEmailGate from '~/components/audit/AuditEmailGate.vue';
 import AuditFullReport from '~/components/audit/AuditFullReport.vue';
 import AuditRecentTicker from '~/components/audit/AuditRecentTicker.vue';
-import GenerativePainting from '~/components/audit/GenerativePainting.vue';
+import FluidBackground from '~/components/audit/FluidBackground.vue';
 
 import useDesignAudit from '~/composables/useDesignAudit';
 import useScrollSmoother from '~/composables/useScrollSmoother';
@@ -341,13 +341,14 @@ definePageMeta({
 <template>
   <main class="design-audit">
     <!--
-      Generative painting that writes itself across the full viewport
-      while the audit runs. URL-seeded so the same site always produces
-      the same piece; every URL produces a distinct one. Hidden outside
-      the auditing state. On completion it emits a snapshot which we
-      pass down to the score card as a keepsake thumbnail.
+      WebGL2 fluid simulation running full-screen during the audit.
+      URL-seeded initial ink drops, cursor creates velocity impulses,
+      click injects fresh dye. On completion we snapshot the current
+      state of the fluid and pass it down to the score card as a
+      keepsake thumbnail — every audited URL produces a unique,
+      repeatable piece of generative fluid art.
     -->
-    <GenerativePainting
+    <FluidBackground
       :state="state"
       :url="auditedUrl || url"
       @snapshot="onPaintingSnapshot"
