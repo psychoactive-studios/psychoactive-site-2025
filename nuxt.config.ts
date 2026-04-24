@@ -90,14 +90,29 @@ export default defineNuxtConfig({
     fonts: ['Inter:400', 'Inter:600', 'Inter:700'],
   },
 
-  // Sitemap — auto-generates /sitemap.xml at build time by crawling the
-  // site. Strapi-driven routes (e.g. /work/:slug, /content-hub/:slug)
-  // are picked up because `nitro.prerender.crawlLinks` follows <a>
-  // links across the site at build time. Excludes preview routes so
-  // Strapi drafts never end up in the public sitemap.
+  // Sitemap — populates /sitemap.xml from an explicit static-page
+  // list plus a Strapi-backed dynamic source (/api/__sitemap__/urls).
+  // Excludes preview routes so Strapi drafts don't end up in the
+  // public sitemap.
+  //
+  // Static URLs are listed explicitly rather than relying on
+  // nitro.prerender.crawlLinks — crawling only runs on fully static
+  // builds and the Vercel deployment is hybrid/SSR.
   sitemap: {
-    sources: ['/__sitemap__/urls'],
+    siteUrl: 'https://www.psychoactive.co.nz',
     exclude: ['/preview/**'],
+    urls: [
+      { loc: '/', priority: 1.0, changefreq: 'weekly' },
+      { loc: '/about', priority: 0.8, changefreq: 'monthly' },
+      { loc: '/services', priority: 0.8, changefreq: 'monthly' },
+      { loc: '/work', priority: 0.8, changefreq: 'weekly' },
+      { loc: '/content-hub', priority: 0.7, changefreq: 'weekly' },
+      { loc: '/contact', priority: 0.5, changefreq: 'yearly' },
+      { loc: '/webflow-enterprise-agency', priority: 0.7, changefreq: 'monthly' },
+      // Uncomment when /design-audit ships to production.
+      // { loc: '/design-audit', priority: 0.7, changefreq: 'monthly' },
+    ],
+    sources: ['/api/__sitemap__/urls'],
     defaults: {
       changefreq: 'weekly',
       priority: 0.7,
