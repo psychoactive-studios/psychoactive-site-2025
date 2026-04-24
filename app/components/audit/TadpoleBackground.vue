@@ -51,28 +51,33 @@ const reduceMotion = ref(false);
 // Palette — bioluminescent set. Additive blending on #101012 gives
 // each tadpole a glowing feel without needing real shaders.
 // ─────────────────────────────────────────────────────────────
+// Monochrome grey palettes matching the logo's flat-vector aesthetic.
+// Mood is now communicated via tonal brightness (and speed, elsewhere)
+// rather than hue. L values sit in the site's $color-grey (#cfcfd0,
+// L ~82) to $color-dots (#878788, L ~53) range.
 const PALETTES = {
-  // Cool dream-pond default: cyans + violets + a splash of teal green.
-  cool: [
-    { h: 185, s: 100, l: 60 },  // cyan
-    { h: 200, s: 100, l: 65 },  // electric blue
-    { h: 270, s: 85,  l: 65 },  // violet
-    { h: 290, s: 90,  l: 70 },  // magenta-violet
-    { h: 160, s: 95,  l: 60 },  // aqua green
+  // Default — mid-greys. A couple of darker accents for visual rhythm
+  // so the flock doesn't read as a flat wash.
+  neutral: [
+    { h: 0, s: 0, l: 78 },
+    { h: 0, s: 0, l: 70 },
+    { h: 0, s: 0, l: 62 },
+    { h: 0, s: 0, l: 55 },
   ],
-  // High-score state — pushes lighter, brighter, more harmonious.
+  // High-score — lighter, more luminous in tone. Tadpoles brighten.
   high: [
-    { h: 175, s: 100, l: 70 },
-    { h: 190, s: 100, l: 75 },
-    { h: 150, s: 100, l: 70 },
-    { h: 280, s: 100, l: 80 },
+    { h: 0, s: 0, l: 88 },
+    { h: 0, s: 0, l: 82 },
+    { h: 0, s: 0, l: 78 },
+    { h: 0, s: 0, l: 72 },
   ],
-  // Low-score state — warmer, slightly anxious.
+  // Low-score — darker, denser greys. Visually heavier, slightly
+  // anxious without shifting hue.
   low: [
-    { h: 340, s: 95,  l: 62 },  // hot pink
-    { h: 15,  s: 100, l: 65 },  // coral
-    { h: 295, s: 90,  l: 60 },  // magenta
-    { h: 265, s: 80,  l: 55 },  // deep purple
+    { h: 0, s: 0, l: 58 },
+    { h: 0, s: 0, l: 50 },
+    { h: 0, s: 0, l: 45 },
+    { h: 0, s: 0, l: 40 },
   ],
 };
 
@@ -83,7 +88,7 @@ function paletteForState(state, score) {
       if (score <= 45) return PALETTES.low;
     }
   }
-  return PALETTES.cool;
+  return PALETTES.neutral;
 }
 
 // Scaled speed by state — visually communicates what's happening.
@@ -156,7 +161,7 @@ function makeTadpole(w, h, paletteEntry, opts = {}) {
     phase: Math.random() * Math.PI * 2,
     wavePhase: Math.random() * Math.PI * 2,
     segs,
-    hue: paletteEntry.h + (Math.random() - 0.5) * 14, // slight per-tadpole variance
+    hue: 0, // monochrome — tonal variation handled via `lit`
     sat: paletteEntry.s,
     lit: paletteEntry.l,
     life: 0, // frames alive — lets us fade in
@@ -325,7 +330,10 @@ function step(now) {
   const dispersing = props.state === 'unlocked' || props.state === 'idle';
 
   ctx.clearRect(0, 0, width, height);
-  ctx.globalCompositeOperation = 'lighter';
+  // Flat, over-dark compositing — matches the logo's filled-vector
+  // aesthetic rather than glowing/stacking like the earlier bio-
+  // luminescent pass.
+  ctx.globalCompositeOperation = 'source-over';
 
   const baseSpeed = 0.9; // px / frame @ speed 1
   for (let i = 0; i < tadpoles.length; i++) {
@@ -467,16 +475,10 @@ function drawTadpole(p, t) {
 
   ctx.closePath();
 
-  // Soft-edged fill for the body: radial-ish gradient using two passes.
-  // Inner translucent fill + blurred shadow = cheap bioluminescence.
-  const bodyInner = `hsla(${hue}, ${sat}%, ${lit}%, ${0.32 * a})`;
-  const bodyGlow = `hsla(${hue}, ${sat}%, ${Math.min(90, lit + 15)}%, ${0.6 * a})`;
-
-  ctx.shadowColor = bodyGlow;
-  ctx.shadowBlur = 18 * size;
-  ctx.fillStyle = bodyInner;
+  // Flat vector fill — matches the logo's aesthetic. Alpha scales with
+  // overall flock alpha + per-tadpole fade-in.
+  ctx.fillStyle = `hsla(${hue}, ${sat}%, ${lit}%, ${0.55 * a})`;
   ctx.fill();
-  ctx.shadowBlur = 0;
 
   // ── Head ──
   // Slight elongation in direction of travel — gives a more tadpole-
@@ -486,17 +488,12 @@ function drawTadpole(p, t) {
   const heading = Math.atan2(headDir.y, headDir.x);
   ctx.rotate(heading);
   ctx.beginPath();
-  ctx.ellipse(0, 0, headR * 1.05, headR * 0.9, 0, 0, Math.PI * 2);
-  const headGrad = ctx.createRadialGradient(0, 0, headR * 0.15, 0, 0, headR * 1.2);
-  headGrad.addColorStop(0, `hsla(${hue}, ${sat}%, ${Math.min(95, lit + 25)}%, ${0.95 * a})`);
-  headGrad.addColorStop(0.6, `hsla(${hue}, ${sat}%, ${lit}%, ${0.55 * a})`);
-  headGrad.addColorStop(1, `hsla(${hue}, ${sat}%, ${lit}%, 0)`);
-  ctx.fillStyle = headGrad;
-  ctx.shadowColor = `hsla(${hue}, ${sat}%, ${Math.min(90, lit + 15)}%, ${0.7 * a})`;
-  ctx.shadowBlur = 22 * size;
+  // Slight teardrop — head is a touch longer than tall, so the forward
+  // end tapers into the body arc rather than popping as a circle.
+  ctx.ellipse(0, 0, headR * 1.1, headR * 0.9, 0, 0, Math.PI * 2);
+  ctx.fillStyle = `hsla(${hue}, ${sat}%, ${lit}%, ${0.85 * a})`;
   ctx.fill();
   ctx.restore();
-  ctx.shadowBlur = 0;
 }
 
 // Static render for prefers-reduced-motion users — drops a handful of
