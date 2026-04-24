@@ -175,7 +175,32 @@ const isHeroCompressed = computed(
     hasQueryUrl.value
 );
 
+// Dev-only: ?paintOnly=<ms> forces the page into the AUDITING state
+// for the given duration (defaults to 42000ms) so we can preview the
+// generative painting locally without needing API env vars. Stripped
+// from production bundles via import.meta.dev.
+function maybeDevPaintOnly() {
+  if (!import.meta.dev) return false;
+  const q = route.query.paintOnly;
+  if (!q) return false;
+  const ms = Math.max(5000, Math.min(120000, parseInt(q, 10) || 42000));
+  const devUrl =
+    (typeof route.query.url === 'string' ? route.query.url : '') ||
+    'https://psychoactive.co.nz';
+  url.value = devUrl;
+  // Directly drive the state machine — bypass runAudit so we don't
+  // hit /api/audit (which would 500 without env vars).
+  const { STATES, state, auditedUrl } = useDesignAudit();
+  state.value = STATES.AUDITING;
+  auditedUrl.value = devUrl;
+  setTimeout(() => {
+    state.value = STATES.IDLE;
+  }, ms);
+  return true;
+}
+
 function maybeAutoRunFromQuery() {
+  if (maybeDevPaintOnly()) return;
   const q = route.query.url;
   const initial = Array.isArray(q) ? q[0] : q;
   if (!initial || typeof initial !== 'string') return;
