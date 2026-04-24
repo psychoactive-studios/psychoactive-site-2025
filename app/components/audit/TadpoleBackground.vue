@@ -160,6 +160,7 @@ function makeTadpole(w, h, paletteEntry, opts = {}) {
     size,
     phase: Math.random() * Math.PI * 2,
     wavePhase: Math.random() * Math.PI * 2,
+    legPhase: Math.random() * Math.PI * 2,
     segs,
     hue: 0, // monochrome — tonal variation handled via `lit`
     sat: paletteEntry.s,
@@ -402,7 +403,89 @@ function step(now) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// Draw one tadpole — head + tapered body with wavy undulation.
+// Draw legs — froglet stage. Back legs are bigger and attach near
+// the body/tail transition; front legs are smaller and sit just
+// behind the head. Gentle sine-wave kick keeps them alive.
+// ─────────────────────────────────────────────────────────────
+const BACK_LEG_IDX = 5;   // spine index where back legs attach
+const FRONT_LEG_IDX = 2;  // spine index where front legs attach
+
+function drawLeg(startX, startY, spineDir, sideSign, length, thickness, kick, hue, sat, lit, alpha) {
+  // spineDir is the tangent of the body at the attach point, in radians.
+  // The leg comes out PERPENDICULAR to the spine, then bends backward.
+  // sideSign is +1 (right) or -1 (left).
+  const perp = spineDir + sideSign * (Math.PI / 2);
+
+  // Thigh goes mostly out to the side, swept slightly back along the body.
+  const thighAngle = perp - sideSign * 0.35;
+  const thighLen = length * 0.55;
+  const kneeX = startX + Math.cos(thighAngle) * thighLen;
+  const kneeY = startY + Math.sin(thighAngle) * thighLen;
+
+  // Shin bends further back (trailing the body) with a sine kick.
+  const shinAngle = thighAngle - sideSign * (0.6 + kick);
+  const shinLen = length * 0.55;
+  const footX = kneeX + Math.cos(shinAngle) * shinLen;
+  const footY = kneeY + Math.sin(shinAngle) * shinLen;
+
+  // Stroked polyline for the leg — round caps + round joins mimic the
+  // tapering-thick look of the logo paths.
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = thickness;
+  ctx.strokeStyle = `hsla(${hue}, ${sat}%, ${lit}%, ${0.75 * alpha})`;
+  ctx.beginPath();
+  ctx.moveTo(startX, startY);
+  ctx.lineTo(kneeX, kneeY);
+  ctx.lineTo(footX, footY);
+  ctx.stroke();
+
+  // Small foot pad — rounded tip.
+  ctx.beginPath();
+  ctx.arc(footX, footY, thickness * 0.65, 0, Math.PI * 2);
+  ctx.fillStyle = `hsla(${hue}, ${sat}%, ${lit}%, ${0.9 * alpha})`;
+  ctx.fill();
+}
+
+function drawLegs(p, t, a) {
+  const { segs, size, legPhase, hue, sat, lit } = p;
+
+  // Compute spine tangent at each attach index (direction from that
+  // segment to the NEXT one — head-ward for the body ribbon, which is
+  // the direction of travel).
+  function spineTangent(idx) {
+    // Tangent of the body at idx — pointing toward the head end.
+    // segs[idx-1] is closer to the head; if idx is 0, fall back to head position.
+    const here = segs[idx];
+    const prev = idx > 0 ? segs[idx - 1] : { x: p.x, y: p.y };
+    return Math.atan2(here.y - prev.y, here.x - prev.x) + Math.PI;
+    // +PI flips: we want tangent pointing HEAD-ward for leg-direction calc.
+  }
+
+  const backAttach = segs[BACK_LEG_IDX];
+  const backDir = spineTangent(BACK_LEG_IDX);
+  const frontAttach = segs[FRONT_LEG_IDX];
+  const frontDir = spineTangent(FRONT_LEG_IDX);
+
+  const kickBack = Math.sin(t * 0.006 + legPhase) * 0.35;
+  const kickFront = Math.sin(t * 0.006 + legPhase + 0.8) * 0.25;
+
+  // Back legs — longer, thicker.
+  const backLen = 10 * size;
+  const backThick = 1.5 * size;
+  drawLeg(backAttach.x, backAttach.y, backDir,  1, backLen, backThick, kickBack,  hue, sat, lit, a);
+  drawLeg(backAttach.x, backAttach.y, backDir, -1, backLen, backThick, -kickBack, hue, sat, lit, a);
+
+  // Front legs — smaller, more recessed. Just-emerging froglet vibe.
+  const frontLen = 6.5 * size;
+  const frontThick = 1.2 * size;
+  drawLeg(frontAttach.x, frontAttach.y, frontDir,  1, frontLen, frontThick, kickFront,  hue, sat, lit, a);
+  drawLeg(frontAttach.x, frontAttach.y, frontDir, -1, frontLen, frontThick, -kickFront, hue, sat, lit, a);
+}
+
+// ─────────────────────────────────────────────────────────────
+// Draw one tadpole — head + tapered body with wavy undulation, plus
+// froglet legs (see drawLegs above).
 // ─────────────────────────────────────────────────────────────
 function drawTadpole(p, t) {
   // Fade in for new spawns so they don't snap into existence.
@@ -411,6 +494,9 @@ function drawTadpole(p, t) {
   if (a < 0.005) return;
 
   const { segs, hue, sat, lit, size, wavePhase } = p;
+
+  // Legs first — body renders on top of leg roots, hiding the join.
+  drawLegs(p, t, a);
 
   // Build the body outline. Each segment gets a perpendicular pair of
   // points — one on each side of the spine — to form the ribbon.
