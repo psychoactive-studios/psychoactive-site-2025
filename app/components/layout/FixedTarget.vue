@@ -8,6 +8,7 @@ import WorkScrollProgressCircle from '../ui/WorkScrollProgressCircle.vue';
 import useWorks from '~/composables/useWorks.js';
 import ClickCursor from '../ui/ClickCursor.vue';
 import TopBackButton from '../ui/BackButton.vue';
+import '@mux/mux-player';
 
 const isMobile = useMediaQuery('(max-width: 768px)');
 const { currentTransitionImage } = useWorks();
@@ -26,10 +27,10 @@ const { currentTransitionImage } = useWorks();
       <!-- Fixed target for Services List animations -->
       <ClientOnly>
         <div v-if="!isMobile" class="services-list__video">
-          <video
+          <mux-player
             id="services-list-video"
             class="services-list__video_player"
-            src="/video/services_grid.mp4"
+            playback-id="wri9qmfp01VRcEsGsWtOgWeo4JPHFjOYXPQy1mZ9oNNo"
             loop
             muted
             playsinline
@@ -42,34 +43,34 @@ const { currentTransitionImage } = useWorks();
             <div class="stepper__scene">
               <div class="stepper__videos">
                 <div class="stepper__videos_overlay" />
-                <video
+                <mux-player
                   id="services-stepper-video-1"
                   class="video step-1"
-                  src="/video/service_01.mp4"
+                  playback-id="zcMhZdPpBbEz502SfJ01BSX7B01PZ8axsMSYLg006F00Lpd8"
                   loop
                   muted
                   playsinline
                 />
-                <video
+                <mux-player
                   id="services-stepper-video-2"
                   class="video step-2"
-                  src="/video/service_02.mp4"
+                  playback-id="dfqGMUi1jsMIX00EvdRnywVIeWIQpEr6UF02R3Ovftp3A"
                   loop
                   muted
                   playsinline
                 />
-                <video
+                <mux-player
                   id="services-stepper-video-3"
                   class="video step-3"
-                  src="/video/service_03.mp4"
+                  playback-id="02DqXW02V3CvlvBJQ022g100ADRYlQU01TZMvutEffhYhTqw"
                   loop
                   muted
                   playsinline
                 />
-                <video
+                <mux-player
                   id="services-stepper-video-4"
                   class="video step-4"
-                  src="/video/service_04.mp4"
+                  playback-id="Gs9aZT00jpkPxKzJmbajcZES7rw2WYYaTmLFIu00Gt5f4"
                   loop
                   muted
                   playsinline
@@ -113,10 +114,10 @@ const { currentTransitionImage } = useWorks();
 
         <!-- Fixed footer video -->
         <div v-if="!isMobile" class="stepper__footer-video">
-          <video
+          <mux-player
             id="services-footer-video"
             class="video"
-            src="/video/preview_reel.mp4"
+            playback-id="L4cwV1O9pQPNJ1px400NV3sNGpNbbX6V3rbrybMq9a6A"
             loop
             muted
             playsinline
@@ -156,7 +157,11 @@ section.services {
     transform: translate(-50%, -50%);
     pointer-events: none;
     display: none;
-    video {
+    video,
+    mux-player {
+      --controls: none;
+      pointer-events: none;
+      display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
@@ -230,6 +235,9 @@ section.services {
         clip-path: circle(0% at 50% 50%);
         position: absolute;
         inset: 0;
+        --controls: none;
+        --media-object-fit: cover;
+        pointer-events: none;
       }
     }
 
@@ -318,7 +326,9 @@ section.services {
       .video {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        --media-object-fit: cover;
+        --controls: none;
+        pointer-events: none;
       }
     }
   }

@@ -33,7 +33,7 @@ export const stepperTitlesData = [
       'Keyword & SEO Planning',
       'AI-Led Strategic Direction',
     ],
-    src: '/video/service_01.mp4',
+    playbackId: 'zcMhZdPpBbEz502SfJ01BSX7B01PZ8axsMSYLg006F00Lpd8',
   },
   {
     number: '02',
@@ -47,7 +47,7 @@ export const stepperTitlesData = [
       'Art Direction & Visual Refinement',
       'AI Design Exploration & Prototyping',
     ],
-    src: '/video/service_02.mp4',
+    playbackId: 'dfqGMUi1jsMIX00EvdRnywVIeWIQpEr6UF02R3Ovftp3A',
   },
   {
     number: '03',
@@ -61,7 +61,7 @@ export const stepperTitlesData = [
       'Performance & SEO Optimisation',
       'AI Integration & Intelligent Features',
     ],
-    src: '/video/service_03.mp4',
+    playbackId: '02DqXW02V3CvlvBJQ022g100ADRYlQU01TZMvutEffhYhTqw',
   },
   {
     number: '04',
@@ -75,7 +75,7 @@ export const stepperTitlesData = [
       'Proactive Monitoring',
       'AI-Driven Optimisation & Content',
     ],
-    src: '/video/service_04.mp4',
+    playbackId: 'Gs9aZT00jpkPxKzJmbajcZES7rw2WYYaTmLFIu00Gt5f4',
   },
 ];
 

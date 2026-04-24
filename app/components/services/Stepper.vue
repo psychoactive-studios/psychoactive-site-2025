@@ -3,6 +3,7 @@ import { stepperAnimation } from '~/utils/animations/services';
 import gsap from 'gsap';
 import { stepperTitlesData } from '~/data/servicesData';
 import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
+import '@mux/mux-player';
 
 let ctx = null;
 
@@ -34,14 +35,22 @@ onUnmounted(() => {
             <WebflowBlackLabel />
           </NuxtLink>
           <div class="stepper__mobile-step_video">
-            <video
+            <mux-player
+              class="video"
+              :playback-id="step.playbackId"
+              loop
+              muted
+              playsinline
+              autoplay
+            />
+            <!-- <video
               class="video"
               :src="step.src"
               autoplay
               loop
               muted
               playsinline
-            />
+            /> -->
           </div>
           <h2 class="stepper__mobile-step_title" :data-number="step.number">
             {{ step.title }}
@@ -126,9 +135,13 @@ onUnmounted(() => {
       }
 
       .video {
+        display: block;
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        --media-object-fit: cover;
+        --controls: none;
+        pointer-events: none;
+        opacity: 1;
       }
     }
     &_title {
