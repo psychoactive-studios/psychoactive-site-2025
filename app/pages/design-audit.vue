@@ -176,25 +176,35 @@ const isHeroCompressed = computed(
 );
 
 // Dev-only: ?paintOnly=<ms> forces the page into the AUDITING state
-// for the given duration (defaults to 42000ms) so we can preview the
-// generative painting locally without needing API env vars. Stripped
-// from production bundles via import.meta.dev.
+// for the given duration so we can preview the generative painting
+// locally without needing API env vars. Stripped from production
+// bundles via import.meta.dev.
+//
+// Values:
+//   ?paintOnly=1      → 42s default duration
+//   ?paintOnly=30000  → explicit 30s (anything >=1000 is treated as ms)
+//   ?paintOnly=1&url=https://apple.com → also seeds the painting
 function maybeDevPaintOnly() {
   if (!import.meta.dev) return false;
   const q = route.query.paintOnly;
   if (!q) return false;
-  const ms = Math.max(5000, Math.min(120000, parseInt(q, 10) || 42000));
+  const parsed = parseInt(q, 10) || 0;
+  // Small values (e.g. 1) mean "on with default duration".
+  // Values >=1000 are interpreted as explicit milliseconds.
+  const ms = parsed >= 1000 ? Math.min(120000, parsed) : 42000;
   const devUrl =
     (typeof route.query.url === 'string' ? route.query.url : '') ||
     'https://psychoactive.co.nz';
+  // Use the page-level destructured state/auditedUrl refs directly.
+  // Calling useDesignAudit() fresh here would return new refs that
+  // aren't the ones driving the template — a subtle bug I hit on the
+  // first pass. This mutation flows through to GenerativePainting via
+  // the :state="state" binding in the template.
   url.value = devUrl;
-  // Directly drive the state machine — bypass runAudit so we don't
-  // hit /api/audit (which would 500 without env vars).
-  const { STATES, state, auditedUrl } = useDesignAudit();
-  state.value = STATES.AUDITING;
   auditedUrl.value = devUrl;
+  state.value = 'auditing';
   setTimeout(() => {
-    state.value = STATES.IDLE;
+    state.value = 'idle';
   }, ms);
   return true;
 }
