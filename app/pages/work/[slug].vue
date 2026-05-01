@@ -54,15 +54,22 @@ if (error.value || !workData.value?.data) {
   });
 }
 
-const { mainTitle, mainImage, hero, article } = workData?.value?.data || {};
+// Reactive wrappers around the Strapi response. Computed refs ensure
+// the template re-renders when workData populates — same fix pattern
+// as the homepage hotfix. Avoids the cold-load race where setup-time
+// destructuring captures undefined into plain locals that never update.
+const mainTitle = computed(() => workData.value?.data?.mainTitle);
+const mainImage = computed(() => workData.value?.data?.mainImage);
+const hero = computed(() => workData.value?.data?.hero);
+const article = computed(() => workData.value?.data?.article);
 
 // SEO meta from workData.data.seo – only set when fields exist
 const seoMeta = computed(() => {
   const seo = workData.value?.data?.seo;
   const meta = {};
-  meta.title = seo?.metaTitle || mainTitle;
+  meta.title = seo?.metaTitle || mainTitle.value;
   if (seo?.metaDescription) meta.description = seo?.metaDescription;
-  meta.ogImage = mainImage?.url;
+  meta.ogImage = mainImage.value?.url;
   return meta;
 });
 

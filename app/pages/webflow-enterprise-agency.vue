@@ -63,8 +63,15 @@ if (error.value) {
   console.error('Error fetching article data:', error.value);
 }
 
-const { works, feedbacks, services, whatSetsUsApart } =
-  webflowPageData.value?.data || {};
+// Reactive wrappers around the Strapi response. Computed refs ensure
+// the template re-renders when webflowPageData populates — same fix
+// pattern as the homepage hotfix. Avoids the cold-load race where
+// setup-time destructuring captures undefined into plain locals that
+// never update.
+const works = computed(() => webflowPageData.value?.data?.works);
+const feedbacks = computed(() => webflowPageData.value?.data?.feedbacks);
+const services = computed(() => webflowPageData.value?.data?.services);
+// `whatSetsUsApart` is fetched but not currently used in the template.
 
 const { scrollSmoother } = useScrollSmoother();
 const { startLoading } = useLoader();
