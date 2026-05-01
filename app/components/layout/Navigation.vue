@@ -35,12 +35,25 @@ const talkButtonHoverHandler = () => {
 };
 
 const clickOnLinkHandler = (e) => {
+  // Always flag the transition as "from hamburger nav" so the page's
+  // onLeave uses the instant-fade path (page goes opacity 0, nav lifts
+  // to reveal black underneath, then new page appears). Setting this
+  // unconditionally — earlier we early-returned during the open
+  // animation, which left the flag as false and made onLeave fall
+  // through to the dramatic leaveAnimation on the first nav. Visible
+  // bug: first hamburger nav per page had no black under the lifting
+  // menu; revisits worked because the open timeline was no longer
+  // active by then.
+  transitionFromNavigation.value = true;
+
   const isAnimating = gsap.getById('open-timeline-main')?.isActive();
   if (isAnimating) {
-    e.preventDefault();
+    // Mid-open click — let NuxtLink navigate, but skip the close-button
+    // click since the close timeline guards against running while the
+    // open one is mid-flight. The outgoing page el still goes opacity 0
+    // (instant fade), and the incoming page replaces the nav DOM.
     return;
   }
-  transitionFromNavigation.value = true;
   document.querySelector('#header-navigation-button').click();
   // scrollSmoother.value.stop();
 };

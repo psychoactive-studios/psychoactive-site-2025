@@ -93,19 +93,41 @@ const displayedWorks = computed(() => {
 });
 let loadInterval;
 
+// Start (or re-start) the staggered reveal that bumps displayedCount
+// up to the real allWorks length one tick at a time. We only want to
+// fire this once allWorks contains real Strapi data — not the initial
+// placeholder-only state that shows up during cold-load hydration,
+// which would otherwise terminate the interval prematurely and leave
+// only the first 4 cards visible.
+function startLoadInterval() {
+  if (loadInterval) return;
+  loadInterval = setInterval(() => {
+    if (displayedCount.value < allWorks.value.length) {
+      displayedCount.value += 1;
+    } else {
+      clearInterval(loadInterval);
+      loadInterval = null;
+    }
+  }, 200);
+}
+
 onMounted(() => {
   SplitText.create(titleRef.value.querySelector('p'), {
     type: 'words,chars',
     charsClass: 'char-center',
   });
 
-  loadInterval = setInterval(() => {
-    if (displayedCount.value < allWorks.value.length) {
-      displayedCount.value += 1;
-    } else {
-      clearInterval(loadInterval);
-    }
-  }, 200);
+  // Watch allWorks length so the staggered reveal kicks in when the
+  // Strapi response lands — even if that's after onMounted has fired.
+  // `immediate: true` covers the warm-cache path where data is already
+  // present at mount.
+  watch(
+    () => allWorks.value.length,
+    (len) => {
+      if (len > displayedCount.value) startLoadInterval();
+    },
+    { immediate: true }
+  );
 });
 
 onUnmounted(() => {
