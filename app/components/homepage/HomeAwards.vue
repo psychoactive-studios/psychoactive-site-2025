@@ -63,6 +63,22 @@ const showOffset = computed(() => awardsData.length / 3);
 const showMoreRef = ref(null);
 const offSetRef = ref(showCount);
 
+// Track click count so the button label escalates with each press —
+// gives the user a clear signal that the button still has more to
+// reveal, with a bit of personality. Caps out at the most playful
+// version once we've exhausted the planned progression.
+const clickCount = ref(0);
+
+const showMoreLabel = computed(() => {
+  const labels = [
+    'Show More',
+    'Show Even More',
+    'Show Even Moreee!',
+    'Okay, even more!',
+  ];
+  return labels[Math.min(clickCount.value, labels.length - 1)];
+});
+
 const handleHoverEffect = () => {
   const el = showMoreRef.value;
   // Stop any ongoing animations on this element
@@ -100,6 +116,24 @@ const onFocusHandler = () => {
 const onClickHandler = async () => {
   playRandomSound('click');
   offSetRef.value += showOffset.value;
+  clickCount.value += 1;
+
+  // Re-trigger the scrambleText animation on the new label so the
+  // label change reads as a deliberate moment, not just a static
+  // text swap.
+  await nextTick();
+  if (showMoreRef.value) {
+    gsap.to(showMoreRef.value, {
+      duration: 0.8,
+      ease: 'none',
+      scrambleText: {
+        text: '{original}',
+        chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+        tweenLength: false,
+      },
+      overwrite: true,
+    });
+  }
 };
 </script>
 
@@ -163,7 +197,7 @@ const onClickHandler = async () => {
             @focus="onFocusHandler"
             @click="onClickHandler"
           >
-            <span ref="showMoreRef">Show More</span>
+            <span ref="showMoreRef">{{ showMoreLabel }}</span>
             <div class="awards__show-more_dots">
               <span />
               <span />

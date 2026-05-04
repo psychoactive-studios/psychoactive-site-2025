@@ -49,20 +49,14 @@ onMounted(async () => {
   background-clip: text;
   -webkit-background-clip: text;
 
-  // Highlight pattern — same idea as HomeOnScrollFilledText: use
-  // <span class="dark"> wrappers to set "supporting" phrases at a
-  // dimmer endpoint, so the un-wrapped phrases pop as the reveal
-  // sweeps through. Dark spans still sweep, just between dimmer
-  // start (15%) and dimmer settled (50%) values.
+  // Highlight pattern — <span class="dark"> wrappers dim
+  // "supporting" phrases so the un-wrapped phrases pop. Use opacity
+  // (not a separate gradient) so the parent's gradient sweep stays
+  // a single continuous reveal across the whole text — earlier
+  // approach gave each dark span its own gradient which produced
+  // multiple visible sweep edges.
   :deep(.dark) {
-    background: linear-gradient(
-      90deg,
-      white(50) calc(var(--bg-width) * 1%),
-      white(15) 0%
-    );
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
+    opacity: 0.45;
   }
 }
 </style>
