@@ -17,6 +17,7 @@ import useNavigation from '~/composables/useNavigation';
 import gsap from 'gsap';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
 import WebflowBlackLabel from '~/components/ui/WebflowBlackLabel.vue';
+import HomeStats from '~/components/homepage/HomeStats.vue';
 
 const params = qs.stringify({
   populate: {
@@ -80,14 +81,9 @@ const worksList = computed(() => {
   return result;
 });
 
-useSeoMeta({
-  title: 'AI-era Webflow Enterprise Agency | Psychoactive Studios',
-  description:
-    'Global digital design agency building AI-era Webflow platforms for ambitious brands. Premium Webflow Enterprise Partner with 50+ international awards.',
-  ogTitle: 'AI-era Webflow Enterprise Agency | Psychoactive Studios',
-  ogDescription:
-    'Global digital design agency building AI-era Webflow platforms for ambitious brands. Premium Webflow Enterprise Partner with 50+ international awards.',
-});
+// Homepage uses the global meta defaults defined in nuxt.config.ts
+// (DEFAULT_TITLE / DEFAULT_DESCRIPTION). No per-page override needed —
+// the homepage IS the canonical use of those defaults.
 
 definePageMeta({
   scrollToTop: true,
@@ -117,33 +113,49 @@ definePageMeta({
 
 <template>
   <main class="homepage">
+    <!-- Pre-rendered headline. Visually hidden because the visual hero
+         (3D scene + animated marks) serves as the human-facing identity.
+         This h1 is what crawlers, audit tools, and screen readers see. -->
     <h1 class="sr-only">
-      Psychoactive Studios — AI-era Webflow Enterprise Agency
+      Psychoactive Studios — AI-era design and development agency for
+      ambitious brands.
     </h1>
+
+    <!-- Hero stays inside ClientOnly because of the 3D scene, GSAP
+         timelines, video player, and scroll-triggered animations. -->
     <ClientOnly>
-      <!-- Hero Section -->
       <section class="hero">
         <Hero v-if="!isMobile" />
         <HeroMobile v-if="isMobile" />
       </section>
+    </ClientOnly>
 
-      <div class="homepage__content">
-        <!-- Partners Section -->
-        <section class="partners">
-          <div class="container">
-            <h2 class="partners__title subheader">
-              Partner to the world’s leading innovation brands and events
-            </h2>
-            <PartnersDesktop />
-          </div>
-        </section>
+    <div class="homepage__content">
+      <!-- Partners — rendered server-side so the audit tool / Google /
+           LinkedIn previews see the client logo strip. The component
+           itself is purely declarative (just <img> tags) so it's
+           SSR-safe with no hydration risk. -->
+      <section class="partners">
+        <div class="container">
+          <h2 class="partners__title subheader">
+            Partner to the world’s leading innovation brands and events
+          </h2>
+          <PartnersDesktop />
+        </div>
+      </section>
 
+      <!-- Stats strip — three real numbers from headline projects.
+           SSR-rendered for trust signals visible to crawlers. Mirrors
+           the treatment used on the Webflow page. -->
+      <HomeStats />
+
+      <ClientOnly>
         <!-- Mobile Digital Text Section -->
         <section v-if="isMobile" class="mobile-digital">
           <div class="container">
             <h2 class="subheader--mobile">Digital First design agency</h2>
             <NuxtLink
-              href="/webflow-enterprise-agency"              
+              href="/webflow-enterprise-agency"
               @mouseenter="() => playInteractionSound('text-hover-short', 100)"
               @click="() => playInteractionSound('click-1')"
             >
@@ -229,8 +241,8 @@ definePageMeta({
         <HomeNewsList :data="articles" />
         <!-- Awards Section -->
         <HomeAwards />
-      </div>
-    </ClientOnly>
+      </ClientOnly>
+    </div>
     <Footer />
   </main>
 </template>
