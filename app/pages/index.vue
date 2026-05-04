@@ -263,18 +263,6 @@ definePageMeta({
       </section>
 
       <ClientOnly>
-        <!-- Mobile-only CTA section. Andrew's call: dropped the
-             AI-era subheader here on mobile because the mobile-intro
-             paragraph above already carries the positioning, and the
-             extra heading was making the top of the page feel busy.
-             Just the CTA now — a clean call-to-action between the
-             stats and the case studies. -->
-        <section v-if="isMobile" class="mobile-digital">
-          <div class="container">
-            <HeroPillLink href="/contact" label="Start a project" />
-          </div>
-        </section>
-
         <!-- Desktop: first half of case studies. Wrapped in ClientOnly
              via the parent above; the intro paragraph below sits
              OUTSIDE this block so it renders in SSR. -->
@@ -485,15 +473,6 @@ definePageMeta({
 
   @include respond(mobile) {
     display: none;
-  }
-}
-
-.mobile-digital {
-  padding-top: getRem(48);
-  padding-bottom: getRem(48);
-  text-align: center;
-  a {
-    display: inline-block;
   }
 }
 
