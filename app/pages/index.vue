@@ -68,21 +68,30 @@ const { scrollSmoother } = useScrollSmoother();
 const isMobile = useMediaQuery('(max-width: 768px)');
 const { startLoading } = useLoader();
 
+// Mobile keeps its existing iteration with the mobile-scale text
+// marker. The intro paragraph is no longer inserted into either
+// iteration — it's now rendered as a dedicated SSR section
+// (mobile-intro under the hero, desktop-intro between the two
+// case-study halves).
 const worksList = computed(() => {
-  const letstalkItem = { id: 'filled-text' };
   const mobileScale = { id: 'mobile-scale' };
   const result = works.value.length ? [...works.value] : [];
   if (isMobile.value) {
-    // On mobile the intro paragraph ('We work at the intersection of...')
-    // is rendered above the case studies (in its own SSR-friendly
-    // section right after the hero), so we don't insert it into the
-    // cases iteration.
     result.splice(3, 0, mobileScale);
-  } else {
-    result.splice(3, 0, letstalkItem);
   }
   return result;
 });
+
+// Desktop case studies are split into two grids so an SSR-rendered
+// intro paragraph can sit between them. First three case studies in
+// `worksFirst`, the rest in `worksRest`.
+const DESKTOP_CASES_BEFORE_INTRO = 3;
+const worksFirst = computed(() =>
+  works.value.slice(0, DESKTOP_CASES_BEFORE_INTRO)
+);
+const worksRest = computed(() =>
+  works.value.slice(DESKTOP_CASES_BEFORE_INTRO)
+);
 
 // Homepage uses the global meta defaults defined in nuxt.config.ts
 // (DEFAULT_TITLE / DEFAULT_DESCRIPTION). No per-page override needed —
@@ -192,28 +201,52 @@ definePageMeta({
           </div>
         </section>
 
-        <section v-if="!isMobile" class="cases">
+        <!-- Desktop: first half of case studies. Wrapped in ClientOnly
+             via the parent above; the intro paragraph below sits
+             OUTSIDE this block so it renders in SSR. -->
+        <section v-if="!isMobile" class="cases cases--top">
           <div class="container">
-            <template v-for="work in worksList" :key="work.id">
-              <!-- Filled Text Section -->
-              <section v-if="work.id === 'filled-text'" class="filled-text">
-                <HomeOnScrollFilledText>
-                  <span class="dark">We work at the intersection of</span>
-                  design, technology, and strategy,
-                  <span class="dark">building</span>
-                  high-performance
-                  <span class="dark"
-                    >websites and digital experiences for some of the world’s most</span
-                  >
-                  ambitious brands.
-                  <span class="dark"
-                    >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
-                  >
-                  we’re completely obsessed.
-                </HomeOnScrollFilledText>
-              </section>
-              <CaseStadyPreview v-else :data="work" />
-            </template>
+            <CaseStadyPreview
+              v-for="work in worksFirst"
+              :key="work.id"
+              :data="work"
+            />
+          </div>
+        </section>
+      </ClientOnly>
+
+      <!-- Desktop intro paragraph — SSR-rendered, sits between the two
+           case-study grids. Hidden on mobile (mobile uses .mobile-intro
+           under the hero instead). -->
+      <section class="desktop-intro">
+        <div class="container">
+          <HomeOnScrollFilledText>
+            <span class="dark">We work at the intersection of</span>
+            design, technology, and strategy,
+            <span class="dark">building</span>
+            high-performance
+            <span class="dark"
+              >websites and digital experiences for some of the world’s most</span
+            >
+            ambitious brands.
+            <span class="dark"
+              >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
+            >
+            we’re completely obsessed.
+          </HomeOnScrollFilledText>
+        </div>
+      </section>
+
+      <ClientOnly>
+        <!-- Desktop: remaining case studies. Same .cases grid styling
+             as the top block. -->
+        <section v-if="!isMobile" class="cases cases--rest">
+          <div class="container">
+            <CaseStadyPreview
+              v-for="work in worksRest"
+              :key="work.id"
+              :data="work"
+            />
           </div>
         </section>
 
@@ -351,6 +384,12 @@ definePageMeta({
   @include respond(mobile) {
     margin-top: 60px;
   }
+  // The second cases grid sits directly below the desktop intro
+  // paragraph, which already has 160px below it — strip the top
+  // margin so we don't double up.
+  &--rest {
+    margin-top: 0;
+  }
   & > .container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -367,6 +406,22 @@ definePageMeta({
       flex-direction: column;
       gap: 64px;
     }
+  }
+}
+
+// Desktop-only SSR intro paragraph that sits between the two
+// case-study grids. Hidden on mobile (mobile uses .mobile-intro
+// directly under the hero). 160px vertical spacing matches the
+// original .filled-text positioning before the cases grid was split —
+// horizontal padding is already handled by HomeOnScrollFilledText.
+.desktop-intro {
+  position: relative;
+  z-index: 1;
+  background-color: $color-background;
+  padding: 160px 0;
+
+  @include respond(mobile) {
+    display: none;
   }
 }
 
