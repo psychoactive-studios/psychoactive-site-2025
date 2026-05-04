@@ -20,7 +20,7 @@ const { feedback } = props;
     </div>
     <div class="slide__body">
       <h3 class="subheader--mobile">{{ feedback.client?.company }}</h3>
-      <div class="slide__body-text body-small" v-html="feedback.feedback.replace(/\n/g, '<br>')" />
+      <div class="slide__body-text body-small--mobile" v-html="feedback.feedback.replace(/\n/g, '<br>')" />
       <div class="slide__body-author">
         <div class="slide__body-author-name body-large--mobile">
           {{ feedback.client?.name }}

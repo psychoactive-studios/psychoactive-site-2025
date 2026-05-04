@@ -20,38 +20,49 @@ import { featuredPartnersData } from '~/data/partnersData';
 
 <style scoped lang="scss">
 .partners-mobile {
+  // Per-logo heights for optical balance (mirrors the desktop
+  // PartnersDesktop approach). The new SVG assets have very
+  // different aspect ratios from the old PNGs, so the previous
+  // per-mark fixed pixel widths produced inconsistent visible
+  // heights. Heights scale with viewport so the marquee stays
+  // proportional across mobile widths.
   img {
-    margin: 0 12px;
+    width: auto;
+    margin: 0 16px;
+    object-fit: contain;
+    opacity: 0.8;
   }
-  .partner-super-ai {
-    width: 104px;
-  }
+
+  // Combined lockups (Adidas trefoil + wordmark, All Blacks fern +
+  // wordmark)
   .partner-adidas {
-    width: 98px;
-  }
-  .partner-ray-white {
-    width: 106px;
-  }
-  .partner-hellboy {
-    width: 124px;
-  }
-  .partner-blackbird {
-    width: 113px;
-  }
-  .partner-wow {
-    width: 121px;
-  }
-  .partner-one {
-    width: 124px;
+    height: 24px;
   }
   .partner-all-blacks {
-    width: 84px;
+    height: 30px;
   }
-  .partner-burgerfuel {
-    width: 112px;
+
+  // Decorative wordmarks
+  .partner-hellboy {
+    height: 28px;
   }
-  .partner-summer-game {
-    width: 90px;
+
+  // Compact emblems
+  .partner-wow {
+    height: 32px;
+  }
+
+  // Wide wordmarks — shorter so width doesn't dominate
+  .partner-blackbird {
+    height: 20px;
+  }
+  .partner-token-2049 {
+    height: 22px;
+  }
+
+  // Mid-range
+  .partner-super-ai {
+    height: 24px;
   }
 }
 </style>

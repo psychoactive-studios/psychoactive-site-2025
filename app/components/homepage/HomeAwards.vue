@@ -4,9 +4,57 @@ import OnScrollFilledTextLight from '../ui/OnScrollFilledTextLight.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const { playRandomSound } = useAudioManager();
 const { scrollSmoother } = useScrollSmoother();
+
+const containerRef = ref(null);
+let ctx = null;
+
+// Per-row stagger animation. Mirrors the WatsUs accordion pattern on
+// the Webflow page — each award item gets its own ScrollTrigger so
+// rows reveal one-by-one as the user scrolls into them, rather than
+// all animating together off a single section trigger.
+const setupRowAnimations = () => {
+  if (!containerRef.value) return;
+  const items = containerRef.value.querySelectorAll(
+    '.awards__collection_item:not([data-animated])'
+  );
+  items.forEach((item) => {
+    item.dataset.animated = 'true';
+    gsap.from(item, {
+      scrollTrigger: {
+        trigger: item,
+        start: 'top 90%',
+      },
+      opacity: 0,
+      y: 24,
+      duration: 0.8,
+      ease: 'power3.out',
+    });
+  });
+};
+
+onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger);
+  ctx = gsap.context(() => {
+    setupRowAnimations();
+  }, containerRef.value);
+});
+
+onUnmounted(() => {
+  if (ctx) ctx.revert();
+});
+
+// When "Show More" loads additional rows, set up their animations
+// so they fade in as the user scrolls past them too.
+watch(
+  () => containerRef.value?.querySelectorAll('.awards__collection_item').length,
+  () => {
+    nextTick(() => setupRowAnimations());
+  }
+);
 
 // Number of awards to show initially and on each "Show More" click
 const showCount = 6;
@@ -56,7 +104,7 @@ const onClickHandler = async () => {
 </script>
 
 <template>
-  <section class="awards">
+  <section ref="containerRef" class="awards">
     <div class="container">
       <!-- Awards Title -->
       <div class="awards__title">
