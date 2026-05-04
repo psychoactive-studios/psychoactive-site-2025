@@ -1,9 +1,12 @@
 <script setup>
-// Hero pill link — recreates the look + interaction of the original
-// WebflowBlackLabel SVG button, but with editable text. Used in the
-// hero (desktop + mobile-digital section) so the button replacing
-// the old Webflow Enterprise Partner badge keeps the same border,
-// background fade, character stagger, and sound treatment.
+// Hero pill link — same pill shape as the original WebflowBlackLabel
+// (border, background fade-in on hover) but with editable text plus
+// the scrambleText hover effect used by the rest of the site's CTAs.
+//
+// Load-in: the element carries the `top-text__label` class so it
+// gets picked up by the existing `heroInitAnimation` slide-from-
+// right tween in app/utils/animations/homepage.js — keeps the
+// timing in sync with the other hero elements.
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 
@@ -16,23 +19,19 @@ const { playInteractionSound } = useAudioManager();
 
 const labelRef = ref(null);
 
-const mouseEnterHandler = () => {
+const mouseEnterHandler = (e) => {
   playInteractionSound('text-hover-short', 100);
-  if (!labelRef.value) return;
-  gsap
-    .timeline()
-    .set(
-      labelRef.value.querySelectorAll('.char'),
-      {
-        opacity: 0,
-        stagger: { amount: 0.28, grid: 'auto', from: 'random' },
-      },
-      '<'
-    )
-    .set(labelRef.value.querySelectorAll('.char'), {
-      opacity: 1,
-      stagger: { amount: 0.28, grid: 'auto', from: 'random' },
-    });
+  const textEl = e.currentTarget?.querySelector('.hero-pill-link__visible');
+  if (!textEl || gsap.isTweening(textEl)) return;
+  gsap.to(textEl, {
+    duration: 0.5,
+    ease: 'none',
+    scrambleText: {
+      text: '{original}',
+      chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+      tweenLength: false,
+    },
+  });
 };
 
 const clickHandler = () => {
@@ -45,21 +44,17 @@ const clickHandler = () => {
   <NuxtLink
     :to="href"
     ref="labelRef"
-    class="hero-pill-link"
+    class="hero-pill-link top-text__label"
     target="_self"
     @mouseenter="mouseEnterHandler"
+    @focus="mouseEnterHandler"
     @click="clickHandler"
   >
     <span class="hero-pill-link__bg" aria-hidden="true" />
-    <span class="hero-pill-link__text">
-      <span
-        v-for="(char, i) in label.split('')"
-        :key="i"
-        class="char"
-        aria-hidden="true"
-      >{{ char === ' ' ? ' ' : char }}</span>
-      <span class="hero-pill-link__sr">{{ label }}</span>
-    </span>
+    <!-- Hidden copy holds the layout space so the visible (scrambling)
+         text doesn't reflow the button width during the hover tween. -->
+    <span class="hero-pill-link__hidden">{{ label }}</span>
+    <span class="hero-pill-link__visible">{{ label }}</span>
   </NuxtLink>
 </template>
 
@@ -106,26 +101,17 @@ const clickHandler = () => {
     z-index: -1;
   }
 
-  &__text {
-    display: inline-flex;
-    position: relative;
+  &__hidden {
+    visibility: hidden;
   }
 
-  &__sr {
+  &__visible {
     position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     white-space: nowrap;
-    border: 0;
-  }
-
-  .char {
-    display: inline-block;
-    will-change: opacity;
   }
 }
 </style>

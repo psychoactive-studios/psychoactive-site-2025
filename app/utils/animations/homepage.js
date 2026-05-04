@@ -307,6 +307,22 @@ export const heroInitAnimation = (ctx, scrollSmoother) => {
       },
       'secondPart'
     )
+    /* Scramble-in for the hero pill's visible text — starts shortly
+       after the pill has slid into view so the text "settles" into
+       the button. Pairs with the scrambleText hover treatment. */
+    .to(
+      '.hero-pill-link__visible',
+      {
+        duration: 1.4,
+        ease: 'none',
+        scrambleText: {
+          text: '{original}',
+          chars: 'uppercase',
+          tweenLength: false,
+        },
+      },
+      'secondPart+=0.5'
+    )
     .to(
       agencyText,
       {

@@ -199,24 +199,100 @@ definePageMeta({
            the treatment used on the Webflow page. -->
       <HomeStats />
 
-      <!-- Positioning bridge — sits between the stats and the case
-           studies. Names what we've been (Webflow Enterprise Partner)
-           and what's new (custom AI builds) so visitors get the full
-           context before they see the work. The Webflow Enterprise
-           Partner mention is linked through to /webflow-enterprise-
-           agency for anyone who wants to dig in. -->
-      <section class="positioning-line">
+      <!-- =================================================
+           POSITIONING-BRIDGE COMPARISON BLOCK
+           Three stacked variants for Andrew to choose from.
+           Pick the winner and we'll keep just that one.
+           ================================================= -->
+
+      <!-- VARIANT 1 — Timeline with year markers + Option 1 copy.
+           Reuses the SectionDivider dot/line pattern. Visualises the
+           evolution. Closing tagline carries the philosophy. -->
+      <section class="pos-variant pos-variant--1">
         <div class="container">
-          <p class="positioning-line__text">
-            <NuxtLink
-              href="/webflow-enterprise-agency"
-              class="positioning-line__link"
-            >
-              Premium Webflow Enterprise Partner
-            </NuxtLink>
-            since 2022. Now building custom AI websites for the
-            projects that need to go further.
-          </p>
+          <div class="pos-variant__label">Variant 1 — Timeline</div>
+          <div class="pos-timeline">
+            <div class="pos-timeline__row">
+              <div class="pos-timeline__beat">
+                <span class="pos-timeline__year">2018</span>
+                <span class="pos-timeline__dot"></span>
+                <span class="pos-timeline__label">Custom digital experiences</span>
+              </div>
+              <div class="pos-timeline__line"></div>
+              <div class="pos-timeline__beat">
+                <span class="pos-timeline__year">2022</span>
+                <span class="pos-timeline__dot"></span>
+                <span class="pos-timeline__label">
+                  <NuxtLink
+                    href="/webflow-enterprise-agency"
+                    class="pos-timeline__link"
+                  >Premium Webflow Enterprise Partner</NuxtLink>
+                </span>
+              </div>
+              <div class="pos-timeline__line"></div>
+              <div class="pos-timeline__beat">
+                <span class="pos-timeline__year">2025</span>
+                <span class="pos-timeline__dot"></span>
+                <span class="pos-timeline__label">AI-era builds</span>
+              </div>
+            </div>
+            <p class="pos-timeline__tagline">
+              Always the right tool for the moment.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- VARIANT 2 — Three blue chips inline + Option 3 copy
+           (manifesto). Chips match the stats section's chip style
+           for visual continuity. -->
+      <section class="pos-variant pos-variant--2">
+        <div class="container">
+          <div class="pos-variant__label">Variant 2 — Chips</div>
+          <div class="pos-chips">
+            <div class="pos-chips__row">
+              <div class="pos-chips__item">
+                <span class="pos-chips__chip">2018</span>
+                <span class="pos-chips__text">Custom builds</span>
+              </div>
+              <div class="pos-chips__item">
+                <span class="pos-chips__chip">2022</span>
+                <span class="pos-chips__text">
+                  <NuxtLink
+                    href="/webflow-enterprise-agency"
+                    class="pos-chips__link"
+                  >Webflow Enterprise Partner</NuxtLink>
+                </span>
+              </div>
+              <div class="pos-chips__item">
+                <span class="pos-chips__chip">2025</span>
+                <span class="pos-chips__text">AI-era experiences</span>
+              </div>
+            </div>
+            <p class="pos-chips__tagline">Right tool, right moment.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- VARIANT 3 — Larger left-aligned statement with thin
+           dot/line divider above + Option 5 copy (forward-leaning
+           prose). Reads as a deliberate manifesto rather than
+           floating context. -->
+      <section class="pos-variant pos-variant--3">
+        <div class="container">
+          <div class="pos-variant__label">Variant 3 — Statement</div>
+          <div class="pos-statement">
+            <SectionDivider class="pos-statement__divider" />
+            <p class="pos-statement__text">
+              Always at the front of the web. Custom builds since
+              2018, <NuxtLink
+                href="/webflow-enterprise-agency"
+                class="pos-statement__link"
+              >Premium Webflow Enterprise Partner</NuxtLink>
+              since 2022, AI-era experiences today. We pick whatever
+              the work needs.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -376,38 +452,181 @@ definePageMeta({
   }
 }
 
-// Webflow → AI positioning bridge. Sits below the stats and above
-// the case studies. Subtle, centered, ~60% opacity so it reads as
-// supporting context rather than a headline.
-.positioning-line {
+// =====================================================
+// POSITIONING-BRIDGE COMPARISON STYLES
+// Three variants stacked so Andrew can pick the winner.
+// Once chosen, drop the other two + the variant labels.
+// =====================================================
+
+.pos-variant {
   position: relative;
   z-index: 1;
   background-color: $color-background;
-  padding: getRem(24) 0 getRem(80);
-  text-align: center;
+  padding: getRem(48) 0;
 
-  @include respond(mobile) {
-    padding: getRem(16) 0 getRem(48);
+  &__label {
+    font-family: 'RoobertMono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: white(30);
+    margin-bottom: getRem(40);
+    text-align: center;
+  }
+}
+
+// --- Variant 1: Timeline -----------------------------
+.pos-timeline {
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: start;
+    gap: 0;
+    max-width: 900px;
+    margin: 0 auto;
   }
 
-  &__text {
+  &__beat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: getRem(12);
+  }
+
+  &__year {
+    font-family: 'RoobertMono', monospace;
+    font-size: clamp(11px, 0.78vw, 14px);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
     color: white(60);
-    font-size: clamp(14px, 1.04vw, 20px);
-    line-height: 1.55;
-    max-width: 60ch;
-    margin: 0 auto;
+  }
+
+  &__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: $color-foreground;
+    margin: getRem(8) 0;
+  }
+
+  &__line {
+    height: 1px;
+    width: 100%;
+    background: white(20);
+    margin-top: calc(#{getRem(8)} + 12px + 4px);
+    align-self: start;
+  }
+
+  &__label {
+    color: white(80);
+    font-size: clamp(13px, 0.93vw, 17px);
+    line-height: 1.3;
+    max-width: 16ch;
   }
 
   &__link {
     color: white(85);
     text-decoration: underline;
     text-underline-offset: 0.18em;
-    text-decoration-thickness: 1px;
     text-decoration-color: white(30);
     transition: text-decoration-color 0.3s ease, color 0.3s ease;
-
     &:hover {
       color: $color-foreground;
+      text-decoration-color: white(80);
+    }
+  }
+
+  &__tagline {
+    color: white(60);
+    font-size: clamp(13px, 0.93vw, 17px);
+    text-align: center;
+    margin: getRem(48) auto 0;
+    font-style: italic;
+  }
+}
+
+// --- Variant 2: Chips --------------------------------
+.pos-chips {
+  &__row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: getRem(40);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: getRem(12);
+  }
+
+  &__chip {
+    display: inline-block;
+    background: $color-blue;
+    color: $color-foreground;
+    font-family: 'RoobertMono', monospace;
+    font-size: clamp(11px, 0.78vw, 13px);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: getRem(6) getRem(12);
+    border-radius: getRem(6);
+    line-height: 1;
+  }
+
+  &__text {
+    color: white(85);
+    font-size: clamp(14px, 1vw, 18px);
+  }
+
+  &__link {
+    color: white(85);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-color: white(30);
+    transition: text-decoration-color 0.3s ease, color 0.3s ease;
+    &:hover {
+      color: $color-foreground;
+      text-decoration-color: white(80);
+    }
+  }
+
+  &__tagline {
+    color: white(60);
+    text-align: center;
+    font-size: clamp(13px, 0.93vw, 17px);
+    margin: getRem(40) auto 0;
+    font-style: italic;
+  }
+}
+
+// --- Variant 3: Statement ----------------------------
+.pos-statement {
+  max-width: 880px;
+  margin: 0 auto;
+
+  &__divider {
+    margin-bottom: getRem(40);
+  }
+
+  &__text {
+    color: white(85);
+    font-size: clamp(20px, 1.7vw, 32px);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  &__link {
+    color: $color-foreground;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-color: white(40);
+    transition: text-decoration-color 0.3s ease;
+    &:hover {
       text-decoration-color: white(80);
     }
   }
