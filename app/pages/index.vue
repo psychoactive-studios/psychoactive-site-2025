@@ -302,7 +302,7 @@ definePageMeta({
              route to the full /work page directly from the homepage. -->
         <section class="work-more">
           <div class="container">
-            <SectionMoreLink href="/work" label="View our work" />
+            <SectionMoreLink href="/work" label="View all work" />
           </div>
         </section>
 
@@ -456,13 +456,14 @@ definePageMeta({
 // *:nth-child(3n + 1) rule above. Both selectors have the same
 // specificity (single class), so source order is what makes the
 // override win.
-// "View our work" CTA section under the case studies. Spacing
-// matches the rhythm before the news list — generous on desktop,
-// tighter on mobile.
+// "View all work" CTA — sits between the cases grid and the news
+// list. Generous space above (rhythm with the cases section) and
+// the news list below has been retuned so the news cards sit close
+// to symmetrically between this CTA and the content-hub CTA below.
 .work-more {
-  margin-top: 85px;
+  margin-top: 160px;
   @include respond(mobile) {
-    margin-top: getRem(64);
+    margin-top: getRem(80);
   }
 }
 

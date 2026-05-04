@@ -48,7 +48,11 @@ const getHref = (news) => {
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/mixins' as *;
 .news-list {
-  margin-top: 160px;
+  // Reduced from 160px so the news cards sit closer to the
+  // "View all work" CTA above. Combined with the larger gap below
+  // the cards (news-list__more margin-top), the cards read as
+  // visually framed by the two CTAs at near-symmetric distance.
+  margin-top: 100px;
   @include respond('mobile') {
     margin-top: 60px;
   }
@@ -76,7 +80,10 @@ const getHref = (news) => {
     }
   }
   &__more {
-    margin-top: 85px;
+    // Bumped from 85px so the gap above the content-hub CTA matches
+    // the gap above the news cards (news-list margin-top: 100px).
+    // Symmetric framing — see comment on .news-list above.
+    margin-top: 100px;
     @include respond(mobile) {
       margin-top: getRem(64);
     }
