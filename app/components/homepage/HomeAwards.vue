@@ -68,10 +68,15 @@ const onClickHandler = async () => {
         </div>
         <div class="awards__title_text heading-h5--mobile">
           <OnScrollFilledTextLight>
-            Our work doesn’t chase awards. It earns them. From Awwwards
-            Site of the Day to CSS Design Awards and Best Awards, every
-            honour reflects the same thing: rigour, taste, and the
-            patience to get the details right.
+            <span class="dark">Our work</span>
+            doesn’t chase awards.
+            <span class="dark">It earns them.</span>
+            From Awwwards Site of the Day to CSS Design Awards and
+            Best Awards,
+            <span class="dark">every honour reflects the same thing:</span>
+            rigour, taste, and the patience
+            <span class="dark">to get the details</span>
+            right.
           </OnScrollFilledTextLight>
         </div>
       </div>
