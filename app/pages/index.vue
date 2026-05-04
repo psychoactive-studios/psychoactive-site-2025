@@ -195,6 +195,7 @@ definePageMeta({
           <span class="dark">brands launching into a new chapter,</span>
           and tech companies building
           <span class="dark">AI-era digital experiences.</span>
+          <span class="paragraph-break" aria-hidden="true"></span>
           Vision in the big picture. Obsession in the details.
           <span class="dark"
             >The rhythm between sections, the timing of an animation,</span
@@ -299,6 +300,7 @@ definePageMeta({
             <span class="dark">brands launching into a new chapter,</span>
             and tech companies building
             <span class="dark">AI-era digital experiences.</span>
+            <span class="paragraph-break" aria-hidden="true"></span>
             Vision in the big picture. Obsession in the details.
             <span class="dark"
               >The rhythm between sections, the timing of an animation,</span
@@ -399,6 +401,17 @@ definePageMeta({
     background-color: $color-background;
     padding: getRem(60) 0 getRem(40);
   }
+}
+
+// Visual paragraph break inside HomeOnScrollFilledText. The slot
+// renders all chars on a single text flow, so a block-level span
+// with a top margin gives us a real paragraph gap without breaking
+// the SplitText / scroll-fill animation rhythm.
+:deep(.paragraph-break) {
+  display: block;
+  width: 100%;
+  height: 0;
+  margin-top: 1.4em;
 }
 
 .partners {
