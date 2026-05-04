@@ -40,6 +40,40 @@ let navBackground,
 // Store SplitText instances for cleanup
 let splitTextInstances = [];
 
+/**
+ * Show the nav-transition cover synchronously. Called the instant a
+ * link in the open menu is clicked. Sets opacity to 1 with no
+ * transition so the cover is fully opaque BEFORE the close-timeline
+ * starts lifting the menu — otherwise the page underneath flashes
+ * through during the small frame window between click and `onLeave`.
+ */
+function showNavTransitionCover() {
+  if (typeof document === 'undefined') return;
+  const el = document.getElementById('nav-transition-cover');
+  if (!el) return;
+  // Kill any in-flight fade-out tween before we slam to 1.
+  gsap.killTweensOf(el);
+  el.style.opacity = '1';
+}
+
+/**
+ * Fade the nav-transition cover back out. Called from
+ * `navTransitionOut.finish()` after `done()` has fired and the new
+ * page has mounted underneath. Small delay gives the DOM a beat to
+ * settle so the new page is in place before the cover fades.
+ */
+function hideNavTransitionCover() {
+  if (typeof document === 'undefined') return;
+  const el = document.getElementById('nav-transition-cover');
+  if (!el) return;
+  gsap.to(el, {
+    opacity: 0,
+    duration: 0.5,
+    delay: 0.05,
+    ease: 'power2.out',
+  });
+}
+
 export default function () {
   /**
    * Cleans up all animations and GSAP instances to prevent memory leaks
@@ -370,5 +404,7 @@ export default function () {
     closeNavigation,
     transitionFromNavigation,
     showLayoutElementsRequired,
+    showNavTransitionCover,
+    hideNavTransitionCover,
   };
 }
