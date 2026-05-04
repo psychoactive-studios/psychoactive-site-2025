@@ -10,7 +10,7 @@ import Circle from '~/components/ui/Circle.vue';
 import LetsTalkSceneGL from '~/components/ui/LetsTalkSceneGL.vue';
 import useLoader from '~/composables/useLoader';
 import useNavigation from '~/composables/useNavigation';
-import { leaveAnimation } from '~/utils/animations/transitions';
+import { leaveAnimation, navTransitionOut } from '~/utils/animations/transitions';
 
 
 const { enableScroll } = useScrollSmoother();
@@ -58,13 +58,7 @@ definePageMeta({
     onLeave: (el, done) => {
       const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
-        gsap
-          .timeline()
-          .set(el, { opacity: 0 })
-          .add(() => {
-            transitionFromNavigation.value = false;
-            done();
-          }, '+=1');
+        navTransitionOut(el, done);
         return;
       }
       leaveAnimation(el, done);

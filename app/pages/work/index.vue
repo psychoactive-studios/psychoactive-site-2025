@@ -7,7 +7,7 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 // import { worksData } from '~/data/worksData';
 import useLoader from '~/composables/useLoader';
 import { SplitText } from 'gsap/SplitText';
-import { leaveAnimation } from '~/utils/animations/transitions';
+import { leaveAnimation, navTransitionOut } from '~/utils/animations/transitions';
 import Footer from '~/components/layout/Footer.vue';
 import useNavigation from '~/composables/useNavigation';
 import useAudioManager from '~/composables/useAudioManager';
@@ -168,13 +168,7 @@ definePageMeta({
     onLeave: (el, done) => {
       const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
-        gsap
-          .timeline()
-          .set(el, { opacity: 0 })
-          .add(() => {
-            transitionFromNavigation.value = false;
-            done();
-          }, '+=1');
+        navTransitionOut(el, done);
         return;
       }
       leaveAnimation(el, done);

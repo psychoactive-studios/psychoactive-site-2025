@@ -14,7 +14,7 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 import useCursor from '~/composables/useCursor';
 
 import { aboutPageInitAnimation } from '~/utils/animations/about';
-import { leaveAnimation } from '~/utils/animations/transitions';
+import { leaveAnimation, navTransitionOut } from '~/utils/animations/transitions';
 
 const { scrollSmoother } = useScrollSmoother();
 const { startLoading } = useLoader();
@@ -66,13 +66,7 @@ definePageMeta({
         overwrite: true,
       });
       if (transitionFromNavigation.value) {
-        gsap
-          .timeline()
-          .set(el, { opacity: 0 })
-          .add(() => {
-            transitionFromNavigation.value = false;
-            done();
-          }, '+=1');
+        navTransitionOut(el, done);
         return;
       }
       leaveAnimation(el, done);
