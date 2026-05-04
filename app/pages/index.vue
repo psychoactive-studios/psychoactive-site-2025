@@ -190,18 +190,18 @@ definePageMeta({
     <section class="mobile-intro">
       <div class="container">
         <HomeOnScrollFilledText>
-          <span class="dark">We work at the intersection of</span>
-          design, technology, and strategy,
-          <span class="dark">building</span>
-          high performance
+          <span class="dark">We design and build websites for</span>
+          sold-out global events seen by millions,
+          <span class="dark">brands launching into a new chapter,</span>
+          and tech companies building
+          <span class="dark">AI-era digital experiences.</span>
+          Vision in the big picture, obsession in the details —
           <span class="dark"
-            >websites and digital experiences for some of the world’s most</span
+            >the rhythm between sections, the timing of an animation,</span
           >
-          ambitious brands.
-          <span class="dark"
-            >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
-          >
-          we’re completely obsessed.
+          the weight of the right typeface at the right moment.
+          <span class="dark">Every interaction</span>
+          earned.
         </HomeOnScrollFilledText>
       </div>
     </section>
@@ -250,13 +250,13 @@ definePageMeta({
         <div class="container">
           <SectionDivider class="positioning-bridge__divider" />
           <p class="positioning-bridge__text">
-            At the front of the web since 2018 —
+            Designing and building digital experiences since 2018.
             <NuxtLink
               href="/webflow-enterprise-agency"
               class="positioning-bridge__link"
             >Premium Webflow Enterprise Partner</NuxtLink>
-            from 2022.<br>
-            Today, leading the way with AI-era experiences.
+            since 2022.<br>
+            Today, building the next era with AI.
           </p>
         </div>
       </section>
@@ -295,18 +295,18 @@ definePageMeta({
       <section class="desktop-intro">
         <div class="container">
           <HomeOnScrollFilledText>
-            <span class="dark">We work at the intersection of</span>
-            design, technology, and strategy,
-            <span class="dark">building</span>
-            high performance
+            <span class="dark">We design and build websites for</span>
+            sold-out global events seen by millions,
+            <span class="dark">brands launching into a new chapter,</span>
+            and tech companies building
+            <span class="dark">AI-era digital experiences.</span>
+            Vision in the big picture, obsession in the details —
             <span class="dark"
-              >websites and digital experiences for some of the world’s most</span
+              >the rhythm between sections, the timing of an animation,</span
             >
-            ambitious brands.
-            <span class="dark"
-              >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
-            >
-            we’re completely obsessed.
+            the weight of the right typeface at the right moment.
+            <span class="dark">Every interaction</span>
+            earned.
           </HomeOnScrollFilledText>
         </div>
       </section>
