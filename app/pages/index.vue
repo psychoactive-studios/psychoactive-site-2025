@@ -154,7 +154,7 @@ definePageMeta({
           <span class="dark">We work at the intersection of</span>
           design, technology, and strategy,
           <span class="dark">building</span>
-          high-performance
+          high performance
           <span class="dark"
             >websites and digital experiences for some of the world’s most</span
           >
@@ -237,7 +237,7 @@ definePageMeta({
             <span class="dark">We work at the intersection of</span>
             design, technology, and strategy,
             <span class="dark">building</span>
-            high-performance
+            high performance
             <span class="dark"
               >websites and digital experiences for some of the world’s most</span
             >
