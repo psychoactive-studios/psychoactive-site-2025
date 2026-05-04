@@ -18,6 +18,7 @@ import gsap from 'gsap';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
 import WebflowBlackLabel from '~/components/ui/WebflowBlackLabel.vue';
 import HomeStats from '~/components/homepage/HomeStats.vue';
+import SectionDivider from '~/components/ui/SectionDivider.vue';
 
 const params = qs.stringify({
   populate: {
@@ -173,15 +174,26 @@ definePageMeta({
            SSR-safe with no hydration risk.
            No visible heading — the logos communicate the point on
            their own. An sr-only h2 keeps the document outline tidy
-           for screen readers and crawlers. -->
+           for screen readers and crawlers.
+           No .container wrapper — the partners strip extends close to
+           the screen edges so the logo row reads as a confident
+           full-width statement, then the divider + stats sit back
+           inside the standard content gutter. -->
       <section class="partners" aria-labelledby="partners-heading">
-        <div class="container">
-          <h2 id="partners-heading" class="sr-only">
-            Selected clients
-          </h2>
-          <PartnersDesktop />
-        </div>
+        <h2 id="partners-heading" class="sr-only">
+          Selected clients
+        </h2>
+        <PartnersDesktop />
       </section>
+
+      <!-- Subtle divider between the logos and the stats. Brand-pattern
+           thin line with a dot at each end. Sits inside .container so
+           the line spans the same gutter as the stats below. -->
+      <div class="partners-stats-divider">
+        <div class="container">
+          <SectionDivider />
+        </div>
+      </div>
 
       <!-- Stats strip — three real numbers from headline projects.
            SSR-rendered for trust signals visible to crawlers. Mirrors
@@ -325,18 +337,27 @@ definePageMeta({
   position: relative;
   z-index: 1;
   background-color: $color-background;
-  // The headline used to add a 3vw bottom margin between caption and
-  // logos. Now that the headline is gone, give the partners section
-  // a bit of top breathing room so it doesn't crash into the hero
-  // when the visual hero ends.
-  padding-top: 4vw;
+  // Logos extend close to the screen edges (smaller side padding
+  // than the standard .container's 160px). Reads as a confident
+  // full-width row of recognisable brand marks.
+  padding: 4vw clamp(24px, 2.5vw, 56px) 0;
   @include respond(mobile) {
     display: none;
   }
-  .container {
-    @include respond(mobile) {
-      padding: 36px 0 0 0;
-    }
+}
+
+// Container for the section divider that sits between the partner
+// logos and the stats strip. Uses the standard .container inside so
+// the divider line matches the stats content gutter below — nicely
+// contrasting against the wider logo strip.
+.partners-stats-divider {
+  position: relative;
+  z-index: 1;
+  background-color: $color-background;
+  padding: getRem(64) 0 0;
+
+  @include respond(mobile) {
+    display: none;
   }
 }
 

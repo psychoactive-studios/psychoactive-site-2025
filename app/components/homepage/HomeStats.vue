@@ -2,29 +2,99 @@
 // Stats strip — three real numbers from headline projects.
 // Rendered server-side (outside <ClientOnly>) so the audit tool,
 // Google, and LinkedIn previews see real proof points in the static
-// HTML. Mirrors the treatment used on the Webflow page.
+// HTML. Mirrors the treatment used on the Webflow page Statistics
+// component, including the scroll-triggered count-up animation.
+//
+// SSR safety: `data` is initialised to the target values, so the
+// static HTML serves real numbers (not zeros). GSAP only resets to
+// 0 and animates back up once the user scrolls the section into
+// view — and by then the section is just entering the viewport, so
+// the snap-back isn't visible to the user.
 
-const stats = [
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+const containerRef = ref(null);
+let ctx;
+
+const data = ref({
+  worldOfWearableArt: 60000,
+  summerGameFest: 50,
+  superAI: 7000,
+});
+
+const stats = computed(() => [
   {
-    number: '60,000+',
+    number: `${Math.floor(data.value.worldOfWearableArt).toLocaleString('en-US')}+`,
     label: 'Attendees each season',
     client: 'World of WearableArt',
   },
   {
-    number: '50 million+',
+    number: `${Math.floor(data.value.summerGameFest).toLocaleString('en-US')} million+`,
     label: 'Livestream views',
     client: 'Summer Game Fest',
   },
   {
-    number: '7,000+',
+    number: `${Math.floor(data.value.superAI).toLocaleString('en-US')}+`,
     label: 'Sell-out event',
     client: 'SuperAI',
   },
-];
+]);
+
+onMounted(() => {
+  if (!containerRef.value) return;
+  ctx = gsap.context(() => {
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: containerRef.value,
+          start: 'top 90%',
+          end: 'bottom center',
+        },
+      })
+      .from(
+        '.home-stats__item',
+        {
+          opacity: 0,
+          y: 24,
+          duration: 1.2,
+          stagger: 0.2,
+          ease: 'power3.out',
+        },
+        'start'
+      )
+      .fromTo(
+        data.value,
+        { worldOfWearableArt: 0 },
+        { worldOfWearableArt: data.value.worldOfWearableArt, duration: 1.4, ease: 'power2.out' },
+        'start'
+      )
+      .fromTo(
+        data.value,
+        { summerGameFest: 0 },
+        { summerGameFest: data.value.summerGameFest, duration: 1.4, ease: 'power2.out' },
+        'start+=0.2'
+      )
+      .fromTo(
+        data.value,
+        { superAI: 0 },
+        { superAI: data.value.superAI, duration: 1.4, ease: 'power2.out' },
+        'start+=0.4'
+      );
+  }, containerRef.value);
+});
+
+onUnmounted(() => {
+  if (ctx) ctx.revert();
+});
 </script>
 
 <template>
-  <section class="home-stats" aria-labelledby="home-stats-heading">
+  <section
+    ref="containerRef"
+    class="home-stats"
+    aria-labelledby="home-stats-heading"
+  >
     <div class="container">
       <h2 id="home-stats-heading" class="sr-only">
         Numbers from recent client work

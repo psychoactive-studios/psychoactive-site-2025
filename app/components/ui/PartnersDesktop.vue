@@ -21,50 +21,47 @@ import { featuredPartnersData } from '~/data/partnersData';
 
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
+@use '~/assets/styles/functions' as *;
+
 .partners-desktop {
-  // With the strip trimmed from 10 to 7 logos, space-between left
-  // huge gaps between logos. Centring with a fixed gap reads as a
-  // deliberate, premium row regardless of how many marks are shown.
+  // Edge-to-edge: first logo touches the left padding, last touches
+  // the right. justify-content: space-between distributes the rest
+  // evenly between them.
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: clamp(40px, 4.5vw, 96px);
+
   @include respond(mobile) {
     display: block;
   }
+
+  // All logos render at the same height so the row reads as a
+  // consistent strip — width is auto-derived from each logo's native
+  // aspect ratio, so wider marks (e.g. Summer Game Fest) take up more
+  // horizontal space than tighter ones (e.g. SuperAI). Some logo
+  // assets — Adidas, All Blacks — currently ship as just the
+  // wordmark or just the emblem rather than the combined lockup; if
+  // those land as combined-lockup PNGs the visual height will match
+  // the others without any code change.
   img {
-    height: auto;
+    height: clamp(28px, 2.4vw, 48px);
+    width: auto;
     object-fit: contain;
   }
-  .partner-super-ai {
-    width: 6.5%;
-  }
+
+  // Per-mark height nudges where the native lockup needs slight
+  // optical compensation. Wordmark-only logos (Adidas) read taller
+  // because there's no descender; emblem-only logos (All Blacks)
+  // read smaller because the silhouette doesn't fill its bbox.
+  // Tweak to taste without the row losing its rhythm.
   .partner-adidas {
-    width: 6.12%;
-  }
-  .partner-ray-white {
-    width: 6.625%;
-  }
-  .partner-hellboy {
-    width: 7.75%;
-  }
-  .partner-blackbird {
-    width: 7.06%;
-  }
-  .partner-wow {
-    width: 7.56%;
-  }
-  .partner-one {
-    width: 7.75%;
+    height: clamp(22px, 1.9vw, 38px);
   }
   .partner-all-blacks {
-    width: 5.25%;
+    height: clamp(34px, 2.9vw, 56px);
   }
-  .partner-burgerfuel {
-    width: 7%;
-  }
-  .partner-summer-game {
-    width: 5.62%;
+  .partner-blackbird {
+    height: clamp(24px, 2vw, 40px);
   }
 }
 </style>
