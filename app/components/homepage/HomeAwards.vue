@@ -68,7 +68,7 @@ const onClickHandler = async () => {
         </div>
         <div class="awards__title_text heading-h5--mobile">
           <OnScrollFilledTextLight>
-            Our work doesn’t chase awards — it earns them. From Awwwards
+            Our work doesn’t chase awards. It earns them. From Awwwards
             Site of the Day to CSS Design Awards and Best Awards, every
             honour reflects the same thing: rigour, taste, and the
             patience to get the details right.
@@ -127,10 +127,13 @@ const onClickHandler = async () => {
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/mixins' as *;
 .awards {
-  margin-top: 320px;
+  // Standardised major-section gap (160px) so the spacing under
+  // "Explore Our Content Hub" matches the page rhythm. Was 320px
+  // which felt disconnected from the rest of the page's spacing.
+  margin-top: 160px;
   margin-bottom: 160px;
   @include respond(mobile) {
-    margin-top: 160px;
+    margin-top: 120px;
     margin-bottom: 120px;
   }
   &__title {

@@ -195,9 +195,9 @@ definePageMeta({
           <span class="dark">brands launching into a new chapter,</span>
           and tech companies building
           <span class="dark">AI-era digital experiences.</span>
-          Vision in the big picture, obsession in the details —
+          Vision in the big picture. Obsession in the details.
           <span class="dark"
-            >the rhythm between sections, the timing of an animation,</span
+            >The rhythm between sections, the timing of an animation,</span
           >
           the weight of the right typeface at the right moment.
           <span class="dark">Every interaction</span>
@@ -249,8 +249,8 @@ definePageMeta({
       <section ref="positioningRef" class="positioning-bridge">
         <div class="container">
           <SectionDivider class="positioning-bridge__divider" />
-          <p class="positioning-bridge__text">
-            Designing and building digital experiences since 2018.
+          <p class="positioning-bridge__text heading-h5--mobile">
+            Designing and building digital experiences since 2018.<br>
             <NuxtLink
               href="/webflow-enterprise-agency"
               class="positioning-bridge__link"
@@ -262,15 +262,14 @@ definePageMeta({
       </section>
 
       <ClientOnly>
-        <!-- Mobile Digital Text Section -->
+        <!-- Mobile-only CTA section. Andrew's call: dropped the
+             AI-era subheader here on mobile because the mobile-intro
+             paragraph above already carries the positioning, and the
+             extra heading was making the top of the page feel busy.
+             Just the CTA now — a clean call-to-action between the
+             stats and the case studies. -->
         <section v-if="isMobile" class="mobile-digital">
           <div class="container">
-            <h2 class="subheader--mobile">
-              AI-era design and development<br>
-              for ambitious brands
-            </h2>
-            <!-- Mobile hero CTA — same HeroPillLink as the desktop
-                 hero so the interaction is consistent. -->
             <HeroPillLink href="/contact" label="Start a project" />
           </div>
         </section>
@@ -300,9 +299,9 @@ definePageMeta({
             <span class="dark">brands launching into a new chapter,</span>
             and tech companies building
             <span class="dark">AI-era digital experiences.</span>
-            Vision in the big picture, obsession in the details —
+            Vision in the big picture. Obsession in the details.
             <span class="dark"
-              >the rhythm between sections, the timing of an animation,</span
+              >The rhythm between sections, the timing of an animation,</span
             >
             the weight of the right typeface at the right moment.
             <span class="dark">Every interaction</span>
@@ -418,32 +417,31 @@ definePageMeta({
 }
 
 // Webflow → AI positioning bridge. Sits between the stats above
-// and the case studies below. Same content gutter as the rest of
-// the page (.container) — the SectionDivider above ties into the
-// dot/line motif used elsewhere on the page.
+// and the case studies below.
+//
+// Hidden on mobile so the mobile flow doesn't repeat positioning
+// messaging that's already in the hero + mobile-intro paragraph.
+//
+// Spacing: padding-top 0 so the gap above the divider equals the
+// 80px gap below the stats numbers (stats has padding-bottom 80).
+// Result: stats sit symmetrically with 80px of breathing room
+// above + below.
 .positioning-bridge {
   position: relative;
   z-index: 1;
   background-color: $color-background;
-  padding: getRem(80) 0 getRem(80);
+  padding: 0 0 getRem(80);
 
   @include respond(mobile) {
-    padding: getRem(48) 0;
+    display: none;
   }
 
   &__divider {
     margin-bottom: getRem(48);
-
-    @include respond(mobile) {
-      margin-bottom: getRem(32);
-    }
   }
 
   &__text {
     color: white(85);
-    font-size: clamp(20px, 1.7vw, 32px);
-    line-height: 1.4;
-    letter-spacing: -0.01em;
     text-align: center;
     margin: 0 auto;
     max-width: 100%;
@@ -478,13 +476,9 @@ definePageMeta({
 }
 
 .mobile-digital {
-  padding-top: getRem(42);
+  padding-top: getRem(48);
+  padding-bottom: getRem(48);
   text-align: center;
-  h2 {
-    line-height: 146%;
-    color: white(80);
-    margin-bottom: getRem(22);
-  }
   a {
     display: inline-block;
   }

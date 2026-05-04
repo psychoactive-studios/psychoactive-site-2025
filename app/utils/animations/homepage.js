@@ -599,10 +599,19 @@ export const heroScrollAnimation = (ctx, isPlaying) => {
               'output-of-elements'
             )
             /* ======= Top text part ========= */
+            // Pill CTA scroll-out — slide further right (was 175,
+            // now 260 so even a wider pill clears the viewport
+            // edge) and fade opacity to 0 in parallel so it doesn't
+            // visually linger at the edge of the screen.
             .fromTo(
               labelImage,
-              { xPercent: 0 },
-              { xPercent: 175, duration: outputTime, ease: 'power1.out' },
+              { xPercent: 0, opacity: 1 },
+              {
+                xPercent: 260,
+                opacity: 0,
+                duration: outputTime,
+                ease: 'power1.out',
+              },
               'output-of-elements'
             )
             .fromTo(
