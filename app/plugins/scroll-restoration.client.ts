@@ -22,13 +22,44 @@
 export default defineNuxtPlugin(() => {
   if (typeof window === 'undefined') return;
 
+  // Diagnostic so we can verify the plugin actually runs.
+  // Console-tag: PSY-SCROLL.
+  // eslint-disable-next-line no-console
+  console.log('[PSY-SCROLL] plugin running. before:', history.scrollRestoration);
+
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual';
   }
 
-  const scrollTop = () => window.scrollTo(0, 0);
+  // eslint-disable-next-line no-console
+  console.log('[PSY-SCROLL] plugin set. after:', history.scrollRestoration);
+
+  const scrollTop = () => {
+    // eslint-disable-next-line no-console
+    console.log('[PSY-SCROLL] scrollTop called. scrollY was:', window.scrollY);
+    window.scrollTo(0, 0);
+  };
 
   scrollTop();
-  window.addEventListener('load', scrollTop, { once: true });
-  window.addEventListener('pageshow', scrollTop);
+
+  // Re-assert manual scroll restoration on every router navigation +
+  // page show — some Vue Router setups reset it back to 'auto'
+  // during their own setup. Belt-and-braces: keep forcing it.
+  const reassert = () => {
+    if (history.scrollRestoration !== 'manual') {
+      // eslint-disable-next-line no-console
+      console.log('[PSY-SCROLL] reasserting manual. was:', history.scrollRestoration);
+      history.scrollRestoration = 'manual';
+    }
+  };
+
+  window.addEventListener('load', () => {
+    reassert();
+    scrollTop();
+  }, { once: true });
+
+  window.addEventListener('pageshow', () => {
+    reassert();
+    scrollTop();
+  });
 });
