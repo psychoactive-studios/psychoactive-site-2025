@@ -1,10 +1,24 @@
-// Disables browser scroll restoration so refresh / back-forward
-// always lands the page at the top instead of wherever the user
-// was last scrolled to. Runs as a Nuxt client plugin so it
-// executes before any page component mounts — earlier than the
-// onBeforeMount / script-setup approach in app.vue, which was too
-// late on Chromium browsers (the browser had already restored
-// scroll by then).
+// Force every page load (refresh, navigation, BFCache restore) to
+// land at the top of the page, regardless of where the user was
+// scrolled before.
+//
+// Why this needs three separate hooks:
+//
+//   1. `history.scrollRestoration = 'manual'` — tells the browser
+//      not to restore the previous scroll position on refresh.
+//      Setting it as early as possible (in this plugin, before the
+//      app mounts) gets in before the browser starts restoring.
+//
+//   2. `window.scrollTo(0, 0)` immediately + on the 'load' event
+//      — belt-and-braces for browsers that ignore or are slow to
+//      apply scrollRestoration.
+//
+//   3. `pageshow` listener — handles the back-forward cache
+//      (BFCache). When a user navigates away and comes back, some
+//      browsers (Safari especially) restore the page from BFCache
+//      with the previous scroll position, completely bypassing
+//      page-load handlers. The pageshow event fires in this case
+//      with `event.persisted === true`.
 export default defineNuxtPlugin(() => {
   if (typeof window === 'undefined') return;
 
@@ -12,15 +26,9 @@ export default defineNuxtPlugin(() => {
     history.scrollRestoration = 'manual';
   }
 
-  // Force the document to scroll position 0 immediately and again
-  // once the browser fires its own load event (covers the rare case
-  // where a browser restores scroll AFTER plugins run).
-  window.scrollTo(0, 0);
-  window.addEventListener(
-    'load',
-    () => {
-      window.scrollTo(0, 0);
-    },
-    { once: true }
-  );
+  const scrollTop = () => window.scrollTo(0, 0);
+
+  scrollTop();
+  window.addEventListener('load', scrollTop, { once: true });
+  window.addEventListener('pageshow', scrollTop);
 });
