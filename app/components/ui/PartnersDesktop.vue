@@ -27,12 +27,7 @@ import { featuredPartnersData } from '~/data/partnersData';
 .partners-desktop {
   // Edge-to-edge within the standard .container gutter. First logo
   // sits at the left, last at the right, the rest distributed evenly
-  // via space-between.
-  //
-  // The `gap` is a safety net — it guarantees minimum spacing
-  // between adjacent logos even if their combined width is tight
-  // against the container. space-between then adds extra space on
-  // top of that gap when there's room to spare.
+  // via space-between. `gap` is a minimum-spacing safety net.
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -42,60 +37,60 @@ import { featuredPartnersData } from '~/data/partnersData';
     display: block;
   }
 
-  // Per-logo heights, not a single shared height. Logos with very
-  // different aspect ratios (a wide wordmark like BLACKBIRD vs a
-  // compact emblem like WOW) need different heights to read with
-  // similar optical weight in the row. Heights chosen so each logo's
-  // visible "type" sits at a comparable size, even when the SVG
-  // viewBox includes surrounding whitespace (notably All Blacks,
-  // where the silver fern extends well above the wordmark in the
-  // viewBox).
+  // Per-logo heights, not a single shared height. Heights are
+  // calibrated so the COMBINED rendered width of all 7 logos +
+  // their gaps fits inside the standard .container at viewport
+  // widths down to 1440px (the smallest desktop we target).
+  //
+  // Aspect ratios from the SVG viewBoxes:
+  //   adidas      5.93   →  small height, long width
+  //   hellboy     2.80   →  compact, taller height ok
+  //   all-blacks  7.74   →  long; small height
+  //   wow         2.83   →  compact emblem, taller
+  //   blackbird   8.83   →  longest; smallest height
+  //   super-ai    5.79   →  long; small height
+  //   token-2049  8.03   →  long; small height
+  //
+  // At 1440px viewport (.container = 1120px), totals ~980px of logos
+  // + ~140px of distributed gaps. At 1920px viewport, gaps grow.
   img {
     width: auto;
     object-fit: contain;
-    flex-shrink: 0;
   }
 
-  // Combined lockups —
-  // Adidas: wordmark + trefoil, modest height keeps the row tidy
-  // alongside the wider logos.
+  // Combined lockups
   .partner-adidas {
-    height: clamp(22px, 1.9vw, 36px);
+    height: clamp(18px, 1.5vw, 28px);
   }
-
-  // All Blacks: the fern occupies the full viewBox height while the
-  // wordmark sits below it, so the visible text reads small relative
-  // to the SVG height. Bumped up so the wordmark text matches the
-  // weight of the other logos and the fern naturally extends taller.
   .partner-all-blacks {
-    height: clamp(28px, 2.4vw, 46px);
+    height: clamp(22px, 2vw, 36px);
   }
 
-  // Decorative wordmark (Hellboy) — slightly taller so the unique
-  // lettering carries presence.
+  // Decorative wordmark (Hellboy) — compact aspect, taller height
+  // so the lettering reads at the same weight as the wider logos.
   .partner-hellboy {
-    height: clamp(28px, 2.4vw, 44px);
+    height: clamp(22px, 1.9vw, 32px);
   }
 
-  // Compact emblem (WOW) — taller; emblems need extra size to hold
+  // Compact emblem (WOW) — emblems need a bit more height to hold
   // their own next to wordmarks.
   .partner-wow {
-    height: clamp(30px, 2.6vw, 48px);
+    height: clamp(24px, 2.2vw, 38px);
   }
 
-  // Wide wordmarks (Blackbird, Token2049) — shorter; their width
-  // already gives them plenty of presence in the row.
+  // Wide wordmarks — width already gives them plenty of presence,
+  // so shorter heights keep the row from feeling lopsided.
   .partner-blackbird {
-    height: clamp(18px, 1.6vw, 28px);
+    height: clamp(14px, 1.3vw, 22px);
   }
   .partner-token-2049 {
-    height: clamp(20px, 1.7vw, 30px);
+    height: clamp(16px, 1.4vw, 24px);
   }
 
-  // SuperAI — wordmark with chip; mid-range height so the chip
-  // detail stays legible.
+  // SuperAI — wordmark with chip; mid-range height so the chip stays
+  // legible.
   .partner-super-ai {
-    height: clamp(22px, 1.9vw, 36px);
+    height: clamp(18px, 1.6vw, 28px);
   }
 }
 </style>
