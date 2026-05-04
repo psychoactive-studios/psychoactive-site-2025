@@ -8,8 +8,10 @@ import { partnersData } from '~/data/partnersData';
       v-for="partner in partnersData"
       :key="partner.id"
       :src="partner.logo"
-      :alt="partner.name"
+      :alt="partner.alt || `${partner.name} client logo`"
       :class="partner.id"
+      loading="lazy"
+      decoding="async"
     />
   </div>
 </template>
