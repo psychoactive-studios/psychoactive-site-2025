@@ -1,9 +1,34 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 const SITE_URL = process.env.NUXT_PUBLIC_SITE_URL || 'https://psychoactive.co.nz'
-const DEFAULT_TITLE = 'Psychoactive Studios | Web Design Agency | Webflow Partner'
-const DEFAULT_DESCRIPTION = 'Award-Winning Multidisciplinary Digital Experience Agency | We design and develop websites, web apps & motion graphics for brands who want to push boundaries'
+const DEFAULT_TITLE = 'Psychoactive Studios — AI-era Design & Development Agency'
+const DEFAULT_DESCRIPTION = "Based in Wellington, NZ, operating globally. We're a design and development agency building AI-era websites for ambitious brands. 50+ international awards."
 const OG_IMAGE_URL = `${SITE_URL}/og.png`
+
+// Organization JSON-LD schema. Surfaced in app.head.script so it's
+// in the static HTML for crawlers / Google's knowledge panel.
+const ORGANIZATION_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Psychoactive Studios',
+  alternateName: 'Psychoactive',
+  url: SITE_URL,
+  logo: `${SITE_URL}/logo.svg`,
+  description: DEFAULT_DESCRIPTION,
+  foundingDate: '2018',
+  email: 'hello@psychoactive.co.nz',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Wellington',
+    addressCountry: 'NZ',
+  },
+  sameAs: [
+    'https://www.linkedin.com/company/psychoactive-studios',
+    'https://www.instagram.com/psychoactivestudios',
+    'https://www.behance.net/psychoactive',
+    'https://dribbble.com/psychoactive',
+  ],
+}
 
 /**
  * Nuxt configuration for the Psychoactive Studios website.
@@ -126,7 +151,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: {
-        lang: 'en',
+        lang: 'en-NZ',
       },
       title: DEFAULT_TITLE,
       meta: [
@@ -138,6 +163,8 @@ export default defineNuxtConfig({
         { key: 'og:description', property: 'og:description', content: DEFAULT_DESCRIPTION },
         { key: 'og:type', property: 'og:type', content: 'website' },
         { key: 'og:url', property: 'og:url', content: SITE_URL },
+        { key: 'og:site_name', property: 'og:site_name', content: 'Psychoactive Studios' },
+        { key: 'og:locale', property: 'og:locale', content: 'en_NZ' },
         { key: 'og:image', property: 'og:image', content: OG_IMAGE_URL },
         { key: 'og:image:secure_url', property: 'og:image:secure_url', content: OG_IMAGE_URL },
         { key: 'og:image:width', property: 'og:image:width', content: '1200' },
@@ -148,8 +175,10 @@ export default defineNuxtConfig({
         { key: 'twitter:title', name: 'twitter:title', content: DEFAULT_TITLE },
         { key: 'twitter:description', name: 'twitter:description', content: DEFAULT_DESCRIPTION },
         { key: 'twitter:image', name: 'twitter:image', content: OG_IMAGE_URL },
-      ],      
+      ],
       link: [
+        // Default canonical — pages can override via useHead({ link: [{ rel: 'canonical', ... }] }).
+        { key: 'canonical', rel: 'canonical', href: SITE_URL },
         {
           rel: 'shortcut icon',
           href: '/favicon.gif',
@@ -173,11 +202,33 @@ export default defineNuxtConfig({
           type: 'font/otf',
           crossorigin: 'anonymous'
         }
-      ]
+      ],
+      script: [
+        // Organization JSON-LD — helps Google's knowledge panel + trust signals.
+        {
+          type: 'application/ld+json',
+          innerHTML: JSON.stringify(ORGANIZATION_SCHEMA),
+        },
+      ],
     }
   },
   // Redirects for content-hub pages
   routeRules: {
+    // Force SSR-on-demand (no prerender) for case-study pages. The
+    // prerender step crawls links at build time and tries to fetch
+    // each /work/:slug from Strapi — if Strapi is briefly unreachable
+    // or returns an error during the build, the prerendered HTML is
+    // the 404 page, and Vercel then serves that cached 404 forever
+    // on direct URL hits. (Client-side navigation from the homepage
+    // bypasses the cache and re-fetches, which is why the page works
+    // when you navigate to it but 404s on direct URL.) Setting
+    // prerender: false makes each request hit the serverless
+    // function, which fetches Strapi fresh.
+    '/work/**': { prerender: false },
+    // Same defensive treatment for content-hub article pages — they
+    // share the same Strapi-backed pattern.
+    '/content-hub/**': { prerender: false },
+
     // Content Hub Redirects
     // '/content-hub/how-we-built-award-worthy-websites-for-global-events': { redirect: { to: '/content-hub/how-we-built-award-worthy-websites-for-global-events', statusCode: 301 } },
     '/content-hub/ai-vs-custom-development-when-to-use-what': { redirect: { to: '/content-hub/when-to-build-with-ai-and-when-to-use-webflow-and-custom-code', statusCode: 301 } },

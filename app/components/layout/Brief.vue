@@ -113,7 +113,7 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
           <PlusIcon />
           <PlusIcon />
         </div>
-        <div class="brief__idea_text subheader--mobile">Have an idea?</div>
+        <div class="brief__idea_text subheader--mobile">Working on something ambitious?</div>
         <div class="brief__idea_plus">
           <PlusIcon />
           <PlusIcon />

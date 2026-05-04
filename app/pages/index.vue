@@ -17,6 +17,8 @@ import useNavigation from '~/composables/useNavigation';
 import gsap from 'gsap';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
 import WebflowBlackLabel from '~/components/ui/WebflowBlackLabel.vue';
+import HomeStats from '~/components/homepage/HomeStats.vue';
+import SectionDivider from '~/components/ui/SectionDivider.vue';
 
 const params = qs.stringify({
   populate: {
@@ -67,27 +69,34 @@ const { scrollSmoother } = useScrollSmoother();
 const isMobile = useMediaQuery('(max-width: 768px)');
 const { startLoading } = useLoader();
 
+// Mobile keeps its existing iteration with the mobile-scale text
+// marker. The intro paragraph is no longer inserted into either
+// iteration — it's now rendered as a dedicated SSR section
+// (mobile-intro under the hero, desktop-intro between the two
+// case-study halves).
 const worksList = computed(() => {
-  const letstalkItem = { id: 'filled-text' };
   const mobileScale = { id: 'mobile-scale' };
   const result = works.value.length ? [...works.value] : [];
   if (isMobile.value) {
     result.splice(3, 0, mobileScale);
-    result.splice(6, 0, letstalkItem);
-  } else {
-    result.splice(3, 0, letstalkItem);
   }
   return result;
 });
 
-useSeoMeta({
-  title: 'AI-era Webflow Enterprise Agency | Psychoactive Studios',
-  description:
-    'Global digital design agency building AI-era Webflow platforms for ambitious brands. Premium Webflow Enterprise Partner with 50+ international awards.',
-  ogTitle: 'AI-era Webflow Enterprise Agency | Psychoactive Studios',
-  ogDescription:
-    'Global digital design agency building AI-era Webflow platforms for ambitious brands. Premium Webflow Enterprise Partner with 50+ international awards.',
-});
+// Desktop case studies are split into two grids so an SSR-rendered
+// intro paragraph can sit between them. First three case studies in
+// `worksFirst`, the rest in `worksRest`.
+const DESKTOP_CASES_BEFORE_INTRO = 3;
+const worksFirst = computed(() =>
+  works.value.slice(0, DESKTOP_CASES_BEFORE_INTRO)
+);
+const worksRest = computed(() =>
+  works.value.slice(DESKTOP_CASES_BEFORE_INTRO)
+);
+
+// Homepage uses the global meta defaults defined in nuxt.config.ts
+// (DEFAULT_TITLE / DEFAULT_DESCRIPTION). No per-page override needed —
+// the homepage IS the canonical use of those defaults.
 
 definePageMeta({
   scrollToTop: true,
@@ -117,33 +126,85 @@ definePageMeta({
 
 <template>
   <main class="homepage">
+    <!-- Pre-rendered headline. Visually hidden because the visual hero
+         (3D scene + animated marks) serves as the human-facing identity.
+         This h1 is what crawlers, audit tools, and screen readers see. -->
     <h1 class="sr-only">
-      Psychoactive Studios — AI-era Webflow Enterprise Agency
+      Psychoactive Studios — AI-era design and development agency for
+      ambitious brands.
     </h1>
+
+    <!-- Hero stays inside ClientOnly because of the 3D scene, GSAP
+         timelines, video player, and scroll-triggered animations. -->
     <ClientOnly>
-      <!-- Hero Section -->
       <section class="hero">
         <Hero v-if="!isMobile" />
         <HeroMobile v-if="isMobile" />
       </section>
+    </ClientOnly>
 
-      <div class="homepage__content">
-        <!-- Partners Section -->
-        <section class="partners">
-          <div class="container">
-            <h2 class="partners__title subheader">
-              Partner to the world’s leading innovation brands and events
-            </h2>
-            <PartnersDesktop />
-          </div>
-        </section>
+    <!-- Mobile-only intro paragraph, sits directly under the hero.
+         Rendered SSR so it's also picked up by crawlers. Hidden on
+         desktop via CSS — the desktop version still appears between
+         case studies (animated, inside ClientOnly) so the existing
+         desktop design is preserved. -->
+    <section class="mobile-intro">
+      <div class="container">
+        <HomeOnScrollFilledText>
+          <span class="dark">We work at the intersection of</span>
+          design, technology, and strategy,
+          <span class="dark">building</span>
+          high performance
+          <span class="dark"
+            >websites and digital experiences for some of the world’s most</span
+          >
+          ambitious brands.
+          <span class="dark"
+            >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
+          >
+          we’re completely obsessed.
+        </HomeOnScrollFilledText>
+      </div>
+    </section>
 
+    <div class="homepage__content">
+      <!-- Partners — rendered server-side so the audit tool / Google /
+           LinkedIn previews see the client logo strip. The component
+           itself is purely declarative (just <img> tags) so it's
+           SSR-safe with no hydration risk.
+           No visible heading — the logos communicate the point on
+           their own. An sr-only h2 keeps the document outline tidy
+           for screen readers and crawlers. -->
+      <section class="partners" aria-labelledby="partners-heading">
+        <div class="container">
+          <h2 id="partners-heading" class="sr-only">
+            Selected clients
+          </h2>
+          <PartnersDesktop />
+        </div>
+      </section>
+
+      <!-- Subtle divider between the logos and the stats. Brand-pattern
+           thin line with a dot at each end. Sits inside .container so
+           the line spans the same gutter as the stats below. -->
+      <div class="partners-stats-divider">
+        <div class="container">
+          <SectionDivider />
+        </div>
+      </div>
+
+      <!-- Stats strip — three real numbers from headline projects.
+           SSR-rendered for trust signals visible to crawlers. Mirrors
+           the treatment used on the Webflow page. -->
+      <HomeStats />
+
+      <ClientOnly>
         <!-- Mobile Digital Text Section -->
         <section v-if="isMobile" class="mobile-digital">
           <div class="container">
             <h2 class="subheader--mobile">Digital First design agency</h2>
             <NuxtLink
-              href="/webflow-enterprise-agency"              
+              href="/webflow-enterprise-agency"
               @mouseenter="() => playInteractionSound('text-hover-short', 100)"
               @click="() => playInteractionSound('click-1')"
             >
@@ -153,55 +214,61 @@ definePageMeta({
           </div>
         </section>
 
-        <section v-if="!isMobile" class="cases">
+        <!-- Desktop: first half of case studies. Wrapped in ClientOnly
+             via the parent above; the intro paragraph below sits
+             OUTSIDE this block so it renders in SSR. -->
+        <section v-if="!isMobile" class="cases cases--top">
           <div class="container">
-            <template v-for="work in worksList" :key="work.id">
-              <!-- Filled Text Section -->
-              <section v-if="work.id === 'filled-text'" class="filled-text">
-                <HomeOnScrollFilledText>
-                  <span class="dark">We work at the intersection of</span>
-                  design, technology, and strategy,
-                  <span class="dark">building</span>
-                  high-performance
-                  <span class="dark"
-                    >websites and digital experiences for some of the world’s most</span
-                  >
-                  ambitious brands.
-                  <span class="dark"
-                    >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
-                  >
-                  we’re completely obsessed.
-                </HomeOnScrollFilledText>
-              </section>
-              <CaseStadyPreview v-else :data="work" />
-            </template>
+            <CaseStadyPreview
+              v-for="work in worksFirst"
+              :key="work.id"
+              :data="work"
+            />
+          </div>
+        </section>
+      </ClientOnly>
+
+      <!-- Desktop intro paragraph — SSR-rendered, sits between the two
+           case-study grids. Hidden on mobile (mobile uses .mobile-intro
+           under the hero instead). -->
+      <section class="desktop-intro">
+        <div class="container">
+          <HomeOnScrollFilledText>
+            <span class="dark">We work at the intersection of</span>
+            design, technology, and strategy,
+            <span class="dark">building</span>
+            high performance
+            <span class="dark"
+              >websites and digital experiences for some of the world’s most</span
+            >
+            ambitious brands.
+            <span class="dark"
+              >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
+            >
+            we’re completely obsessed.
+          </HomeOnScrollFilledText>
+        </div>
+      </section>
+
+      <ClientOnly>
+        <!-- Desktop: remaining case studies. Same .cases grid styling
+             as the top block. -->
+        <section v-if="!isMobile" class="cases cases--rest">
+          <div class="container">
+            <CaseStadyPreview
+              v-for="work in worksRest"
+              :key="work.id"
+              :data="work"
+            />
           </div>
         </section>
 
         <section v-if="isMobile" class="cases">
           <div class="container">
             <template v-for="work in worksList" :key="work.id">
-              <!-- Filled Text Section -->
-              <section v-if="work.id === 'filled-text'" class="filled-text">
-                <HomeOnScrollFilledText>
-                  <span class="dark">We work at the intersection of</span>
-                  design, technology, and strategy,
-                  <span class="dark">building</span>
-                  high-performance
-                  <span class="dark"
-                    >websites and digital experiences for some of the world’s most</span
-                  >
-                  ambitious brands.
-                  <span class="dark"
-                    >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
-                  >
-                  we’re completely obsessed.
-                </HomeOnScrollFilledText>
-              </section>
-
               <!-- Mobile Scale Text Section -->
               <section
-                v-else-if="work.id === 'mobile-scale'"
+                v-if="work.id === 'mobile-scale'"
                 class="mobile-scale"
               >
                 <div class="container">
@@ -229,8 +296,8 @@ definePageMeta({
         <HomeNewsList :data="articles" />
         <!-- Awards Section -->
         <HomeAwards />
-      </div>
-    </ClientOnly>
+      </ClientOnly>
+    </div>
     <Footer />
   </main>
 </template>
@@ -248,22 +315,49 @@ definePageMeta({
   }
 }
 
+// Mobile-only intro paragraph that sits directly under the hero.
+// Hidden on desktop (the desktop layout still shows the animated
+// intro paragraph between case studies). Rendered SSR so it's also
+// picked up by crawlers on mobile.
+.mobile-intro {
+  display: none;
+
+  @include respond(mobile) {
+    display: block;
+    position: relative;
+    z-index: 1;
+    background-color: $color-background;
+    padding: getRem(60) 0 getRem(40);
+  }
+}
+
 .partners {
   position: relative;
   z-index: 1;
   background-color: $color-background;
-  &__title {
-    text-align: center;
-    opacity: 0.5;
-    margin-bottom: 3vw;
-  }
+  // Logos sit within the standard .container gutter (matches the rest
+  // of the page content). The dropped headline used to add 3vw bottom
+  // margin between caption and logos — keeping a similar amount of
+  // top breathing room here so the section doesn't crash into the
+  // hero above.
+  padding-top: 4vw;
   @include respond(mobile) {
     display: none;
   }
-  .container {
-    @include respond(mobile) {
-      padding: 36px 0 0 0;
-    }
+}
+
+// Container for the section divider that sits between the partner
+// logos and the stats strip. Uses the standard .container inside so
+// the divider line matches the stats content gutter below — nicely
+// contrasting against the wider logo strip.
+.partners-stats-divider {
+  position: relative;
+  z-index: 1;
+  background-color: $color-background;
+  padding: getRem(64) 0 0;
+
+  @include respond(mobile) {
+    display: none;
   }
 }
 
@@ -330,6 +424,49 @@ definePageMeta({
       flex-direction: column;
       gap: 64px;
     }
+  }
+}
+
+// Second cases grid (sits below the SSR desktop intro paragraph).
+// Two things going on:
+//   1. Strip the top margin — the .desktop-intro section already has
+//      160px bottom padding so we don't need to double up.
+//   2. Restore the tile rhythm. Splitting the cases section into two
+//      grids resets the nth-child counter, so without overriding the
+//      default the first tile of cases--rest would render full-width
+//      and every subsequent tile would shift. Andrew confirmed the
+//      desired post-intro order: case 4 + case 5 on one row, case 6
+//      (WOW) full-width, case 7 + case 8 on the next row.
+//
+// IMPORTANT: this block must come AFTER the .cases > .container >
+// *:nth-child(3n + 1) rule above. Both selectors have the same
+// specificity (single class), so source order is what makes the
+// override win.
+.cases.cases--rest {
+  margin-top: 0;
+  & > .container {
+    & > *:nth-child(3n + 1) {
+      grid-column: auto;
+    }
+    & > *:nth-child(3n) {
+      grid-column: 1 / 3;
+    }
+  }
+}
+
+// Desktop-only SSR intro paragraph that sits between the two
+// case-study grids. Hidden on mobile (mobile uses .mobile-intro
+// directly under the hero). 160px vertical spacing matches the
+// original .filled-text positioning before the cases grid was split —
+// horizontal padding is already handled by HomeOnScrollFilledText.
+.desktop-intro {
+  position: relative;
+  z-index: 1;
+  background-color: $color-background;
+  padding: 160px 0;
+
+  @include respond(mobile) {
+    display: none;
   }
 }
 
