@@ -56,6 +56,11 @@ import { featuredPartnersData } from '~/data/partnersData';
   img {
     width: auto;
     object-fit: contain;
+    // Sit at the same visual weight as the stats numbers below
+    // (both use white at ~80% opacity). Keeps the partners + stats
+    // section coherent and lets the case studies / hero / headlines
+    // remain the brightest content on the page.
+    opacity: 0.8;
   }
 
   // Combined lockups
