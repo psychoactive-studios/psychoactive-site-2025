@@ -16,7 +16,7 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 import useNavigation from '~/composables/useNavigation';
 import gsap from 'gsap';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
-import LinkButton from '~/components/ui/LinkButton.vue';
+import HeroPillLink from '~/components/ui/HeroPillLink.vue';
 import HomeStats from '~/components/homepage/HomeStats.vue';
 import SectionDivider from '~/components/ui/SectionDivider.vue';
 import SectionMoreLink from '~/components/ui/SectionMoreLink.vue';
@@ -228,11 +228,9 @@ definePageMeta({
               AI-era design and development<br>
               for ambitious brands
             </h2>
-            <!-- Mobile hero CTA — same LinkButton + label as the
-                 desktop hero so the interaction is consistent. -->
-            <LinkButton href="/contact" target="_self" size="small">
-              Start a project
-            </LinkButton>
+            <!-- Mobile hero CTA — same HeroPillLink as the desktop
+                 hero so the interaction is consistent. -->
+            <HeroPillLink href="/contact" label="Start a project" />
           </div>
         </section>
 

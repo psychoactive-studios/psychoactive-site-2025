@@ -15,7 +15,7 @@ import VideoPreview from '../ui/VideoPreview.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useAudioManager from '~/composables/useAudioManager';
-import LinkButton from '../ui/LinkButton.vue';
+import HeroPillLink from '../ui/HeroPillLink.vue';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen, previewVideoData } = useVideoPlayer();
@@ -145,18 +145,15 @@ const onScrollDownHandler = (e) => {
             <div class="top-text__innovation display-large grey-text">
               innovate
             </div>
-            <!-- Hero CTA. Uses the same LinkButton component as the
-                 footer "Start a project" button, so the interaction
-                 (scrambleText hover, sound, pill shape) is consistent
-                 across the site. -->
-            <LinkButton
+            <!-- Hero CTA — recreates the original WebflowBlackLabel
+                 pill button style (border, background fade, random
+                 char opacity stagger, hover + click sounds) but with
+                 editable text. -->
+            <HeroPillLink
               href="/contact"
-              target="_self"
-              size="small"
+              label="Start a project"
               class="top-text__cta"
-            >
-              Start a project
-            </LinkButton>
+            />
           </div>
           <div class="center">
             <div class="center__line" />
