@@ -98,12 +98,13 @@ const stats = [
   }
 
   &__number {
+    // Typography (font-size, line-height, letter-spacing) is inherited
+    // from the .display-xl--mobile class on the element itself — same
+    // class the Webflow page Statistics component uses, so the numbers
+    // match in size and weight. We only override what's specific to
+    // this layout.
     color: white(80);
     white-space: nowrap;
-    font-size: clamp(48px, 6.25vw, 120px);
-    font-weight: 400;
-    line-height: 0.95;
-    letter-spacing: -0.02em;
 
     @include respond(mobile) {
       font-size: max(10.25vw, 42px);
