@@ -111,21 +111,6 @@ let positioningCtx;
 onMounted(() => {
   gsap.registerPlugin(ScrollTrigger);
 
-  // Force scroll-to-top on initial mount. App.vue already does this
-  // globally, but the additional ScrollTriggers + height changes on
-  // the homepage (positioning bridge fade-in, awards stagger,
-  // sections shown/hidden by viewport) can shift the layout enough
-  // for the browser's scroll restoration to land at a non-zero
-  // position. Belt-and-braces: scroll both the browser window AND
-  // the smooth-scroll instance to 0, then refresh ScrollTrigger so
-  // it recalculates trigger positions against the now-correct
-  // scroll position.
-  window.scrollTo(0, 0);
-  if (scrollSmoother.value) {
-    scrollSmoother.value.scrollTo(0, { immediate: true, force: true });
-  }
-  ScrollTrigger.refresh();
-
   if (!positioningRef.value) return;
   positioningCtx = gsap.context(() => {
     gsap.from(

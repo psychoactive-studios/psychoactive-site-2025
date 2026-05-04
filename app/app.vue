@@ -2,49 +2,24 @@
 import Loader from './components/ui/Loader.vue';
 import useLoader from '~/composables/useLoader';
 import useAudioManager from '~/composables/useAudioManager';
-import useScrollSmoother from '~/composables/useScrollSmoother';
 
 const { isLoading } = useLoader();
 const { playInteractionSound, hasInteracted } = useAudioManager();
-const { scrollSmoother } = useScrollSmoother();
 
-onBeforeMount(() => {
-  // Check if we are on the client
-  if (typeof window !== 'undefined' && 'scrollRestoration' in history) {
-    // Disable automatic browser scroll restoration
-    history.scrollRestoration = 'manual';
-  }
-});
-
-// Force scroll-to-top on every refresh / initial load. Browser
-// scroll restoration is disabled (above) but layout shifts during
-// hydration + ScrollSmoother init were still letting the page land
-// at a non-zero position. Three defensive scrolls cover the bases:
-//   1. Immediate on mount — before any rendering.
-//   2. After nextTick — once Vue has finished initial render.
-//   3. After the loader finishes — once content + animations are
-//      settled.
-const scrollHomeToTop = () => {
-  if (typeof window === 'undefined') return;
+// Disable browser scroll restoration as early as possible so the
+// browser doesn't try to restore the previous scroll position on
+// refresh. We do this in a top-level synchronous block (not in
+// onMounted) so it runs before the browser has a chance to restore.
+if (typeof window !== 'undefined' && 'scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+  // Force the document straight to scroll position 0 before any
+  // rendering happens — no animation, no lenis smoothing,
+  // no visible motion.
   window.scrollTo(0, 0);
-  if (scrollSmoother.value) {
-    scrollSmoother.value.scrollTo(0, { immediate: true, force: true });
-  }
-};
+}
 
-onMounted(async () => {
-  scrollHomeToTop();
-  await nextTick();
-  scrollHomeToTop();
-
+onMounted(() => {
   window.addEventListener('click', handleGlobalClick);
-});
-
-// Run again the moment the loader hides — by then the page has
-// fully rendered, fonts have loaded, and any layout shifts are done.
-// This is the catch-all that covers every page on every refresh.
-watch(isLoading, (loading) => {
-  if (!loading) scrollHomeToTop();
 });
 
 const handleGlobalClick = (event) => {
