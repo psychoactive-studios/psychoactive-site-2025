@@ -28,9 +28,15 @@ import { featuredPartnersData } from '~/data/partnersData';
   // Edge-to-edge within the standard .container gutter. First logo
   // sits at the left, last at the right, the rest distributed evenly
   // via space-between.
+  //
+  // The `gap` is a safety net — it guarantees minimum spacing
+  // between adjacent logos even if their combined width is tight
+  // against the container. space-between then adds extra space on
+  // top of that gap when there's room to spare.
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: clamp(16px, 1.5vw, 40px);
 
   @include respond(mobile) {
     display: block;
@@ -39,50 +45,57 @@ import { featuredPartnersData } from '~/data/partnersData';
   // Per-logo heights, not a single shared height. Logos with very
   // different aspect ratios (a wide wordmark like BLACKBIRD vs a
   // compact emblem like WOW) need different heights to read with
-  // similar optical weight in the row. Heights cluster within a 1.5×
-  // range so the row still feels coherent — wider lockups sit a
-  // touch shorter, compact emblems and dense wordmarks sit taller.
+  // similar optical weight in the row. Heights chosen so each logo's
+  // visible "type" sits at a comparable size, even when the SVG
+  // viewBox includes surrounding whitespace (notably All Blacks,
+  // where the silver fern extends well above the wordmark in the
+  // viewBox).
   img {
     width: auto;
     object-fit: contain;
+    flex-shrink: 0;
   }
 
-  // Combined lockups (Adidas, All Blacks) — moderate height; the
-  // peak / fern gives them visual presence without needing extra
-  // height.
+  // Combined lockups —
+  // Adidas: wordmark + trefoil, modest height keeps the row tidy
+  // alongside the wider logos.
   .partner-adidas {
-    height: clamp(28px, 2.4vw, 48px);
+    height: clamp(22px, 1.9vw, 36px);
   }
+
+  // All Blacks: the fern occupies the full viewBox height while the
+  // wordmark sits below it, so the visible text reads small relative
+  // to the SVG height. Bumped up so the wordmark text matches the
+  // weight of the other logos and the fern naturally extends taller.
   .partner-all-blacks {
-    height: clamp(28px, 2.4vw, 48px);
+    height: clamp(28px, 2.4vw, 46px);
   }
 
-  // Compact decorative wordmarks (Hellboy) — taller so the
-  // distinctive lettering reads at the same weight as the wider
-  // logos.
+  // Decorative wordmark (Hellboy) — slightly taller so the unique
+  // lettering carries presence.
   .partner-hellboy {
-    height: clamp(34px, 2.9vw, 56px);
+    height: clamp(28px, 2.4vw, 44px);
   }
 
-  // Compact emblem (WOW) — taller still; emblems need extra size to
-  // hold their own next to wordmarks.
+  // Compact emblem (WOW) — taller; emblems need extra size to hold
+  // their own next to wordmarks.
   .partner-wow {
-    height: clamp(36px, 3vw, 60px);
+    height: clamp(30px, 2.6vw, 48px);
   }
 
   // Wide wordmarks (Blackbird, Token2049) — shorter; their width
   // already gives them plenty of presence in the row.
   .partner-blackbird {
-    height: clamp(22px, 1.9vw, 36px);
+    height: clamp(18px, 1.6vw, 28px);
   }
   .partner-token-2049 {
-    height: clamp(24px, 2vw, 38px);
+    height: clamp(20px, 1.7vw, 30px);
   }
 
-  // SuperAI — wordmark with chip; medium-wide aspect, mid-range
-  // height so the chip detail stays legible.
+  // SuperAI — wordmark with chip; mid-range height so the chip
+  // detail stays legible.
   .partner-super-ai {
-    height: clamp(28px, 2.4vw, 46px);
+    height: clamp(22px, 1.9vw, 36px);
   }
 }
 </style>
