@@ -1,11 +1,14 @@
 <script setup>
-import { partnersData } from '~/data/partnersData';
+// Use the featured-only subset so the homepage hero strip stays
+// uncluttered (~7 most internationally recognisable marks) rather
+// than rendering every client we've ever shipped for.
+import { featuredPartnersData } from '~/data/partnersData';
 </script>
 
 <template>
   <div class="partners-desktop">
     <img
-      v-for="partner in partnersData"
+      v-for="partner in featuredPartnersData"
       :key="partner.id"
       :src="partner.logo"
       :alt="partner.alt || `${partner.name} client logo`"
@@ -19,22 +22,19 @@ import { partnersData } from '~/data/partnersData';
 <style scoped lang="scss">
 @use '~/assets/styles/mixins' as *;
 .partners-desktop {
+  // With the strip trimmed from 10 to 7 logos, space-between left
+  // huge gaps between logos. Centring with a fixed gap reads as a
+  // deliberate, premium row regardless of how many marks are shown.
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: clamp(40px, 4.5vw, 96px);
   @include respond(mobile) {
     display: block;
   }
   img {
     height: auto;
     object-fit: contain;
-    margin: 0 clamp(8px, 1.042vw, 20px);
-    &:first-child {
-      margin-left: 0;
-    }
-    &:last-child {
-      margin-right: 0;
-    }
   }
   .partner-super-ai {
     width: 6.5%;

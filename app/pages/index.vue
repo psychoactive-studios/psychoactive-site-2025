@@ -170,11 +170,14 @@ definePageMeta({
       <!-- Partners — rendered server-side so the audit tool / Google /
            LinkedIn previews see the client logo strip. The component
            itself is purely declarative (just <img> tags) so it's
-           SSR-safe with no hydration risk. -->
-      <section class="partners">
+           SSR-safe with no hydration risk.
+           No visible heading — the logos communicate the point on
+           their own. An sr-only h2 keeps the document outline tidy
+           for screen readers and crawlers. -->
+      <section class="partners" aria-labelledby="partners-heading">
         <div class="container">
-          <h2 class="partners__title subheader">
-            Partner to the world’s leading innovation brands and events
+          <h2 id="partners-heading" class="sr-only">
+            Selected clients
           </h2>
           <PartnersDesktop />
         </div>
@@ -322,11 +325,11 @@ definePageMeta({
   position: relative;
   z-index: 1;
   background-color: $color-background;
-  &__title {
-    text-align: center;
-    opacity: 0.5;
-    margin-bottom: 3vw;
-  }
+  // The headline used to add a 3vw bottom margin between caption and
+  // logos. Now that the headline is gone, give the partners section
+  // a bit of top breathing room so it doesn't crash into the hero
+  // when the visual hero ends.
+  padding-top: 4vw;
   @include respond(mobile) {
     display: none;
   }

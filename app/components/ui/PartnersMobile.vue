@@ -1,11 +1,13 @@
 <script setup>
-import { partnersData } from '~/data/partnersData';
+// Match the desktop hero strip — show only the featured (most
+// internationally recognisable) clients in the marquee.
+import { featuredPartnersData } from '~/data/partnersData';
 </script>
 
 <template>
   <Vue3Marquee :duration="30" :pause-on-hover="true" class="partners-mobile">
     <img
-      v-for="partner in partnersData"
+      v-for="partner in featuredPartnersData"
       :key="partner.id"
       :src="partner.logo"
       :alt="partner.alt || `${partner.name} client logo`"
