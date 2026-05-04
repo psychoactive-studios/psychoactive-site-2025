@@ -50,13 +50,18 @@ onMounted(async () => {
   -webkit-background-clip: text;
 
   // Highlight pattern — <span class="dark"> wrappers dim
-  // "supporting" phrases so the un-wrapped phrases pop. Use opacity
-  // (not a separate gradient) so the parent's gradient sweep stays
-  // a single continuous reveal across the whole text — earlier
-  // approach gave each dark span its own gradient which produced
-  // multiple visible sweep edges.
+  // "supporting" phrases so the un-wrapped phrases pop. Set a
+  // constant 50% white fill that overrides the parent's gradient
+  // — dark spans stay visibly-but-dimmer regardless of sweep
+  // position. Earlier opacity-on-gradient approach made dark spans
+  // disappear in the unrevealed area (30% × 0.45 ≈ 13% white,
+  // basically invisible on the dark background).
   :deep(.dark) {
-    opacity: 0.45;
+    -webkit-text-fill-color: white(50);
+    color: white(50);
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
   }
 }
 </style>
