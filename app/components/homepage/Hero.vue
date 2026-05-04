@@ -15,7 +15,7 @@ import VideoPreview from '../ui/VideoPreview.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useAudioManager from '~/composables/useAudioManager';
-import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
+import LinkButton from '../ui/LinkButton.vue';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen, previewVideoData } = useVideoPlayer();
@@ -145,14 +145,18 @@ const onScrollDownHandler = (e) => {
             <div class="top-text__innovation display-large grey-text">
               innovate
             </div>
-            <NuxtLink
-              href="/webflow-enterprise-agency"              
-              @mouseenter="() => playInteractionSound('text-hover-short', 100)"
-              @click="() => playInteractionSound('click-1')"
+            <!-- Hero CTA. Uses the same LinkButton component as the
+                 footer "Start a project" button, so the interaction
+                 (scrambleText hover, sound, pill shape) is consistent
+                 across the site. -->
+            <LinkButton
+              href="/contact"
+              target="_self"
+              size="small"
+              class="top-text__cta"
             >
-              <!-- <WebflowLabel class="top-text__label" /> -->
-              <WebflowBlackLabel class="top-text__label" />
-            </NuxtLink>
+              Start a project
+            </LinkButton>
           </div>
           <div class="center">
             <div class="center__line" />

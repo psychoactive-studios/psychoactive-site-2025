@@ -16,7 +16,7 @@ import useScrollSmoother from '~/composables/useScrollSmoother';
 import useNavigation from '~/composables/useNavigation';
 import gsap from 'gsap';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
-import WebflowBlackLabel from '~/components/ui/WebflowBlackLabel.vue';
+import LinkButton from '~/components/ui/LinkButton.vue';
 import HomeStats from '~/components/homepage/HomeStats.vue';
 import SectionDivider from '~/components/ui/SectionDivider.vue';
 import SectionMoreLink from '~/components/ui/SectionMoreLink.vue';
@@ -199,6 +199,27 @@ definePageMeta({
            the treatment used on the Webflow page. -->
       <HomeStats />
 
+      <!-- Positioning bridge — sits between the stats and the case
+           studies. Names what we've been (Webflow Enterprise Partner)
+           and what's new (custom AI builds) so visitors get the full
+           context before they see the work. The Webflow Enterprise
+           Partner mention is linked through to /webflow-enterprise-
+           agency for anyone who wants to dig in. -->
+      <section class="positioning-line">
+        <div class="container">
+          <p class="positioning-line__text">
+            <NuxtLink
+              href="/webflow-enterprise-agency"
+              class="positioning-line__link"
+            >
+              Premium Webflow Enterprise Partner
+            </NuxtLink>
+            since 2022. Now building custom AI websites for the
+            projects that need to go further.
+          </p>
+        </div>
+      </section>
+
       <ClientOnly>
         <!-- Mobile Digital Text Section -->
         <section v-if="isMobile" class="mobile-digital">
@@ -207,14 +228,11 @@ definePageMeta({
               AI-era design and development<br>
               for ambitious brands
             </h2>
-            <NuxtLink
-              href="/webflow-enterprise-agency"
-              @mouseenter="() => playInteractionSound('text-hover-short', 100)"
-              @click="() => playInteractionSound('click-1')"
-            >
-              <!-- <WebflowLabel class="top-text__label" /> -->
-              <WebflowBlackLabel class="top-text__label" />
-            </NuxtLink>
+            <!-- Mobile hero CTA — same LinkButton + label as the
+                 desktop hero so the interaction is consistent. -->
+            <LinkButton href="/contact" target="_self" size="small">
+              Start a project
+            </LinkButton>
           </div>
         </section>
 
@@ -357,6 +375,43 @@ definePageMeta({
   padding-top: 4vw;
   @include respond(mobile) {
     display: none;
+  }
+}
+
+// Webflow → AI positioning bridge. Sits below the stats and above
+// the case studies. Subtle, centered, ~60% opacity so it reads as
+// supporting context rather than a headline.
+.positioning-line {
+  position: relative;
+  z-index: 1;
+  background-color: $color-background;
+  padding: getRem(24) 0 getRem(80);
+  text-align: center;
+
+  @include respond(mobile) {
+    padding: getRem(16) 0 getRem(48);
+  }
+
+  &__text {
+    color: white(60);
+    font-size: clamp(14px, 1.04vw, 20px);
+    line-height: 1.55;
+    max-width: 60ch;
+    margin: 0 auto;
+  }
+
+  &__link {
+    color: white(85);
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1px;
+    text-decoration-color: white(30);
+    transition: text-decoration-color 0.3s ease, color 0.3s ease;
+
+    &:hover {
+      color: $color-foreground;
+      text-decoration-color: white(80);
+    }
   }
 }
 
