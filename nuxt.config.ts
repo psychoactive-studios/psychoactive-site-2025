@@ -214,6 +214,21 @@ export default defineNuxtConfig({
   },
   // Redirects for content-hub pages
   routeRules: {
+    // Force SSR-on-demand (no prerender) for case-study pages. The
+    // prerender step crawls links at build time and tries to fetch
+    // each /work/:slug from Strapi — if Strapi is briefly unreachable
+    // or returns an error during the build, the prerendered HTML is
+    // the 404 page, and Vercel then serves that cached 404 forever
+    // on direct URL hits. (Client-side navigation from the homepage
+    // bypasses the cache and re-fetches, which is why the page works
+    // when you navigate to it but 404s on direct URL.) Setting
+    // prerender: false makes each request hit the serverless
+    // function, which fetches Strapi fresh.
+    '/work/**': { prerender: false },
+    // Same defensive treatment for content-hub article pages — they
+    // share the same Strapi-backed pattern.
+    '/content-hub/**': { prerender: false },
+
     // Content Hub Redirects
     // '/content-hub/how-we-built-award-worthy-websites-for-global-events': { redirect: { to: '/content-hub/how-we-built-award-worthy-websites-for-global-events', statusCode: 301 } },
     '/content-hub/ai-vs-custom-development-when-to-use-what': { redirect: { to: '/content-hub/when-to-build-with-ai-and-when-to-use-webflow-and-custom-code', statusCode: 301 } },
