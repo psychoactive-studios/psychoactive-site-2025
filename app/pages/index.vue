@@ -174,16 +174,14 @@ definePageMeta({
            SSR-safe with no hydration risk.
            No visible heading — the logos communicate the point on
            their own. An sr-only h2 keeps the document outline tidy
-           for screen readers and crawlers.
-           No .container wrapper — the partners strip extends close to
-           the screen edges so the logo row reads as a confident
-           full-width statement, then the divider + stats sit back
-           inside the standard content gutter. -->
+           for screen readers and crawlers. -->
       <section class="partners" aria-labelledby="partners-heading">
-        <h2 id="partners-heading" class="sr-only">
-          Selected clients
-        </h2>
-        <PartnersDesktop />
+        <div class="container">
+          <h2 id="partners-heading" class="sr-only">
+            Selected clients
+          </h2>
+          <PartnersDesktop />
+        </div>
       </section>
 
       <!-- Subtle divider between the logos and the stats. Brand-pattern
@@ -337,10 +335,12 @@ definePageMeta({
   position: relative;
   z-index: 1;
   background-color: $color-background;
-  // Logos extend close to the screen edges (smaller side padding
-  // than the standard .container's 160px). Reads as a confident
-  // full-width row of recognisable brand marks.
-  padding: 4vw clamp(24px, 2.5vw, 56px) 0;
+  // Logos sit within the standard .container gutter (matches the rest
+  // of the page content). The dropped headline used to add 3vw bottom
+  // margin between caption and logos — keeping a similar amount of
+  // top breathing room here so the section doesn't crash into the
+  // hero above.
+  padding-top: 4vw;
   @include respond(mobile) {
     display: none;
   }
