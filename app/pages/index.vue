@@ -73,8 +73,11 @@ const worksList = computed(() => {
   const mobileScale = { id: 'mobile-scale' };
   const result = works.value.length ? [...works.value] : [];
   if (isMobile.value) {
+    // On mobile the intro paragraph ('We work at the intersection of...')
+    // is rendered above the case studies (in its own SSR-friendly
+    // section right after the hero), so we don't insert it into the
+    // cases iteration.
     result.splice(3, 0, mobileScale);
-    result.splice(6, 0, letstalkItem);
   } else {
     result.splice(3, 0, letstalkItem);
   }
@@ -129,6 +132,30 @@ definePageMeta({
         <HeroMobile v-if="isMobile" />
       </section>
     </ClientOnly>
+
+    <!-- Mobile-only intro paragraph, sits directly under the hero.
+         Rendered SSR so it's also picked up by crawlers. Hidden on
+         desktop via CSS — the desktop version still appears between
+         case studies (animated, inside ClientOnly) so the existing
+         desktop design is preserved. -->
+    <section class="mobile-intro">
+      <div class="container">
+        <HomeOnScrollFilledText>
+          <span class="dark">We work at the intersection of</span>
+          design, technology, and strategy,
+          <span class="dark">building</span>
+          high-performance
+          <span class="dark"
+            >websites and digital experiences for some of the world’s most</span
+          >
+          ambitious brands.
+          <span class="dark"
+            >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
+          >
+          we’re completely obsessed.
+        </HomeOnScrollFilledText>
+      </div>
+    </section>
 
     <div class="homepage__content">
       <!-- Partners — rendered server-side so the audit tool / Google /
@@ -193,27 +220,9 @@ definePageMeta({
         <section v-if="isMobile" class="cases">
           <div class="container">
             <template v-for="work in worksList" :key="work.id">
-              <!-- Filled Text Section -->
-              <section v-if="work.id === 'filled-text'" class="filled-text">
-                <HomeOnScrollFilledText>
-                  <span class="dark">We work at the intersection of</span>
-                  design, technology, and strategy,
-                  <span class="dark">building</span>
-                  high-performance
-                  <span class="dark"
-                    >websites and digital experiences for some of the world’s most</span
-                  >
-                  ambitious brands.
-                  <span class="dark"
-                    >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
-                  >
-                  we’re completely obsessed.
-                </HomeOnScrollFilledText>
-              </section>
-
               <!-- Mobile Scale Text Section -->
               <section
-                v-else-if="work.id === 'mobile-scale'"
+                v-if="work.id === 'mobile-scale'"
                 class="mobile-scale"
               >
                 <div class="container">
@@ -257,6 +266,22 @@ definePageMeta({
     background-color: $color-background;
     position: relative;
     z-index: 1;
+  }
+}
+
+// Mobile-only intro paragraph that sits directly under the hero.
+// Hidden on desktop (the desktop layout still shows the animated
+// intro paragraph between case studies). Rendered SSR so it's also
+// picked up by crawlers on mobile.
+.mobile-intro {
+  display: none;
+
+  @include respond(mobile) {
+    display: block;
+    position: relative;
+    z-index: 1;
+    background-color: $color-background;
+    padding: getRem(60) 0 getRem(40);
   }
 }
 
