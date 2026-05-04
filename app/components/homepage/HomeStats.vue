@@ -29,12 +29,18 @@ const stats = [
       <h2 id="home-stats-heading" class="sr-only">
         Numbers from recent client work
       </h2>
+      <!-- Mirrors the layout of the Webflow page Statistics component:
+           flex with space-between, no equal-width columns, so each
+           number takes its natural width and "50 million+" doesn't
+           wrap. First item left, third item right-aligned. -->
       <ul class="home-stats__list">
         <li v-for="stat in stats" :key="stat.client" class="home-stats__item">
-          <div class="home-stats__number">{{ stat.number }}</div>
-          <div class="home-stats__meta">
-            <span class="home-stats__label">{{ stat.label }}</span>
-            <span class="home-stats__client">{{ stat.client }}</span>
+          <div class="home-stats__number display-xl--mobile">
+            {{ stat.number }}
+          </div>
+          <div class="home-stats__info">
+            <label>{{ stat.label }}</label>
+            <span>{{ stat.client }}</span>
           </div>
         </li>
       </ul>
@@ -61,58 +67,74 @@ const stats = [
     list-style: none;
     margin: 0;
     padding: 0;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(24px, 4vw, 80px);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: getRem(24);
 
     @include respond(mobile) {
-      grid-template-columns: 1fr;
-      gap: getRem(36);
+      flex-direction: column;
+      align-items: stretch;
+      gap: getRem(60);
     }
   }
 
   &__item {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: getRem(16);
+
+    // Mirror the Webflow page's left/right edge alignment so the row
+    // visually anchors to the section edges.
+    &:last-child {
+      align-items: flex-end;
+      text-align: right;
+
+      @include respond(mobile) {
+        align-items: flex-start;
+        text-align: left;
+      }
+    }
   }
 
   &__number {
+    color: white(80);
+    white-space: nowrap;
     font-size: clamp(48px, 6.25vw, 120px);
     font-weight: 400;
     line-height: 0.95;
     letter-spacing: -0.02em;
-    color: white(85);
 
     @include respond(mobile) {
-      font-size: clamp(56px, 16vw, 96px);
+      font-size: max(10.25vw, 42px);
     }
   }
 
-  &__meta {
-    display: flex;
+  &__info {
+    margin-top: 2.4vw;
+    font-size: clamp(12px, 1.042vw, 20px);
+    font-weight: 400;
+    line-height: 130%;
+    display: inline-flex;
     align-items: center;
-    flex-wrap: wrap;
     gap: getRem(12);
-  }
-
-  &__label {
-    display: inline-block;
-    background: $color-blue;
-    color: $color-foreground;
-    text-transform: uppercase;
-    font-family: 'RoobertMono', monospace;
-    font-size: clamp(10px, 0.7vw, 12px);
-    letter-spacing: 0.06em;
-    padding: getRem(6) getRem(12);
-    border-radius: getRem(4);
-    line-height: 1;
-  }
-
-  &__client {
     color: white(85);
-    font-size: clamp(14px, 1vw, 18px);
+
+    @include respond(mobile) {
+      margin-top: getRem(12);
+    }
+
+    label {
+      font-family: 'RoobertMono', monospace;
+      font-size: clamp(12px, 0.833vw, 16px);
+      font-weight: 500;
+      line-height: 100%;
+      text-transform: uppercase;
+      border-radius: 6px;
+      background: $color-blue;
+      color: $color-foreground;
+      padding: 4px 12px;
+    }
   }
 }
 </style>

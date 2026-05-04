@@ -120,6 +120,9 @@ onUnmounted(() => {
   &__item {
     &_number {
       color: white(80);
+      // Prevent the number wrapping onto two lines (e.g. "50 million+")
+      // when the column gets squeezed on intermediate viewport widths.
+      white-space: nowrap;
       @include respond(mobile) {
         font-size: max(10.25vw, 42px);
       }
