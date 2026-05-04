@@ -1,5 +1,5 @@
 import superAiLogo from '/img/partners/super-ai.png';
-import adidasLogo from '/img/partners/adidas.png';
+import adidasLogo from '/img/partners/adidas.svg';
 import rayWhiteLogo from '/img/partners/ray-white.png';
 import hellboyLogo from '/img/partners/hellboy.png';
 import blackbirdLogo from '/img/partners/blackbird.png';
@@ -73,6 +73,11 @@ export const partnersData = [
     name: 'All Blacks',
     alt: 'All Blacks client logo',
     logo: allBlacksLogo,
+    // Image is just the silver fern (the brand-accurate stylization
+    // we want to keep). The component renders this wordmark text next
+    // to it so the row reads as the combined "ALL BLACKS + fern"
+    // lockup rather than a fern on its own.
+    wordmark: 'ALL BLACKS',
     featured: true,
   },
   {
