@@ -35,12 +35,14 @@ const stats = [
            wrap. First item left, third item right-aligned. -->
       <ul class="home-stats__list">
         <li v-for="stat in stats" :key="stat.client" class="home-stats__item">
-          <div class="home-stats__number display-xl--mobile">
-            {{ stat.number }}
-          </div>
-          <div class="home-stats__info">
-            <label>{{ stat.label }}</label>
-            <span>{{ stat.client }}</span>
+          <div class="home-stats__inner">
+            <div class="home-stats__number display-xl--mobile">
+              {{ stat.number }}
+            </div>
+            <div class="home-stats__info">
+              <label>{{ stat.label }}</label>
+              <span>{{ stat.client }}</span>
+            </div>
           </div>
         </li>
       </ul>
@@ -79,22 +81,20 @@ const stats = [
     }
   }
 
+  // Each item is just a positioning wrapper — the actual layout
+  // (number above, chip+client below) lives inside __inner. This
+  // lets the third item sit at the right edge of the section while
+  // the chip+client name left-aligns to the start of "7,000+" rather
+  // than to the right edge of the page.
   &__item {
     display: flex;
+  }
+
+  &__inner {
+    display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap: getRem(16);
-
-    // Mirror the Webflow page's left/right edge alignment so the row
-    // visually anchors to the section edges.
-    &:last-child {
-      align-items: flex-end;
-      text-align: right;
-
-      @include respond(mobile) {
-        align-items: flex-start;
-        text-align: left;
-      }
-    }
   }
 
   &__number {
