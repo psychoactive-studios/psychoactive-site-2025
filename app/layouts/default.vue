@@ -72,6 +72,17 @@ watch(
         <slot />
       </div>
     </ScrollProvider>
+    <!--
+      Black "cover" used by the hamburger-nav page transition.
+      Sits between the menu (z-index 99) and the page (~0). Hidden by
+      default. When the user clicks a link in the open menu, this is
+      flipped to opacity 1 synchronously so the menu can lift away
+      without ever revealing the outgoing page underneath. Fades back
+      out once the new page has mounted. See `useNavigation.js` for
+      the show/hide helpers and `utils/animations/transitions.js` for
+      the fade-out call.
+    -->
+    <div id="nav-transition-cover" aria-hidden="true" />
   </div>
 </template>
 
@@ -80,5 +91,14 @@ watch(
 #header-navigation-button,
 #header-sound-button {
   scale: 0;
+}
+#nav-transition-cover {
+  position: fixed;
+  inset: 0;
+  background-color: #101012; /* matches $color-background */
+  z-index: 98;               /* just below .navigation (z-index: 99) */
+  opacity: 0;
+  pointer-events: none;
+  will-change: opacity;
 }
 </style>

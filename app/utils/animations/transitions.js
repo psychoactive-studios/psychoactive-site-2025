@@ -6,67 +6,90 @@ import useNavigation from '~/composables/useNavigation';
 /**
  * Page transition out when the navigation came from the hamburger menu.
  *
- * Two things this helper does that the previous inline implementation
- * didn't:
+ * Three things this helper does:
  *
  * 1. Hide the outgoing page synchronously (direct style mutation, no
- *    GSAP frame delay). Eliminates the brief moment where the old
- *    page was visible behind the menu as it started lifting.
+ *    GSAP frame delay). Belt-and-braces with the nav-transition
+ *    cover — covers the brief frame between click and onLeave.
  *
  * 2. Wait for the actual `close-timeline` to finish before signalling
- *    the route transition complete. The previous fixed `+=1s` wait
- *    could desync from the real close animation — sometimes the new
- *    page appeared mid-close, sometimes left a black gap. Hooking
- *    onComplete syncs the page swap to the menu's actual end-of-close.
+ *    the route transition complete. Polls (rather than checking once)
+ *    so we catch the close-timeline whether it started immediately
+ *    after the click (menu was fully open) OR after the open-timeline
+ *    completes (mid-open click — the click handler queues the close).
  *
- * If close didn't start (user clicked a link during the open
- * animation, which closeNavigation guards against), we fall back to a
- * generous timeout so navigation still completes.
+ * 3. Fade the nav-transition cover back out once the new page has
+ *    mounted, so the user smoothly sees the new page rather than a
+ *    sudden cut from black.
  */
 export const navTransitionOut = (el, done, options = {}) => {
-  // Hide the outgoing page underneath the menu — synchronous so there
-  // is no possibility of a frame where it's visible behind the lifting
-  // menu. The page is about to be unmounted; no need to restore.
+  // Hide the outgoing page underneath the menu/cover — synchronous so
+  // there's no frame where it's visible. About to be unmounted; no
+  // need to restore.
   if (el && el.style) el.style.opacity = '0';
 
   // Pages with overlay/pinned content (services stepper, work scroll
   // progress widget, etc.) can pass `options.alsoHide` to hide their
-  // extras at the same instant the page el goes invisible. These DOM
-  // mutations fire synchronously alongside the opacity drop.
+  // extras at the same instant the page el goes invisible.
   if (typeof options.alsoHide === 'function') {
     options.alsoHide();
   }
 
+  const { transitionFromNavigation, hideNavTransitionCover } = useNavigation();
+
   const finish = () => {
     // Pages can pass `options.onComplete` for side effects that need
     // to fire AFTER the close timeline finishes (e.g. resetting the
-    // colour mode flag, clearing back-button state, etc.) — alongside
-    // the standard transitionFromNavigation reset.
+    // colour mode flag, clearing back-button state, etc.).
     if (typeof options.onComplete === 'function') options.onComplete();
-    const { transitionFromNavigation } = useNavigation();
     transitionFromNavigation.value = false;
     done();
+    // Fade the cover out a beat after `done()` so the new page has
+    // a chance to mount underneath before the cover reveals it.
+    hideNavTransitionCover();
   };
 
-  const close = gsap.getById('close-timeline');
-
-  if (close && close.isActive()) {
+  const hookCloseOnComplete = (close) => {
     // Capture and restore any existing onComplete so the close
     // timeline's own end-of-animation logic (initNavigation) still
     // fires.
     const existing = close.eventCallback('onComplete');
     close.eventCallback('onComplete', () => {
       if (typeof existing === 'function') existing();
-      // Clear our hook so the next close cycle doesn't re-trigger it.
       close.eventCallback('onComplete', existing || null);
       finish();
     });
-  } else {
-    // Close didn't start (e.g. user clicked during open animation,
-    // when closeNavigation early-returns). Use a fallback delay so the
-    // outgoing page gets a beat before the next one mounts.
-    setTimeout(finish, 1000);
-  }
+  };
+
+  // Poll for close-timeline to become active. Covers two cases:
+  //   - Click while menu fully open: close starts almost immediately
+  //     (we usually catch it on the first attempt).
+  //   - Click during open animation: the click handler queues the
+  //     header-button click on open's onComplete. close-timeline only
+  //     starts once open finishes — which can be up to ~1s later.
+  // Budget: 2s (~120 frames at 60fps). If close still hasn't started
+  // after that, finish anyway so navigation isn't stuck forever.
+  const POLL_BUDGET_FRAMES = 120;
+  const waitForClose = (attempts = 0) => {
+    const close = gsap.getById('close-timeline');
+    if (close?.isActive()) {
+      hookCloseOnComplete(close);
+      return;
+    }
+    // If we have a close-timeline reference and it's already done,
+    // there's nothing left to wait for.
+    if (close && close.progress() === 1) {
+      finish();
+      return;
+    }
+    if (attempts < POLL_BUDGET_FRAMES) {
+      requestAnimationFrame(() => waitForClose(attempts + 1));
+      return;
+    }
+    finish();
+  };
+
+  waitForClose();
 };
 
 export const leaveAnimation = (el, done) => {

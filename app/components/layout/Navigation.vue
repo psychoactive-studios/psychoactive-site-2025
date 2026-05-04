@@ -8,8 +8,12 @@ import gsap from 'gsap';
 import { navigationData } from '~/data/navigationData';
 import useVideoPlayer from '~/composables/useVideoPlayer';
 
-const { navigationRef, initNavigation, transitionFromNavigation } =
-  useNavigation();
+const {
+  navigationRef,
+  initNavigation,
+  transitionFromNavigation,
+  showNavTransitionCover,
+} = useNavigation();
 const { playInteractionSound } = useAudioManager();
 const { previewVideoData } = useVideoPlayer();
 
@@ -34,35 +38,66 @@ const talkButtonHoverHandler = () => {
   talkButtonHoverTween.restart();
 };
 
+const triggerHeaderNavButtonClick = () => {
+  document.querySelector('#header-navigation-button')?.click();
+};
+
+/**
+ * Queue the close (via header-button click) to fire as soon as the
+ * open-timeline finishes. Without this, mid-open clicks fall through
+ * to navTransitionOut's fallback timeout and the menu sits fully open
+ * over the new page after it mounts. Wraps any existing onComplete
+ * so the timeline's own end-of-open logic still runs.
+ */
+const queueCloseAfterOpen = (openTimeline) => {
+  const existing = openTimeline.eventCallback('onComplete');
+  openTimeline.eventCallback('onComplete', () => {
+    if (typeof existing === 'function') existing();
+    openTimeline.eventCallback('onComplete', existing || null);
+    triggerHeaderNavButtonClick();
+  });
+};
+
 const clickOnLinkHandler = (e) => {
   // Always flag the transition as "from hamburger nav" so the page's
   // onLeave uses the instant-fade path (page goes opacity 0, nav lifts
-  // to reveal black underneath, then new page appears). Setting this
+  // to reveal the cover, then new page appears). Setting this
   // unconditionally — earlier we early-returned during the open
   // animation, which left the flag as false and made onLeave fall
-  // through to the dramatic leaveAnimation on the first nav. Visible
-  // bug: first hamburger nav per page had no black under the lifting
-  // menu; revisits worked because the open timeline was no longer
-  // active by then.
+  // through to the dramatic leaveAnimation on the first nav.
   transitionFromNavigation.value = true;
 
-  const isAnimating = gsap.getById('open-timeline-main')?.isActive();
-  if (isAnimating) {
-    // Mid-open click — let NuxtLink navigate, but skip the close-button
-    // click since the close timeline guards against running while the
-    // open one is mid-flight. The outgoing page el still goes opacity 0
-    // (instant fade), and the incoming page replaces the nav DOM.
+  // Synchronously raise the cover. Sits between the menu and the page
+  // so when the close-timeline starts lifting the menu's white panel,
+  // what's revealed underneath is solid black — never the outgoing
+  // page. Closes the small frame window between this click and the
+  // page's onLeave firing its own opacity hide.
+  showNavTransitionCover();
+
+  const openTimeline = gsap.getById('open-timeline-main');
+  if (openTimeline?.isActive()) {
+    // Mid-open click. Don't fire the header button click yet — both
+    // closeNavigation() and the header button's onClickHandler guard
+    // against running while open is active, so the click would no-op.
+    // Queue it to fire the moment open completes; navTransitionOut
+    // polls for the close-timeline to start so it picks up the sync.
+    queueCloseAfterOpen(openTimeline);
     return;
   }
-  document.querySelector('#header-navigation-button').click();
-  // scrollSmoother.value.stop();
+  triggerHeaderNavButtonClick();
 };
 
-const clickOnContactHandler = (e) => {  
+const clickOnContactHandler = (e) => {
   transitionFromNavigation.value = true;
+  showNavTransitionCover();
   playInteractionSound('click-3');
-  document.querySelector('#header-navigation-button').click();
-  // scrollSmoother.value.stop();
+
+  const openTimeline = gsap.getById('open-timeline-main');
+  if (openTimeline?.isActive()) {
+    queueCloseAfterOpen(openTimeline);
+    return;
+  }
+  triggerHeaderNavButtonClick();
 };
 </script>
 
