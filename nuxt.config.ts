@@ -204,6 +204,15 @@ export default defineNuxtConfig({
         }
       ],
       script: [
+        // Disable browser scroll restoration as early as possible —
+        // before any bundle JS runs — so the browser doesn't try
+        // to restore the previous scroll position on refresh.
+        // Setting this in app.vue's script setup was too late on
+        // some browsers (the restore happened during HTML parsing).
+        {
+          innerHTML: `if('scrollRestoration' in history){history.scrollRestoration='manual';}`,
+          tagPosition: 'head',
+        },
         // Organization JSON-LD — helps Google's knowledge panel + trust signals.
         {
           type: 'application/ld+json',
