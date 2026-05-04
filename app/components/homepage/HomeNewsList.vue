@@ -1,9 +1,6 @@
 <script setup>
 import HomeNewsCard from './HomeNewsCard.vue';
-import LinkWithHover from '../ui/LinkWithHover.vue';
-import useAudioManager from '~/composables/useAudioManager';
-
-const { playRandomSound } = useAudioManager();
+import SectionMoreLink from '../ui/SectionMoreLink.vue';
 
 defineProps({
   data: {
@@ -38,16 +35,11 @@ const getHref = (news) => {
           :href="getHref(news)"
         />
       </div>
-      <div class="news-list__more body-button">
-        <div class="news-list__more_line" />
-        <LinkWithHover
-          href="/content-hub"
-          @click="() => playRandomSound('click')"
-        >
-          Explore Our Content Hub
-        </LinkWithHover>
-        <div class="news-list__more_line" />
-      </div>
+      <SectionMoreLink
+        href="/content-hub"
+        label="Explore Our Content Hub"
+        class="news-list__more"
+      />
     </div>
   </section>
 </template>
@@ -85,38 +77,8 @@ const getHref = (news) => {
   }
   &__more {
     margin-top: 85px;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    line-height: 27px; /* 168.75% */
     @include respond(mobile) {
       margin-top: getRem(64);
-    }
-    &_line {
-      flex-grow: 1;
-      height: 1px;
-      background-color: white(20);
-      position: relative;
-      &::before {
-        content: '';
-        position: absolute;
-        top: -3px;
-        left: -4px;
-        width: 7px;
-        height: 7px;
-        background-color: white(50);
-        border-radius: 50%;
-      }
-      &::after {
-        content: '';
-        position: absolute;
-        top: -3px;
-        right: -4px;
-        width: 7px;
-        height: 7px;
-        background-color: white(50);
-        border-radius: 50%;
-      }
     }
   }
 }

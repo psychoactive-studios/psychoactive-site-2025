@@ -138,7 +138,9 @@ const onScrollDownHandler = (e) => {
           </div>
           <div class="top-text">
             <div class="top-text__agency subheader">
-              Digital-First design agency
+              AI-era design<br>
+              and development<br>
+              for ambitious brands
             </div>
             <div class="top-text__innovation display-large grey-text">
               innovate

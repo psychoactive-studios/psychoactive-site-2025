@@ -19,6 +19,7 @@ import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
 import WebflowBlackLabel from '~/components/ui/WebflowBlackLabel.vue';
 import HomeStats from '~/components/homepage/HomeStats.vue';
 import SectionDivider from '~/components/ui/SectionDivider.vue';
+import SectionMoreLink from '~/components/ui/SectionMoreLink.vue';
 
 const params = qs.stringify({
   populate: {
@@ -202,7 +203,10 @@ definePageMeta({
         <!-- Mobile Digital Text Section -->
         <section v-if="isMobile" class="mobile-digital">
           <div class="container">
-            <h2 class="subheader--mobile">Digital First design agency</h2>
+            <h2 class="subheader--mobile">
+              AI-era design and development<br>
+              for ambitious brands
+            </h2>
             <NuxtLink
               href="/webflow-enterprise-agency"
               @mouseenter="() => playInteractionSound('text-hover-short', 100)"
@@ -289,6 +293,16 @@ definePageMeta({
 
               <CaseStadyPreview v-else :data="work" />
             </template>
+          </div>
+        </section>
+
+        <!-- "View our work" CTA — sits under the case studies on both
+             desktop and mobile. Mirrors the "Explore Our Content Hub"
+             treatment used under the news list. Gives visitors a clear
+             route to the full /work page directly from the homepage. -->
+        <section class="work-more">
+          <div class="container">
+            <SectionMoreLink href="/work" label="View our work" />
           </div>
         </section>
 
@@ -442,6 +456,16 @@ definePageMeta({
 // *:nth-child(3n + 1) rule above. Both selectors have the same
 // specificity (single class), so source order is what makes the
 // override win.
+// "View our work" CTA section under the case studies. Spacing
+// matches the rhythm before the news list — generous on desktop,
+// tighter on mobile.
+.work-more {
+  margin-top: 85px;
+  @include respond(mobile) {
+    margin-top: getRem(64);
+  }
+}
+
 .cases.cases--rest {
   margin-top: 0;
   & > .container {
