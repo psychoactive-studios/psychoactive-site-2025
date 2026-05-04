@@ -4,9 +4,57 @@ import OnScrollFilledTextLight from '../ui/OnScrollFilledTextLight.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const { playRandomSound } = useAudioManager();
 const { scrollSmoother } = useScrollSmoother();
+
+const containerRef = ref(null);
+let ctx = null;
+
+// Per-row stagger animation. Mirrors the WatsUs accordion pattern on
+// the Webflow page — each award item gets its own ScrollTrigger so
+// rows reveal one-by-one as the user scrolls into them, rather than
+// all animating together off a single section trigger.
+const setupRowAnimations = () => {
+  if (!containerRef.value) return;
+  const items = containerRef.value.querySelectorAll(
+    '.awards__collection_item:not([data-animated])'
+  );
+  items.forEach((item) => {
+    item.dataset.animated = 'true';
+    gsap.from(item, {
+      scrollTrigger: {
+        trigger: item,
+        start: 'top 90%',
+      },
+      opacity: 0,
+      y: 24,
+      duration: 0.8,
+      ease: 'power3.out',
+    });
+  });
+};
+
+onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger);
+  ctx = gsap.context(() => {
+    setupRowAnimations();
+  }, containerRef.value);
+});
+
+onUnmounted(() => {
+  if (ctx) ctx.revert();
+});
+
+// When "Show More" loads additional rows, set up their animations
+// so they fade in as the user scrolls past them too.
+watch(
+  () => containerRef.value?.querySelectorAll('.awards__collection_item').length,
+  () => {
+    nextTick(() => setupRowAnimations());
+  }
+);
 
 // Number of awards to show initially and on each "Show More" click
 const showCount = 6;
@@ -14,6 +62,22 @@ const showOffset = computed(() => awardsData.length / 3);
 
 const showMoreRef = ref(null);
 const offSetRef = ref(showCount);
+
+// Track click count so the button label escalates with each press —
+// gives the user a clear signal that the button still has more to
+// reveal, with a bit of personality. Caps out at the most playful
+// version once we've exhausted the planned progression.
+const clickCount = ref(0);
+
+const showMoreLabel = computed(() => {
+  const labels = [
+    'Show More',
+    'Show Even More',
+    'Show Even Moreee!',
+    'Okay, even more!',
+  ];
+  return labels[Math.min(clickCount.value, labels.length - 1)];
+});
 
 const handleHoverEffect = () => {
   const el = showMoreRef.value;
@@ -52,11 +116,29 @@ const onFocusHandler = () => {
 const onClickHandler = async () => {
   playRandomSound('click');
   offSetRef.value += showOffset.value;
+  clickCount.value += 1;
+
+  // Re-trigger the scrambleText animation on the new label so the
+  // label change reads as a deliberate moment, not just a static
+  // text swap.
+  await nextTick();
+  if (showMoreRef.value) {
+    gsap.to(showMoreRef.value, {
+      duration: 0.8,
+      ease: 'none',
+      scrambleText: {
+        text: '{original}',
+        chars: '0123456789!@#$%^&*()-_=+[]{};:<>/?,.',
+        tweenLength: false,
+      },
+      overwrite: true,
+    });
+  }
 };
 </script>
 
 <template>
-  <section class="awards">
+  <section ref="containerRef" class="awards">
     <div class="container">
       <!-- Awards Title -->
       <div class="awards__title">
@@ -68,9 +150,15 @@ const onClickHandler = async () => {
         </div>
         <div class="awards__title_text heading-h5--mobile">
           <OnScrollFilledTextLight>
-            Our work doesn’t chase awards; it earns them. Each recognition
-            reflects the rigour, imagination, and care we bring to every
-            project.
+            <span class="dark">Our work</span>
+            doesn’t chase awards.
+            <span class="dark">It earns them.</span>
+            From Awwwards Site of the Day to CSS Design Awards and
+            Best Awards,
+            <span class="dark">every honour reflects the same thing:</span>
+            rigour, taste, and the patience
+            <span class="dark">to get the details</span>
+            right.
           </OnScrollFilledTextLight>
         </div>
       </div>
@@ -109,7 +197,7 @@ const onClickHandler = async () => {
             @focus="onFocusHandler"
             @click="onClickHandler"
           >
-            <span ref="showMoreRef">Show More</span>
+            <span ref="showMoreRef">{{ showMoreLabel }}</span>
             <div class="awards__show-more_dots">
               <span />
               <span />
@@ -126,10 +214,13 @@ const onClickHandler = async () => {
 @use '~/assets/styles/functions' as *;
 @use '~/assets/styles/mixins' as *;
 .awards {
-  margin-top: 320px;
+  // Standardised major-section gap (160px) so the spacing under
+  // "Explore Our Content Hub" matches the page rhythm. Was 320px
+  // which felt disconnected from the rest of the page's spacing.
+  margin-top: 160px;
   margin-bottom: 160px;
   @include respond(mobile) {
-    margin-top: 160px;
+    margin-top: 120px;
     margin-bottom: 120px;
   }
   &__title {

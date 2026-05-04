@@ -15,7 +15,7 @@ import VideoPreview from '../ui/VideoPreview.vue';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useAudioManager from '~/composables/useAudioManager';
-import WebflowBlackLabel from '../ui/WebflowBlackLabel.vue';
+import HeroPillLink from '../ui/HeroPillLink.vue';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
 const { onPlayerOpen, previewVideoData } = useVideoPlayer();
@@ -138,19 +138,22 @@ const onScrollDownHandler = (e) => {
           </div>
           <div class="top-text">
             <div class="top-text__agency subheader">
-              Digital-First design agency
+              AI-era design<br>
+              and development<br>
+              for ambitious brands
             </div>
             <div class="top-text__innovation display-large grey-text">
               innovate
             </div>
-            <NuxtLink
-              href="/webflow-enterprise-agency"              
-              @mouseenter="() => playInteractionSound('text-hover-short', 100)"
-              @click="() => playInteractionSound('click-1')"
-            >
-              <!-- <WebflowLabel class="top-text__label" /> -->
-              <WebflowBlackLabel class="top-text__label" />
-            </NuxtLink>
+            <!-- Hero CTA — recreates the original WebflowBlackLabel
+                 pill button style (border, background fade, random
+                 char opacity stagger, hover + click sounds) but with
+                 editable text. -->
+            <HeroPillLink
+              href="/contact"
+              label="Start a project"
+              class="top-text__cta"
+            />
           </div>
           <div class="center">
             <div class="center__line" />

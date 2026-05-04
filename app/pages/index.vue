@@ -15,10 +15,12 @@ import useLoader from '~/composables/useLoader';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useNavigation from '~/composables/useNavigation';
 import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import PartnersDesktop from '~/components/ui/PartnersDesktop.vue';
-import WebflowBlackLabel from '~/components/ui/WebflowBlackLabel.vue';
+import HeroPillLink from '~/components/ui/HeroPillLink.vue';
 import HomeStats from '~/components/homepage/HomeStats.vue';
 import SectionDivider from '~/components/ui/SectionDivider.vue';
+import SectionMoreLink from '~/components/ui/SectionMoreLink.vue';
 
 const params = qs.stringify({
   populate: {
@@ -98,6 +100,43 @@ const worksRest = computed(() =>
 // (DEFAULT_TITLE / DEFAULT_DESCRIPTION). No per-page override needed —
 // the homepage IS the canonical use of those defaults.
 
+// Scroll-triggered fade-in for the positioning bridge — slight
+// upward translate + opacity so it feels like part of the same
+// animation language as the stats / hero rather than static
+// floating text. Fires when the section is ~85% from the top of
+// the viewport (just barely entering view).
+const positioningRef = ref(null);
+let positioningCtx;
+
+onMounted(() => {
+  gsap.registerPlugin(ScrollTrigger);
+  if (!positioningRef.value) return;
+  positioningCtx = gsap.context(() => {
+    gsap.from(
+      [
+        positioningRef.value.querySelector('.positioning-bridge__divider'),
+        positioningRef.value.querySelector('.positioning-bridge__text'),
+      ],
+      {
+        opacity: 0,
+        y: 20,
+        duration: 1.1,
+        ease: 'power3.out',
+        stagger: 0.15,
+        scrollTrigger: {
+          trigger: positioningRef.value,
+          start: 'top 85%',
+          end: 'bottom center',
+        },
+      }
+    );
+  }, positioningRef.value);
+});
+
+onUnmounted(() => {
+  if (positioningCtx) positioningCtx.revert();
+});
+
 definePageMeta({
   scrollToTop: true,
   pageTransition: {
@@ -151,18 +190,19 @@ definePageMeta({
     <section class="mobile-intro">
       <div class="container">
         <HomeOnScrollFilledText>
-          <span class="dark">We work at the intersection of</span>
-          design, technology, and strategy,
-          <span class="dark">building</span>
-          high performance
+          <span class="dark">We design and build websites for</span>
+          sold-out global events seen by millions,
+          <span class="dark">brands launching into a new chapter,</span>
+          and tech companies building
+          <span class="dark">AI-era digital experiences.</span>
+          <span class="paragraph-break" aria-hidden="true"></span>
+          Vision in the big picture. Obsession in the details.
           <span class="dark"
-            >websites and digital experiences for some of the world’s most</span
+            >The rhythm between sections, the timing of an animation,</span
           >
-          ambitious brands.
-          <span class="dark"
-            >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
-          >
-          we’re completely obsessed.
+          the weight of the right typeface at the right moment.
+          <span class="dark">Every interaction</span>
+          earned.
         </HomeOnScrollFilledText>
       </div>
     </section>
@@ -198,22 +238,31 @@ definePageMeta({
            the treatment used on the Webflow page. -->
       <HomeStats />
 
-      <ClientOnly>
-        <!-- Mobile Digital Text Section -->
-        <section v-if="isMobile" class="mobile-digital">
-          <div class="container">
-            <h2 class="subheader--mobile">Digital First design agency</h2>
+      <!-- Positioning bridge — sits between the stats (proof points)
+           and the case studies (the work). Names what we are now
+           (Webflow Enterprise Partner since 2022) and what's new
+           (AI-era experiences) so visitors get the full positioning
+           before seeing the work.
+           Same content gutter as the rest of the page so it ties in
+           with the surrounding sections. Centred, two-line manual
+           break for a deliberate, balanced statement. Reuses the
+           SectionDivider dot pattern above. -->
+      <section ref="positioningRef" class="positioning-bridge">
+        <div class="container">
+          <SectionDivider class="positioning-bridge__divider" />
+          <p class="positioning-bridge__text heading-h5--mobile">
+            Designing and building digital experiences since 2018.<br>
             <NuxtLink
               href="/webflow-enterprise-agency"
-              @mouseenter="() => playInteractionSound('text-hover-short', 100)"
-              @click="() => playInteractionSound('click-1')"
-            >
-              <!-- <WebflowLabel class="top-text__label" /> -->
-              <WebflowBlackLabel class="top-text__label" />
-            </NuxtLink>
-          </div>
-        </section>
+              class="positioning-bridge__link"
+            >Premium Webflow Enterprise Partner</NuxtLink>
+            since 2022.<br>
+            Today, building the next era with AI.
+          </p>
+        </div>
+      </section>
 
+      <ClientOnly>
         <!-- Desktop: first half of case studies. Wrapped in ClientOnly
              via the parent above; the intro paragraph below sits
              OUTSIDE this block so it renders in SSR. -->
@@ -234,18 +283,19 @@ definePageMeta({
       <section class="desktop-intro">
         <div class="container">
           <HomeOnScrollFilledText>
-            <span class="dark">We work at the intersection of</span>
-            design, technology, and strategy,
-            <span class="dark">building</span>
-            high performance
+            <span class="dark">We design and build websites for</span>
+            sold-out global events seen by millions,
+            <span class="dark">brands launching into a new chapter,</span>
+            and tech companies building
+            <span class="dark">AI-era digital experiences.</span>
+            <span class="paragraph-break" aria-hidden="true"></span>
+            Vision in the big picture. Obsession in the details.
             <span class="dark"
-              >websites and digital experiences for some of the world’s most</span
+              >The rhythm between sections, the timing of an animation,</span
             >
-            ambitious brands.
-            <span class="dark"
-              >From sold-out global events seen by millions, to award-winning brand platforms and AI-era digital experiences,</span
-            >
-            we’re completely obsessed.
+            the weight of the right typeface at the right moment.
+            <span class="dark">Every interaction</span>
+            earned.
           </HomeOnScrollFilledText>
         </div>
       </section>
@@ -292,6 +342,16 @@ definePageMeta({
           </div>
         </section>
 
+        <!-- "View our work" CTA — sits under the case studies on both
+             desktop and mobile. Mirrors the "Explore Our Content Hub"
+             treatment used under the news list. Gives visitors a clear
+             route to the full /work page directly from the homepage. -->
+        <section class="work-more">
+          <div class="container">
+            <SectionMoreLink href="/work" label="View all work" />
+          </div>
+        </section>
+
         <!-- News Section -->
         <HomeNewsList :data="articles" />
         <!-- Awards Section -->
@@ -331,6 +391,17 @@ definePageMeta({
   }
 }
 
+// Visual paragraph break inside HomeOnScrollFilledText. The slot
+// renders all chars on a single text flow, so a block-level span
+// with a top margin gives us a real paragraph gap without breaking
+// the SplitText / scroll-fill animation rhythm.
+:deep(.paragraph-break) {
+  display: block;
+  width: 100%;
+  height: 0;
+  margin-top: 1.4em;
+}
+
 .partners {
   position: relative;
   z-index: 1;
@@ -346,6 +417,50 @@ definePageMeta({
   }
 }
 
+// Webflow → AI positioning bridge. Sits between the stats above
+// and the case studies below.
+//
+// Hidden on mobile so the mobile flow doesn't repeat positioning
+// messaging that's already in the hero + mobile-intro paragraph.
+//
+// Spacing: padding-top 0 so the gap above the divider equals the
+// 80px gap below the stats numbers (stats has padding-bottom 80).
+// Result: stats sit symmetrically with 80px of breathing room
+// above + below.
+.positioning-bridge {
+  position: relative;
+  z-index: 1;
+  background-color: $color-background;
+  padding: 0 0 getRem(80);
+
+  @include respond(mobile) {
+    display: none;
+  }
+
+  &__divider {
+    margin-bottom: getRem(48);
+  }
+
+  &__text {
+    color: white(85);
+    text-align: center;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+
+  &__link {
+    color: $color-foreground;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-color: white(40);
+    transition: text-decoration-color 0.3s ease;
+
+    &:hover {
+      text-decoration-color: white(80);
+    }
+  }
+}
+
 // Container for the section divider that sits between the partner
 // logos and the stats strip. Uses the standard .container inside so
 // the divider line matches the stats content gutter below — nicely
@@ -358,19 +473,6 @@ definePageMeta({
 
   @include respond(mobile) {
     display: none;
-  }
-}
-
-.mobile-digital {
-  padding-top: getRem(42);
-  text-align: center;
-  h2 {
-    line-height: 146%;
-    color: white(80);
-    margin-bottom: getRem(22);
-  }
-  a {
-    display: inline-block;
   }
 }
 
@@ -442,6 +544,17 @@ definePageMeta({
 // *:nth-child(3n + 1) rule above. Both selectors have the same
 // specificity (single class), so source order is what makes the
 // override win.
+// "View all work" CTA — sits between the cases grid and the news
+// list. Generous space above (rhythm with the cases section) and
+// the news list below has been retuned so the news cards sit close
+// to symmetrically between this CTA and the content-hub CTA below.
+.work-more {
+  margin-top: 160px;
+  @include respond(mobile) {
+    margin-top: getRem(80);
+  }
+}
+
 .cases.cases--rest {
   margin-top: 0;
   & > .container {

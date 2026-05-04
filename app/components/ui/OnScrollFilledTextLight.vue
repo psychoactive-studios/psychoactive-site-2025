@@ -47,5 +47,16 @@ onMounted(async () => {
     white(30) 0%
   );
   background-clip: text;
+  -webkit-background-clip: text;
+
+  // Highlight pattern — <span class="dark"> wrappers dim
+  // "supporting" phrases so the un-wrapped phrases pop. Use opacity
+  // (not a separate gradient) so the parent's gradient sweep stays
+  // a single continuous reveal across the whole text — earlier
+  // approach gave each dark span its own gradient which produced
+  // multiple visible sweep edges.
+  :deep(.dark) {
+    opacity: 0.45;
+  }
 }
 </style>

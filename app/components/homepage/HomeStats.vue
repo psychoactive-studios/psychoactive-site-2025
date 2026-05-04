@@ -131,8 +131,12 @@ onUnmounted(() => {
   background-color: $color-background;
   padding: getRem(80) 0 getRem(80);
 
+  // Hidden on mobile — the mobile flow runs hero → intro paragraph
+  // → cases for a tighter, less cluttered top of page. The stats
+  // still appear in the SSR HTML for crawlers; they just don't
+  // render visually on mobile.
   @include respond(mobile) {
-    padding: getRem(48) 0;
+    display: none;
   }
 
   &__list {

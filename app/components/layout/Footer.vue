@@ -37,9 +37,9 @@ const handleClick = () => {
 
     <div class="container mobile-cta">
       <section class="mobile-cta__wrapper">
-        <h2 class="mobile-cta__title">Working on something ambitious?</h2>
+        <h2 class="mobile-cta__title">Have an idea?</h2>
         <LinkButton :href="navigationData.find(el => el.id === 'contact').url" size="small" target="_self">
-          let’s talk
+          Start a project
         </LinkButton>
       </section>
     </div>

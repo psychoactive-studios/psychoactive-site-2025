@@ -71,7 +71,9 @@ if (error.value) {
 const works = computed(() => webflowPageData.value?.data?.works);
 const feedbacks = computed(() => webflowPageData.value?.data?.feedbacks);
 const services = computed(() => webflowPageData.value?.data?.services);
-// `whatSetsUsApart` is fetched but not currently used in the template.
+const whatSetsUsApart = computed(
+  () => webflowPageData.value?.data?.whatSetsUsApart
+);
 
 const { scrollSmoother } = useScrollSmoother();
 const { startLoading } = useLoader();
