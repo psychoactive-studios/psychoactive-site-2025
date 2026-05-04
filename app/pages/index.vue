@@ -387,8 +387,24 @@ definePageMeta({
   // The second cases grid sits directly below the desktop intro
   // paragraph, which already has 160px below it — strip the top
   // margin so we don't double up.
+  //
+  // Restore the original tile rhythm (half / half / full / half /
+  // half / full / ...). Splitting the cases section into two grids
+  // resets the nth-child counter, so without this override the first
+  // tile of cases--rest would render full-width and every subsequent
+  // tile would shift. Andrew confirmed the desired post-intro order:
+  // case 4 + case 5 on one row, case 6 (WOW) full-width, case 7 +
+  // case 8 on the next row.
   &--rest {
     margin-top: 0;
+    & > .container {
+      & > *:nth-child(3n + 1) {
+        grid-column: auto;
+      }
+      & > *:nth-child(3n) {
+        grid-column: 1 / 3;
+      }
+    }
   }
   & > .container {
     display: grid;
