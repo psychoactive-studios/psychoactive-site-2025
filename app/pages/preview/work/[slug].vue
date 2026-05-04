@@ -13,6 +13,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ButtonDotsArrow from '~/components/ui/ButtonDotsArrow.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import useScrollSmoother from '~/composables/useScrollSmoother';
+import { navTransitionOut } from '~/utils/animations/transitions';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -134,16 +135,15 @@ definePageMeta({
       const { transitionFromNavigation } = useNavigation();
       const { mode } = useHeader();
       if (transitionFromNavigation.value) {
-        gsap
-          .timeline()
-          .set(el, { opacity: 0 })
-          .set('#work-scroll-progress', { display: 'none' })
-          .set('#top-back-button', { display: 'none', scale: 0 })
-          .add(() => {
-            transitionFromNavigation.value = false;
+        navTransitionOut(el, done, {
+          alsoHide: () => {
+            gsap.set('#work-scroll-progress', { display: 'none' });
+            gsap.set('#top-back-button', { display: 'none', scale: 0 });
+          },
+          onComplete: () => {
             mode.value = 'mixed';
-            done();
-          }, '+=1');
+          },
+        });
         return;
       }
       gsap

@@ -12,7 +12,7 @@ import useDesignAudit from '~/composables/useDesignAudit';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useNavigation from '~/composables/useNavigation';
 import useLoader from '~/composables/useLoader';
-import { leaveAnimation } from '~/utils/animations/transitions';
+import { leaveAnimation, navTransitionOut } from '~/utils/animations/transitions';
 
 const {
   url,
@@ -278,13 +278,7 @@ definePageMeta({
     onLeave: (el, done) => {
       const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
-        gsap
-          .timeline()
-          .set(el, { opacity: 0 })
-          .add(() => {
-            transitionFromNavigation.value = false;
-            done();
-          }, '+=1');
+        navTransitionOut(el, done);
         return;
       }
       leaveAnimation(el, done);

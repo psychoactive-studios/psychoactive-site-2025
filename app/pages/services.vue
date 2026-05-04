@@ -7,7 +7,7 @@ import OnScrollFilledText from '~/components/ui/OnScrollFilledText.vue';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useLoader from '~/composables/useLoader';
 import useNavigation from '~/composables/useNavigation';
-import { leaveAnimation } from '~/utils/animations/transitions';
+import { leaveAnimation, navTransitionOut } from '~/utils/animations/transitions';
 import { stepperTitlesData } from '~/data/servicesData';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -114,14 +114,11 @@ definePageMeta({
         // otherwise, scrolling past the hero and navigating away leaves
         // the stepper videos/titles visible behind the folding menu,
         // causing a flash of the old page before the new one mounts.
-        gsap
-          .timeline()
-          .set(el, { opacity: 0 })
-          .set('#services-fixed-section', { display: 'none' })
-          .add(() => {
-            transitionFromNavigation.value = false;
-            done();
-          }, '+=1');
+        navTransitionOut(el, done, {
+          alsoHide: () => {
+            gsap.set('#services-fixed-section', { display: 'none' });
+          },
+        });
         return;
       }
 

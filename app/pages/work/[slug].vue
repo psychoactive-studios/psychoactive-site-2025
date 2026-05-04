@@ -15,6 +15,7 @@ import ButtonDotsArrow from '~/components/ui/ButtonDotsArrow.vue';
 import useAudioManager from '~/composables/useAudioManager';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import ButtonOutline from '~/components/ui/ButtonOutline.vue';
+import { navTransitionOut } from '~/utils/animations/transitions';
 
 // Config Strapi variables
 const config = useRuntimeConfig();
@@ -132,18 +133,15 @@ definePageMeta({
       const { transitionFromNavigation, backButtonHref } = useNavigation();
       const { mode } = useHeader();
       if (transitionFromNavigation.value) {
-        gsap
-          .timeline()
-          .set(el, { opacity: 0 })
-          .set('#work-scroll-progress', { display: 'none' })
-          .add(() => {
+        navTransitionOut(el, done, {
+          alsoHide: () => {
+            gsap.set('#work-scroll-progress', { display: 'none' });
             backButtonHref.value = null;
-          })
-          .add(() => {
-            transitionFromNavigation.value = false;
+          },
+          onComplete: () => {
             mode.value = 'mixed';
-            done();
-          }, '+=1');
+          },
+        });
         return;
       }
       gsap

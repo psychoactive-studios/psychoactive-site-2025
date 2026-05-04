@@ -10,7 +10,7 @@ import useNavigation from '~/composables/useNavigation';
 import useLoader from '~/composables/useLoader';
 import useAudioManager from '~/composables/useAudioManager';
 import { calculateReadingTime } from '~/utils/comput';
-import { leaveAnimation } from '~/utils/animations/transitions';
+import { leaveAnimation, navTransitionOut } from '~/utils/animations/transitions';
 import { useDebounceFn, useMediaQuery } from '@vueuse/core';
 import ButtonOutline from '~/components/ui/ButtonOutline.vue';
 
@@ -147,18 +147,13 @@ definePageMeta({
       }, 50);
     },
     onLeave: (el, done) => {
-      const { transitionFromNavigation } = useNavigation();
+      const { transitionFromNavigation, backButtonHref } = useNavigation();
       if (transitionFromNavigation.value) {
-        gsap
-          .timeline()
-          .set(el, { opacity: 0 })
-          .add(() => {
+        navTransitionOut(el, done, {
+          alsoHide: () => {
             backButtonHref.value = null;
-          })
-          .add(() => {
-            transitionFromNavigation.value = false;
-            done();
-          }, '+=1');
+          },
+        });
         return;
       }
       gsap

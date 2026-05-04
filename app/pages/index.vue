@@ -9,7 +9,7 @@ import CaseStadyPreview from '~/components/ui/CaseStadyPreview.vue';
 import HomeOnScrollFilledText from '~/components/homepage/HomeOnScrollFilledText.vue';
 import WebflowLabel from '~/components/ui/WebflowLabel.vue';
 import ScaleMobileText from '~/assets/img/scale.svg';
-import { leaveAnimation } from '~/utils/animations/transitions';
+import { leaveAnimation, navTransitionOut } from '~/utils/animations/transitions';
 import Footer from '~/components/layout/Footer.vue';
 import useLoader from '~/composables/useLoader';
 import useScrollSmoother from '~/composables/useScrollSmoother';
@@ -106,13 +106,7 @@ definePageMeta({
     onLeave: (el, done) => {
       const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
-        gsap
-          .timeline()
-          .set(el, { opacity: 0 })
-          .add(() => {
-            transitionFromNavigation.value = false;
-            done();
-          }, '+=1');
+        navTransitionOut(el, done);
         return;
       }
       leaveAnimation(el, done);

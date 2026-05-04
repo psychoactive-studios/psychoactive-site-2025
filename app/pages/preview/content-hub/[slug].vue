@@ -10,7 +10,7 @@ import useNavigation from '~/composables/useNavigation';
 import useLoader from '~/composables/useLoader';
 import useAudioManager from '~/composables/useAudioManager';
 import { calculateReadingTime } from '~/utils/comput';
-import { leaveAnimation } from '~/utils/animations/transitions';
+import { leaveAnimation, navTransitionOut } from '~/utils/animations/transitions';
 import { useDebounceFn, useMediaQuery } from '@vueuse/core';
 
 // Config Strapi variables
@@ -157,13 +157,7 @@ definePageMeta({
     onLeave: (el, done) => {
       const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
-        gsap
-          .timeline()
-          .set(el, { opacity: 0 })
-          .add(() => {
-            transitionFromNavigation.value = false;
-            done();
-          }, '+=1');
+        navTransitionOut(el, done);
         return;
       }
       leaveAnimation(el, done);

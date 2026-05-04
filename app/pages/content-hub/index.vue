@@ -7,7 +7,7 @@ import NewsCard from '~/components/ui/NewsCard.vue';
 import DesignAuditPromoCard from '~/components/content-hub/DesignAuditPromoCard.vue';
 import useLoader from '~/composables/useLoader';
 import useAudioManager from '~/composables/useAudioManager';
-import { leaveAnimation } from '~/utils/animations/transitions';
+import { leaveAnimation, navTransitionOut } from '~/utils/animations/transitions';
 import { useMediaQuery } from '@vueuse/core';
 import HomeNewsCard from '~/components/homepage/HomeNewsCard.vue';
 import useHeader from '~/composables/useHeader';
@@ -72,13 +72,7 @@ definePageMeta({
     onLeave: (el, done) => {
       const { transitionFromNavigation } = useNavigation();
       if (transitionFromNavigation.value) {
-        gsap
-          .timeline()
-          .set(el, { opacity: 0 })
-          .add(() => {
-            transitionFromNavigation.value = false;
-            done();
-          }, '+=1');
+        navTransitionOut(el, done);
         return;
       }
       leaveAnimation(el, done);
