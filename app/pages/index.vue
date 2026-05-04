@@ -384,28 +384,6 @@ definePageMeta({
   @include respond(mobile) {
     margin-top: 60px;
   }
-  // The second cases grid sits directly below the desktop intro
-  // paragraph, which already has 160px below it — strip the top
-  // margin so we don't double up.
-  //
-  // Restore the original tile rhythm (half / half / full / half /
-  // half / full / ...). Splitting the cases section into two grids
-  // resets the nth-child counter, so without this override the first
-  // tile of cases--rest would render full-width and every subsequent
-  // tile would shift. Andrew confirmed the desired post-intro order:
-  // case 4 + case 5 on one row, case 6 (WOW) full-width, case 7 +
-  // case 8 on the next row.
-  &--rest {
-    margin-top: 0;
-    & > .container {
-      & > *:nth-child(3n + 1) {
-        grid-column: auto;
-      }
-      & > *:nth-child(3n) {
-        grid-column: 1 / 3;
-      }
-    }
-  }
   & > .container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -421,6 +399,33 @@ definePageMeta({
       display: flex;
       flex-direction: column;
       gap: 64px;
+    }
+  }
+}
+
+// Second cases grid (sits below the SSR desktop intro paragraph).
+// Two things going on:
+//   1. Strip the top margin — the .desktop-intro section already has
+//      160px bottom padding so we don't need to double up.
+//   2. Restore the tile rhythm. Splitting the cases section into two
+//      grids resets the nth-child counter, so without overriding the
+//      default the first tile of cases--rest would render full-width
+//      and every subsequent tile would shift. Andrew confirmed the
+//      desired post-intro order: case 4 + case 5 on one row, case 6
+//      (WOW) full-width, case 7 + case 8 on the next row.
+//
+// IMPORTANT: this block must come AFTER the .cases > .container >
+// *:nth-child(3n + 1) rule above. Both selectors have the same
+// specificity (single class), so source order is what makes the
+// override win.
+.cases.cases--rest {
+  margin-top: 0;
+  & > .container {
+    & > *:nth-child(3n + 1) {
+      grid-column: auto;
+    }
+    & > *:nth-child(3n) {
+      grid-column: 1 / 3;
     }
   }
 }
