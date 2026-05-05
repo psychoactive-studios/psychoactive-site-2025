@@ -44,9 +44,9 @@ const props = defineProps({
   // sphere AND grid; expensive: per-frame work scales linearly.
   // Changing this REBUILDS the geometry (debounced, see watcher).
   particleDensity: { type: Number, default: 124 },
-  particleSize:    { type: Number, default: 0.008 },
-  particleOpacity: { type: Number, default: 0.82 },
-  fogDensity:      { type: Number, default: 0.235 },
+  particleSize:    { type: Number, default: 0.009 },
+  particleOpacity: { type: Number, default: 1.0 },
+  fogDensity:      { type: Number, default: 0.2 },
   cameraDistance:  { type: Number, default: 4.95 },
   pointsScale:     { type: Number, default: 0.66 },
   // Sphere FOV is the "normal" perspective look. Grid FOV is tiny so
