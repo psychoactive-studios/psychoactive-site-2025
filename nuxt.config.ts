@@ -147,12 +147,13 @@ export default defineNuxtConfig({
   image: {
     // Specify the provider that supports static generation
     provider: 'ipx',
-    // Whitelist the DigitalOcean Spaces CDN so IPX will process external
-    // image URLs (resize, format, srcset). Without this, NuxtImg falls
-    // back to serving the original file at full resolution — which is
-    // why PageSpeed flagged 1500x1500 AVIFs being served for 200x200
-    // displays on the homepage news cards (~257 KiB savings).
-    domains: ['new-psychoactive-website-media.syd1.cdn.digitaloceanspaces.com'],
+    // Note: previously had `domains` whitelisting DigitalOcean Spaces
+    // so NuxtImg would route external URLs through IPX. That, combined
+    // with `sizes` attributes, generated /_ipx/w_320/... srcset URLs
+    // the static deploy didn't actually serve, so news-card images
+    // fell back to broken-image alt text in production. Until we have
+    // a runtime IPX server or an external image CDN (Cloudinary etc.),
+    // external URLs are passed through to the browser unchanged.
   },
   vite: {
     build: {

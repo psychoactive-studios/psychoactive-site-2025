@@ -93,17 +93,20 @@ const onMouseEnterHandler = (e) => {
     <div class="news-card__image">
       <div class="news-card__image_wrapper">
         <!--
-          sizes="200px" tells NuxtImg this thumbnail is always rendered
-          at ~200px wide regardless of viewport, so it can pick the
-          smallest srcset entry instead of serving the 1500x1500 source.
-          PageSpeed flagged ~257 KiB savings across the news cards.
+          width/height keep the CLS benefit (browser knows the box
+          before the image loads). loading="lazy" defers off-screen
+          images. We deliberately don't set a `sizes` attribute here:
+          adding one made NuxtImg generate /_ipx/w_320/... srcset
+          URLs which the static deploy doesn't actually serve, so the
+          browser fell back to alt text. Bringing back the image
+          size savings requires either a runtime IPX server or an
+          external CDN (Cloudinary, imgproxy) — separate piece of work.
         -->
         <NuxtImg
           :src="src"
           :alt="title"
           width="200"
           height="200"
-          sizes="200px"
           loading="lazy"
         />
       </div>
