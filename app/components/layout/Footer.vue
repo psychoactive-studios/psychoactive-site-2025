@@ -53,7 +53,13 @@ const handleClick = () => {
             @mouseenter="() => playRandomSound('awards-footer-hover')"
             @click="playRandomSound('click')"
           >
-            <NuxtImg :src="award.icon" :alt="award.name" />
+            <NuxtImg
+              :src="award.icon"
+              :alt="award.name"
+              :width="award.width"
+              :height="award.height"
+              loading="lazy"
+            />
           </a>
         </li>
       </ul>
@@ -64,13 +70,22 @@ const handleClick = () => {
         <AnalogClock city="CALI" />
       </div>
       <div class="awards__label">
+        <!--
+          The link content is the WebflowLabel SVG mark, no text — add
+          an explicit aria-label so screen readers announce the
+          destination (Lighthouse a11y "Links do not have a
+          discernible name"). target="_blank" is paired with
+          rel="noopener" for security best practice on cross-origin links.
+        -->
         <a
           href="https://webflow.com/@Psychoactive-Studios"
           target="_blank"
+          rel="noopener"
+          aria-label="Psychoactive Studios on Webflow — view our showcase profile (opens in a new tab)"
           @mouseenter="() => playInteractionSound('text-hover-short', 100)"
           @click="playInteractionSound('click-1')"
         >
-          <WebflowLabel />
+          <WebflowLabel aria-hidden="true" />
         </a>
       </div>
     </section>

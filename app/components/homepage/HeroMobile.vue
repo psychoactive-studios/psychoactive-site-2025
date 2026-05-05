@@ -61,6 +61,12 @@ onBeforeUnmount(() => {
 <template>
   <div ref="containerRef" class="hero-mobile" data-speed="0.5">
     <div class="hero-mobile__player">
+      <!--
+        Decorative silent loop — purely visual, no spoken content. Marked
+        aria-hidden so screen readers skip it entirely (Lighthouse a11y
+        flagged the missing captions track, but the video has no audio
+        to caption — hiding from AT is the correct treatment here).
+      -->
       <video
         ref="previewVideoRef"
         class="hero-mobile__player_preview"
@@ -68,6 +74,7 @@ onBeforeUnmount(() => {
         loop
         muted
         playsinline
+        aria-hidden="true"
       />
       <video
         ref="mainVideoRef"

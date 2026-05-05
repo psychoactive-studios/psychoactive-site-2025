@@ -239,9 +239,10 @@ onClickOutside(navigationMobileRef, () => {
       <NuxtLink
         to="/"
         class="navigation-mobile__logo"
+        aria-label="Psychoactive Studios — home"
         @click="onToggleNavigation"
       >
-        <span ref="lottieLogoContainerRef" />
+        <span ref="lottieLogoContainerRef" aria-hidden="true" />
       </NuxtLink>
     </div>
     <div class="navigation-mobile__wrapper">

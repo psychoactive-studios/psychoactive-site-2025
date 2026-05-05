@@ -15,6 +15,13 @@ import token2049Logo from '/img/partners/token-2049.svg';
 // readers understand each logo represents a real client of Psychoactive
 // Studios, not a generic mark.
 //
+// `width`/`height` are the source asset's intrinsic dimensions (SVG
+// viewBox or PNG pixel size). Bound on the <img> so the browser knows
+// each logo's exact aspect ratio before it loads, which lets the row
+// reserve correct space and avoids the per-logo CLS Lighthouse flagged.
+// CSS still sizes them via `height` clamp(); width auto-derives from
+// the intrinsic ratio rather than from the loaded image.
+//
 // `featured: true` puts a logo in the homepage hero strip. Trimmed to
 // the most internationally recognisable marks so the row reads cleanly
 // and doesn't compete with the stats section underneath. The full list
@@ -29,6 +36,8 @@ export const partnersData = [
     name: 'Adidas',
     alt: 'Adidas client logo',
     logo: adidasLogo,
+    width: 812,
+    height: 137,
     featured: true,
   },
   {
@@ -36,6 +45,8 @@ export const partnersData = [
     name: 'Hellboy',
     alt: 'Hellboy client logo',
     logo: hellboyLogo,
+    width: 378,
+    height: 135,
     featured: true,
   },
   {
@@ -43,6 +54,8 @@ export const partnersData = [
     name: 'All Blacks',
     alt: 'All Blacks client logo',
     logo: allBlacksLogo,
+    width: 1069,
+    height: 138,
     featured: true,
   },
   {
@@ -50,6 +63,8 @@ export const partnersData = [
     name: 'World of WearableArt',
     alt: 'World of WearableArt client logo',
     logo: wowLogo,
+    width: 387,
+    height: 137,
     featured: true,
   },
   {
@@ -57,6 +72,8 @@ export const partnersData = [
     name: 'Blackbird VC',
     alt: 'Blackbird VC client logo',
     logo: blackbirdLogo,
+    width: 901,
+    height: 102,
     featured: true,
   },
   {
@@ -64,6 +81,8 @@ export const partnersData = [
     name: 'Super AI',
     alt: 'SuperAI client logo',
     logo: superAiLogo,
+    width: 781,
+    height: 135,
     featured: true,
   },
   {
@@ -71,6 +90,8 @@ export const partnersData = [
     name: 'Token2049',
     alt: 'Token2049 client logo',
     logo: token2049Logo,
+    width: 747,
+    height: 93,
     featured: true,
   },
 
@@ -81,6 +102,8 @@ export const partnersData = [
     name: 'Ray White',
     alt: 'Ray White client logo',
     logo: rayWhiteLogo,
+    width: 213,
+    height: 40,
     featured: false,
   },
   {
@@ -88,6 +111,8 @@ export const partnersData = [
     name: 'One NZ',
     alt: 'One NZ client logo',
     logo: oneLogo,
+    width: 249,
+    height: 124,
     featured: false,
   },
   {
@@ -95,6 +120,8 @@ export const partnersData = [
     name: 'BurgerFuel',
     alt: 'BurgerFuel client logo',
     logo: burgerfuelLogo,
+    width: 225,
+    height: 60,
     featured: false,
   },
   {
@@ -102,6 +129,8 @@ export const partnersData = [
     name: 'Summer Game Fest',
     alt: 'Summer Game Fest client logo',
     logo: summerGameLogo,
+    width: 181,
+    height: 124,
     featured: false,
   },
 ];

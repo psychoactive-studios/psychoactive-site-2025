@@ -92,7 +92,20 @@ const onMouseEnterHandler = (e) => {
     </div>
     <div class="news-card__image">
       <div class="news-card__image_wrapper">
-        <NuxtImg :src="src" :alt="title" width="200" height="200" />
+        <!--
+          sizes="200px" tells NuxtImg this thumbnail is always rendered
+          at ~200px wide regardless of viewport, so it can pick the
+          smallest srcset entry instead of serving the 1500x1500 source.
+          PageSpeed flagged ~257 KiB savings across the news cards.
+        -->
+        <NuxtImg
+          :src="src"
+          :alt="title"
+          width="200"
+          height="200"
+          sizes="200px"
+          loading="lazy"
+        />
       </div>
     </div>
   </NuxtLink>

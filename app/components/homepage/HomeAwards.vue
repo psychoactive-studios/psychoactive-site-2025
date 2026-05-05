@@ -186,7 +186,22 @@ const onClickHandler = async () => {
             class="awards__collection_item"
           >
             <div class="award-platform">
-              <img :src="award.platform" :alt="award.project" loading="lazy" />
+              <!--
+                Explicit width/height tell the browser the intrinsic
+                2:1 aspect ratio before the image loads, so the row
+                doesn't shift as each one streams in (Lighthouse CLS
+                audit). NuxtImg + sizes routes the request through
+                IPX so we serve a resized variant rather than the full
+                700x350 source for a ~96x48 display.
+              -->
+              <NuxtImg
+                :src="award.platform"
+                :alt="award.project"
+                width="700"
+                height="350"
+                sizes="120px"
+                loading="lazy"
+              />
             </div>
             <div class="award-details body--mobile-compact">
               <div class="award-details--prize">{{ award.prize }}</div>

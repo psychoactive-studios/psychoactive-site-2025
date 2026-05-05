@@ -7,11 +7,20 @@ import { featuredPartnersData } from '~/data/partnersData';
 
 <template>
   <div class="partners-desktop">
+    <!--
+      width/height come from the SVG viewBox (or PNG dimensions) so the
+      browser can reserve each logo's exact aspect ratio before it loads.
+      CSS still drives the rendered height; width auto-derives from the
+      intrinsic ratio. Without these attributes Lighthouse flagged the
+      strip as a CLS contributor on desktop.
+    -->
     <img
       v-for="partner in featuredPartnersData"
       :key="partner.id"
       :src="partner.logo"
       :alt="partner.alt || `${partner.name} client logo`"
+      :width="partner.width"
+      :height="partner.height"
       :class="partner.id"
       loading="lazy"
       decoding="async"

@@ -126,10 +126,21 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
         @mouseleave="briefMouseLeaveHandler"
         @click="() => playInteractionSound('sound-btn-hover-1')"
       >
-        <NuxtLink :href="navigationData.find(el => el.id === 'contact').url" class="brief__title_text">
-          <BriefOurAIAgent class="brief__title_text--original" />
-          <BriefOurAIAgent class="brief__title_text--mask" />
-          <div class="brief__title_dots">
+        <!--
+          The link's visible content is two SVG renders of the
+          "Brief our AI agent" wordmark plus three decorative dots —
+          there's no text node a screen reader can read out, so the
+          aria-label provides the accessible name (Lighthouse
+          a11y "Links do not have a discernible name").
+        -->
+        <NuxtLink
+          :href="navigationData.find(el => el.id === 'contact').url"
+          class="brief__title_text"
+          aria-label="Brief our AI agent — start a project"
+        >
+          <BriefOurAIAgent class="brief__title_text--original" aria-hidden="true" />
+          <BriefOurAIAgent class="brief__title_text--mask" aria-hidden="true" />
+          <div class="brief__title_dots" aria-hidden="true">
             <span class="dot-left" />
             <span class="dot-center" />
             <span class="dot-right" />

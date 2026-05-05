@@ -1,7 +1,15 @@
 <script setup>
 import qs from 'qs';
+import { defineAsyncComponent } from 'vue';
 import { useMediaQuery } from '@vueuse/core';
-import Hero from '~/components/homepage/Hero.vue';
+// Hero is lazy-loaded so its dependency tree (Three.js, GSAP plugins,
+// hls.js, the morph + hologram shaders, ServicesHero3DSceneV2, etc.)
+// gets split into its own chunk. PageSpeed flagged ~700 KiB of unused
+// JavaScript on mobile because all of those bundled into the homepage's
+// main chunk even though Hero never mounts on mobile (gated by the
+// v-if below). With defineAsyncComponent the chunk is only fetched on
+// devices that actually render the desktop hero.
+const Hero = defineAsyncComponent(() => import('~/components/homepage/Hero.vue'));
 import HeroMobile from '~/components/homepage/HeroMobile.vue';
 import HomeAwards from '~/components/homepage/HomeAwards.vue';
 import HomeNewsList from '~/components/homepage/HomeNewsList.vue';
@@ -263,6 +271,16 @@ definePageMeta({
         </div>
       </section>
 
+      <!--
+        sr-only h2 anchors the heading hierarchy for the case studies.
+        Without it, the h3 inside each <CaseStadyPreview> sits after
+        an h1 (the page-level sr-only h1) with no h2 in between, which
+        Lighthouse flagged as a non-sequential heading order. Lives
+        OUTSIDE ClientOnly so it ships in SSR even though the case
+        studies themselves don't.
+      -->
+      <h2 class="sr-only">Recent work</h2>
+
       <ClientOnly>
         <!-- Desktop: first half of case studies. Wrapped in ClientOnly
              via the parent above; the intro paragraph below sits
@@ -387,6 +405,27 @@ definePageMeta({
     position: relative;
     z-index: 1;
   }
+}
+
+/*
+  Reserve the hero's full viewport height during SSR / pre-hydration.
+
+  The hero's children (Hero / HeroMobile) live inside <ClientOnly>, so
+  during server render and the very first paint the section is empty
+  and contributes 0 px to layout. The mobile-intro section below it
+  therefore starts at the top of the page, then jumps down by ~100vh
+  the moment HeroMobile hydrates — which Lighthouse measured as a CLS
+  of 1.000 (catastrophic; "good" is < 0.1).
+
+  Pinning min-height to 100vh on the wrapper means the section already
+  occupies its final height during SSR, so .mobile-intro never moves
+  when hydration completes. Matches HeroMobile's own .hero-mobile
+  { height: 100vh } exactly; the desktop hero internally uses 100svh
+  which is ≤ 100vh on iOS Safari, so the wrapper still doesn't grow
+  when the desktop hero mounts.
+*/
+.hero {
+  min-height: 100vh;
 }
 
 // Mobile-only intro paragraph that sits directly under the hero.

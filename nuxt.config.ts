@@ -147,6 +147,32 @@ export default defineNuxtConfig({
   image: {
     // Specify the provider that supports static generation
     provider: 'ipx',
+    // Whitelist the DigitalOcean Spaces CDN so IPX will process external
+    // image URLs (resize, format, srcset). Without this, NuxtImg falls
+    // back to serving the original file at full resolution — which is
+    // why PageSpeed flagged 1500x1500 AVIFs being served for 200x200
+    // displays on the homepage news cards (~257 KiB savings).
+    domains: ['new-psychoactive-website-media.syd1.cdn.digitaloceanspaces.com'],
+  },
+  vite: {
+    build: {
+      /*
+        Combine all per-component CSS into a single bundle instead of
+        Vite's default per-route/per-component splitting. PageSpeed
+        flagged ~16 small render-blocking CSS files (Brief, Footer,
+        ButtonOutline, LinkWithHover, VideoPreview, etc.) totalling
+        32 KiB but causing 410 ms of cumulative blocking time on Slow
+        4G — every file is its own request and several waited 450-900
+        ms each.
+
+        Trade-off: first paint loads slightly more CSS than the page
+        strictly needs (every component's styles, not just the ones
+        on this route). For a small-ish site like this the total is
+        well under 100 KiB gzipped, and on the up-side every
+        subsequent navigation is essentially free of CSS requests.
+      */
+      cssCodeSplit: false,
+    },
   },
   app: {
     head: {
@@ -156,7 +182,10 @@ export default defineNuxtConfig({
       title: DEFAULT_TITLE,
       meta: [
         { name: 'description', content: DEFAULT_DESCRIPTION },
-        { name: 'viewport', content: 'width=device-width,minimum-scale=1.0,maximum-scale=1.0' },
+        // Allow user-initiated zoom for accessibility — locking
+        // maximum-scale=1.0 / user-scalable=no blocks low-vision users
+        // who rely on pinch-zoom magnification (Lighthouse a11y audit).
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
 
         // Open Graph
         { key: 'og:title', property: 'og:title', content: DEFAULT_TITLE },
