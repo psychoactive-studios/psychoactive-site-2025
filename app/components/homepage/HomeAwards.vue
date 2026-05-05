@@ -84,11 +84,20 @@ const handleHoverEffect = () => {
   // Stop any ongoing animations on this element
   if (gsap.isTweening(el)) return;
 
-  // Set the width to prevent layout shift
-  const width = el.offsetWidth;
-  gsap.set(el, { width });
-
-  // Store the original text
+  // Run the character-glitch scramble in place. We don't lock the
+  // element's width here (used to call gsap.set(el, { width }) before
+  // the scramble) because:
+  //   1. The label is rendered in RoobertMono so each scrambled
+  //      character occupies the same horizontal space as the original
+  //      — there's no layout shift to prevent.
+  //   2. The click handler's scramble uses overwrite: true, which
+  //      killed this tween before its onComplete clearProps ran. The
+  //      stale inline width then made longer escalating labels
+  //      ("Show Even Moreee!", "Okay, even more!") wrap onto two
+  //      lines because the span was still locked to the previous
+  //      label's narrower measurement.
+  // The button's `white-space: nowrap` keeps everything on one line
+  // even if a future change reintroduces width-locking.
   gsap.to(el, {
     duration: 0.7,
     ease: 'none',
@@ -98,9 +107,6 @@ const handleHoverEffect = () => {
       tweenLength: false,
     },
     overwrite: true,
-    onComplete: () => {
-      gsap.set(el, { clearProps: 'all' });
-    },
   });
 };
 
@@ -344,6 +350,11 @@ const onClickHandler = async () => {
       padding-right: 44px;
       position: relative;
       min-width: 134px;
+      // Escalating labels ("Show Even Moreee!", "Okay, even more!")
+      // are longer than the initial "Show More" — keep them on a
+      // single line so the dotted underline + dots glyph stay tidy
+      // even mid-scramble.
+      white-space: nowrap;
     }
     &_dots {
       display: inline-flex;
