@@ -7,9 +7,14 @@
     @mousemove="handleMouseMove"
     @touchmove="handleMouseMove"
   >
+    <!-- src is set imperatively by useMuxVideo() (HLS stream from Mux).
+         crossorigin REQUIRED — the bulge effect uses this video as a
+         WebGL VideoTexture, which can only read pixels from
+         cross-origin sources when the element opts into CORS. Mux
+         serves Access-Control-Allow-Origin: *. -->
     <video
       ref="videoEl"
-      :src="src"
+      crossorigin="anonymous"
       muted
       autoplay
       loop
@@ -27,6 +32,7 @@ import fragmentShader from '@/utils/glsl/video.frag?raw';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useMediaQuery, usePointer } from '@vueuse/core';
+import useMuxVideo from '~/composables/useMuxVideo';
 
 const { pointerType, x: eventX, y: eventY } = usePointer();
 const isMobile = useMediaQuery('(max-width: 768px)');
@@ -35,7 +41,8 @@ const isHovered = ref(false);
 const isInView = ref(false);
 
 const props = defineProps({
-  src: {
+  // Mux Playback ID. Streams via HLS — see useMuxVideo composable.
+  playbackId: {
     type: String,
     default: null,
   },
@@ -68,8 +75,11 @@ const settings = {
 };
 
 const shouldActivate = computed(
-  () => !isMobile.value && pointerType.value === 'mouse' && !!props.src
+  () => !isMobile.value && pointerType.value === 'mouse' && !!props.playbackId
 );
+
+// Stream the video from Mux HLS into the local <video> element.
+useMuxVideo(videoEl, () => props.playbackId);
 
 function init() {
   if (!videoEl.value || !canvasEl.value) return;

@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, onUnmounted, ref, watch } from 'vue';
 import * as THREE from 'three';
+import gsap from 'gsap';
 import { createNoise3D } from 'simplex-noise';
 import { useDebounceFn, useEventListener } from '@vueuse/core';
 
@@ -54,6 +55,24 @@ const PUSH_STRENGTH = 0.1;
 const SPRING_CONSTANT = 0.001;
 const DAMPING = 0.96;
 
+// --- Formation morph (sphere ↔ grid) ---
+// Particles' "rest" target lerps between sphere positions and grid
+// positions based on formationMix. Driven externally via setFormation().
+let sphereOriginalPositions = null; // Float32Array of original sphere positions
+let gridPositions = null;            // Float32Array of grid target positions
+const formationMixObj = { value: 0 }; // 0 = sphere, 1 = grid
+let formationMix = 0;
+
+// --- Click ripple ---
+// Radial wave pushes particles outward from a center point. Faded over
+// rippleDuration. Driven externally via fireRipple().
+let rippleStartTime = -1;
+const rippleCenter = new THREE.Vector3();
+const RIPPLE_DURATION = 1.8;
+const RIPPLE_SPEED = 3.0;
+const RIPPLE_WIDTH = 0.45;
+const RIPPLE_AMP = 0.35;
+
 function init() {
   if (!canvasElement.value) return;
 
@@ -92,6 +111,29 @@ function init() {
   for (let i = 0; i < positions.length; i++) {
     originalPositions[i] = positions[i];
     velocities[i] = 0;
+  }
+
+  // Pre-compute grid positions (used as the alternate "rest" target
+  // when formationMix → 1). The geometry is 190x190 so we map each
+  // particle to a 190x190 plane grid.
+  const totalParticles = positions.length / 3;
+  const cols = 190;
+  const rows = Math.ceil(totalParticles / cols);
+  const gridSize = 4.0; // total span (units)
+  const gridStep = gridSize / (cols - 1);
+
+  sphereOriginalPositions = new Float32Array(positions.length);
+  gridPositions = new Float32Array(positions.length);
+  for (let i = 0; i < totalParticles; i++) {
+    const col = i % cols;
+    const row = Math.floor(i / cols);
+    const ix = i * 3;
+    sphereOriginalPositions[ix]     = positions[ix];
+    sphereOriginalPositions[ix + 1] = positions[ix + 1];
+    sphereOriginalPositions[ix + 2] = positions[ix + 2];
+    gridPositions[ix]     = (col - cols / 2) * gridStep;
+    gridPositions[ix + 1] = (row - rows / 2) * gridStep;
+    gridPositions[ix + 2] = 0;
   }
 
   geometry.setAttribute(
@@ -172,10 +214,14 @@ function animate() {
   totalTime += delta;
   const elapsedTime = totalTime;
 
-  // Camera sway
+  // Camera sway. When morphed to grid (formationMix → 1), pivot the
+  // camera to face-on (0, 0, 4) — otherwise the rotating camera sees
+  // the flat grid edge-on and it collapses to a vertical line.
   const rotationSpeed = 0.06;
-  camera.position.x = Math.sin(elapsedTime * rotationSpeed) * 4;
-  camera.position.z = Math.cos(elapsedTime * rotationSpeed) * 4;
+  const baseX = Math.sin(elapsedTime * rotationSpeed) * 4;
+  const baseZ = Math.cos(elapsedTime * rotationSpeed) * 4;
+  camera.position.x = baseX * (1 - formationMix);
+  camera.position.z = baseZ * (1 - formationMix) + 4 * formationMix;
   camera.lookAt(scene.position);
 
   // Mouse Interaction
@@ -213,10 +259,47 @@ function animate() {
 
   const paletteLengthMinusOne = colorPalette.length - 1;
 
+  // Apply ripple wave (one pass before particle physics) — pushes
+  // particles outward from rippleCenter at radius growing over time.
+  if (rippleStartTime >= 0) {
+    const rt = elapsedTime - rippleStartTime;
+    if (rt > RIPPLE_DURATION) {
+      rippleStartTime = -1;
+    } else {
+      const rippleRadius = rt * RIPPLE_SPEED;
+      const decay = 1 - rt / RIPPLE_DURATION;
+      for (let i = 0; i < positions.length; i += 3) {
+        const dx = positions[i] - rippleCenter.x;
+        const dy = positions[i + 1] - rippleCenter.y;
+        const dz = positions[i + 2] - rippleCenter.z;
+        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        const distFromRipple = Math.abs(dist - rippleRadius);
+        if (distFromRipple < RIPPLE_WIDTH && dist > 0.001) {
+          const intensity =
+            (1 - distFromRipple / RIPPLE_WIDTH) * RIPPLE_AMP * decay;
+          const inv = 1 / dist;
+          velocities[i]     += dx * inv * intensity;
+          velocities[i + 1] += dy * inv * intensity;
+          velocities[i + 2] += dz * inv * intensity;
+        }
+      }
+    }
+  }
+
+  const fmix = formationMix;
+
   for (let i = 0; i < positions.length; i += 3) {
-    const ox = originalPositions[i];
-    const oy = originalPositions[i + 1];
-    const oz = originalPositions[i + 2];
+    // Lerp the "rest" target between sphere and grid based on
+    // formationMix. Spring physics will pull each particle toward this.
+    const sox = sphereOriginalPositions[i];
+    const soy = sphereOriginalPositions[i + 1];
+    const soz = sphereOriginalPositions[i + 2];
+    const gox = gridPositions[i];
+    const goy = gridPositions[i + 1];
+    const goz = gridPositions[i + 2];
+    const ox = sox + (gox - sox) * fmix;
+    const oy = soy + (goy - soy) * fmix;
+    const oz = soz + (goz - soz) * fmix;
 
     const noise = simplex(
       ox * frequency,
@@ -224,33 +307,31 @@ function animate() {
       oz * frequency + elapsedTime * timeFactor
     );
 
-    // Reuse objects to prevent Garbage Collection lag
-    _tempNormal.set(ox, oy, oz).normalize();
+    // CRITICAL: use the SPHERE's original normal (sox/soy/soz) for the
+    // displacement direction. The sphere normal always has length > 0
+    // (radius = 2). If we used the lerped (ox/oy/oz), particles whose
+    // grid position is at (0,0,0) would have a zero-length vector at
+    // formationMix = 1 → normalize() returns NaN → NaN positions →
+    // particles vanish or render glitchily. That's what was making the
+    // grid morph "janky / completely wrong".
+    _tempNormal.set(sox, soy, soz).normalize();
     const dispScalar = noise * amplitude;
 
-    _targetPos.set(
-      ox + _tempNormal.x * dispScalar,
-      oy + _tempNormal.y * dispScalar,
-      oz + _tempNormal.z * dispScalar
-    );
+    // Target position = lerped rest pos (sphere ↔ grid) + noise wiggle.
+    // We assign the position directly (rather than via the original
+    // weak spring physics) so the morph completes within the tween
+    // duration. The slow spring (SPRING_CONSTANT = 0.001) takes
+    // thousands of frames to converge — fine for tiny noise wiggles
+    // around a fixed sphere, but meant the grid morph never visually
+    // completed. Mouse-push velocities are still added on top so the
+    // interactive push behaviour is preserved.
+    positions[i]     = ox + _tempNormal.x * dispScalar + velocities[i];
+    positions[i + 1] = oy + _tempNormal.y * dispScalar + velocities[i + 1];
+    positions[i + 2] = oz + _tempNormal.z * dispScalar + velocities[i + 2];
 
-    _currentPos.set(positions[i], positions[i + 1], positions[i + 2]);
-
-    _springForce
-      .subVectors(_targetPos, _currentPos)
-      .multiplyScalar(SPRING_CONSTANT);
-
-    velocities[i] += _springForce.x;
-    velocities[i + 1] += _springForce.y;
-    velocities[i + 2] += _springForce.z;
-
-    velocities[i] *= DAMPING;
+    velocities[i]     *= DAMPING;
     velocities[i + 1] *= DAMPING;
     velocities[i + 2] *= DAMPING;
-
-    positions[i] += velocities[i];
-    positions[i + 1] += velocities[i + 1];
-    positions[i + 2] += velocities[i + 2];
 
     // Colors
     const colorNoise = simplex(
@@ -280,6 +361,36 @@ function animate() {
 
   renderer.render(scene, camera);
 }
+
+// --- External controls ----------------------------------------------------
+
+/**
+ * Morph particles between sphere (0) and grid (1).
+ * @param target  0..1 — 0 = sphere, 1 = grid
+ * @param duration seconds for the GSAP tween
+ */
+function setFormation(target, duration = 1.2) {
+  gsap.to(formationMixObj, {
+    value: target,
+    duration,
+    ease: 'power2.inOut',
+    onUpdate: () => {
+      formationMix = formationMixObj.value;
+    },
+  });
+}
+
+/**
+ * Fire a radial ripple wave through the particles starting from the
+ * given center (defaults to scene origin, which sits behind the play
+ * button visually).
+ */
+function fireRipple(x = 0, y = 0, z = 0) {
+  rippleStartTime = totalTime;
+  rippleCenter.set(x, y, z);
+}
+
+defineExpose({ setFormation, fireRipple });
 
 // --- Watchers & Lifecycle ---
 

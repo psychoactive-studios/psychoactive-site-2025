@@ -1,11 +1,19 @@
 <script setup>
 import gsap from 'gsap';
 import useHomeVideoPlayerMobile from '~/composables/useHomeVideoPlayerMobile';
+import useMuxVideo from '~/composables/useMuxVideo';
 import PlayIcon from '~/assets/icons/icon-play.svg';
 import '@mux/videojs-kit/dist/index.css';
 import { SplitText } from 'gsap/SplitText';
 
 const containerRef = ref(null);
+const previewVideoRef = ref(null);
+
+// Stream the mobile preview from Mux (psreel_mob_preview).
+useMuxVideo(
+  previewVideoRef,
+  'uNIZGdFOKErRZfVpFo9EvpeJBNcreuogUYG5USiPMMo',
+);
 
 const {
   mainVideoRef,
@@ -58,8 +66,8 @@ onBeforeUnmount(() => {
   <div ref="containerRef" class="hero-mobile">
     <div class="hero-mobile__player">
       <video
+        ref="previewVideoRef"
         class="hero-mobile__player_preview"
-        src="/video/psreel_mob_preview.mp4"
         autoplay
         loop
         muted

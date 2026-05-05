@@ -3,10 +3,13 @@ import PlusIcon from '~/assets/icons/icon-plus.svg';
 import PlayIcon from '~/assets/icons/icon-play.svg';
 import useAudioManager from '~/composables/useAudioManager';
 import useVideoPlayer from '~/composables/useVideoPlayer';
+import useMuxVideo from '~/composables/useMuxVideo';
 import { SplitText } from 'gsap/SplitText';
 
 const props = defineProps({
-  preview: {
+  // Mux Playback ID for the preview video. Streams via HLS — see
+  // useMuxVideo composable.
+  previewPlaybackId: {
     type: String,
     required: true,
   },
@@ -37,7 +40,11 @@ const props = defineProps({
 });
 
 const playerContainerRef = ref(null);
+const previewVideoRef = ref(null);
 const { playInteractionSound } = useAudioManager();
+
+// Stream the preview from Mux HLS (no <video src=...>).
+useMuxVideo(previewVideoRef, () => props.previewPlaybackId);
 
 onMounted(() => {
   SplitText.create(
@@ -103,8 +110,8 @@ const handleVideoClick = () => {
         <div :id="uniqueId" :data-flip-id="uniqueId" class="player__wrapper">
           <div class="player__preview">
             <video
+              ref="previewVideoRef"
               class="player__preview_video"
-              :src="preview"
               :autoplay="autoplay"
               :style="
                 currentAspectRatio && { 'aspect-ratio': currentAspectRatio }

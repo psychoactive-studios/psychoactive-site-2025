@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import CircleDashed from '../ui/CircleDashed.vue';
 import HeroCenterLine from './HeroCenterLine.vue';
 import useAudioManager from '~/composables/useAudioManager';
+import useMuxVideo from '~/composables/useMuxVideo';
 import WebflowLabel from '../ui/WebflowLabel.vue';
 import useLoader from '~/composables/useLoader';
 import ButtonDotsArrow from '../ui/ButtonDotsArrow.vue';
@@ -21,24 +22,24 @@ const { isLoading, addResourceToLoad, resourceLoaded } = useLoader();
 addResourceToLoad(1);
 
 const containerRef = ref(null);
+const heroVideoRef = ref(null);
 let ctx;
 
-const heroVideoResource = ref(null);
+// Stream the webflow-page hero video from Mux (service_03 asset).
+useMuxVideo(
+  heroVideoRef,
+  '02DqXW02V3CvlvBJQ022g100ADRYlQU01TZMvutEffhYhTqw',
+);
 
-onMounted(async () => {
+onMounted(() => {
   if (containerRef.value) {
     ctx = gsap.context(() => {}, containerRef.value);
     heroInitSplitText();
     heroScrollAnimation(ctx);
   }
-
-  const blob = await $fetch('/video/service_03.mp4', {
-    responseType: 'blob',
-  });
-  heroVideoResource.value = URL.createObjectURL(blob);
+  // No more blob fetch — service_03 streams from Mux directly via
+  // useMuxVideo. Resolve the loader resource immediately.
   resourceLoaded();
-
-  // setTimeout(() => heroScrollAnimation(ctx), 200);
 });
 
 onUnmounted(() => {
@@ -83,8 +84,7 @@ const onClickHandler = (e) => {
         <div class="scene">
           <div class="video">
             <video
-              v-if="heroVideoResource"
-              :src="heroVideoResource"
+              ref="heroVideoRef"
               autoplay
               loop
               muted

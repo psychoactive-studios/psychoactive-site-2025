@@ -1,9 +1,21 @@
+<script setup>
+import useMuxVideo from '~/composables/useMuxVideo';
+
+const ethosBgVideoRef = ref(null);
+
+// Stream the eye-loop background from Mux.
+useMuxVideo(
+  ethosBgVideoRef,
+  'tpkS6goFnp12NeBrOdVAaFVPzCIVogWA0201801L01ZoMUg',
+);
+</script>
+
 <template>
   <div class="our-ethos">
     <div class="our-ethos__title">
       <video
+        ref="ethosBgVideoRef"
         class="our-ethos__title_bg"
-        src="/video/eye-loop-bg.mp4"
         autoplay
         muted
         loop

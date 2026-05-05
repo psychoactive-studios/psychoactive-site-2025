@@ -2,12 +2,20 @@
 import gsap from 'gsap';
 import useScrollSmoother from '~/composables/useScrollSmoother';
 import useHomeVideoPlayerMobile from '~/composables/useHomeVideoPlayerMobile';
+import useMuxVideo from '~/composables/useMuxVideo';
 import { heroInitAnimationMobile } from '~/utils';
 import PlayIcon from '~/assets/icons/icon-play.svg';
 import '@mux/videojs-kit/dist/index.css';
 
 const containerRef = ref(null);
+const previewVideoRef = ref(null);
 let ctx = null;
+
+// Stream the mobile preview video from Mux (psreel_mob_preview).
+useMuxVideo(
+  previewVideoRef,
+  'uNIZGdFOKErRZfVpFo9EvpeJBNcreuogUYG5USiPMMo',
+);
 
 const { scrollSmoother } = useScrollSmoother();
 const {
@@ -54,8 +62,8 @@ onBeforeUnmount(() => {
   <div ref="containerRef" class="hero-mobile" data-speed="0.5">
     <div class="hero-mobile__player">
       <video
+        ref="previewVideoRef"
         class="hero-mobile__player_preview"
-        src="/video/psreel_mob_preview.mp4"
         autoplay
         loop
         muted

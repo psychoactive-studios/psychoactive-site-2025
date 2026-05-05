@@ -50,18 +50,19 @@ onMounted(async () => {
   -webkit-background-clip: text;
 
   // Highlight pattern — <span class="dark"> wrappers dim
-  // "supporting" phrases so the un-wrapped phrases pop. Set a
-  // constant 50% white fill that overrides the parent's gradient
-  // — dark spans stay visibly-but-dimmer regardless of sweep
-  // position. Earlier opacity-on-gradient approach made dark spans
-  // disappear in the unrevealed area (30% × 0.45 ≈ 13% white,
-  // basically invisible on the dark background).
+  // "supporting" phrases so the un-wrapped phrases pop. The parent
+  // uses `background-clip: text` with a gradient sweep, which
+  // affects every descendant text node by default — so we need to
+  // forcefully reset the gradient and pin a constant 50% white fill
+  // on dark spans. !important is needed to beat the parent's
+  // -webkit-text-fill-color: transparent inheritance.
   :deep(.dark) {
-    -webkit-text-fill-color: white(50);
-    color: white(50);
-    background: none;
-    -webkit-background-clip: initial;
-    background-clip: initial;
+    background: none !important;
+    background-image: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    -webkit-text-fill-color: white(50) !important;
+    color: white(50) !important;
   }
 }
 </style>

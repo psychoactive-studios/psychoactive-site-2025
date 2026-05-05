@@ -7,13 +7,21 @@ import {
   heroScrollAnimation,
 } from '~/utils/animations/about';
 import useAudioManager from '~/composables/useAudioManager';
+import useMuxVideo from '~/composables/useMuxVideo';
 import BulgeVideo from '../ui/BulgeVideo.vue';
 import { useMediaQuery } from '@vueuse/core';
 
 
 const containerRef = ref(null);
-const heroVideoResource = ref(null);
+const mobileVideoRef = ref(null);
 let ctx = null;
+
+// Mux Playback ID for the about-page hero video (service_04 asset).
+const HERO_VIDEO_PLAYBACK_ID = 'Gs9aZT00jpkPxKzJmbajcZES7rw2WYYaTmLFIu00Gt5f4';
+
+// On mobile we show a plain <video>; on desktop the BulgeVideo
+// component creates its own <video> internally and handles streaming.
+useMuxVideo(mobileVideoRef, HERO_VIDEO_PLAYBACK_ID);
 
 const { isLoading, addResourceToLoad, resourceLoaded } = useLoader();
 const { scrollSmoother } = useScrollSmoother();
@@ -23,13 +31,12 @@ const isMobile = useMediaQuery('(max-width: 768px)');
 // Indicate that this component has a resource to load
 addResourceToLoad(1);
 
-onMounted(async () => {
+onMounted(() => {
   ctx = gsap.context(() => {}, containerRef.value);
   heroScrollAnimation(ctx, containerRef.value);
-  const blob = await $fetch('/video/service_04.mp4', {
-    responseType: 'blob',
-  });
-  heroVideoResource.value = URL.createObjectURL(blob);
+  // No more blob fetch — the hero video streams from Mux directly via
+  // useMuxVideo (mobile) and BulgeVideo's internal useMuxVideo
+  // (desktop). Resolve the loader resource immediately.
   resourceLoaded();
 });
 
@@ -50,15 +57,19 @@ watch(isLoading, (newVal) => {
   <section ref="containerRef" class="hero">    
     <div class="hero__wrapper">      
       <video
-        v-if="isMobile"        
-        :src="heroVideoResource"
+        v-if="isMobile"
+        ref="mobileVideoRef"
         class="hero__video"
         loop
         muted
         playsinline
         autoplay
       />
-      <BulgeVideo v-else :src="heroVideoResource" class="hero__video" />
+      <BulgeVideo
+        v-else
+        :playback-id="HERO_VIDEO_PLAYBACK_ID"
+        class="hero__video"
+      />
       <div class="hero__video-overlay" />
       <HeroCenterLine class="hero__center-line" />
       <div class="container">

@@ -2,9 +2,22 @@
 import gsap from 'gsap';
 import useAudioManager from '~/composables/useAudioManager';
 import useCursor from '~/composables/useCursor';
+import useMuxVideo from '~/composables/useMuxVideo';
 import LinkWithHover from '../ui/LinkWithHover.vue';
 
 const { playInteractionSound } = useAudioManager();
+
+// Background video refs (streamed from Mux via useMuxVideo).
+const metamorphosisBgRef = ref(null);
+const metamorphosisTitleVideoRef = ref(null);
+useMuxVideo(
+  metamorphosisBgRef,
+  'rprnJ02pLARA2HPM7OKAgIR7Rp6Lfl02juowtgW5eQ9kI',
+);
+useMuxVideo(
+  metamorphosisTitleVideoRef,
+  '02DqXW02V3CvlvBJQ022g100ADRYlQU01TZMvutEffhYhTqw',
+);
 
 const { pointerX, pointerY, cursorRef, cursorText } = useCursor();
 
@@ -115,7 +128,7 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
     <div class="container">
       <div class="metamorphosis__video">
         <video
-          src="/video/metamorphosis-bg.mp4"
+          ref="metamorphosisBgRef"
           autoplay
           muted
           loop
@@ -147,7 +160,7 @@ watch([isCursorVisible, pointerX, pointerY], (newVal) => {
             <div class="metamorphosis__title_media">
               <div class="metamorphosis__title_video">
                 <video
-                  src="/video/service_03.mp4"
+                  ref="metamorphosisTitleVideoRef"
                   autoplay
                   muted
                   loop

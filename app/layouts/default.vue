@@ -5,13 +5,11 @@ import ScrollProvider from '~/components/layout/ScrollProvider.vue';
 import FixedTarget from '~/components/layout/FixedTarget.vue';
 import ModalContainer from '~/components/ui/VideoPlayerModal.vue';
 import useAudioManager from '~/composables/useAudioManager';
-import useVideoPlayer from '~/composables/useVideoPlayer';
 import useLoader from '~/composables/useLoader';
 import { navigationData } from '~/data/navigationData';
 import useNavigation from '~/composables/useNavigation';
 
 const { loadSounds } = useAudioManager();
-const { previewVideoData } = useVideoPlayer();
 const { addResourceToLoad, resourceLoaded } = useLoader();
 const { showLayoutElementsRequired } = useNavigation();
 
@@ -20,12 +18,15 @@ addResourceToLoad(1);
 
 const route = useRoute();
 
-onMounted(async () => {
+onMounted(() => {
+  // Previously this fetched /video/preview_reel.mp4 as a blob and
+  // exposed it via useVideoPlayer's `previewVideoData` ref. That
+  // forced the entire 4.7MB MP4 to download before the page could
+  // render, blocking LCP and tanking Lighthouse. Videos now stream
+  // from Mux on demand (via useMuxVideo) so there's no blocking
+  // resource to wait for here — we just resolve immediately so the
+  // loader can finish.
   loadSounds();
-  const blob = await $fetch('/video/preview_reel.mp4', {
-    responseType: 'blob',
-  });
-  previewVideoData.value = URL.createObjectURL(blob);
   resourceLoaded();
 });
 

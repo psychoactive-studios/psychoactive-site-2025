@@ -7,6 +7,11 @@ const player = '.video-player.homehero-prepared';
 const playerPreview = '.video-player .player__preview';
 const playerDotsL = '.player__dots--tl, .player__dots--bl';
 const playerDotsR = '.player__dots--tr, .player__dots--br';
+// The visible button is teleported to <body> by ShowreelHoverPreview
+// — the in-place button (`.play-button--ghost`) stays in the DOM as a
+// hidden source-of-truth. The floating clone reads this element's
+// computed transform every frame and mirrors it, so the scale-from-0
+// page-load step here is reflected on the clone for free.
 const playerButton = '.video-player .play-button';
 const playerControlePlus = '.player__preview_controls .plus';
 const playerControlTexts =

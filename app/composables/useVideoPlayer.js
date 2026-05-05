@@ -17,6 +17,10 @@ const isMuted = ref(false);
 const currentTime = ref(0);
 const duration = ref(0);
 const progress = ref(0);
+// previewVideoData was a blob URL set by default.vue's $fetch of
+// /video/preview_reel.mp4. That blob fetch has been removed in
+// favour of streaming via Mux + useMuxVideo, so this ref is no
+// longer set anywhere — kept for backwards compat (always null).
 const previewVideoData = ref(null);
 
 export default function () {
