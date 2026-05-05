@@ -548,9 +548,14 @@ function handlePointerLeave() {
 // CLOSE START: watch isOpen rather than currentPreview, because
 // currentPreview only resets at the END of the close (after the un-flip
 // completes ~0.7s later). isOpen flips to false synchronously at the
-// very start of onPlayerClose, before any animation runs. Snapping
-// uMix here means the canvas shows pure psychedelic from the moment
-// the user clicks close — no eye is visible during the un-flip.
+// very start of onPlayerClose, before any animation runs.
+//
+// We EASE uMix from 0.92 → 0 over the un-flip duration instead of
+// snapping it. Snapping made the rectangle look static during the
+// shrink (pure psychedelic, no morph) which read as a visual
+// disconnect from the hologram around it. Easing keeps the morph
+// alive throughout the shrink so the rectangle reacts continuously
+// with the hologram fade.
 //
 // We DELIBERATELY don't emit 'hover-end' here, even if !isHovering.
 // That used to trigger Hero.vue's slow ~1.26s hologram fade-out, which
@@ -561,11 +566,18 @@ function handlePointerLeave() {
 watch(isOpen, (newVal, oldVal) => {
   if (oldVal === true && newVal === false && currentPreview.value === uniqueId) {
     // Restore canvas/videoA visibility (hide videoB takeover) so the
-    // canvas's psychedelic is what shows during the un-flip.
+    // canvas's psychedelic shows underneath the easing morph.
     restoreFromTakeover();
     gsap.killTweensOf(targetMix);
-    targetMix.value = 0;
-    lerpedMix.value = 0;
+    // Ease the morph back to 0 over the shrink (matches the Flip
+    // un-flip duration in onPlayerClose). isOpening stays true
+    // throughout, so the on-pause handler keeps videoB playing in
+    // case the browser tries to suspend it as off-screen.
+    gsap.to(targetMix, {
+      value: 0,
+      duration: 0.7,
+      ease: 'power3.out',
+    });
   }
 });
 

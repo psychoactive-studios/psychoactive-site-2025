@@ -370,7 +370,20 @@ definePageMeta({
 
 .homepage {
   &__content {
-    background-color: $color-background;
+    /*
+      Section bg is a vertical gradient: transparent at the very top,
+      ramping to solid $color-background by ~200px in. This lets the
+      hero's hologram fade into the section instead of producing a
+      hard horizontal cut where the two meet. Because the bottom of
+      the gradient = solid $color-background, the rest of the section
+      sits on a normal opaque background as usual.
+    */
+    background: linear-gradient(
+      to bottom,
+      rgba(16, 16, 18, 0) 0,
+      rgba(16, 16, 18, 1) 200px,
+      rgba(16, 16, 18, 1) 100%
+    );
     position: relative;
     z-index: 1;
   }
@@ -406,7 +419,11 @@ definePageMeta({
 .partners {
   position: relative;
   z-index: 1;
-  background-color: $color-background;
+  // No bg-color: lets the parent .homepage__content's top-fade
+  // gradient show through, smoothing the transition from hero
+  // hologram → opaque section. The gradient reaches solid
+  // $color-background by ~200px so the rest of this section reads
+  // normally on the dark page bg.
   // Logos sit within the standard .container gutter (matches the rest
   // of the page content). The dropped headline used to add 3vw bottom
   // margin between caption and logos — keeping a similar amount of

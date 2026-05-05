@@ -26,7 +26,7 @@ import useAudioManager from '~/composables/useAudioManager';
 import HeroPillLink from '../ui/HeroPillLink.vue';
 
 const { disableScroll, scrollSmoother } = useScrollSmoother();
-const { onPlayerOpen, isOpen } = useVideoPlayer();
+const { onPlayerOpen, isOpen, currentPreview } = useVideoPlayer();
 const { playInteractionSound, isSoundApproved, hasInteracted } =
   useAudioManager();
 const { isLoading } = useLoader();
@@ -84,7 +84,7 @@ function resetMorphDefaults() {
 
 // --- Hologram background state ------------------------------------------
 const HOLOGRAM_DEFAULTS = {
-  strength: 0.46,
+  strength: 1.0,
   vignette: 0.9,
   aberration: 0.033,
   scanlineStrength: 0.23,
@@ -112,48 +112,104 @@ function firePulse() {
 // to a grid on play-button hover and fire a ripple wave on click.
 const hero3dRef = ref(null);
 
-// Hologram fade — driven by hover events from the preview. GSAP tween
-// runs against a plain object (more reliable than tweening a Vue ref
-// directly) and syncs the ref via onUpdate so the prop is reactive.
-const bgMix = ref(0);
-const bgMixState = { value: 0 };
+// Hologram fade — driven by two independent sources so they don't
+// fight each other:
+//   baseMix  — controlled by the preloader fade-in + hover/close
+//              tweens. At rest sits at HOLOGRAM_REST_MIX (subtle
+//              ambient hologram). Hover ramps to HOLOGRAM_HOVER_MIX.
+//   scrollMix — controlled by ScrollTrigger as the user scrolls
+//              past the hero. 1 while the hero is in view, lerps
+//              to 0 as the rectangle scrolls out.
+// The actual `bgMix` prop the component sees is the product of the
+// two, so scrolling away ALWAYS wins regardless of hover state.
+const HOLOGRAM_REST_MIX = 0.3;
+const HOLOGRAM_HOVER_MIX = 0.5;
 
-function tweenBgMix(target, duration, ease) {
-  gsap.to(bgMixState, {
+// Starts at 0 — the preloader-finish watcher tweens up to
+// HOLOGRAM_REST_MIX so the hologram fades in smoothly rather than
+// popping in once the loader hides.
+const baseMix = ref(0);
+const baseMixState = { value: 0 };
+const scrollMix = ref(1);
+
+const bgMix = computed(() => baseMix.value * scrollMix.value);
+
+// Drives the hologram's z-index. While the modal is opening / open /
+// closing, the rectangle is teleported INTO #video-player-modal at
+// z-index 100 — which would otherwise occlude the hologram and
+// produce a visible jump when the rectangle reparents back at the
+// end of the close. Setting this true bumps the hologram above the
+// modal for the duration of the transition; the alpha fading below
+// keeps it from tinting the actual showreel during fullscreen
+// viewing.
+const isHologramAboveModal = ref(false);
+
+function tweenBaseMix(target, duration, ease) {
+  gsap.to(baseMixState, {
     value: target,
     duration,
     ease,
     overwrite: true,
-    onUpdate: () => { bgMix.value = bgMixState.value; },
+    onUpdate: () => { baseMix.value = baseMixState.value; },
   });
 }
 
 function onPreviewHoverStart() {
-  tweenBgMix(1, morphDuration.value * 1.1, 'power2.out');
+  tweenBaseMix(HOLOGRAM_HOVER_MIX, morphDuration.value * 1.1, 'power2.out');
   // Morph the dot sphere to a grid as the user hovers the play button.
   hero3dRef.value?.setFormation(1, 1.0);
 }
 function onPreviewHoverEnd() {
-  tweenBgMix(0, morphDuration.value * 0.9, 'power2.in');
+  tweenBaseMix(HOLOGRAM_REST_MIX, morphDuration.value * 0.9, 'power2.in');
   // Morph back to the sphere on hover-out.
   hero3dRef.value?.setFormation(0, 1.4);
 }
 
-// MODAL CLOSE: when the user clicks close, isOpen flips to false
-// synchronously at the very start of onPlayerClose (well before the
-// rectangle's un-flip animation kicks off). The un-flip takes ~0.8s,
-// and during that window the hologram is still fully visible behind
-// the shrinking rectangle. We need it to fade FAST so it's gone by
-// the time the rectangle lands — otherwise it lingers as a "ghost
-// fade" for ~1.26s after the rectangle is back in place.
+// MODAL OPEN / CLOSE — drive both z-index AND alpha together so the
+// hologram visibly bridges the rectangle's scale-up and scale-down
+// instead of disappearing the moment the rectangle teleports into
+// #video-player-modal.
 //
-// 0.45s gets the hologram to ~0 right around when the modal box has
-// faded out (0.5s) and well before the un-flip completes (0.8s),
-// hidden behind the still-fading modal opacity.
+//   OPEN  (false → true): bump z-index above the modal so the
+//   hologram keeps painting over the rectangle as it scales up. At
+//   the same time, ramp baseMix DOWN to 0 over ~1s so the hologram
+//   has fully faded by the time the modal__player opacifies — the
+//   actual showreel video is then clean / untinted during fullscreen
+//   viewing.
+//
+//   CLOSE (true → false): hologram is at 0 from the open fade-out,
+//   z-index already bumped. Ramp baseMix UP from 0 to REST_MIX over
+//   ~0.7s — matches the Flip un-flip duration, so the hologram fades
+//   in across exactly the time the rectangle is shrinking. By the
+//   moment Vue reparents the rectangle out of the modal (Flip
+//   onComplete → currentPreview = null), the hologram is already at
+//   its rest level over the (now-small) rectangle. Dropping the
+//   z-index back to 2 in the currentPreview watcher then has no
+//   visible effect.
 watch(isOpen, (newVal, oldVal) => {
-  if (oldVal === true && newVal === false) {
-    tweenBgMix(0, 0.45, 'power2.out');
+  if (oldVal === false && newVal === true) {
+    isHologramAboveModal.value = true;
+    tweenBaseMix(0, 1.0, 'power2.in');
+  } else if (oldVal === true && newVal === false) {
+    // Defensive: keep the bump in case currentPreview already nulled
+    // somehow (it shouldn't yet — the un-flip hasn't run).
+    isHologramAboveModal.value = true;
+    tweenBaseMix(HOLOGRAM_REST_MIX, 0.7, 'power2.out');
     hero3dRef.value?.setFormation(0, 0.6);
+  }
+});
+
+// CLOSE END — currentPreview becomes null in the Flip un-flip's
+// onComplete (~0.8s after the close click), at the same moment Vue
+// reparents the rectangle's wrapper back out of #video-player-modal
+// and into .player__container. With the rectangle no longer in the
+// modal, the hologram doesn't need its z-index boost any more, so
+// we drop it back to its at-rest level (2). The hologram alpha is
+// already at REST_MIX from the close tween above, so this z-index
+// drop is purely a cleanup — no visible change.
+watch(currentPreview, (newVal, oldVal) => {
+  if (newVal === null && oldVal !== null) {
+    isHologramAboveModal.value = false;
   }
 });
 
@@ -165,6 +221,27 @@ onMounted(() => {
     heroScrollAnimation(ctx, isPlaying);
 
     // heroInitAnimation(ctx, scrollSmoother);
+
+    // ScrollTrigger that fades the hologram OUT as the user starts
+    // scrolling past the rectangle. Set up in onMounted (alongside
+    // the hero's own pin trigger) so the ScrollTrigger.refresh() it
+    // forces happens once at mount, not later when other timelines
+    // are mid-flight (which produced a visible restart of the
+    // hero load animation).
+    ScrollTrigger.create({
+      trigger: '.hero__intro',
+      start: 'top top',
+      end: 'bottom top',
+      scrub: 0.5,
+      onUpdate: (self) => {
+        // Fade starts ~30% through the hero scroll so the initial
+        // pixels of scroll don't immediately dim things; fully
+        // gone by the end of the pin range.
+        const fadeStart = 0.30;
+        const t = (self.progress - fadeStart) / (1 - fadeStart);
+        scrollMix.value = 1 - Math.max(0, Math.min(1, t));
+      },
+    });
   }
 });
 
@@ -177,6 +254,11 @@ watch(isLoading, (newVal) => {
     heroInitAnimation(ctx, scrollSmoother);
     if (isSoundApproved.value && hasInteracted.value)
       playInteractionSound('home-load');
+
+    // Fade the hologram in from 0 to its rest level so it doesn't
+    // pop on screen the moment the preloader finishes. 1.2s ease
+    // matches the cadence of the rest of the hero load animation.
+    tweenBaseMix(HOLOGRAM_REST_MIX, 1.2, 'power2.out');
   }
 });
 
@@ -354,18 +436,9 @@ const onScrollDownHandler = (e) => {
         :scan-roll-speed="bgScanRollSpeed"
         :barrel="bgBarrel"
         :force-visible="bgForceVisible"
+        :above-modal="isHologramAboveModal"
       />
 
-      <!--
-        Bandaid: solid black gradient sitting on top of the hologram
-        at the very bottom of the hero. As the next section
-        (.homepage__content) slides up to meet the hero, the cut-off
-        line lands inside this gradient — the bottom of the gradient
-        is solid #101012, exactly the section's background, so the
-        join is invisible. Only ~80px tall, so it doesn't intrude on
-        anything visible.
-      -->
-      <div class="hero__intro__bottom-fade" aria-hidden="true" />
 
       <section class="hero__intro_wrapper">
         <div class="homehero-3d-scene--wrapper">
@@ -546,28 +619,7 @@ const onScrollDownHandler = (e) => {
     display: flex;
     flex-direction: column;
     padding: 0;
-    // Anchor for the absolute-positioned ShowreelHoverBackground
-    // (which used to be position:fixed at body — see component docs).
     position: relative;
-
-    &__bottom-fade {
-      // Bandaid for the hologram cut-off where .homepage__content
-      // meets the hero. Sits absolute at the bottom of .hero__intro,
-      // gradient transparent → opaque #101012 over 80px. Bottom edge
-      // of the gradient lines up with the section join, masking it.
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 80px;
-      background: linear-gradient(
-        to bottom,
-        rgba(16, 16, 18, 0) 0%,
-        rgba(16, 16, 18, 1) 100%
-      );
-      pointer-events: none;
-      z-index: 1; // above the hologram (z-index 0), below content
-    }
     // padding: 0 0 48px 0;
     &_wrapper {
       flex-grow: 1;
@@ -940,3 +992,4 @@ const onScrollDownHandler = (e) => {
   // }
 }
 </style>
+

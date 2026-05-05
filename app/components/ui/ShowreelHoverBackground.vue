@@ -53,6 +53,19 @@ const props = defineProps({
   // Lets you preview the hologram + tune its knobs without having to
   // hover the play button.
   forceVisible:     { type: Boolean, default: false },
+
+  /**
+   * When true, bump the hologram's z-index ABOVE the video-player modal
+   * (z-index 100) so it can paint over the rectangle during open/close
+   * transitions — when the rectangle is teleported INTO the modal at
+   * z-index 100 and would otherwise occlude the hologram. Default is
+   * false (z-index 2), which sits above `.scene` (z-index 1) but below
+   * the modal so the modal showreel content isn't tinted by the
+   * hologram during fullscreen viewing. Hero.vue toggles this true
+   * during the open + close sequences and back to false once the
+   * rectangle has reparented out of the modal.
+   */
+  aboveModal:       { type: Boolean, default: false },
 });
 
 const rootRef = ref(null);
@@ -172,10 +185,10 @@ function initScene() {
 
   syncSize();
 
-  // Observe the wrapper itself — its size now drives the canvas (it
-  // sits absolute inside the hero), not the viewport directly.
+  // Canvas is viewport-sized — observe the document element so we
+  // catch viewport resizes (which is what actually matters here).
   resizeObserver = new ResizeObserver(syncSize);
-  if (rootRef.value) resizeObserver.observe(rootRef.value);
+  resizeObserver.observe(document.documentElement);
 
   window.addEventListener('resize', syncSize);
 
@@ -184,23 +197,18 @@ function initScene() {
 }
 
 function syncSize() {
-  if (!renderer || !material || !canvasRef.value) return;
-  // Use the CANVAS's actual rendered size (not viewport) — the canvas
-  // is now anchored to the hero, so its dimensions and the viewport's
-  // dimensions only happen to coincide at the top of the page. Once
-  // the user scrolls, the canvas's bounding rect shifts but its size
-  // stays the same. Shader uniforms / center calculations all need to
-  // be canvas-relative so the projection stays correct.
-  const w = canvasRef.value.clientWidth;
-  const h = canvasRef.value.clientHeight;
-  if (w === 0 || h === 0) return;
+  if (!renderer || !material) return;
+  // Canvas is fixed to the viewport (teleported to body) — use window
+  // dimensions for the WebGL drawing buffer + shader uniforms.
+  const w = window.innerWidth;
+  const h = window.innerHeight;
   renderer.setSize(w, h, false);
   material.uniforms.uResolution.value.set(w, h);
   updateCenter();
 }
 
 function updateCenter() {
-  if (!material || !canvasRef.value) return;
+  if (!material) return;
   if (!props.centerTarget) {
     center.set(0.5, 0.5);
     return;
@@ -210,16 +218,11 @@ function updateCenter() {
     center.set(0.5, 0.5);
     return;
   }
-  // Centre target's position is normalised to the CANVAS rect (not
-  // the viewport). That way, even when scrolling shifts the canvas
-  // off the top of the screen, the centre stays correctly aligned
-  // with the rectangle (which is also inside the hero and scrolls
-  // with it).
-  const canvasRect = canvasRef.value.getBoundingClientRect();
-  if (canvasRect.width === 0 || canvasRect.height === 0) return;
+  // Centre target normalised to viewport UV. Recomputed every frame
+  // (in animate()) so it tracks the rectangle as the page scrolls.
   const rect = el.getBoundingClientRect();
-  const cx = ((rect.left + rect.right) / 2 - canvasRect.left) / canvasRect.width;
-  const cy = 1.0 - ((rect.top + rect.bottom) / 2 - canvasRect.top) / canvasRect.height;
+  const cx = (rect.left + rect.right) / 2 / window.innerWidth;
+  const cy = 1.0 - (rect.top + rect.bottom) / 2 / window.innerHeight;
   center.set(cx, cy);
 }
 
@@ -247,15 +250,10 @@ function animate() {
   // Recompute the rectangle centre each frame in case scroll / layout moved
   updateCenter();
 
-  // Mouse — normalised to CANVAS UV (since the canvas no longer
-  // covers the viewport, viewport-normalised values would offset the
-  // mouse parallax once the page has scrolled).
-  if (pointerType.value === 'mouse' && canvasRef.value) {
-    const cRect = canvasRef.value.getBoundingClientRect();
-    if (cRect.width > 0 && cRect.height > 0) {
-      mouse.x = gsap.utils.clamp(0, 1, (pointerX.value - cRect.left) / cRect.width);
-      mouse.y = gsap.utils.clamp(0, 1, 1.0 - (pointerY.value - cRect.top) / cRect.height);
-    }
+  // Mouse — normalised viewport UV (canvas is fixed to the viewport).
+  if (pointerType.value === 'mouse') {
+    mouse.x = gsap.utils.clamp(0, 1, pointerX.value / window.innerWidth);
+    mouse.y = gsap.utils.clamp(0, 1, 1.0 - pointerY.value / window.innerHeight);
   }
   lerpedMouse.x = gsap.utils.interpolate(lerpedMouse.x, mouse.x, 0.06);
   lerpedMouse.y = gsap.utils.interpolate(lerpedMouse.y, mouse.y, 0.06);
@@ -312,46 +310,75 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div ref="rootRef" class="hologram">
-    <!-- crossorigin REQUIRED — this video is used as a WebGL
-         VideoTexture by the hologram shader, which can only read
-         pixels from cross-origin sources when the element opts into
-         CORS. Mux serves Access-Control-Allow-Origin: *. -->
-    <video
-      v-if="playbackId"
-      ref="videoRef"
-      crossorigin="anonymous"
-      autoplay
-      loop
-      muted
-      playsinline
-      class="hologram__source"
-    />
-    <canvas
-      v-show="enabled"
-      ref="canvasRef"
-      class="hologram__canvas"
-    />
-  </div>
+  <Teleport to="body">
+    <div
+      ref="rootRef"
+      :class="['hologram', { 'hologram--above-modal': aboveModal }]"
+    >
+      <!-- crossorigin REQUIRED — this video is used as a WebGL
+           VideoTexture by the hologram shader, which can only read
+           pixels from cross-origin sources when the element opts into
+           CORS. Mux serves Access-Control-Allow-Origin: *. -->
+      <video
+        v-if="playbackId"
+        ref="videoRef"
+        crossorigin="anonymous"
+        autoplay
+        loop
+        muted
+        playsinline
+        class="hologram__source"
+      />
+      <canvas
+        v-show="enabled"
+        ref="canvasRef"
+        class="hologram__canvas"
+      />
+    </div>
+  </Teleport>
 </template>
 
 <style scoped lang="scss">
 .hologram {
   /*
-    Absolutely positioned inside the hero (NOT fixed to viewport).
-    Reason: when fixed, the next section below the hero (z-index 1
-    with an opaque #101012 bg) slides up over the still-fixed canvas
-    as you scroll, producing a hard horizontal cut wherever they
-    meet in the viewport. Living inside the hero means the canvas
-    SCROLLS WITH THE HERO — by the time the next section reaches the
-    viewport, the hologram has scrolled off the top with everything
-    else. No overlap, no cut.
+    Teleported to <body> and fixed to the viewport so the canvas
+    paints OVER the hero content (rectangle, dots, headline) rather
+    than behind it. The hologram shader outputs alpha based on
+    uMix * uStrength * vignette, so it acts as a translucent overlay
+    — the rectangle's pixels show through where alpha is low,
+    creating the "hover-state aura" interaction with the rectangle.
+    A separate bottom-fade gradient inside .hero__intro masks the
+    cut where this fixed canvas meets the next page section.
+
+    Z-INDEX: must be HIGHER than `.scene` (z-index 1) which holds
+    the rectangle, dot scene, and hero text — otherwise this canvas
+    sits BEHIND the rectangle and the swirls only ever appear
+    around it, never inside it. Stays well below the modal (100),
+    the floating play button (50), the hamburger nav (99) and the
+    transition overlay (110), so all of those still composite over
+    the hologram correctly.
   */
-  position: absolute;
+  position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0; // sits below the dot scene + rectangle (z-index >= 1)
+  z-index: 2;
   overflow: hidden;
+
+  /*
+    Driven by Hero.vue during the open + close transitions. With the
+    rectangle teleported INTO #video-player-modal (z-index 100), a
+    z-index of 2 leaves the hologram trapped behind the modal and the
+    rectangle stops "reacting" to it during the scale animations.
+    Bumping to 105 puts the hologram over the modal for the duration
+    of the transition; Hero.vue is responsible for fading the alpha
+    appropriately so the hologram never obscures the actual showreel
+    during fullscreen viewing. Stays below the transition overlay
+    (110) so a black-out can still cover the hologram during the
+    handoff into fullscreen.
+  */
+  &--above-modal {
+    z-index: 105;
+  }
   &__source {
     /* Off-screen — used only as a WebGL texture source */
     position: absolute;
@@ -362,12 +389,6 @@ onUnmounted(() => {
     left: -9999px;
   }
   &__canvas {
-    /*
-      Fill the wrapper (which fills the hero). The hero is 100svh,
-      full width — so the canvas ends up 100% of the visible
-      viewport when scrolled to the top, exactly as before, just
-      anchored to the hero rather than the viewport.
-    */
     width: 100%;
     height: 100%;
     display: block;
