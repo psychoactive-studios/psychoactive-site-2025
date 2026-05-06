@@ -212,16 +212,28 @@ const onClickHandler = async () => {
           >
             <div class="award-platform">
               <!--
-                Explicit width/height tell the browser each platform
-                logo's true intrinsic aspect ratio (looked up by file
-                path) so the row reserves correct space before images
-                load — fixes both CLS and Lighthouse's "incorrect
-                aspect ratio" flag. CSS still drives the rendered
-                height; width auto-derives from the declared ratio.
-                No `sizes` attribute: triggers /_ipx/w_320/... URLs
-                the static deploy doesn't serve.
+                Plain <img> on purpose — NOT NuxtImg.
+
+                HomeAwards lives inside <ClientOnly> in index.vue, so
+                this template is never SSR'd. NuxtImg generates IPX
+                transform URLs like /_ipx/s_700x350/img/awards/orpetron.png
+                from the width/height props, but those URLs only get
+                served if the build saw them at prerender time — which
+                it doesn't, because nothing inside ClientOnly makes it
+                into the prerendered HTML. Result: NuxtImg here 404s
+                for every variant and the row falls back to broken-image
+                alt text in production.
+
+                Plain <img> with the original src (/img/awards/...) works
+                because static-file serving still returns the file.
+                Width/height come from the per-platform dimensions map
+                so the browser still reserves the correct aspect ratio
+                box before each image loads (CLS protection preserved),
+                and the dimensions are accurate per file (best-awards
+                and w3 are ~1:1, the rest are 2:1) so Lighthouse won't
+                re-flag "incorrect aspect ratio".
               -->
-              <NuxtImg
+              <img
                 :src="award.platform"
                 :alt="award.project"
                 :width="getPlatformDimensions(award.platform).width"
