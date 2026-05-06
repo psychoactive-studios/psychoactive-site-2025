@@ -79,6 +79,31 @@ const showMoreLabel = computed(() => {
   return labels[Math.min(clickCount.value, labels.length - 1)];
 });
 
+// Per-platform image dimensions. Lighthouse "Displays images with
+// incorrect aspect ratio" flagged the awards row because every <img>
+// was being declared 700x350 (Zendetta/Awwwards/Tech Behemoths source
+// dimensions) but a few platform logos in /public/img/awards/ have
+// different intrinsic ratios — best-awards.png is 114x114 and w3.png
+// is 298x318, both ~1:1 rather than 2:1. Looking up real dimensions
+// per file gets the browser the correct intrinsic aspect ratio so the
+// row reserves the right box and Lighthouse stops complaining.
+const PLATFORM_DIMENSIONS = {
+  '/img/awards/orpetron.png':          { width: 700, height: 350 },
+  '/img/awards/awwwards.png':          { width: 700, height: 350 },
+  '/img/awards/css-design-awards.png': { width: 700, height: 350 },
+  '/img/awards/muse.png':              { width: 700, height: 350 },
+  '/img/awards/tech-behemoths.png':    { width: 700, height: 350 },
+  '/img/awards/best-awards.png':       { width: 114, height: 114 },
+  '/img/awards/w3.png':                { width: 298, height: 318 },
+  '/img/awards/fwa.png':               { width: 366, height: 110 },
+};
+
+const FALLBACK_DIMENSIONS = { width: 700, height: 350 };
+
+function getPlatformDimensions(path) {
+  return PLATFORM_DIMENSIONS[path] || FALLBACK_DIMENSIONS;
+}
+
 const handleHoverEffect = () => {
   const el = showMoreRef.value;
   // Stop any ongoing animations on this element
@@ -187,21 +212,20 @@ const onClickHandler = async () => {
           >
             <div class="award-platform">
               <!--
-                Explicit width/height tell the browser the intrinsic
-                2:1 aspect ratio before the image loads, so the row
-                doesn't shift as each one streams in (Lighthouse CLS
-                audit). No `sizes` attribute: that triggered NuxtImg
-                to generate /_ipx/w_320/... srcset URLs which the
-                static deploy doesn't serve, so images fell back to
-                alt text. Without sizes, NuxtImg passes through to
-                /_ipx/_/img/... (no transform) which is prerendered
-                fine.
+                Explicit width/height tell the browser each platform
+                logo's true intrinsic aspect ratio (looked up by file
+                path) so the row reserves correct space before images
+                load — fixes both CLS and Lighthouse's "incorrect
+                aspect ratio" flag. CSS still drives the rendered
+                height; width auto-derives from the declared ratio.
+                No `sizes` attribute: triggers /_ipx/w_320/... URLs
+                the static deploy doesn't serve.
               -->
               <NuxtImg
                 :src="award.platform"
                 :alt="award.project"
-                width="700"
-                height="350"
+                :width="getPlatformDimensions(award.platform).width"
+                :height="getPlatformDimensions(award.platform).height"
                 loading="lazy"
               />
             </div>

@@ -1,15 +1,23 @@
 <script setup>
 import qs from 'qs';
-import { defineAsyncComponent } from 'vue';
 import { useMediaQuery } from '@vueuse/core';
-// Hero is lazy-loaded so its dependency tree (Three.js, GSAP plugins,
-// hls.js, the morph + hologram shaders, ServicesHero3DSceneV2, etc.)
-// gets split into its own chunk. PageSpeed flagged ~700 KiB of unused
-// JavaScript on mobile because all of those bundled into the homepage's
-// main chunk even though Hero never mounts on mobile (gated by the
-// v-if below). With defineAsyncComponent the chunk is only fetched on
-// devices that actually render the desktop hero.
-const Hero = defineAsyncComponent(() => import('~/components/homepage/Hero.vue'));
+// Hero is statically imported again. We tried defineAsyncComponent
+// to defer Hero's dependency tree (Three.js, GSAP plugins, hls.js,
+// the morph/hologram shaders, ServicesHero3DSceneV2) but:
+//   1. The unused-JS audit barely moved (~700 KiB mobile, ~584 KiB
+//      desktop both before and after) because Three.js / GSAP are
+//      pulled in by other components too — lazy-loading Hero alone
+//      doesn't isolate them.
+//   2. On desktop, the late mount caused CLS to remain at 0.817:
+//      Hero's heroScrollAnimation creates a ScrollTrigger pin that
+//      wraps .hero__intro in a pin-spacer AFTER the initial layout,
+//      shifting .homepage__content below it.
+// Static import means Hero mounts during the main hydration pass —
+// before the user sees content settle — so the pin-spacer is in
+// place when the page first paints and there's no shift. Mobile
+// still renders HeroMobile only via v-if, so Hero's render path
+// never executes on mobile (just the bundle bytes ride along).
+import Hero from '~/components/homepage/Hero.vue';
 import HeroMobile from '~/components/homepage/HeroMobile.vue';
 import HomeAwards from '~/components/homepage/HomeAwards.vue';
 import HomeNewsList from '~/components/homepage/HomeNewsList.vue';
